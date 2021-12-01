@@ -4,12 +4,13 @@ using System.Text;
 
 namespace MMOTFG_Bot
 {
-    public enum Direction { North, South, East, West, NUM_DIRECTIONS };
-    public enum ItemID { PenDrive, NUM_ITEMS};
+    public enum Direction { North, South, East, West, NUM_DIRECTIONS }; //quitar esto porfavor
+    //patrón command
+    public enum ItemID { PenDrive, NUM_ITEMS}; //no se puede tocar desde fuera
 
     static class ItemInfo
     {
-        private static Event[] onConsumeEvents;
+        private static Event[] onConsumeEvents; //listas
         private static Event[] onInspectEvents;
         private static string[] itemNames;
 
@@ -38,7 +39,7 @@ namespace MMOTFG_Bot
         }
     }
 
-    static class Inventory
+    static class Inventory //map con objetos-número de objetos
     {
         static int[] items;
 
@@ -71,8 +72,40 @@ namespace MMOTFG_Bot
     {
         public string name;
         public string description;
-        public MapNode[] connectedNodes = new MapNode[(int)Direction.NUM_DIRECTIONS];
+        public MapNode[] connectedNodes = new MapNode[(int)Direction.NUM_DIRECTIONS]; //listas
         public Event onArriveEvent, onExitEvent, onLookEvent;
+
+        /*class MapNode {...}
+        class MapNodeCastle
+        {
+            public onArrive()
+            {
+                ....
+             }
+        }
+        
+         class MapNodeMove {
+        onArrive () {}
+        onExit() {}
+        onLook() { showDescription() }
+        }
+
+        class MapNodeCastle : MapNodeMove {
+        constructor() {
+        description = "..............";
+            }
+        }
+
+        class MapNodeMove {
+    string description;
+   constructor (descripition) {...}
+    onArrive () {}
+    onExit() {}
+    onLook() { showDescription() }
+}
+new MapNodeMove("esto es un castillo")
+         
+         */
 
         public MapNode()
         {
@@ -113,7 +146,7 @@ namespace MMOTFG_Bot
     {
         Dictionary<string, MapNode>  nodes;
         int nNodes = 0;
-        MapNode currentNode;
+        MapNode currentNode; //podría ser string
 
         public Map()
         {
