@@ -10,12 +10,13 @@ using Telegram.Bot.Types.InlineQueryResults;
 
 namespace MMOTFG_Bot
 {
-    class Program
-    {
-		
-		static void Main(string[] args)
-        {
-			Map mapa = new Map();
+	class Program
+	{
+		static Map mapa = new Map();
+
+		static async Task Main(string[] args)
+		{
+			
 			Inventory.Init();
 
 			Event arriveEvent = new Event();
@@ -48,121 +49,132 @@ namespace MMOTFG_Bot
 
 			mapa.setPosition("entrance");
 
-			char c;
-            while (true)
-            {
-				c = (char)Console.Read();
-                switch (c)
-                {
-					case ('w'):
-						mapa.navigate(Direction.North);
-						break;
-					case ('s'):
-						mapa.navigate(Direction.South);
-						break;
-					case ('d'):
-						mapa.navigate(Direction.East);
-						break;
-					case ('a'):
-						mapa.navigate(Direction.West);
-						break;
-					case ('l'):
-						mapa.lookAround();
-						break;
-					case ('u'):
-                        if (!Inventory.useItem(ItemID.PenDrive))
-                        {
-							Console.WriteLine("Ibas a usar un objeto, pero llevas el bolsillo más vacío que la sección de calificaciones del campus virtual");
-                        }
-						break;
-				}
-            }
+			// char c;
+			// while (true)
+			// {
+			//     c = (char)Console.Read();
+			//     switch (c)
+			//     {
+			//         case ('w'):
+			//             mapa.navigate(Direction.North);
+			//             break;
+			//         case ('s'):
+			//             mapa.navigate(Direction.South);
+			//             break;
+			//         case ('d'):
+			//             mapa.navigate(Direction.East);
+			//             break;
+			//         case ('a'):
+			//             mapa.navigate(Direction.West);
+			//             break;
+			//         case ('l'):
+			//             mapa.lookAround();
+			//             break;
+			//         case ('u'):
+			//             if (!Inventory.useItem(ItemID.PenDrive))
+			//             {
+			//                 Console.WriteLine("Ibas a usar un objeto, pero llevas el bolsillo más vacío que la sección de calificaciones del campus virtual");
+			//             }
+			//             break;
+			//     }
+			// }
+
+			var botClient = new TelegramBotClient("1985137093:AAFk7-_Zyc2lSijP5diw2ghWPvmGVHKbB4E");
+			var me = await botClient.GetMeAsync();
+
+			Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);
+
+			using var cts = new CancellationTokenSource();
+
+			botClient.StartReceiving(new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync), cts.Token);
+			BotCommand command = new BotCommand();
+
+
+			Console.WriteLine($"Start listening for @{me.Username}");
+			Console.ReadLine();
+
+			cts.Cancel();
 		}
 
- //       static async Task Main(string[] args)
- //       {
-	//		var botClient = new TelegramBotClient("1985137093:AAFk7-_Zyc2lSijP5diw2ghWPvmGVHKbB4E");
-	//		var me = await botClient.GetMeAsync();
-	//		Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);
+		static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+		{
+			var handler = update.Type switch
+			{
+				// UpdateType.Unknown:
+				// UpdateType.ChannelPost:
+				// UpdateType.EditedChannelPost:
+				// UpdateType.ShippingQuery:
+				// UpdateType.PreCheckoutQuery:
+				// UpdateType.Poll:
+				UpdateType.Message => BotOnMessageReceived(botClient, update.Message),
+				//UpdateType.EditedMessage => BotOnMessageReceived(botClient, update.EditedMessage),
+				//UpdateType.CallbackQuery => BotOnCallbackQueryReceived(botClient, update.CallbackQuery),
+				//UpdateType.InlineQuery => BotOnInlineQueryReceived(botClient, update.InlineQuery),
+				//UpdateType.ChosenInlineResult => BotOnChosenInlineResultReceived(botClient, update.ChosenInlineResult),
+				//_ => UnknownUpdateHandlerAsync(botClient, update)
+			};
 
- //           using var cts = new CancellationTokenSource();
+			try
+			{
+				await handler;
+			}
+			catch (Exception exception)
+			{
+				await HandleErrorAsync(botClient, exception, cancellationToken);
+			}
+		}
 
- //           botClient.StartReceiving(new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync), cts.Token);
+		static async Task BotOnInlineQueryReceived(ITelegramBotClient botClient, InlineQuery query)
+		{
+			InlineQueryResultBase[] results = {
+					//// displayed result
+					//new InlineQueryResultArticle(
+					//	id: "0",
+					//	title: "dumbify your message!",
+					//	inputMessageContent: new InputTextMessageContent(
+					//		DumbifyText(query.Query)
+					//	)
+					//)
+				};
 
- //           Console.WriteLine($"Start listening for @{me.Username}");
- //           Console.ReadLine();
+			await botClient.AnswerInlineQueryAsync(
+				inlineQueryId: query.Id,
+				results: results,
+				isPersonal: true,
+				cacheTime: 0);
+		}
 
- //           cts.Cancel();
- //       }
+		static async Task BotOnMessageReceived(ITelegramBotClient botClient, Message message)
+		{
+			var chatId = message.Chat.Id;
+			var senderName = message.From.FirstName;
+			var senderID = message.From.Id;
 
-	//	static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
-	//	{
-	//		var handler = update.Type switch
-	//		{
-	//			// UpdateType.Unknown:
-	//			// UpdateType.ChannelPost:
-	//			// UpdateType.EditedChannelPost:
-	//			// UpdateType.ShippingQuery:
-	//			// UpdateType.PreCheckoutQuery:
-	//			// UpdateType.Poll:
-	//			UpdateType.Message => BotOnMessageReceived(botClient, update.Message),
-	//			//UpdateType.EditedMessage => BotOnMessageReceived(botClient, update.EditedMessage),
-	//			//UpdateType.CallbackQuery => BotOnCallbackQueryReceived(botClient, update.CallbackQuery),
-	//			//UpdateType.InlineQuery => BotOnInlineQueryReceived(botClient, update.InlineQuery),
-	//			//UpdateType.ChosenInlineResult => BotOnChosenInlineResultReceived(botClient, update.ChosenInlineResult),
-	//			//_ => UnknownUpdateHandlerAsync(botClient, update)
-	//		};
+			Console.WriteLine("Received message: " + message.Text + " from " + senderName);
 
-	//		try
-	//		{
-	//			await handler;
-	//		}
-	//		catch (Exception exception)
-	//		{
-	//			await HandleErrorAsync(botClient, exception, cancellationToken);
-	//		}
-	//	}
+			string[] subStrings = message.Text.ToLower().Split(' ');
 
-	//	static async Task BotOnInlineQueryReceived(ITelegramBotClient botClient, InlineQuery query)
-	//	{
-	//		InlineQueryResultBase[] results = {
-	//				//// displayed result
-	//				//new InlineQueryResultArticle(
-	//				//	id: "0",
-	//				//	title: "dumbify your message!",
-	//				//	inputMessageContent: new InputTextMessageContent(
-	//				//		DumbifyText(query.Query)
-	//				//	)
-	//				//)
-	//			};
+			switch(subStrings[0]){
+				case ("/move"):
+					if(subStrings.Length == 2){
+						mapa.navigate(botClient, chatId, subStrings[1]);
+					}
+				break;
+			}
+			
+			//await botClient.SendTextMessageAsync(chatId: chatId, text: DumbifyText(message.Text));
+		}
 
-	//		await botClient.AnswerInlineQueryAsync(
-	//			inlineQueryId: query.Id,
-	//			results: results,
-	//			isPersonal: true,
-	//			cacheTime: 0);
-	//	}
-
-	//	static async Task BotOnMessageReceived(ITelegramBotClient botClient, Message message)
-	//	{
-	//		var chatId = message.Chat.Id;
-	//		var senderName = message.From.FirstName;
-
-	//		Console.WriteLine("Received message: " + message.Text + " from " + senderName);
-
-	//		//await botClient.SendTextMessageAsync(chatId: chatId, text: DumbifyText(message.Text));
-	//	}
-
-	//	static Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
-	//	{
-	//		var errorMessage = exception switch
-	//		{
-	//			ApiRequestException apiRequestException => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
-	//			_ => exception.ToString()
-	//		};
-	//		Console.WriteLine(errorMessage);
-	//		return Task.CompletedTask;
-	//	}
+		static Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+		{
+			var errorMessage = exception switch
+			{
+				ApiRequestException apiRequestException => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
+				_ => exception.ToString()
+			};
+			Console.WriteLine(errorMessage);
+			return Task.CompletedTask;
+		}
 
 	}
 }
