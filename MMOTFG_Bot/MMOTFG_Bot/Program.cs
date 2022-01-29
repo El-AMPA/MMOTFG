@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -7,12 +9,14 @@ using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
+using Telegram.Bot.Types.InputFiles;
 
 namespace MMOTFG_Bot
 {
 	class Program
 	{
 		static Map mapa = new Map();
+		static string assetsPath = "./../../../assets/"; //TO-DO: Yikes dawg
 
 		static async Task Main(string[] args)
 		{
@@ -89,7 +93,6 @@ namespace MMOTFG_Bot
 			botClient.StartReceiving(new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync), cts.Token);
 			BotCommand command = new BotCommand();
 
-
 			Console.WriteLine($"Start listening for @{me.Username}");
 			Console.ReadLine();
 
@@ -152,17 +155,78 @@ namespace MMOTFG_Bot
 
 			Console.WriteLine("Received message: " + message.Text + " from " + senderName);
 
-			string[] subStrings = message.Text.ToLower().Split(' ');
+			await SendImage(botClient, chatId, "Dog1.png", "<b>I shall smite thee heathen🐶</b>");
+			await SendImageCollection(botClient, chatId, new[] { "Dog1.png", "Dog2.png" });
+			await SendAudio(botClient, chatId, "DoggoMusic.mp3", "Why do I hear boss music?");
 
-			switch(subStrings[0]){
-				case ("/move"):
-					if(subStrings.Length == 2){
-						mapa.navigate(botClient, chatId, subStrings[1]);
-					}
-				break;
+			if(message.Type == MessageType.Text) //Si le mandas una imagen explota ahora mismo
+            {
+				string[] subStrings = message.Text.ToLower().Split(' ');
+
+				switch (subStrings[0])
+				{
+					case ("/move"):
+						if (subStrings.Length == 2)
+						{
+							mapa.navigate(botClient, chatId, subStrings[1]);
+						}
+						break;
+				}
 			}
-			
+
 			//await botClient.SendTextMessageAsync(chatId: chatId, text: DumbifyText(message.Text));
+		}
+
+		/// <summary>
+		/// Send a single image to a user. ImageCaption supports HTML formatting.
+		/// TO-DO: Quitar el botClient de aquí, ahora está aqui porque el warreo es warreo.
+		/// </summary>
+		static async Task SendImage(ITelegramBotClient botClient, long chatId, string imageName, string imageCaption = "")
+        {
+			using (var stream = System.IO.File.OpenRead(assetsPath + imageName))
+			{
+				InputOnlineFile inputOnlineFile = new InputOnlineFile(stream);
+				//ImageCaption supports emojis! 👏👏
+				await botClient.SendPhotoAsync(chatId, inputOnlineFile, imageCaption, ParseMode.Html);
+				stream.Close();
+			}
+		}
+
+		/// <summary>
+		/// Send a collection of images to a user.
+		/// Currently doesn't support captions on individual images because they're not shown as text on chat as
+		/// normal images do. You have to open the individual images of the collection to see the text. Not worth
+		/// the effort.
+		/// TO-DO: Quitar el botClient de aquí, ahora está aqui porque el warreo es warreo.
+		/// </summary>
+		static async Task SendImageCollection(ITelegramBotClient botClient, long chatId, string[] imagesNames)
+		{
+			List<FileStream> streams = new List<FileStream>();
+			List<InputMediaPhoto> media = new List<InputMediaPhoto>();
+			foreach (string imageName in imagesNames)
+            {
+				FileStream stream = System.IO.File.OpenRead(assetsPath + imageName);
+				streams.Add(stream);
+				media.Add(new InputMediaPhoto(new InputMedia(stream, imageName)));
+			}
+
+			await botClient.SendMediaGroupAsync(chatId, media);
+
+			foreach (var stream in streams) stream.Close();
+		}
+
+		/// <summary>
+		/// Send an audio to a user. ImageCaption supports HTML formatting.
+		/// TO-DO: Quitar el botClient de aquí, ahora está aqui porque el warreo es warreo.
+		/// </summary>
+		static async Task SendAudio(ITelegramBotClient botClient, long chatId, string audioName, string audioCaption)
+        {
+			using (var stream = System.IO.File.OpenRead(assetsPath + audioName))
+			{
+				InputOnlineFile inputOnlineFile = new InputOnlineFile(stream);
+				await botClient.SendAudioAsync(chatId, inputOnlineFile, audioCaption, ParseMode.Html);
+				stream.Close();
+			}
 		}
 
 		static Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
