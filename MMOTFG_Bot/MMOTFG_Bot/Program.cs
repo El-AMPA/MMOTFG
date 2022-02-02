@@ -15,7 +15,7 @@ namespace MMOTFG_Bot
 
 		static void Main(string[] args)
 		{
-			IInteraccionable sal = new Saludador();
+			Saludador sal = new Saludador();
 
 			string[] palabras = { "a", "b" };
 

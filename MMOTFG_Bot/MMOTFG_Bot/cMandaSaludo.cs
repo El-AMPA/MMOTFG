@@ -5,19 +5,20 @@ namespace MMOTFG_Bot
     class cMandaSaludo : ICommand
     {
         public string[] palabras_clave { get; set; }
-        public IInteraccionable interAcc { get; set; }
 
         string saludo;
 
+        Saludador saludador;
+
         public void ejecutar()
         {
-            interAcc.sendToUser(0, saludo);
+            saludador.sendToUser(0, saludo);
         }
 
-        public cMandaSaludo(string[] palabras_clave_, IInteraccionable inter_, string saludo_)
+        public cMandaSaludo(string[] palabras_clave_, Saludador saludador_, string saludo_)
         {
             palabras_clave = palabras_clave_;
-            interAcc = inter_;
+            saludador = saludador_;
             saludo = saludo_;
         }
 
