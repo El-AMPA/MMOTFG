@@ -8,7 +8,8 @@ namespace MMOTFG_Bot
     {
         public Potion()
         {
-            maxStackQuantity = 20;
+            name = "Potion";
+            maxStackQuantity = 5;
         }
     }
 }

@@ -8,8 +8,9 @@ namespace MMOTFG_Bot
     class InventorySystem
     {
         private const int MAX_SLOTS_INVENTORY = 10;
-        public readonly List<InventoryRecord> InventoryRecords = new List<InventoryRecord>();
-        public void AddItem(ObtainableItem item, int quantityToAdd)
+        private List<InventoryRecord> InventoryRecords = new List<InventoryRecord>();
+
+        public async void AddItem(long chatId, ObtainableItem item, int quantityToAdd)
         {
             while (quantityToAdd > 0)
             {
@@ -44,12 +45,14 @@ namespace MMOTFG_Bot
                     else
                     {
                         //There is no available space in the inventory
+                        await TelegramCommunicator.SendText(chatId, "Item " + item.name + " couldn't be added because inventory is full.");
                     }
                 }
             }
+            if (quantityToAdd == 0) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was added to the inventory.");
         }
 
-        public void ConsumeItems(ObtainableItem item, int quantityToConsume)
+        public async void ConsumeItems(long chatId, ObtainableItem item, int quantityToConsume)
         {
             while(quantityToConsume > 0 && InventoryRecords.Exists(x => (x.InventoryItem.iD == item.iD))) {
                 // If an object of this item type already exists in the inventory, and has room to stack more items,
@@ -72,9 +75,10 @@ namespace MMOTFG_Bot
             {
                 //Couldn't consume every item.
             }
+            await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was consumed.");
         }
 
-        public int GetNumberOfItemsInInventory(ObtainableItem item)
+        public int GetNumberOfItemsInInventory(long chatId, ObtainableItem item)
         {
             int numItems = 0;
             List<InventoryRecord> auxRecord = InventoryRecords.FindAll(x => x.InventoryItem == item);
@@ -84,6 +88,17 @@ namespace MMOTFG_Bot
             }
 
             return numItems;
+        }
+
+        public async void ShowInventory(long chatId)
+        {
+            string message = "";
+            foreach (InventoryRecord i in InventoryRecords)
+            {
+                message += i.InventoryItem.name + " x" + i.Quantity + "\n";
+            }
+
+            if (message != "") await TelegramCommunicator.SendText(chatId, message);
         }
 
         public class InventoryRecord

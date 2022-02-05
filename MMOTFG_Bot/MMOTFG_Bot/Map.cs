@@ -45,35 +45,6 @@ namespace MMOTFG_Bot
 		}
 	}
 
-	static class Inventory //map con objetos-número de objetos
-	{
-		static int[] items;
-
-		public static void Init()
-		{
-			items = new int[(int)ItemID.NUM_ITEMS];
-			ItemInfo.Init();
-		}
-
-		public static void addItem(ItemID item, int num = 1)
-		{
-			items[(int)item] += num;
-		}
-
-		public static bool useItem(ItemID id)
-		{
-			if (items[(int)id] > 0)
-			{
-				items[(int)id] -= 1;
-				ItemInfo.consume(id);
-				return true;
-			}
-			else return false;
-
-			if (items[(int)id] < 0) items[(int)id] = 0;
-		}
-	}
-
 	class MapNode
 	{
 		public string name;
@@ -256,7 +227,7 @@ new MapNodeMove("esto es un castillo")
 		public override void execute()
 		{
 			Console.WriteLine("Has obtenido el item " + ItemInfo.getItemName(item) + ".");
-			Inventory.addItem(item);
+			//Inventory.addItem(item);
 		}
 	}
 
@@ -272,7 +243,7 @@ new MapNodeMove("esto es un castillo")
 		{
 			
 			Console.WriteLine("Has usado el item " + ItemInfo.getItemName(item) + ".");
-			Inventory.useItem(item);
+			//Inventory.useItem(item);
 		}
 	}
 }

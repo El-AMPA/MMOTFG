@@ -16,42 +16,38 @@ namespace MMOTFG_Bot
 	class Program
 	{
 		static Map mapa = new Map();
-		static string assetsPath = "./../../../assets/"; //TO-DO: Yikes dawg
-
+		static InventorySystem inventorySystem = new InventorySystem(); //TO-DO: Esto tendrá que ser estático.
 		static async Task Main(string[] args)
 		{
-			
-			Inventory.Init();
+			//Event arriveEvent = new Event();
+			//arriveEvent.addAction(new DescriptorAction("Nunca te gustó mucho la entrada a la facultad, pero depsués de tantos años ya te has acostumbrado."));
+			//MapNode entranceNode = new MapNode();
+			//entranceNode.onArriveEvent = arriveEvent;
+			//mapa.addNode("entrance", entranceNode);
 
-			Event arriveEvent = new Event();
-			arriveEvent.addAction(new DescriptorAction("Nunca te gustó mucho la entrada a la facultad, pero depsués de tantos años ya te has acostumbrado."));
-			MapNode entranceNode = new MapNode();
-			entranceNode.onArriveEvent = arriveEvent;
-			mapa.addNode("entrance", entranceNode);
+			//arriveEvent = new Event();
+			//arriveEvent.addAction(new DescriptorAction("Al aula cinco ya no le queda ni un ápice del brillo que tenía en 2018. Te sientes triste solo de mirar a través de la puerta."));
+			//MapNode aulaNode = new MapNode();
+			//aulaNode.onArriveEvent = arriveEvent;
+			//Event exitEvent = new Event();
+			//exitEvent.addAction(new DescriptorAction("Al salir del aula cinco sientes al fantasma de Fede acechándote. Yikes dawg"));
+			//aulaNode.onExitEvent = exitEvent;
+			//mapa.addNode("aula5", aulaNode);
+			//Event lookEvent = new Event();
+			//lookEvent.addAction(new DescriptorAction("Encima de la mesa del profesor, observas que hay un pen-drive abandonado. Decides cogerlo"));
 
-			arriveEvent = new Event();
-			arriveEvent.addAction(new DescriptorAction("Al aula cinco ya no le queda ni un ápice del brillo que tenía en 2018. Te sientes triste solo de mirar a través de la puerta."));
-			MapNode aulaNode = new MapNode();
-			aulaNode.onArriveEvent = arriveEvent;
-			Event exitEvent = new Event();
-			exitEvent.addAction(new DescriptorAction("Al salir del aula cinco sientes al fantasma de Fede acechándote. Yikes dawg"));
-			aulaNode.onExitEvent = exitEvent;
-			mapa.addNode("aula5", aulaNode);
-			Event lookEvent = new Event();
-			lookEvent.addAction(new DescriptorAction("Encima de la mesa del profesor, observas que hay un pen-drive abandonado. Decides cogerlo"));
+			//ItemInfo.setItemName(ItemID.PenDrive, "pendrive misterioso");
+			//Event onUseEvent = new Event();
+			//onUseEvent.addAction(new DescriptorAction("El pendrive contiene el examen de consolas con la solución de la última práctica. ¡Menudo éxito!"));
+			//ItemInfo.addConsumeEvent(ItemID.PenDrive, onUseEvent);
 
-			ItemInfo.setItemName(ItemID.PenDrive, "pendrive misterioso");
-			Event onUseEvent = new Event();
-			onUseEvent.addAction(new DescriptorAction("El pendrive contiene el examen de consolas con la solución de la última práctica. ¡Menudo éxito!"));
-			ItemInfo.addConsumeEvent(ItemID.PenDrive, onUseEvent);
+			//lookEvent.addAction(new GiveItemAction(ItemID.PenDrive));
+			//aulaNode.onLookEvent = lookEvent;
 
-			lookEvent.addAction(new GiveItemAction(ItemID.PenDrive));
-			aulaNode.onLookEvent = lookEvent;
+			//mapa.connectNode("entrance", "aula5", Direction.North);
+			//mapa.connectNode("aula5", "entrance", Direction.South);
 
-			mapa.connectNode("entrance", "aula5", Direction.North);
-			mapa.connectNode("aula5", "entrance", Direction.South);
-
-			mapa.setPosition("entrance");
+			//mapa.setPosition("entrance");
 
 			// char c;
 			// while (true)
@@ -85,7 +81,7 @@ namespace MMOTFG_Bot
 
 			var botClient = new TelegramBotClient("1985137093:AAFk7-_Zyc2lSijP5diw2ghWPvmGVHKbB4E");
 			var me = await botClient.GetMeAsync();
-
+			TelegramCommunicator.Init(botClient);
 			Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);
 
 			using var cts = new CancellationTokenSource();
@@ -112,7 +108,7 @@ namespace MMOTFG_Bot
 				UpdateType.Message => BotOnMessageReceived(botClient, update.Message),
 				//UpdateType.EditedMessage => BotOnMessageReceived(botClient, update.EditedMessage),
 				//UpdateType.CallbackQuery => BotOnCallbackQueryReceived(botClient, update.CallbackQuery),
-				//UpdateType.InlineQuery => BotOnInlineQueryReceived(botClient, update.InlineQuery),
+				UpdateType.InlineQuery => BotOnInlineQueryReceived(botClient, update.InlineQuery),
 				//UpdateType.ChosenInlineResult => BotOnChosenInlineResultReceived(botClient, update.ChosenInlineResult),
 				//_ => UnknownUpdateHandlerAsync(botClient, update)
 			};
@@ -155,77 +151,21 @@ namespace MMOTFG_Bot
 
 			Console.WriteLine("Received message: " + message.Text + " from " + senderName);
 
-			await SendImage(botClient, chatId, "Dog1.png", "<b>I shall smite thee heathen🐶</b>");
-			await SendImageCollection(botClient, chatId, new[] { "Dog1.png", "Dog2.png" });
-			await SendAudio(botClient, chatId, "DoggoMusic.mp3", "Why do I hear boss music?");
-
 			if(message.Type == MessageType.Text) //Si le mandas una imagen explota ahora mismo
             {
 				string[] subStrings = message.Text.ToLower().Split(' ');
 
 				switch (subStrings[0])
 				{
-					case ("/move"):
-						if (subStrings.Length == 2)
-						{
-							mapa.navigate(botClient, chatId, subStrings[1]);
-						}
-						break;
+					case ("/add"):
+						Console.WriteLine("Adding item");
+						Potion potion = new Potion();
+						inventorySystem.AddItem(chatId, potion, 3);
+					break;
+					case ("/show"):
+						if (subStrings[1] == "inventory") inventorySystem.ShowInventory(chatId);
+					break;
 				}
-			}
-
-			//await botClient.SendTextMessageAsync(chatId: chatId, text: DumbifyText(message.Text));
-		}
-
-		/// <summary>
-		/// Send a single image to a user. ImageCaption supports HTML formatting.
-		/// TO-DO: Quitar el botClient de aquí, ahora está aqui porque el warreo es warreo.
-		/// </summary>
-		static async Task SendImage(ITelegramBotClient botClient, long chatId, string imageName, string imageCaption = "")
-        {
-			using (var stream = System.IO.File.OpenRead(assetsPath + imageName))
-			{
-				InputOnlineFile inputOnlineFile = new InputOnlineFile(stream);
-				//ImageCaption supports emojis! 👏👏
-				await botClient.SendPhotoAsync(chatId, inputOnlineFile, imageCaption, ParseMode.Html);
-				stream.Close();
-			}
-		}
-
-		/// <summary>
-		/// Send a collection of images to a user.
-		/// Currently doesn't support captions on individual images because they're not shown as text on chat as
-		/// normal images do. You have to open the individual images of the collection to see the text. Not worth
-		/// the effort.
-		/// TO-DO: Quitar el botClient de aquí, ahora está aqui porque el warreo es warreo.
-		/// </summary>
-		static async Task SendImageCollection(ITelegramBotClient botClient, long chatId, string[] imagesNames)
-		{
-			List<FileStream> streams = new List<FileStream>();
-			List<InputMediaPhoto> media = new List<InputMediaPhoto>();
-			foreach (string imageName in imagesNames)
-            {
-				FileStream stream = System.IO.File.OpenRead(assetsPath + imageName);
-				streams.Add(stream);
-				media.Add(new InputMediaPhoto(new InputMedia(stream, imageName)));
-			}
-
-			await botClient.SendMediaGroupAsync(chatId, media);
-
-			foreach (var stream in streams) stream.Close();
-		}
-
-		/// <summary>
-		/// Send an audio to a user. ImageCaption supports HTML formatting.
-		/// TO-DO: Quitar el botClient de aquí, ahora está aqui porque el warreo es warreo.
-		/// </summary>
-		static async Task SendAudio(ITelegramBotClient botClient, long chatId, string audioName, string audioCaption)
-        {
-			using (var stream = System.IO.File.OpenRead(assetsPath + audioName))
-			{
-				InputOnlineFile inputOnlineFile = new InputOnlineFile(stream);
-				await botClient.SendAudioAsync(chatId, inputOnlineFile, audioCaption, ParseMode.Html);
-				stream.Close();
 			}
 		}
 
