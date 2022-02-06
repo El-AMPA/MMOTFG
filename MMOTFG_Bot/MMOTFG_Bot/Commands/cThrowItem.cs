@@ -15,7 +15,12 @@ namespace MMOTFG_Bot.Commands
 
         internal override void Execute(string command, long chatId, string[] args = null)
         {
-            InventorySystem.ThrowAwayItem(chatId, new Potion(), 1);
+            if(args.Length == 1) InventorySystem.ThrowAwayItem(chatId, new Potion(), 1);
+            else
+            {
+                if (args[1] == "all") InventorySystem.ThrowAwayItem(chatId, new Potion(), -1);
+                else InventorySystem.ThrowAwayItem(chatId, new Potion(), int.Parse(args[1]));
+            }
         }
 
         internal override bool IsFormattedCorrectly(string[] args)
@@ -28,7 +33,7 @@ namespace MMOTFG_Bot.Commands
             if (args[1] == "all") return true;
 
             int numberToUse;
-            if (!Int32.TryParse(args[1], out numberToUse)) return false;
+            if (!int.TryParse(args[1], out numberToUse)) return false;
             if (numberToUse <= 0) return false;
 
             return true;

@@ -12,7 +12,8 @@ namespace MMOTFG_Bot
 
         public static async void AddItem(long chatId, ObtainableItem item, int quantityToAdd)
         {
-            while (quantityToAdd > 0)
+            int quantityToAddAux = quantityToAdd;
+            while (quantityToAddAux > 0)
             {
                 // If an object of this item type already exists in the inventory, and has room to stack more items,
                 // then add as many as we can to that stack.
@@ -24,13 +25,13 @@ namespace MMOTFG_Bot
                     int maximumQuantityYouCanAddToThisStack = (item.maxStackQuantity - inventoryRecord.Quantity);
 
                     // Add to the stack (either the full quanity, or the amount that would make it reach the stack maximum)
-                    int quantityToAddToStack = Math.Min(quantityToAdd, maximumQuantityYouCanAddToThisStack);
+                    int quantityToAddToStack = Math.Min(quantityToAddAux, maximumQuantityYouCanAddToThisStack);
 
                     inventoryRecord.AddToQuantity(quantityToAddToStack);
 
                     // Decrease the quantityToAdd by the amount we added to the stack.
                     // If we added the total quantityToAdd to the stack, then this value will be 0, and we'll exit the 'while' loop.
-                    quantityToAdd -= quantityToAddToStack;
+                    quantityToAddAux -= quantityToAddToStack;
                 }
                 else
                 {
@@ -46,21 +47,36 @@ namespace MMOTFG_Bot
                     {
                         //There is no available space in the inventory
                         await TelegramCommunicator.SendText(chatId, "Item " + item.name + " couldn't be added because inventory is full.");
+                        break;
                     }
                 }
             }
             if (quantityToAdd == 0) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was added to the inventory.");
+            else await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was added " + (quantityToAdd - quantityToAddAux) + " times");
         }
 
         public static async void ConsumeItems(long chatId, ObtainableItem item, int quantityToConsume)
         {
-            while(quantityToConsume > 0 && InventoryRecords.Exists(x => (x.InventoryItem.iD == item.iD))) {
+            //If the item isn't contained in the inventory, there is no point in continuing.
+            if (!InventoryRecords.Exists(x => x.InventoryItem.iD == item.iD))
+            {
+                await TelegramCommunicator.SendText(chatId, "Item " + item.name + " couldn't be consumed as it was not found in your inventory");
+                return;
+            }
+
+            int quantityToConsumeAux = quantityToConsume;
+            if (quantityToConsumeAux == -1)
+            {
+                quantityToConsume = GetNumberOfItemsInInventory(chatId, item); //-1 = Every single item of that type
+                quantityToConsumeAux = quantityToConsume;
+            }
+            while (quantityToConsumeAux > 0 && InventoryRecords.Exists(x => (x.InventoryItem.iD == item.iD))) {
                 // If an object of this item type already exists in the inventory, and has room to stack more items,
                 // then add as many as we can to that stack.
                 InventoryRecord inventoryRecord = InventoryRecords.First(x => (x.InventoryItem.iD == item.iD));
 
                 // Add to the stack (either the full quanity, or the amount that would make it reach the stack maximum)
-                int quantityToConsumeToStack = Math.Min(quantityToConsume, inventoryRecord.Quantity);
+                int quantityToConsumeToStack = Math.Min(quantityToConsumeAux, inventoryRecord.Quantity);
 
                 for (int k = 0; k < quantityToConsumeToStack; k++)
                 {
@@ -73,18 +89,32 @@ namespace MMOTFG_Bot
 
                 // Decrease the quantityToConsume by the amount we added to the stack.
                 // If we added the total quantityToConsume to the stack, then this value will be 0, and we'll exit the 'while' loop.
-                quantityToConsume -= quantityToConsumeToStack;
+                quantityToConsumeAux -= quantityToConsumeToStack;
             }
-            if(quantityToConsume > 0)
+            if(quantityToConsumeAux > 0)
             {
                 //Couldn't consume every item.
             }
-            await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was consumed.");
+            if (quantityToConsume == 1) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was consumed.");
+            else await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was consumed " + (quantityToConsume - quantityToConsumeAux) + " times");
         }
 
         public static async void ThrowAwayItem(long chatId, ObtainableItem item, int quantityToThrowAway)
         {
+            //If the item isn't contained in the inventory, there is no point in continuing.
+            if (!InventoryRecords.Exists(x => x.InventoryItem.iD == item.iD))
+            {
+                await TelegramCommunicator.SendText(chatId, "Item " + item.name + " couldn't be thrown away as it was not found in your inventory");
+                return;
+            }
+
             int quantityToThrowAwayAux = quantityToThrowAway;
+            if (quantityToThrowAwayAux == -1)
+            {
+                quantityToThrowAway = GetNumberOfItemsInInventory(chatId, item); //-1 = Every single item of that type
+                quantityToThrowAwayAux = quantityToThrowAway;
+            }
+
             while (quantityToThrowAwayAux > 0 && InventoryRecords.Exists(x => (x.InventoryItem.iD == item.iD)))
             {
                 // If an object of this item type already exists in the inventory, and has room to stack more items,
@@ -114,7 +144,7 @@ namespace MMOTFG_Bot
         public static int GetNumberOfItemsInInventory(long chatId, ObtainableItem item)
         {
             int numItems = 0;
-            List<InventoryRecord> auxRecord = InventoryRecords.FindAll(x => x.InventoryItem == item);
+            List<InventoryRecord> auxRecord = InventoryRecords.FindAll(x => x.InventoryItem.iD == item.iD); //TO-DO: Cuando se haga un refactor de los items, comprar por ID's, no por nombres
             foreach (InventoryRecord i in auxRecord)
             {
                 numItems += i.Quantity;
@@ -125,7 +155,7 @@ namespace MMOTFG_Bot
 
         public static async void ShowInventory(long chatId)
         {
-            string message = "";
+            string message = "User inventory:\n";
             foreach (InventoryRecord i in InventoryRecords)
             {
                 message += i.InventoryItem.name + " x" + i.Quantity + "\n";

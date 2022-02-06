@@ -9,7 +9,10 @@ namespace MMOTFG_Bot.Commands
         public string[] palabras_clave =
         {
             "/consume",
-            "/use"
+            "/use",
+            "/eat",
+            "/equip",
+            "/drink"
         };
 
         internal override void Execute(string command, long chatId, string[] args = null)
@@ -18,7 +21,7 @@ namespace MMOTFG_Bot.Commands
             else
             {
                 if(args[1] == "all") InventorySystem.ConsumeItems(chatId, new Potion(), -1);
-                else InventorySystem.ConsumeItems(chatId, new Potion(), Int32.Parse(args[1]));
+                else InventorySystem.ConsumeItems(chatId, new Potion(), int.Parse(args[1]));
             }
         }
 
@@ -32,7 +35,7 @@ namespace MMOTFG_Bot.Commands
             if (args[1] == "all") return true;
 
             int numberToUse;
-            if (!Int32.TryParse(args[1], out numberToUse)) return false;
+            if (!int.TryParse(args[1], out numberToUse)) return false;
             if (numberToUse <= 0) return false;
 
             return true;
