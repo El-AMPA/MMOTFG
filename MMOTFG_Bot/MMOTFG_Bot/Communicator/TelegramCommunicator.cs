@@ -89,7 +89,7 @@ namespace MMOTFG_Bot
 				keyboard[i] = new KeyboardButton[] { new KeyboardButton(buttonNames[i]) };
             }
 			rkm.Keyboard = keyboard;
-			await botClient.SendTextMessageAsync(chatId, "Text", ParseMode.Html, null, false, false, 0, false, rkm);
+			await botClient.SendTextMessageAsync(chatId, "Text", replyMarkup: rkm);
 		}
 	}
 }

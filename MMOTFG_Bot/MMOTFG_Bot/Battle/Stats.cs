@@ -4,10 +4,10 @@ using System.Text;
 
 namespace MMOTFG_Bot
 {
+    public enum StatNames { HP, ATK };
+
     class Stats
     {
-        public enum StatNames {HP, ATK};
 
-        public int[] values;
     }
 }

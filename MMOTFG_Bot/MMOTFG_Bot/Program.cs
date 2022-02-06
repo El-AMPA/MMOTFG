@@ -17,6 +17,8 @@ namespace MMOTFG_Bot
 	{
 		static Map mapa = new Map();
 		static InventorySystem inventorySystem = new InventorySystem(); //TO-DO: Esto tendrá que ser estático.
+		static Battle battle = null;
+
 		static async Task Main(string[] args)
 		{
 			Saludador sal = new Saludador();
@@ -164,19 +166,25 @@ namespace MMOTFG_Bot
 
 				switch (subStrings[0])
 				{
-					case ("/add"):
+					case "/add":
 						Console.WriteLine("Adding item");
 						Potion potion = new Potion();
 						inventorySystem.AddItem(chatId, potion, 3);
 					break;
-					case ("/show"):
+					case "/show":
 						if (subStrings[1] == "inventory") inventorySystem.ShowInventory(chatId);
 					break;
 					case "/fight":
 						Player player = new Player();
 						Enemy enemy = new Enemy();
-						Battle battle = new Battle(player, enemy);
-
+						battle = new Battle(player, enemy);
+						battle.setPlayerOptions(chatId);
+					break;
+					default:
+						if (battle != null)
+                        {
+							battle.playerAttack(chatId, subStrings[0]);
+						}							
 					break;
 				}
 			}
