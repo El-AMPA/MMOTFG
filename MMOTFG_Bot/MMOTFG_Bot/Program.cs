@@ -165,6 +165,12 @@ namespace MMOTFG_Bot
 					case ("/show"):
 						if (subStrings[1] == "inventory") inventorySystem.ShowInventory(chatId);
 					break;
+					case "/fight":
+						Player player = new Player();
+						Enemy enemy = new Enemy();
+						Battle battle = new Battle(player, enemy);
+
+					break;
 				}
 			}
 		}

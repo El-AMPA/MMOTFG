@@ -8,6 +8,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace MMOTFG_Bot
 {
@@ -78,5 +79,17 @@ namespace MMOTFG_Bot
         {
 			await botClient.SendTextMessageAsync(chatId, text, ParseMode.Html);
         }
+
+		static public async Task SendButtons(long chatId, int buttonNum, string[] buttonNames)
+        {
+			var rkm = new ReplyKeyboardMarkup();
+			var keyboard = new KeyboardButton[buttonNum][];
+			for(int i = 0; i< buttonNum; i++)
+            {
+				keyboard[i] = new KeyboardButton[] { new KeyboardButton(buttonNames[i]) };
+            }
+			rkm.Keyboard = keyboard;
+			await botClient.SendTextMessageAsync(chatId, "Text", ParseMode.Html, null, false, false, 0, false, rkm);
+		}
 	}
 }
