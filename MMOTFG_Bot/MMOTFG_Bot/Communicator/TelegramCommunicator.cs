@@ -14,7 +14,7 @@ namespace MMOTFG_Bot
 {
 	class TelegramCommunicator
     {
-		static private string assetsPath = "./../../../assets/"; //TO-DO: Yikes dawg
+		static private string assetsPath = "./../../../Assets/"; //TO-DO: Yikes dawg
 
 		private static ITelegramBotClient botClient;
 

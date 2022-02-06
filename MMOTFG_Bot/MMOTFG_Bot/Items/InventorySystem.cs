@@ -5,12 +5,12 @@ using System.Text;
 
 namespace MMOTFG_Bot
 {
-    class InventorySystem
+    static class InventorySystem
     {
         private const int MAX_SLOTS_INVENTORY = 10;
-        private List<InventoryRecord> InventoryRecords = new List<InventoryRecord>();
+        private static List<InventoryRecord> InventoryRecords = new List<InventoryRecord>();
 
-        public async void AddItem(long chatId, ObtainableItem item, int quantityToAdd)
+        public static async void AddItem(long chatId, ObtainableItem item, int quantityToAdd)
         {
             while (quantityToAdd > 0)
             {
@@ -52,7 +52,7 @@ namespace MMOTFG_Bot
             if (quantityToAdd == 0) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was added to the inventory.");
         }
 
-        public async void ConsumeItems(long chatId, ObtainableItem item, int quantityToConsume)
+        public static async void ConsumeItems(long chatId, ObtainableItem item, int quantityToConsume)
         {
             while(quantityToConsume > 0 && InventoryRecords.Exists(x => (x.InventoryItem.iD == item.iD))) {
                 // If an object of this item type already exists in the inventory, and has room to stack more items,
@@ -60,16 +60,20 @@ namespace MMOTFG_Bot
                 InventoryRecord inventoryRecord = InventoryRecords.First(x => (x.InventoryItem.iD == item.iD));
 
                 // Add to the stack (either the full quanity, or the amount that would make it reach the stack maximum)
-                int quantityToAddToStack = Math.Min(quantityToConsume, inventoryRecord.Quantity);
+                int quantityToConsumeToStack = Math.Min(quantityToConsume, inventoryRecord.Quantity);
 
-                inventoryRecord.AddToQuantity(-quantityToAddToStack);
+                for (int k = 0; k < quantityToConsumeToStack; k++)
+                {
+                    //TO-DO: Aplicamos el efecto del item en cuestion
+                }
+                inventoryRecord.AddToQuantity(-quantityToConsumeToStack);
 
                 //If the current stack has been deplenished, it's removed from the list
                 if (inventoryRecord.Quantity == 0) InventoryRecords.Remove(inventoryRecord);
 
-                // Decrease the quantityToAdd by the amount we added to the stack.
-                // If we added the total quantityToAdd to the stack, then this value will be 0, and we'll exit the 'while' loop.
-                quantityToConsume -= quantityToAddToStack;
+                // Decrease the quantityToConsume by the amount we added to the stack.
+                // If we added the total quantityToConsume to the stack, then this value will be 0, and we'll exit the 'while' loop.
+                quantityToConsume -= quantityToConsumeToStack;
             }
             if(quantityToConsume > 0)
             {
@@ -78,7 +82,36 @@ namespace MMOTFG_Bot
             await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was consumed.");
         }
 
-        public int GetNumberOfItemsInInventory(long chatId, ObtainableItem item)
+        public static async void ThrowAwayItem(long chatId, ObtainableItem item, int quantityToThrowAway)
+        {
+            int quantityToThrowAwayAux = quantityToThrowAway;
+            while (quantityToThrowAwayAux > 0 && InventoryRecords.Exists(x => (x.InventoryItem.iD == item.iD)))
+            {
+                // If an object of this item type already exists in the inventory, and has room to stack more items,
+                // then add as many as we can to that stack.
+                InventoryRecord inventoryRecord = InventoryRecords.First(x => (x.InventoryItem.iD == item.iD));
+
+                // Add to the stack (either the full quanity, or the amount that would make it reach the stack maximum)
+                int quantityToAddToStack = Math.Min(quantityToThrowAwayAux, inventoryRecord.Quantity);
+
+                inventoryRecord.AddToQuantity(-quantityToAddToStack);
+
+                //If the current stack has been deplenished, it's removed from the list
+                if (inventoryRecord.Quantity == 0) InventoryRecords.Remove(inventoryRecord);
+
+                // Decrease the quantityToThrowAway by the amount we added to the stack.
+                // If we added the total quantityToThrowAway to the stack, then this value will be 0, and we'll exit the 'while' loop.
+                quantityToThrowAwayAux -= quantityToAddToStack;
+            }
+            if (quantityToThrowAwayAux > 0)
+            {
+                //Couldn't consume every item.
+            }
+            if(quantityToThrowAway == 1) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was thrown away.");
+            else await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was thrown away " + (quantityToThrowAway - quantityToThrowAwayAux) + " times");
+        }
+
+        public static int GetNumberOfItemsInInventory(long chatId, ObtainableItem item)
         {
             int numItems = 0;
             List<InventoryRecord> auxRecord = InventoryRecords.FindAll(x => x.InventoryItem == item);
@@ -90,7 +123,7 @@ namespace MMOTFG_Bot
             return numItems;
         }
 
-        public async void ShowInventory(long chatId)
+        public static async void ShowInventory(long chatId)
         {
             string message = "";
             foreach (InventoryRecord i in InventoryRecords)
