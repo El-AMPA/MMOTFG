@@ -19,6 +19,13 @@ namespace MMOTFG_Bot
 		static InventorySystem inventorySystem = new InventorySystem(); //TO-DO: Esto tendrá que ser estático.
 		static async Task Main(string[] args)
 		{
+			Saludador sal = new Saludador();
+
+			string[] palabras = { "a", "b" };
+
+			ICommand cSaludo = new cMandaSaludo(palabras, sal, "hola");
+
+			cSaludo.miraPalabras("a");
 			//Event arriveEvent = new Event();
 			//arriveEvent.addAction(new DescriptorAction("Nunca te gustó mucho la entrada a la facultad, pero depsués de tantos años ya te has acostumbrado."));
 			//MapNode entranceNode = new MapNode();
