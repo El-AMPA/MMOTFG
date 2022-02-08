@@ -1,0 +1,12 @@
+{
+    "commandList" : [
+        {
+            "command": "move",
+            "description": "navigate the map following the specified cardinal direction."
+        },
+        {
+            "command": "use",
+            "description:" : "use the specified item."
+        }
+    ]
+}
