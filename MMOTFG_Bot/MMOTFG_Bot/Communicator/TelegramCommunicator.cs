@@ -25,7 +25,6 @@ namespace MMOTFG_Bot
 
 		/// <summary>
 		/// Send a single image to a user. ImageCaption supports HTML formatting.
-		/// TO-DO: Quitar el botClient de aquí, ahora está aqui porque el warreo es warreo.
 		/// </summary>
 		public static async Task SendImage(long chatId, string imageName, string imageCaption = "")
 		{
@@ -43,7 +42,6 @@ namespace MMOTFG_Bot
 		/// Currently doesn't support captions on individual images because they're not shown as text on chat as
 		/// normal images do. You have to open the individual images of the collection to see the text. Not worth
 		/// the effort.
-		/// TO-DO: Quitar el botClient de aquí, ahora está aqui porque el warreo es warreo.
 		/// </summary>
 		static public async Task SendImageCollection(long chatId, string[] imagesNames)
 		{
@@ -63,7 +61,6 @@ namespace MMOTFG_Bot
 
 		/// <summary>
 		/// Send an audio to a user. ImageCaption supports HTML formatting.
-		/// TO-DO: Quitar el botClient de aquí, ahora está aqui porque el warreo es warreo.
 		/// </summary>
 		static public async Task SendAudio(long chatId, string audioName, string audioCaption)
 		{
