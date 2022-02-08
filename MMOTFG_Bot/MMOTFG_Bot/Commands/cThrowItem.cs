@@ -6,12 +6,14 @@ namespace MMOTFG_Bot.Commands
 {
     class cThrowItem : ICommand
     {
-        public string[] palabras_clave =
+        public override void Init()
         {
-            "/throw",
-            "/delete",
-            "/throw_away"
-        };
+            key_words = new string[] {
+                "/throw",
+                "/delete",
+                "/throw_away"
+            };
+        }
 
         internal override void Execute(string command, long chatId, string[] args = null)
         {
@@ -37,20 +39,6 @@ namespace MMOTFG_Bot.Commands
             if (numberToUse <= 0) return false;
 
             return true;
-        }
-
-        public override bool ContainsKeyWord(string command, long chatId, string[] args = null)
-        {
-            if (!IsFormattedCorrectly(args))
-            {
-                //TelegramCommunicator.SendText(chatId, "Correct format: " + command + " itemName nItemsToUse(Opt)"); TO-DO: Me parece un poco feo que al final todo tenga que ser asíncrono. Repensar esto.
-                return false;
-            }
-            foreach (string p in palabras_clave)
-            {
-                if (command == p) Execute(command, chatId, args);
-            }
-            return false;
         }
     }
 }

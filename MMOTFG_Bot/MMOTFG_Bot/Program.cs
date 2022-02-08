@@ -84,7 +84,11 @@ namespace MMOTFG_Bot
 
 			var botClient = new TelegramBotClient("1985137093:AAFk7-_Zyc2lSijP5diw2ghWPvmGVHKbB4E");
 			var me = await botClient.GetMeAsync();
+
+			//Module initializers
 			TelegramCommunicator.Init(botClient);
+			foreach (ICommand c in commandList) c.Init();
+
 			Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);
 
 			using var cts = new CancellationTokenSource();
