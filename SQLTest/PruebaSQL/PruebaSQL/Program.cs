@@ -17,7 +17,7 @@ namespace PruebaSQL
 
 			string connectionString =
 			"Server=tcp:localhost,1433;Initial Catalog=model;"
-			+ "User ID =SA;Password =contrasena1+"
+			+ "User ID =sa;Password =Contrasena1;"
 			+ "Timeout = 5";
 
 			// Provide the query string with a parameter placeholder.
