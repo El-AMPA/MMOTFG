@@ -11,6 +11,9 @@ namespace MMOTFG_Bot
 
         public int attackNum;
 
+        public string imageName = "manuela.jpg";
+        public string imageCaption = "Manuela ataca!";
+
         public Enemy()
         {
             stats[(int)StatNames.HP] = 50;

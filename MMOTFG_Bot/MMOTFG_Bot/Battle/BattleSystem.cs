@@ -4,26 +4,31 @@ using System.Text;
 
 namespace MMOTFG_Bot
 {
-    class Battle
+    static class BattleSystem
     {
-        Player player;
-        Enemy enemy;
-        Random rnd;
+        static Player player;
+        static Enemy enemy;
+        static Random rnd;
 
-        public Battle(Player p, Enemy e)
+        public static void Init()
         {
-            player = p;
-            enemy = e;
             rnd = new Random();
+            player = new Player();
+        }
+
+        public static async void startBattle(long chatId, Enemy e)
+        {
+            enemy = e;
+            await TelegramCommunicator.SendImage(chatId, e.imageName, e.imageCaption);
             Console.WriteLine("tiroriroriroriro chan chan chan");
         }
-        
-        public async void setPlayerOptions(long chatId)
+
+        public static async void setPlayerOptions(long chatId)
         {
             await TelegramCommunicator.SendButtons(chatId, player.attackNum, player.attackNames.ToArray());
         }
 
-        public async void playerAttack(long chatId, string attackName)
+        public static async void playerAttack(long chatId, string attackName)
         {
             attackName = char.ToUpper(attackName[0]) + attackName.Substring(1);
             int attack = player.attackNames.IndexOf(attackName);
@@ -37,7 +42,7 @@ namespace MMOTFG_Bot
             else enemyAttack(chatId);
         }
 
-        private async void enemyAttack(long chatId)
+        private static async void enemyAttack(long chatId)
         {
             int attack = rnd.Next(0, enemy.attackNum);
             float damage = enemy.stats[(int)StatNames.ATK] * enemy.attacks[attack].power;
