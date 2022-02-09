@@ -13,15 +13,15 @@ namespace MMOTFG_Bot.Items
             iD = Guid.NewGuid();
         }
 
-        private void drinkPotion(long chatId, string[] args)
+        private async void drinkPotion(long chatId, string[] args)
         {
-            TelegramCommunicator.SendText(chatId, "Gained 5MP.");
+            await TelegramCommunicator.SendText(chatId, "Gained 5MP.");
         }
 
-        private void eatPotion(long chatId, string[] args)
+        private async void eatPotion(long chatId, string[] args)
         {
-            TelegramCommunicator.SendText(chatId, "Why would you eat a potion you freak.\n Your MP has been reduced by 2." +
-                ". As if we had an MP system lmao.");
+            await TelegramCommunicator.SendText(chatId, "Why would you eat a potion you freak.\n Your MP has been reduced by 2." +
+                " As if we had an MP system lmao.");
         }
 
         public override void Init()
