@@ -14,8 +14,14 @@ namespace MMOTFG_Bot
 
         public static void Init()
         {
-            obtainableItems.Add("health_potion", new HealthPotion());
-            obtainableItems.Add("mana_potion", new ManaPotion());
+            HealthPotion hPotion = new HealthPotion();
+            hPotion.Init();
+
+            ManaPotion mPotion = new ManaPotion();
+            mPotion.Init();
+
+            obtainableItems.Add(hPotion.name, hPotion);
+            obtainableItems.Add(mPotion.name, mPotion);
         }
 
         private static bool StringToItem(string s, out ObtainableItem item)
@@ -73,7 +79,7 @@ namespace MMOTFG_Bot
             else await TelegramCommunicator.SendText(chatId, "Item " + itemString + " doesn't exist");
         }
 
-        public static async void ConsumeItems(long chatId, string itemString, int quantityToConsume)
+        public static async void ConsumeItems(long chatId, string itemString, int quantityToConsume, string command, string[] args = null)
         {
             ObtainableItem item;
             if (StringToItem(itemString, out item))
@@ -102,7 +108,7 @@ namespace MMOTFG_Bot
 
                     for (int k = 0; k < quantityToConsumeToStack; k++)
                     {
-                        //TO-DO: Aplicamos el efecto del item en cuestion
+                        item.ProcessCommand(command, chatId, args);
                     }
                     inventoryRecord.AddToQuantity(-quantityToConsumeToStack);
 
