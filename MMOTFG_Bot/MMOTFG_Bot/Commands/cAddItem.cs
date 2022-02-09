@@ -15,8 +15,8 @@ namespace MMOTFG_Bot.Commands
 
         internal override void Execute(string command, long chatId, string[] args = null)
         {
-            if(args.Length == 1) InventorySystem.AddItem(chatId, new Potion(), 1);
-            else InventorySystem.AddItem(chatId, new Potion(), int.Parse(args[1]));
+            if(args.Length == 1) InventorySystem.AddItem(chatId, args[0], 1);
+            else InventorySystem.AddItem(chatId, args[0], int.Parse(args[1]));
         }
 
         internal override bool IsFormattedCorrectly(string[] args)

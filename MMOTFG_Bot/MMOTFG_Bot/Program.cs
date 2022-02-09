@@ -87,6 +87,7 @@ namespace MMOTFG_Bot
 
 			//Module initializers
 			TelegramCommunicator.Init(botClient);
+			InventorySystem.Init();
 			foreach (ICommand c in commandList) c.Init();
 
 			Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);
