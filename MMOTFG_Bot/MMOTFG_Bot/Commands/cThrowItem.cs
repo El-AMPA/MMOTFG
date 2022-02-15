@@ -17,11 +17,11 @@ namespace MMOTFG_Bot.Commands
 
         internal override void Execute(string command, long chatId, string[] args = null)
         {
-            if(args.Length == 1) InventorySystem.ThrowAwayItem(chatId, new Potion(), 1);
+            if(args.Length == 1) InventorySystem.ThrowAwayItem(chatId, args[0], 1);
             else
             {
-                if (args[1] == "all") InventorySystem.ThrowAwayItem(chatId, new Potion(), -1);
-                else InventorySystem.ThrowAwayItem(chatId, new Potion(), int.Parse(args[1]));
+                if (args[1] == "all") InventorySystem.ThrowAwayItem(chatId, args[0], -1);
+                else InventorySystem.ThrowAwayItem(chatId, args[0], int.Parse(args[1]));
             }
         }
 

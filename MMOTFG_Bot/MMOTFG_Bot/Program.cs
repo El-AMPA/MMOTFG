@@ -88,6 +88,7 @@ namespace MMOTFG_Bot
 			//Module initializers
 			BattleSystem.Init();
 			TelegramCommunicator.Init(botClient);
+			InventorySystem.Init();
 			foreach (ICommand c in commandList) c.Init();
 
 			//set attack keywords
