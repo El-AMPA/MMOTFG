@@ -15,7 +15,7 @@ namespace MMOTFG_Bot
         public string imageCaption = "Manuela ataca!";
 
         public float droppedMoney = 100;
-        public ObtainableItem droppedItem = new Potion();
+        public ObtainableItem droppedItem = new Items.HealthPotion();
         public int droppedItemAmount = 2;
 
         public Enemy()
