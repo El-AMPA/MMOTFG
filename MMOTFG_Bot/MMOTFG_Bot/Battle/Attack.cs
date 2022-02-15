@@ -8,11 +8,13 @@ namespace MMOTFG_Bot
     {
         public string name;
         public float power;
+        public float mpCost;
 
-        public Attack(string n, float p)
+        public Attack(string n, float p, float m)
         {
             name = n;
             power = p;
+            mpCost = m;
         }
     }
 }
