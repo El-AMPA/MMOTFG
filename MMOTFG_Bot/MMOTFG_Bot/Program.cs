@@ -18,7 +18,8 @@ namespace MMOTFG_Bot
 		static Map mapa = new Map();
 		static Battle battle = null;
 
-		static ICommand[] commandList = { new cUseItem(), new cAddItem(), new cThrowItem(), new cShowInventory()};
+		//TO-DO: Esto es un poco bastante feo.
+		static ICommand[] commandList = { new cUseItem(), new cAddItem(), new cThrowItem(), new cShowInventory(), new cEquipItem()};
 
 		static async Task Main(string[] args)
 		{

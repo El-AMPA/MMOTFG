@@ -11,20 +11,30 @@ namespace MMOTFG_Bot
         private const int MAX_SLOTS_INVENTORY = 10;
         private static List<InventoryRecord> InventoryRecords = new List<InventoryRecord>();
         private static Dictionary<string, ObtainableItem> obtainableItems = new Dictionary<string, ObtainableItem>();
+        private static EquipableItem[] equipment;
 
         public static void Init()
         {
+            //TO-DO: ESTO ES FEO DE COJONES ME ESTOY MURIENDO DE VERLO
+            equipment = new EquipableItem[Enum.GetNames(typeof(EQUIPMENT_SLOT)).Length];
+
             HealthPotion hPotion = new HealthPotion();
             hPotion.Init();
 
             ManaPotion mPotion = new ManaPotion();
             mPotion.Init();
 
+            ThunderfuryBleesedBladeOfTheWindseeker tFury= new ThunderfuryBleesedBladeOfTheWindseeker();
+            tFury.Init();
+
             obtainableItems.Add(hPotion.name, hPotion);
             obtainableItems.Add(mPotion.name, mPotion);
+            obtainableItems.Add(tFury.name, tFury);
         }
 
-        private static bool StringToItem(string s, out ObtainableItem item)
+        //TO-DO: Repensar si es mejor dejarlo como está o que al sistema de inventario le llegue la clase Objeto ya directamente. Es bastante inflexible solo poder recibir un string y
+        //traducirlo aquí
+        public static bool StringToItem(string s, out ObtainableItem item)
         {
             return obtainableItems.TryGetValue(s, out item);
         }
@@ -197,6 +207,24 @@ namespace MMOTFG_Bot
             }
 
             if (message != "") await TelegramCommunicator.SendText(chatId, message);
+        }
+
+        public static async void UnequipGear(long chatId, EQUIPMENT_SLOT slot)
+        {
+            if(equipment[(int)slot] != null)
+            {
+                await TelegramCommunicator.SendText(chatId, "You've unequipped " + equipment[(int)slot].name + " from your " + slot + " gear slot.");
+                equipment[(int)slot] = null;
+                //TO-DO: Aplicar los efectos de desequipar un objeto.
+            }
+        }
+
+        public static async void EquipGear(long chatId, EquipableItem item)
+        {
+            if (equipment[(int)item.gearSlot] != null) UnequipGear(chatId, item.gearSlot);
+            await TelegramCommunicator.SendText(chatId, "You've equipped " + item.name + " into your " + item.gearSlot + " gear slot.");
+            equipment[(int)item.gearSlot] = item;
+            //TO-DO: Aplicar los efectos de equipar un objeto.
         }
 
         public class InventoryRecord

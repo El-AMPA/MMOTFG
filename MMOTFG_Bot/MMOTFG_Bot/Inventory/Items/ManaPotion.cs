@@ -26,24 +26,8 @@ namespace MMOTFG_Bot.Items
 
         public override void Init()
         {
-            key_words = new KeyValuePair<string, Action<long, string[]>>[]
-            {
-                new KeyValuePair<string, Action<long, string[]>>("/drink", drinkPotion),
-                new KeyValuePair<string, Action<long, string[]>>("/eat", eatPotion)
-            };
-        }
-
-        public override bool ProcessCommand(string command, long chatId, string[] args = null)
-        {
-            foreach (KeyValuePair<string, Action<long, string[]>> a in key_words)
-            {
-                if (a.Key == command)
-                {
-                    a.Value(chatId, args);
-                    return true;
-                }
-            }
-            return false;
+            key_words.Add(new KeyValuePair<string, Action<long, string[]>>("/drink", drinkPotion));
+            key_words.Add(new KeyValuePair<string, Action<long, string[]>>("/eat", eatPotion));
         }
     }
 }
