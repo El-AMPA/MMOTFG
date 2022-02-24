@@ -82,7 +82,7 @@ namespace MMOTFG_Bot
 			//     }
 			// }
 
-			var botClient = new TelegramBotClient("1985137093:AAFk7-_Zyc2lSijP5diw2ghWPvmGVHKbB4E");
+			var botClient = new TelegramBotClient("${{secret.MMOTFG_TOKEN}}");
 			var me = await botClient.GetMeAsync();
 
 			//Module initializers
