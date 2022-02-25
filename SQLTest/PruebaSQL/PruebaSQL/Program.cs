@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Threading;
 
 namespace PruebaSQL
 {
@@ -16,15 +17,17 @@ namespace PruebaSQL
 			//https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlconnection.connectionstring?view=dotnet-plat-ext-6.0
 
 			string connectionString =
-			"Server=tcp:localhost,1433;Initial Catalog=model;"
-			+ "User ID =sa;Password =Contrasena1;"
-			+ "Timeout = 5";
+			"Server=tcp:sqldatabase,1433;Initial Catalog=model;"
+			+ "User ID =sa;Password = Esekuele6595;"
+			+ "Timeout = 10";
 
 			// Provide the query string with a parameter placeholder.
+			//string queryString =
+			//	"SELECT ProductID, UnitPrice, ProductName from dbo.products "
+			//		+ "WHERE UnitPrice > @pricePoint "
+			//		+ "ORDER BY UnitPrice DESC;";
 			string queryString =
-				"SELECT ProductID, UnitPrice, ProductName from dbo.products "
-					+ "WHERE UnitPrice > @pricePoint "
-					+ "ORDER BY UnitPrice DESC;";
+				"CREATE TABLE ola (@pricepoint int);";
 
 			// Specify the parameter value.
 			int paramValue = 5;

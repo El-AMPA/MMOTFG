@@ -1,0 +1,15 @@
+services:
+
+  sqlapp:
+    image: pruebasql
+    depends_on:
+      - sql
+
+  sqldatabase:
+    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Esekuele6595
+      - MSSQL_PID=Express
+    ports:
+      - '1433:1433'

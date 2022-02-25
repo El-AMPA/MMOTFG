@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "PruebaSQL": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
