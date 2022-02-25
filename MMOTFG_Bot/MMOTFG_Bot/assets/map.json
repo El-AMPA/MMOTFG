@@ -1,0 +1,16 @@
+{
+  "Nodes": [
+    {
+      "name": "TestNode1",
+      "nodeConnections": [
+        {}
+      ]
+    },
+    {
+      "name": "TestNode2",
+      "nodeConnections": [
+        {}
+      ]
+    }
+  ]
+}

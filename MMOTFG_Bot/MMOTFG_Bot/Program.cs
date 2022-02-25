@@ -11,12 +11,12 @@ using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
+using Newtonsoft.Json;
 
 namespace MMOTFG_Bot
 {
 	class Program
 	{
-		static Map mapa = new Map();
 		static Battle battle = null;
 
 		//TO-DO: Esto es un poco bastante feo.
@@ -25,67 +25,31 @@ namespace MMOTFG_Bot
 		static async Task Main(string[] args)
 		{
 			//Set Working Directory
+			Console.WriteLine("Old:" + Directory.GetCurrentDirectory());
 			Directory.SetCurrentDirectory("./../../..");
+			Console.WriteLine("New:" + Directory.GetCurrentDirectory());
 
-			//Event arriveEvent = new Event();
-			//arriveEvent.addAction(new DescriptorAction("Nunca te gustó mucho la entrada a la facultad, pero depsués de tantos años ya te has acostumbrado."));
-			//MapNode entranceNode = new MapNode();
-			//entranceNode.onArriveEvent = arriveEvent;
-			//mapa.addNode("entrance", entranceNode);
+			string mapText = "";
+            try
+            {
+				mapText = System.IO.File.ReadAllText("./assets/map.json");
+			}
+			catch (FileNotFoundException e)
+            {
+				Console.WriteLine("ERROR: map.json couldn't be found in assets folder.");
+				Environment.Exit(-1);
+			}
 
-			//arriveEvent = new Event();
-			//arriveEvent.addAction(new DescriptorAction("Al aula cinco ya no le queda ni un ápice del brillo que tenía en 2018. Te sientes triste solo de mirar a través de la puerta."));
-			//MapNode aulaNode = new MapNode();
-			//aulaNode.onArriveEvent = arriveEvent;
-			//Event exitEvent = new Event();
-			//exitEvent.addAction(new DescriptorAction("Al salir del aula cinco sientes al fantasma de Fede acechándote. Yikes dawg"));
-			//aulaNode.onExitEvent = exitEvent;
-			//mapa.addNode("aula5", aulaNode);
-			//Event lookEvent = new Event();
-			//lookEvent.addAction(new DescriptorAction("Encima de la mesa del profesor, observas que hay un pen-drive abandonado. Decides cogerlo"));
-
-			//ItemInfo.setItemName(ItemID.PenDrive, "pendrive misterioso");
-			//Event onUseEvent = new Event();
-			//onUseEvent.addAction(new DescriptorAction("El pendrive contiene el examen de consolas con la solución de la última práctica. ¡Menudo éxito!"));
-			//ItemInfo.addConsumeEvent(ItemID.PenDrive, onUseEvent);
-
-			//lookEvent.addAction(new GiveItemAction(ItemID.PenDrive));
-			//aulaNode.onLookEvent = lookEvent;
-
-			//mapa.connectNode("entrance", "aula5", Direction.North);
-			//mapa.connectNode("aula5", "entrance", Direction.South);
-
-			//mapa.setPosition("entrance");
-
-			// char c;
-			// while (true)
-			// {
-			//     c = (char)Console.Read();
-			//     switch (c)
-			//     {
-			//         case ('w'):
-			//             mapa.navigate(Direction.North);
-			//             break;
-			//         case ('s'):
-			//             mapa.navigate(Direction.South);
-			//             break;
-			//         case ('d'):
-			//             mapa.navigate(Direction.East);
-			//             break;
-			//         case ('a'):
-			//             mapa.navigate(Direction.West);
-			//             break;
-			//         case ('l'):
-			//             mapa.lookAround();
-			//             break;
-			//         case ('u'):
-			//             if (!Inventory.useItem(ItemID.PenDrive))
-			//             {
-			//                 Console.WriteLine("Ibas a usar un objeto, pero llevas el bolsillo más vacío que la sección de calificaciones del campus virtual");
-			//             }
-			//             break;
-			//     }
-			// }
+			Navigation.Map mapTest;
+			try
+			{
+				mapTest = JsonConvert.DeserializeObject<Navigation.Map>(System.IO.File.ReadAllText("./assets/map.json"));
+			}
+            catch (Newtonsoft.Json.JsonReaderException e)
+            {
+				Console.WriteLine("ERROR: map.json isn't formatted correctly. \nError message:" + e.Message);
+				Environment.Exit(-1);
+			}
 
 			string token = "";
             try
@@ -94,7 +58,7 @@ namespace MMOTFG_Bot
 			}
 			catch(FileNotFoundException e)
             {
-				Console.WriteLine("No se ha encontrado el archivo token.txt en la raíz del proyecto.");
+				Console.WriteLine("ERROR: Token.txt couldn't be found in root directory.");
 				Environment.Exit(-1);
             }
 			
