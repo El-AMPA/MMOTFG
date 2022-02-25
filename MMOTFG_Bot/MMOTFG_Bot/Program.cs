@@ -1,5 +1,6 @@
 ﻿using MMOTFG_Bot.Commands;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -23,6 +24,9 @@ namespace MMOTFG_Bot
 
 		static async Task Main(string[] args)
 		{
+			//Set Working Directory
+			Directory.SetCurrentDirectory("./../../..");
+
 			//Event arriveEvent = new Event();
 			//arriveEvent.addAction(new DescriptorAction("Nunca te gustó mucho la entrada a la facultad, pero depsués de tantos años ya te has acostumbrado."));
 			//MapNode entranceNode = new MapNode();
@@ -83,7 +87,18 @@ namespace MMOTFG_Bot
 			//     }
 			// }
 
-			var botClient = new TelegramBotClient("1985137093:AAFk7-_Zyc2lSijP5diw2ghWPvmGVHKbB4E");
+			string token = "";
+            try
+            {
+				token = System.IO.File.ReadAllText("token.txt");
+			}
+			catch(FileNotFoundException e)
+            {
+				Console.WriteLine("No se ha encontrado el archivo token.txt en la raíz del proyecto.");
+				Environment.Exit(-1);
+            }
+			
+			var botClient = new TelegramBotClient(token);
 			var me = await botClient.GetMeAsync();
 
 			//Module initializers
@@ -161,53 +176,54 @@ namespace MMOTFG_Bot
 			Console.WriteLine("Received message: " + message.Text + " from " + senderName);
 
 			if(message.Type == MessageType.Text) //Si le mandas una imagen explota ahora mismo
-            {
+			{
 				List<string> subStrings = message.Text.ToLower().Split(' ').ToList();
 				string command = subStrings[0];
 				string[] args = new string[subStrings.Count - 1];
 				subStrings.CopyTo(1, args, 0, args.Length);
 
-				//TO-DO: Integrarlo con los comandos.
-				//Descomentar esto y comentar lo de abajo si se quiere probar el sistema de combate.
-				//switch (subStrings[0])
+                //TO-DO: Integrarlo con los comandos.
+                //Descomentar esto y comentar lo de abajo si se quiere probar el sistema de combate.
+
+                //switch (subStrings[0])
+                //{
+                //    case "/fight":
+                //        Player player = new Player();
+                //        Enemy enemy = new Enemy();
+                //        battle = new Battle(player, enemy);
+                //        battle.setPlayerOptions(chatId);
+                //        break;
+                //    default:
+                //        if (battle != null)
+                //        {
+                //            battle.playerAttack(chatId, subStrings[0]);
+                //        }
+                //        break;
+                //}
+
+                foreach (ICommand c in commandList)
+				{
+					if (c.ContainsKeyWord(command, chatId, args)) break;
+				}
+
+				//switch (command)
 				//{
+				//	case ("/add"):
+				//		Console.WriteLine("Adding item");
+				//		Potion potion = new Potion();
+				//		inventorySystem.AddItem(chatId, potion, 3);
+				//	break;
+				//	case ("/show"):
+				//		if (subStrings[1] == "inventory") inventorySystem.ShowInventory(chatId);
+				//	break;
 				//	case "/fight":
 				//		Player player = new Player();
 				//		Enemy enemy = new Enemy();
-				//		battle = new Battle(player, enemy);
-				//		battle.setPlayerOptions(chatId);
-				//		break;
-				//	default:
-				//		if (battle != null)
-				//		{
-				//			battle.playerAttack(chatId, subStrings[0]);
-				//		}
-				//		break;
+				//		Battle battle = new Battle(player, enemy);
+
+				//	break;
 				//}
-
-				foreach (ICommand c in commandList)
-                {
-                    if (c.ContainsKeyWord(command, chatId, args)) break;
-                }
-
-                //switch (command)
-                //{
-                //	case ("/add"):
-                //		Console.WriteLine("Adding item");
-                //		Potion potion = new Potion();
-                //		inventorySystem.AddItem(chatId, potion, 3);
-                //	break;
-                //	case ("/show"):
-                //		if (subStrings[1] == "inventory") inventorySystem.ShowInventory(chatId);
-                //	break;
-                //	case "/fight":
-                //		Player player = new Player();
-                //		Enemy enemy = new Enemy();
-                //		Battle battle = new Battle(player, enemy);
-
-                //	break;
-                //}
-            }
+			}
 		}
 
 		static Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
