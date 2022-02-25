@@ -26,7 +26,6 @@ namespace MMOTFG_Bot
 		{
 			//Set Working Directory
 			Directory.SetCurrentDirectory("./../../..");
-			Console.WriteLine(Directory.GetCurrentDirectory());
 
 			//Event arriveEvent = new Event();
 			//arriveEvent.addAction(new DescriptorAction("Nunca te gustó mucho la entrada a la facultad, pero depsués de tantos años ya te has acostumbrado."));
