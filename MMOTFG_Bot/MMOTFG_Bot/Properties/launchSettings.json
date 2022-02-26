@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "MMOTFG_Bot": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "PLATFORM_PC": "1"
+      }
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

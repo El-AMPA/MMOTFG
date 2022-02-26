@@ -24,8 +24,17 @@ namespace MMOTFG_Bot
 
 		static async Task Main(string[] args)
 		{
-			//Set Working Directory
-			Directory.SetCurrentDirectory("./../../..");
+            /*Si estamos depurando en visual studio, tenemos que cambiar la ruta relativa en PC
+			* para que funcione igual que en el contenedor de Docker*/
+            if (Environment.GetEnvironmentVariable("PLATFORM_PC") != null)
+            {
+				Console.WriteLine("Estamos en PC");
+				Directory.SetCurrentDirectory("./../../..");
+            }
+            else
+            {
+				Console.WriteLine("Estamos en Docker");
+			}
 
 			//Event arriveEvent = new Event();
 			//arriveEvent.addAction(new DescriptorAction("Nunca te gustó mucho la entrada a la facultad, pero depsués de tantos años ya te has acostumbrado."));
@@ -90,15 +99,15 @@ namespace MMOTFG_Bot
 			string token = "";
             try
             {
-				token = System.IO.File.ReadAllText("token.txt");
-			}
-			catch(FileNotFoundException e)
-            {
-				Console.WriteLine("No se ha encontrado el archivo token.txt en la raíz del proyecto.");
-				Environment.Exit(-1);
+                token = System.IO.File.ReadAllText("assets/token.txt");
             }
-			
-			var botClient = new TelegramBotClient(token);
+            catch (FileNotFoundException e)
+            {
+                Console.WriteLine("No se ha encontrado el archivo token.txt en la carpeta assets.");
+                Environment.Exit(-1);
+            }
+
+            var botClient = new TelegramBotClient(token);
 			var me = await botClient.GetMeAsync();
 
 			//Module initializers
