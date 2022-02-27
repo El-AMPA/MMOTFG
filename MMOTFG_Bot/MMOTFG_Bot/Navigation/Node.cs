@@ -7,7 +7,6 @@ namespace MMOTFG_Bot.Navigation
 {
     class Node
     {
-
         public class NodeConnection
         {
             public List<Event> OnArriveEvent
@@ -22,6 +21,12 @@ namespace MMOTFG_Bot.Navigation
                 set;
             } 
 
+            public string ConnectingNode
+            {
+                get;
+                set;
+            }
+
             public void OnArrive(long chatId)
             {
                 foreach (Event e in OnArriveEvent) e.Execute(chatId);
@@ -32,14 +37,14 @@ namespace MMOTFG_Bot.Navigation
                 foreach (Event e in OnExitEvent) e.Execute(chatId);
             }
 
-            public Node Node
-            {
-                get;
-                set;
-            }
+            //public Node Node
+            //{
+            //    get;
+            //    set;
+            //}
         }
 
-        public List<NodeConnection> NodeConnections
+        public Dictionary<string, NodeConnection> NodeConnections
         {
             get;
             set;
@@ -51,19 +56,26 @@ namespace MMOTFG_Bot.Navigation
             set;
         }
 
-        public void OnExit(long chatId, Map.Direction direction)
+        public void OnExit(long chatId, string direction)
         {
-            NodeConnections[(int)direction].OnExit(chatId);
+            NodeConnections[direction].OnExit(chatId);
         }
 
-        public void OnArrive(long chatId, Map.Direction direction)
+        public void OnArrive(long chatId, string direction)
         {
-            NodeConnections[(int)direction].OnArrive(chatId);
+            NodeConnections[direction].OnArrive(chatId);
         }
 
-        public Node GetConnectingNode(Map.Direction direction)
+        public void BuildConnection(string dir, NodeConnection connection)
         {
-            return NodeConnections[(int)direction].Node;
+
+            NodeConnections.Add(dir, connection);
+        }
+
+        public Node GetConnectingNode(string direction)
+        {
+            //return NodeConnections[direction].Node;
+            return null;
         }
     }
 }

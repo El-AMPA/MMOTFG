@@ -1,4 +1,5 @@
 ﻿using MMOTFG_Bot.Commands;
+using MMOTFG_Bot.Navigation;
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -11,13 +12,14 @@ using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
-using Newtonsoft.Json;
 
 namespace MMOTFG_Bot
 {
 	class Program
 	{
 		static Battle battle = null;
+
+		static Map map = MapReader.BuildMap("./assets/map.json");
 
 		//TO-DO: Esto es un poco bastante feo.
 		static ICommand[] commandList = { new cUseItem(), new cAddItem(), new cThrowItem(), new cShowInventory(), new cEquipItem()};
@@ -28,28 +30,6 @@ namespace MMOTFG_Bot
 			Console.WriteLine("Old:" + Directory.GetCurrentDirectory());
 			Directory.SetCurrentDirectory("./../../..");
 			Console.WriteLine("New:" + Directory.GetCurrentDirectory());
-
-			string mapText = "";
-            try
-            {
-				mapText = System.IO.File.ReadAllText("./assets/map.json");
-			}
-			catch (FileNotFoundException e)
-            {
-				Console.WriteLine("ERROR: map.json couldn't be found in assets folder.");
-				Environment.Exit(-1);
-			}
-
-			Navigation.Map mapTest;
-			try
-			{
-				mapTest = JsonConvert.DeserializeObject<Navigation.Map>(System.IO.File.ReadAllText("./assets/map.json"));
-			}
-            catch (Newtonsoft.Json.JsonReaderException e)
-            {
-				Console.WriteLine("ERROR: map.json isn't formatted correctly. \nError message:" + e.Message);
-				Environment.Exit(-1);
-			}
 
 			string token = "";
             try
@@ -138,6 +118,8 @@ namespace MMOTFG_Bot
 			var senderID = message.From.Id;
 
 			Console.WriteLine("Received message: " + message.Text + " from " + senderName);
+
+			map.foo(chatId);
 
 			if(message.Type == MessageType.Text) //Si le mandas una imagen explota ahora mismo
 			{

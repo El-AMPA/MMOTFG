@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
+using Newtonsoft.Json;
+using JsonSubTypes;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Events
 {
-    abstract class Event
+    [JsonConverter(typeof(JsonSubtypes), "EventType")]
+    [JsonSubtypes.KnownSubType(typeof(eGiveItem), "eGiveItem")]
+    class Event
     {
-        public abstract void Execute(long chatId);
+        public virtual void Execute(long chatId)
+        {
+            Console.WriteLine("A");
+        }
     }
 }

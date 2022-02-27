@@ -1,16 +1,49 @@
 {
   "Nodes": [
     {
-      "name": "TestNode1",
-      "nodeConnections": [
-        {}
-      ]
-    },
-    {
-      "name": "TestNode2",
-      "nodeConnections": [
-        {}
-      ]
+      "Name": "TestNode1",
+      "NodeConnections": {
+        "north": {
+          "ConnectingNode": "TestNode2",
+          "OnArriveEvent": [
+            {
+              "EventType": "eGiveItem",
+              "ItemLots": [
+                {
+                  "item": "health_potion",
+                  "quantity": 3,
+                  "chanceToObtain": 1
+                },
+                {
+                  "item": "mana_potion",
+                  "quantity": 1,
+                  "chanceToObtain": 0.5
+                }
+              ]
+            }
+          ]
+        },
+        "trapdoor": {
+          "ConnectingNode": "TestNode2",
+          "OnArriveEvent": [
+            {
+              "TypeDiscriminator": 1,
+              "ItemLots": [
+                {
+                  "item": "health_potion",
+                  "quantity": 3,
+                  "chanceToObtain": 1
+                },
+                {
+                  "item": "mana_potion",
+                  "quantity": 1,
+                  "chanceToObtain": 0.5
+                }
+              ]
+            }
+          ]
+        }
+      }
     }
   ]
 }
