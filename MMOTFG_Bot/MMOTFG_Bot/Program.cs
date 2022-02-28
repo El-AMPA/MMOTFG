@@ -20,7 +20,8 @@ namespace MMOTFG_Bot
 		static Map mapa = new Map();
 		static Player player = new Player();
 
-		static List<ICommand> commandList = new List<ICommand>{ new cUseItem(), new cAddItem(), new cThrowItem(), new cShowInventory(), new cEquipItem(), new cFight()};
+		static List<ICommand> commandList = new List<ICommand>{ new cUseItem(), new cAddItem(), new cThrowItem(),
+            new cShowInventory(), new cEquipItem(), new cInfo(), new cStatus(), new cFight()};
 
 		static async Task Main(string[] args)
 		{

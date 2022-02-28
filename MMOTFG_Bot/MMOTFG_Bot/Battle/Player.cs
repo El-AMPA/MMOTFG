@@ -4,20 +4,16 @@ using System.Text;
 
 namespace MMOTFG_Bot
 {
-    class Player
+    class Player : Battler
     {
-        public float[] stats = new float[] {0,0,0};
-        public Attack[] attacks;
-
-        public int attackNum;
         public List<string> attackNames = new List<string>();
         public List<float> attackmpCosts = new List<float>();
 
         public Player()
         {
-            stats[(int)StatNames.HP] = 100;
-            stats[(int)StatNames.ATK] = 10;
-            stats[(int)StatNames.MP] = 50;
+            stats = new float[] { 100, 10, 50 };
+
+            originalStats = (float[])stats.Clone();
 
             attacks = new Attack[]{
                 new Attack("Tortazo", 1.5f, 0),

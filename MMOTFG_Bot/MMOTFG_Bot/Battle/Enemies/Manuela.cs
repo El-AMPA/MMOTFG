@@ -15,6 +15,7 @@ namespace MMOTFG_Bot.Battle.Enemies
             droppedItemAmount = 2;
 
             stats = new float[]{50, 10, 25};
+            originalStats = (float[])stats.Clone();
 
             attacks = new Attack[]{
                 new Attack("Arañazo", 1, 0),
@@ -26,10 +27,10 @@ namespace MMOTFG_Bot.Battle.Enemies
 
         public override async void OnHit(long chatId)
         {
-            if (stats[(int)StatNames.HP] < 25)
+            if (stats[(int)StatName.HP] < 25)
             {
-                stats[(int)StatNames.ATK] *= 2;
-                await TelegramCommunicator.SendText(chatId, "Manuela se ha enfadado! Sus ataques harán más daño");
+                stats[(int)StatName.ATK] *= 2;
+                await TelegramCommunicator.SendText(chatId, "Manuela se ha enfadado! Sus ataques harán más daño.");
             }
         }
     }

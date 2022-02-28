@@ -1,29 +1,29 @@
-﻿using MMOTFG_Bot.Battle.Enemies;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace MMOTFG_Bot.Commands
 {
-    class cFight : ICommand
+    class cStatus : ICommand
     {
         public override void Init()
         {
             key_words = new string[] {
-                "/fight"
+                "/status"
             };
         }
 
         internal override void Execute(string command, long chatId, string[] args = null)
         {
-            //habría que preguntar al mapa qué enemigo hay en esta sala
-            BattleSystem.startBattle(chatId, new Manuela());
-            BattleSystem.setPlayerOptions(chatId);
+            if (args.Length == 0) BattleSystem.showStatus(chatId, BattleSystem.player);
+            else BattleSystem.showStatus(chatId, BattleSystem.enemy);
         }
 
         internal override bool IsFormattedCorrectly(string[] args)
         {
-            //Format: /fight
+            //Format: /status enemy (optional)
+            if (args.Length > 1) return false;
+
             return true;
         }
     }

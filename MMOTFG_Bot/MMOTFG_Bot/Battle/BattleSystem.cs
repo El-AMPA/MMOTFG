@@ -6,11 +6,11 @@ namespace MMOTFG_Bot
 {
     static class BattleSystem
     {
-        static Player player;
-        static Enemy enemy;
+        public static Player player;
+        public static Enemy enemy;
         static Random rnd;
 
-        static bool battleActive = false;
+        public static bool battleActive = false;
 
         public static void Init()
         {
@@ -47,18 +47,20 @@ namespace MMOTFG_Bot
             int atkNum = player.attackNames.IndexOf(attackName);
             if (atkNum == -1) return;
             Attack attack = player.attacks[atkNum];
-            if (attack.mpCost > player.stats[(int)StatNames.MP])
+            if (attack.mpCost > player.stats[(int)StatName.MP])
             {
                 await TelegramCommunicator.SendText(chatId, "Not enough MP for that attack");
                 return;
             }
-            player.stats[(int)StatNames.MP] -= attack.mpCost;
-            float damage = player.stats[(int)StatNames.ATK] * attack.power;
-            await TelegramCommunicator.SendText(chatId, $"Player used {attack.name}! Enemy took {damage} damage.");
-            await TelegramCommunicator.SendText(chatId, $"Remaining MP: {player.stats[(int)StatNames.MP]}");
-            enemy.stats[(int)StatNames.HP] -= damage;
-            await TelegramCommunicator.SendText(chatId, $"Enemy has {enemy.stats[(int)StatNames.HP]} HP left");
-            if (enemy.stats[(int)StatNames.HP] <= 0)
+            player.stats[(int)StatName.MP] -= attack.mpCost;
+            float damage = player.stats[(int)StatName.ATK] * attack.power;
+            await TelegramCommunicator.SendText(chatId, $"Player used {attack.name}! Enemy took {damage} damage.");          
+            //await TelegramCommunicator.SendText(chatId, $"Remaining MP: {player.stats[(int)StatNames.MP]}");
+            enemy.stats[(int)StatName.HP] -= damage;
+            enemy.OnHit(chatId);
+            await TelegramCommunicator.SendText(chatId, $"Enemy HP: {getStatBar(enemy, StatName.HP)}");
+            //await TelegramCommunicator.SendText(chatId, $"Enemy has {enemy.stats[(int)StatNames.HP]} HP left");
+            if (enemy.stats[(int)StatName.HP] <= 0)
             {
                 battleActive = false;
                 string msg = "Enemy died!";
@@ -77,12 +79,45 @@ namespace MMOTFG_Bot
         private static async void enemyAttack(long chatId)
         {
             Attack attack = enemy.nextAttack(rnd);
-            float damage = enemy.stats[(int)StatNames.ATK] * attack.power;
+            float damage = enemy.stats[(int)StatName.ATK] * attack.power;
             await TelegramCommunicator.SendText(chatId, $"Enemy used {attack.name}! Player took {damage} damage.");
-            player.stats[(int)StatNames.HP] -= damage;
-            await TelegramCommunicator.SendText(chatId, $"You have {player.stats[(int)StatNames.HP]} HP left");
-            if (player.stats[(int)StatNames.HP] <= 0)
+            player.stats[(int)StatName.HP] -= damage;
+            await TelegramCommunicator.SendText(chatId, $"Your HP: {getStatBar(player, StatName.HP)}");
+            //await TelegramCommunicator.SendText(chatId, $"You have {player.stats[(int)StatNames.HP]} HP left");
+            if (player.stats[(int)StatName.HP] <= 0)
                 await TelegramCommunicator.SendText(chatId, "You died!");
+            else enemy.OnTurnEnd(chatId);
+        }
+
+        private static string getStatBar(Battler b, StatName s)
+        {
+            int green = (int)(10 * b.stats[(int)s] / b.originalStats[(int)s]);
+            string bar = "";
+            for (int i = 0; i < 10; i++)
+            {
+                if (i < green) bar += "\U0001F7E9"; //green
+                else bar += "\U0001F7E5"; //red
+            }
+            return bar;
+        }
+
+        public static async void showStatus(long chatId, Battler b)
+        {
+            if (!battleActive && b != player){
+                await TelegramCommunicator.SendText(chatId, "No battle currently active");
+                return;
+            }
+            string s = "";
+            for(int i = 0; i < Stats.statNum; i++)
+            {
+                StatName sn = (StatName)i;
+                s += $"{Enum.GetName(typeof(StatName), i)}: {b.stats[i]}";
+                if (sn == StatName.HP || sn == StatName.MP)
+                    s += $"/{b.originalStats[i]}";
+                s += "\n";
+            }
+
+            await TelegramCommunicator.SendText(chatId, s);
         }
     }
 }
