@@ -8,6 +8,8 @@ services:
     ports:
       - '1433:1433'
   sqlapp:
-    image: mmotfgbot
+    image: telegrambotsregistry.azurecr.io/mmotfgbot
     depends_on:
       - sqldatabase
+    ports:
+      - "80:80"
