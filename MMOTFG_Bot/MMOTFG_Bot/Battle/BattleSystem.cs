@@ -54,7 +54,8 @@ namespace MMOTFG_Bot
             }
             player.stats[(int)StatNames.MP] -= attack.mpCost;
             float damage = player.stats[(int)StatNames.ATK] * attack.power;
-            await TelegramCommunicator.SendText(chatId, $"Player used {attack.name}! Enemy took {damage} damage.\nRemaining MP: {player.stats[(int)StatNames.MP]}");
+            await TelegramCommunicator.SendText(chatId, $"Player used {attack.name}! Enemy took {damage} damage.");
+            await TelegramCommunicator.SendText(chatId, $"Remaining MP: {player.stats[(int)StatNames.MP]}");
             enemy.stats[(int)StatNames.HP] -= damage;
             await TelegramCommunicator.SendText(chatId, $"Enemy has {enemy.stats[(int)StatNames.HP]} HP left");
             if (enemy.stats[(int)StatNames.HP] <= 0)

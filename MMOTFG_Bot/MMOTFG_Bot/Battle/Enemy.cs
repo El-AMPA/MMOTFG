@@ -6,31 +6,21 @@ namespace MMOTFG_Bot
 {
     class Enemy
     {
-        public float[] stats = new float[] { 0, 0, 0};
+        public float[] stats; 
+        //estudiar para el futuro
+        //public Dictionary<string, float> stats = new Dictionary<string, float>();
         public Attack[] attacks;
 
         public int attackNum;
 
-        public string imageName = "manuela.jpg";
-        public string imageCaption = "Manuela ataca!";
+        public string imageName;
+        public string imageCaption;
 
-        public float droppedMoney = 100;
-        public ObtainableItem droppedItem = new Items.HealthPotion();
-        public int droppedItemAmount = 2;
+        public float droppedMoney;
+        public ObtainableItem droppedItem;
+        public int droppedItemAmount;
 
-        public Enemy()
-        {
-            stats[(int)StatNames.HP] = 50;
-            stats[(int)StatNames.ATK] = 10;
-            stats[(int)StatNames.MP] = 25;
-
-            attacks = new Attack[]{
-                new Attack("Arañazo", 1, 0),
-                new Attack("Super Arañazo", 2, 1)
-            };
-
-            attackNum = attacks.Length;
-        }
+        public Enemy() { }
 
         //la idea de esto es que los ataques estén ordenados de menor a mayor MP con el básico costando 0 siempre
         public Attack nextAttack(Random rnd)
@@ -42,5 +32,11 @@ namespace MMOTFG_Bot
             stats[(int)StatNames.MP] -= attacks[attack].mpCost;
             return attacks[attack];
         }
+
+        //para que el enemigo cambie de fase o lo que sea al recibir daño
+        virtual public async void OnHit(long chatId) { }
+
+        //para que el enemigo se cure al final del turno y cosas así
+        virtual public async void OnTurnEnd(long chatId) { }
     }
 }
