@@ -1,1 +1,0 @@
-MSBuild.exe .\PruebaSQL\PruebaSQL.csproj /t:ContainerBuild /p:Configuration=Release
