@@ -79,13 +79,12 @@ namespace MMOTFG_Bot
 
 		static public async Task SendButtons(long chatId, int buttonNum, string[] buttonNames)
         {
-			var rkm = new ReplyKeyboardMarkup();
 			var keyboard = new KeyboardButton[buttonNum][];
 			for(int i = 0; i< buttonNum; i++)
             {
 				keyboard[i] = new KeyboardButton[] { new KeyboardButton(buttonNames[i]) };
             }
-			rkm.Keyboard = keyboard;
+			var rkm = new ReplyKeyboardMarkup(keyboard);
 			await botClient.SendTextMessageAsync(chatId, "Text", replyMarkup: rkm);
 		}
 	}
