@@ -1,4 +1,5 @@
 ﻿using MMOTFG_Bot.Commands;
+using MMOTFG_Bot.Navigation;
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -17,8 +18,9 @@ namespace MMOTFG_Bot
 {
 	class Program
 	{
-		static Map mapa = new Map();
 		static Player player = new Player();
+
+		static Map map = MapReader.BuildMap("./assets/map.json");
 
 		static List<ICommand> commandList = new List<ICommand>{ new cUseItem(), new cAddItem(), new cThrowItem(),
             new cShowInventory(), new cEquipItem(), new cInfo(), new cStatus(), new cFight()};
@@ -175,6 +177,7 @@ namespace MMOTFG_Bot
 			BattleSystem.Init();
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
+			map.BuildMap(); //TO-DO: Static?
 			foreach (ICommand c in commandList) c.Init();
 
 			//set attack keywords
