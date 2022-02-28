@@ -24,9 +24,30 @@ namespace MMOTFG_Bot.Navigation
             set;
         }
 
-        public void foo(long chatid)
+        private Node SearchNode(string name)
         {
-            Nodes[0].OnArrive(chatid, "north");
+            foreach(Node n in Nodes)
+            {
+                if (n.Name == name) return n;
+            }
+            Console.WriteLine("ERROR: One of the requested nodes does not exist. Please check for possible spelling mistakes.");
+            Environment.Exit(0);
+            return null;
+        }
+
+        public void BuildMap()
+        {
+            Node aux;
+            Console.WriteLine("Building map...");
+            foreach(Node n in Nodes)
+            {
+                foreach(KeyValuePair<string, Node.NodeConnection> connection in n.NodeConnections)
+                {
+                    aux = SearchNode(connection.Value.ConnectingNode);
+                    n.BuildConnection(connection.Key, n);
+                    Console.WriteLine("Node " + n.Name + " leads to node " + aux.Name + " via " + connection.Key);
+                }
+            }
         }
     }
 }

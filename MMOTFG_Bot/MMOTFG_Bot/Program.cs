@@ -27,9 +27,9 @@ namespace MMOTFG_Bot
 		static async Task Main(string[] args)
 		{
 			//Set Working Directory
-			Console.WriteLine("Old:" + Directory.GetCurrentDirectory());
+			//Console.WriteLine("Old:" + Directory.GetCurrentDirectory());
 			Directory.SetCurrentDirectory("./../../..");
-			Console.WriteLine("New:" + Directory.GetCurrentDirectory());
+			//Console.WriteLine("New:" + Directory.GetCurrentDirectory());
 
 			string token = "";
             try
@@ -48,6 +48,7 @@ namespace MMOTFG_Bot
 			//Module initializers
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
+			map.BuildMap(); //TO-DO: Static?
 			foreach (ICommand c in commandList) c.Init();
 
 			Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);
@@ -118,8 +119,6 @@ namespace MMOTFG_Bot
 			var senderID = message.From.Id;
 
 			Console.WriteLine("Received message: " + message.Text + " from " + senderName);
-
-			map.foo(chatId);
 
 			if(message.Type == MessageType.Text) //Si le mandas una imagen explota ahora mismo
 			{

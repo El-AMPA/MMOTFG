@@ -27,6 +27,8 @@ namespace MMOTFG_Bot.Navigation
                 set;
             }
 
+            private Node Node;
+
             public void OnArrive(long chatId)
             {
                 foreach (Event e in OnArriveEvent) e.Execute(chatId);
@@ -37,11 +39,10 @@ namespace MMOTFG_Bot.Navigation
                 foreach (Event e in OnExitEvent) e.Execute(chatId);
             }
 
-            //public Node Node
-            //{
-            //    get;
-            //    set;
-            //}
+            public void SetNode(Node node)
+            {
+                Node = node;
+            }
         }
 
         public Dictionary<string, NodeConnection> NodeConnections
@@ -58,18 +59,25 @@ namespace MMOTFG_Bot.Navigation
 
         public void OnExit(long chatId, string direction)
         {
-            NodeConnections[direction].OnExit(chatId);
+            NodeConnection connection = GetConnectionFromDirection(direction);
+            if (connection != null) connection.OnExit(chatId);
         }
 
         public void OnArrive(long chatId, string direction)
         {
-            NodeConnections[direction].OnArrive(chatId);
+            NodeConnection connection = GetConnectionFromDirection(direction);
+            if (connection != null) connection.OnArrive(chatId);
         }
 
-        public void BuildConnection(string dir, NodeConnection connection)
+        public void BuildConnection(string direction, Node node)
         {
+            NodeConnection connection = GetConnectionFromDirection(direction);
+            if (connection != null) connection.SetNode(node);
+        }
 
-            NodeConnections.Add(dir, connection);
+        private NodeConnection GetConnectionFromDirection(string direction)
+        {
+            return NodeConnections[direction];
         }
 
         public Node GetConnectingNode(string direction)
