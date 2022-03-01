@@ -1,70 +1,43 @@
-{
-  "Nodes": [
-    {
-      "Name": "Corridor",
-      "NodeConnections": {
-        "north": {
-          "ConnectingNode": "Corridor2",
-          "OnExitEvent": [
-            {
-              "EventType": "eSendText",
-              "Description": "La sala esta oscura... El aroma a pienso es insoportable, pero tu determinacion nunca ha sido mas fuerte."
-            },
-            {
-              "EventType": "eSendText",
-              "Description": "Intentas avanzar por la sala sigilosamente, pero de forma inesperada, notas una respiracion en tu nuca..."
-            },
-            {
-              "EventType": "eSendImage",
-              "Descrption": "I will smite thee heathen.",
-              "ImageName": "Dog1.png"
-            }
-          ]
-        }
+[
+  {
+    "Name": "Corridor",
+    "NodeConnections": {
+      "north": {
+        "ConnectingNode": "Corridor2"
       }
     },
-    {
-      "Name": "TestNode2",
-      "NodeConnections": {
-        "north": {
-          "ConnectingNode": "TestNode2",
-          "OnArriveEvent": [
-            {
-              "EventType": "eSendText",
-              "Description": "Si Alvar."
-            },
-            {
-              "EventType": "eSendText",
-              "Description": "Intentas avanzar por la sala sigilosamente, pero de forma inesperada, notas una respiracion en tu nuca..."
-            },
-            {
-              "EventType": "eSendImage",
-              "Descrption": "I will smite thee heathen.",
-              "ImageName": "Dog1.png"
-            }
-          ]
-        },
-        "trapdoor": {
-          "ConnectingNode": "TestNode2",
-          "OnArriveEvent": [
-            {
-              "TypeDiscriminator": 1,
-              "ItemLots": [
-                {
-                  "item": "health_potion",
-                  "quantity": 3,
-                  "chanceToObtain": 1
-                },
-                {
-                  "item": "mana_potion",
-                  "quantity": 1,
-                  "chanceToObtain": 0.5
-                }
-              ]
-            }
-          ]
-        }
+    "OnExitEvent": [
+      {
+        "EventType": "eSendText",
+        "Description": "La sala esta oscura... El aroma a pienso es insoportable, pero tu determinacion nunca ha sido mas fuerte."
+      },
+      {
+        "EventType": "eSendText",
+        "Description": "Intentas avanzar por la sala sigilosamente, pero de forma inesperada, notas una respiracion en tu nuca..."
+      },
+      {
+        "EventType": "eSendImage",
+        "Descrption": "I will smite thee heathen.",
+        "ImageName": "Dog1.png"
       }
-    }
-  ]
-}
+    ],
+    "OnInspectText": "Estás en una mazmorra muy dank y dark. Al norte puedes seguir avanzando por el pasillo. También puedes usar una trampilla, ¿me pregunto a donde llevará ...?"
+  },
+  {
+    "Name": "Corridor2",
+    "NodeConnections": {
+      "north": {
+        "ConnectingNode": "Corridor"
+      },
+      "trapdoor": {
+        "ConnectingNode": "Corridor"
+      }
+    },
+    "OnArriveEvent": [
+      {
+        "EventType": "eSendText",
+        "Description": "Si Alvar hubiera implementado las batallas seguro que hubiera estado muy chula."
+      }
+    ]
+  }
+]

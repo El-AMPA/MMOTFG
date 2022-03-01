@@ -19,7 +19,7 @@ namespace MMOTFG_Bot.Events
     //Thus, if it were a pure abstract class, it would just send an exception.
     class Event
     {
-        public virtual async void Execute(long chatId)
+        public virtual void Execute(long chatId)
         {
 
         }

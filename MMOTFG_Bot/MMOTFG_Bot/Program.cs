@@ -19,10 +19,9 @@ namespace MMOTFG_Bot
 	{
 		static Battle battle = null;
 
-		static Map map = MapReader.BuildMap("./assets/map.json");
-
 		//TO-DO: Esto es un poco bastante feo.
-		static ICommand[] commandList = { new cUseItem(), new cAddItem(), new cThrowItem(), new cShowInventory(), new cEquipItem()};
+		static ICommand[] commandList = { new cUseItem(), new cAddItem(), new cThrowItem(), new cShowInventory(), new cEquipItem(),
+			new cNavigate(), new cDirections(), new cInspectRoom()};
 
 		static async Task Main(string[] args)
 		{
@@ -48,7 +47,7 @@ namespace MMOTFG_Bot
 			//Module initializers
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
-			map.BuildMap(); //TO-DO: Static?
+			Map.BuildMap("assets/map.json");
 			foreach (ICommand c in commandList) c.Init();
 
 			Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);

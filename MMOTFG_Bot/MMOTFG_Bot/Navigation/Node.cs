@@ -9,43 +9,28 @@ namespace MMOTFG_Bot.Navigation
     {
         public class NodeConnection
         {
-            public List<Event> OnArriveEvent
-            {
-                get;
-                set;
-            }
-            
-            public List<Event> OnExitEvent
-            {
-                get;
-                set;
-            } 
-
             public string ConnectingNode
             {
                 get;
                 set;
             }
 
-            private Node Node;
-
-            public void OnArrive(long chatId)
-            {
-                foreach (Event e in OnArriveEvent) e.Execute(chatId);
-            }
-
-            public void OnExit(long chatId)
-            {
-                foreach (Event e in OnExitEvent) e.Execute(chatId);
-            }
-
-            public void SetNode(Node node)
-            {
-                Node = node;
-            }
+            public Node Node;
         }
 
         public Dictionary<string, NodeConnection> NodeConnections
+        {
+            get;
+            set;
+        }
+
+        public List<Event> OnArriveEvent
+        {
+            get;
+            set;
+        }
+
+        public List<Event> OnExitEvent
         {
             get;
             set;
@@ -55,35 +40,40 @@ namespace MMOTFG_Bot.Navigation
         {
             get;
             set;
+        } = "";
+
+        public string OnInspectText
+        {
+            get;
+            set;
+        } = "";
+
+        public void OnExit(long chatId)
+        {
+            if(OnExitEvent != null) foreach (Event e in OnExitEvent) e.Execute(chatId);
         }
 
-        public void OnExit(long chatId, string direction)
+        public void OnArrive(long chatId)
         {
-            NodeConnection connection = GetConnectionFromDirection(direction);
-            if (connection != null) connection.OnExit(chatId);
-        }
-
-        public void OnArrive(long chatId, string direction)
-        {
-            NodeConnection connection = GetConnectionFromDirection(direction);
-            if (connection != null) connection.OnArrive(chatId);
+            if(OnArriveEvent != null) foreach (Event e in OnArriveEvent) e.Execute(chatId);
         }
 
         public void BuildConnection(string direction, Node node)
         {
-            NodeConnection connection = GetConnectionFromDirection(direction);
-            if (connection != null) connection.SetNode(node);
+            NodeConnection connection;
+            if(NodeConnections.TryGetValue(direction, out connection)) connection.Node = node;
         }
 
-        private NodeConnection GetConnectionFromDirection(string direction)
+        public bool GetConnectingNode(string direction, out Node connectingNode)
         {
-            return NodeConnections[direction];
-        }
-
-        public Node GetConnectingNode(string direction)
-        {
-            //return NodeConnections[direction].Node;
-            return null;
+            NodeConnection connection;
+            connectingNode = null;
+            if (NodeConnections.TryGetValue(direction, out connection))
+            {
+                connectingNode = connection.Node;
+                return true;
+            }
+            else return false;
         }
     }
 }
