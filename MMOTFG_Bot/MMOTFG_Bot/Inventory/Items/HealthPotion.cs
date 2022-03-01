@@ -15,8 +15,8 @@ namespace MMOTFG_Bot.Items
 
         private async void drinkPotion(long chatId, string[] args)
         {
-            BattleSystem.player.changeHP(5);
-            await TelegramCommunicator.SendText(chatId, "Gained 5HP.");
+            BattleSystem.player.changeHP(500);
+            await TelegramCommunicator.SendText(chatId, "Gained 500HP.");
         }
 
         private async void eatPotion(long chatId, string[] args)

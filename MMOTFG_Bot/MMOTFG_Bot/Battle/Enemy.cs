@@ -16,12 +16,12 @@ namespace MMOTFG_Bot
         public Enemy() { }
 
         //la idea de esto es que los ataques estén ordenados de menor a mayor MP con el básico costando 0 siempre
-        public Attack nextAttack(Random rnd)
+        public Attack nextAttack()
         {
             int i = 0;
             while (attacks[i].mpCost > stats[(int)StatName.MP])
                 i++;
-            int attack = rnd.Next(0, attackNum - i);
+            int attack = RNG.Next(0, attackNum - i);
             stats[(int)StatName.MP] -= attacks[attack].mpCost;
             return attacks[attack];
         }       

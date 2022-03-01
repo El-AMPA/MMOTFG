@@ -17,7 +17,7 @@ namespace MMOTFG_Bot.Commands
         internal override void Execute(string command, long chatId, string[] args = null)
         {
             //habría que preguntar al mapa qué enemigo hay en esta sala
-            BattleSystem.startBattle(chatId, new Manuela());
+            BattleSystem.startBattle(chatId, new Peter());
             BattleSystem.setPlayerOptions(chatId);
         }
 

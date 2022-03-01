@@ -8,6 +8,8 @@ namespace MMOTFG_Bot.Battle.Enemies
     {
         public Manuela()
         {
+            name = "Manuela";
+
             imageName = "manuela.jpg";
             imageCaption = "Manuela ataca!";
             droppedMoney = 100;

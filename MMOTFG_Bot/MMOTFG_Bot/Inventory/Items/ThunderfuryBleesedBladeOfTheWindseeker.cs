@@ -19,6 +19,12 @@ namespace MMOTFG_Bot.Items
             await TelegramCommunicator.SendText(chatId, "Om nom nom");
         }
 
+        public override async void OnEquip(long chatId, string[] args = null)
+        {
+            await TelegramCommunicator.SendText(chatId, "You have equipped the TBBOTW. Attack +100");
+            BattleSystem.player.stats[(int)StatName.ATK] += 100;
+        }
+
         public ThunderfuryBleesedBladeOfTheWindseeker()
         {
             name = "thunderfury_blessed_blade_of_the_windseeker";

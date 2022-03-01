@@ -11,6 +11,8 @@ namespace MMOTFG_Bot
 
         public Player()
         {
+            name = "Player";
+
             stats = new float[] { 100, 10, 50 };
 
             originalStats = (float[])stats.Clone();
@@ -18,7 +20,7 @@ namespace MMOTFG_Bot
             attacks = new Attack[]{
                 new Attack("Tortazo", 1.5f, 0),
                 new Attack("Patada", 2, 1),
-                new Attack("Cabezazo", 5, 5),
+                new StatReducingAttack("Burla", 0, 5),
                 new Attack("Overkill", 100, 100)
             };
 
@@ -28,6 +30,11 @@ namespace MMOTFG_Bot
                 attackNames.Add(a.name);
                 attackmpCosts.Add(a.mpCost);
             }
+        }
+
+        public override async void OnKill(long chatId)
+        {
+            await TelegramCommunicator.SendText(chatId, "You died!");
         }
     }
 }

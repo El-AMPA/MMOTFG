@@ -13,12 +13,12 @@ namespace MMOTFG_Bot.Items
             //key_words.Add(new KeyValuePair<string, Action<long, string[]>>("/equip", Equip));
         }
 
-        private void OnEquip(long chatId, string[] args)
+        public virtual async void OnEquip(long chatId, string[] args = null)
         {
 
         }
 
-        private void OnUnequip(long chatId, string[] args)
+        public virtual async void OnUnequip(long chatId, string[] args = null)
         {
 
         }

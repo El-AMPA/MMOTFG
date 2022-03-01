@@ -8,13 +8,11 @@ namespace MMOTFG_Bot
     {
         public static Player player;
         public static Enemy enemy;
-        static Random rnd;
 
         public static bool battleActive = false;
 
         public static void Init()
         {
-            rnd = new Random();
             player = new Player();
         }
 
@@ -52,41 +50,61 @@ namespace MMOTFG_Bot
                 await TelegramCommunicator.SendText(chatId, "Not enough MP for that attack");
                 return;
             }
-            player.stats[(int)StatName.MP] -= attack.mpCost;
-            float damage = player.stats[(int)StatName.ATK] * attack.power;
-            await TelegramCommunicator.SendText(chatId, $"Player used {attack.name}! Enemy took {damage} damage.");          
-            //await TelegramCommunicator.SendText(chatId, $"Remaining MP: {player.stats[(int)StatNames.MP]}");
-            enemy.stats[(int)StatName.HP] -= damage;
-            enemy.OnHit(chatId);
-            await TelegramCommunicator.SendText(chatId, $"Enemy HP: {getStatBar(enemy, StatName.HP)}");
-            //await TelegramCommunicator.SendText(chatId, $"Enemy has {enemy.stats[(int)StatNames.HP]} HP left");
-            if (enemy.stats[(int)StatName.HP] <= 0)
-            {
-                battleActive = false;
-                string msg = "Enemy died!";
-                if (enemy.droppedMoney > 0)
-                    msg += $"\nYou gained {enemy.droppedMoney}€";
-                if (enemy.droppedItem != null)
-                {
-                    msg += $"\nYou obtained {enemy.droppedItem.name} x{enemy.droppedItemAmount}";
-                    InventorySystem.AddItem(chatId, enemy.droppedItem.name, enemy.droppedItemAmount);
-                }
-                await TelegramCommunicator.SendText(chatId, msg);
-            }
-            else enemyAttack(chatId);
+
+            useAttack(chatId, attack, player, enemy);
         }
 
         private static async void enemyAttack(long chatId)
         {
-            Attack attack = enemy.nextAttack(rnd);
-            float damage = enemy.stats[(int)StatName.ATK] * attack.power;
-            await TelegramCommunicator.SendText(chatId, $"Enemy used {attack.name}! Player took {damage} damage.");
-            player.stats[(int)StatName.HP] -= damage;
-            await TelegramCommunicator.SendText(chatId, $"Your HP: {getStatBar(player, StatName.HP)}");
-            //await TelegramCommunicator.SendText(chatId, $"You have {player.stats[(int)StatNames.HP]} HP left");
-            if (player.stats[(int)StatName.HP] <= 0)
-                await TelegramCommunicator.SendText(chatId, "You died!");
-            else enemy.OnTurnEnd(chatId);
+            Attack attack = enemy.nextAttack();
+
+            useAttack(chatId, attack, enemy, player);
+        }
+
+        private static async void useAttack(long chatId, Attack attack, Battler user, Battler target)
+        {
+            user.stats[(int)StatName.MP] -= attack.mpCost;
+            attack.setUser(user);
+            attack.setTarget(target);
+            float damage = (float)Math.Round(attack.getDamage(), 2);
+
+            string message = $"{user.name} used {attack.name}!";
+            if (damage != 0)
+            {
+                message += $" {target.name} took {damage} damage.";
+                target.stats[(int)StatName.HP] -= damage;
+            }
+            await TelegramCommunicator.SendText(chatId, message);
+            attack.OnAttack(chatId);
+
+            if (target.stats[(int)StatName.HP] <= 0)
+            {
+                target.OnKill(chatId);
+                battleActive = false;
+                if(target == enemy)
+                {
+                    string msg = $"{target.name} died!";
+                    if (enemy.droppedMoney > 0)
+                        msg += $"\nYou gained {enemy.droppedMoney}€";
+                    if (enemy.droppedItem != null)
+                    {
+                        msg += $"\nYou obtained {enemy.droppedItem.name} x{enemy.droppedItemAmount}";
+                        await InventorySystem.AddItem(chatId, enemy.droppedItem.name, enemy.droppedItemAmount);
+                    }
+                    await TelegramCommunicator.SendText(chatId, msg);
+                }              
+            }
+            else
+            {
+                target.OnHit(chatId);
+                if(damage != 0) await TelegramCommunicator.SendText(chatId, $"{target.name} HP: {getStatBar(target, StatName.HP)}");
+                if(user == player) enemyAttack(chatId);
+                else
+                {
+                    user.OnTurnEnd(chatId);
+                    target.OnTurnEnd(chatId);
+                }
+            }
         }
 
         private static string getStatBar(Battler b, StatName s)
@@ -107,7 +125,7 @@ namespace MMOTFG_Bot
                 await TelegramCommunicator.SendText(chatId, "No battle currently active");
                 return;
             }
-            string s = "";
+            string s = $"{b.name} Status:\n";
             for(int i = 0; i < Stats.statNum; i++)
             {
                 StatName sn = (StatName)i;

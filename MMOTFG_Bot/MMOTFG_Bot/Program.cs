@@ -20,7 +20,7 @@ namespace MMOTFG_Bot
 	{
 		static Player player = new Player();
 
-		static Map map = MapReader.BuildMap("./assets/map.json");
+		//static Map map = MapReader.BuildMap("./assets/map.json");
 
 		static List<ICommand> commandList = new List<ICommand>{ new cUseItem(), new cAddItem(), new cThrowItem(),
             new cShowInventory(), new cEquipItem(), new cInfo(), new cStatus(), new cFight()};
@@ -177,7 +177,7 @@ namespace MMOTFG_Bot
 			BattleSystem.Init();
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
-			map.BuildMap(); //TO-DO: Static?
+			//map.BuildMap(); //TO-DO: Static?
 			foreach (ICommand c in commandList) c.Init();
 
 			//set attack keywords

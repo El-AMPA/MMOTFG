@@ -14,6 +14,8 @@ namespace MMOTFG_Bot
 
         public int attackNum;
 
+        public string name;
+
         public Battler()
         {
         }
@@ -34,6 +36,9 @@ namespace MMOTFG_Bot
 
         //para eventos al recibir daño
         virtual public async void OnHit(long chatId) { }
+
+        //para eventos al morir
+        virtual public async void OnKill(long chatId) { }
 
         //para eventos de final de turno
         virtual public async void OnTurnEnd(long chatId) { }
