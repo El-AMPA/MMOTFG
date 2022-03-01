@@ -20,7 +20,7 @@ namespace MMOTFG_Bot.Events
 
         public async override void Execute(long chatId)
         {
-            await TelegramCommunicator.SendAudio(chatId, Description, AudioName);
+            await TelegramCommunicator.SendAudio(chatId, AudioName, Description);
         }
     }
 }
