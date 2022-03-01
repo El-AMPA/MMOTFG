@@ -1,0 +1,15 @@
+services:      
+  sqldatabase:
+    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=22MMOTFGDatabasePassword23
+      - MSSQL_PID=Express
+    ports:
+      - '1433:1433'
+  sqlapp:
+    image: telegrambotsregistry.azurecr.io/mmotfgbot
+    depends_on:
+      - sqldatabase
+    ports:
+      - "80:80"
