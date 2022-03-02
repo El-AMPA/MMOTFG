@@ -16,12 +16,16 @@ namespace MMOTFG_Bot.Events
             get;
             set;
         }
+        //Range [0, 1]
         public float ChanceToObtain
         {
             get;
             set;
         }
     }
+    /// <summary>
+    /// Grants the user items. Supports multiple items and random drop chance.
+    /// </summary>
     class eGiveItem : Event
     {
         public List<ItemLot> ItemLots

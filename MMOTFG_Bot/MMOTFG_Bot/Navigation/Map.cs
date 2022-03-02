@@ -6,14 +6,21 @@ using System.Text;
 
 namespace MMOTFG_Bot.Navigation
 {
+    /// <summary>
+    /// Map that stores the world of the whole game.
+    /// </summary>
     class Map
     {
         private static Node currentNode;
         private static Node nextNode;
+        private static List<Node> nodes;
 
+        /// <summary>
+        /// Moves the player in the specified direction
+        /// </summary>
         public async static void Navigate(long chatId, string dir)
         {
-            //Move the player in the specified direction
+            //If currentNode doesn't have a connection in that direction, it doesn't move the player.
             if(currentNode.GetConnectingNode(dir, out nextNode))
             {
                 currentNode.OnExit(chatId);
@@ -26,8 +33,55 @@ namespace MMOTFG_Bot.Navigation
             }
         }
 
-        private static List<Node> nodes;
+        public static void BuildMap(string mapPath)
+        {
+            ReadMapFromJSON(mapPath);
 
+            //Connecting the map together.
+            Node aux;
+            Console.WriteLine("Building map...");
+            foreach (Node n in nodes)
+            {
+                foreach (KeyValuePair<string, Node.NodeConnection> connection in n.NodeConnections)
+                {
+                    aux = SearchNode(connection.Value.ConnectingNode);
+                    n.BuildConnection(connection.Key, aux);
+                    Console.WriteLine("Node " + n.Name + " leads to node " + aux.Name + " via " + connection.Key);
+                }
+            }
+
+            currentNode = nodes[0];
+        }
+
+        /// <summary>
+        /// Shows the available directions from CurrentNode.
+        /// </summary>
+        public async static void GetDirections(long chatId)
+        {
+            string msg = "Available directions:";
+            foreach (var connection in currentNode.NodeConnections)
+            {
+                msg += "\n" + connection.Key;
+            }
+
+            await TelegramCommunicator.SendText(chatId, msg);
+        }
+
+        /// <summary>
+        /// Sends the 'OnInspectText' field of the current node of the player 
+        /// </summary>
+        public async static void OnInspect(long chatId)
+        {
+            if (currentNode.OnInspectText != "")
+            {
+                await TelegramCommunicator.SendText(chatId, currentNode.OnInspectText);
+            }
+            else await TelegramCommunicator.SendText(chatId, "There is nothing of interest around here");
+        }
+
+        /// <summary>
+        /// Searches a node in the Nodes list by a given name
+        /// </summary>
         private static Node SearchNode(string name)
         {
             foreach(Node n in nodes)
@@ -39,12 +93,15 @@ namespace MMOTFG_Bot.Navigation
             return null;
         }
 
+        /// <summary>
+        /// Deserializes the .json file specified by path and constructs the map.
+        /// </summary>
         private static void ReadMapFromJSON(string path)
         {
-            string mapText = "";
+            string mapText = ""; //Text of the entire .json file
             try
             {
-                mapText = File.ReadAllText(path, Encoding.GetEncoding("iso-8859-1"));
+                mapText = File.ReadAllText(path, Encoding.GetEncoding("iso-8859-1")); //This encoding supports spanish characters "ñ, á ..."
             }
             catch (FileNotFoundException e)
             {
@@ -54,56 +111,13 @@ namespace MMOTFG_Bot.Navigation
 
             try
             {
-                JsonSerializerSettings settings = new JsonSerializerSettings();
-                settings.Culture = new System.Globalization.CultureInfo("es-ES", false);
-                
-                nodes = JsonConvert.DeserializeObject<List<Node>>(mapText);
+                nodes = JsonConvert.DeserializeObject<List<Node>>(mapText); //Deserializes the .json file into an array of nodes.
             }
             catch (JsonException e)
             {
                 Console.WriteLine("ERROR: map.json isn't formatted correctly. \nError message:" + e.Message);
                 Environment.Exit(-1);
             }
-        }
-
-        public static void BuildMap(string mapPath)
-        {
-            ReadMapFromJSON(mapPath);
-
-            //Connecting the map together.
-            Node aux;
-            Console.WriteLine("Building map...");
-            foreach(Node n in nodes)
-            {
-                foreach(KeyValuePair<string, Node.NodeConnection> connection in n.NodeConnections)
-                {
-                    aux = SearchNode(connection.Value.ConnectingNode);
-                    n.BuildConnection(connection.Key, aux);
-                    Console.WriteLine("Node " + n.Name + " leads to node " + aux.Name + " via " + connection.Key);
-                }
-            }
-
-            currentNode = nodes[0];
-        }
-
-        public async static void GetDirections(long chatId)
-        {
-            string msg = "Available directions:";
-            foreach(var connection in currentNode.NodeConnections)
-            {
-                msg += "\n" + connection.Key;
-            }
-
-            await TelegramCommunicator.SendText(chatId, msg);
-        }
-
-        public async static void OnInspect(long chatId)
-        {
-            if(currentNode.OnInspectText != "")
-            {
-                await TelegramCommunicator.SendText(chatId, currentNode.OnInspectText);
-            }
-            else await TelegramCommunicator.SendText(chatId, "There is nothing of interest around here");
         }
     }
 }

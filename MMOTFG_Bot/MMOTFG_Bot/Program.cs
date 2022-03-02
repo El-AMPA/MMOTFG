@@ -176,7 +176,7 @@ namespace MMOTFG_Bot
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
 			Map.BuildMap("assets/map.json");
-			foreach (ICommand c in commandList) c.Init();
+			foreach (ICommand c in commandList) c.SetKeywords();
 
 			Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);
 

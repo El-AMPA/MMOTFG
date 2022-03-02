@@ -4,9 +4,13 @@ using System.Text;
 
 namespace MMOTFG_Bot.Commands
 {
+    /// <summary>
+    /// Uses an item a specified amount of times.
+    /// The user can add 'all' to consume ALL instances of that item.
+    /// </summary>
     class cUseItem : ICommand
     {
-        public override void Init()
+        public override void SetKeywords()
         {
             key_words = new string[]{
                 "/consume",

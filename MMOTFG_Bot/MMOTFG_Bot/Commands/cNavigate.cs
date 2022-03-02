@@ -5,9 +5,12 @@ using MMOTFG_Bot.Navigation;
 
 namespace MMOTFG_Bot.Commands
 {
+    /// <summary>
+    /// Moves the player in the specified direction
+    /// </summary>
     class cNavigate : ICommand
     {
-        public override void Init()
+        public override void SetKeywords()
         {
             key_words = new string[]{
                 "/go",

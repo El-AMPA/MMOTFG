@@ -5,9 +5,12 @@ using MMOTFG_Bot.Navigation;
 
 namespace MMOTFG_Bot.Commands
 {
+    /// <summary>
+    /// Sends the 'OnInspectText' field of the current node of the player 
+    /// </summary>
     class cInspectRoom : ICommand
     {
-        public override void Init()
+        public override void SetKeywords()
         {
             key_words = new string[] {
                 "/inspect",
