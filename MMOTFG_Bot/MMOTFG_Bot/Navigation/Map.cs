@@ -33,11 +33,17 @@ namespace MMOTFG_Bot.Navigation
             }
         }
 
-        public static void BuildMap(string mapPath)
+        /// <summary>
+        /// Builds the map reading it from the file specified by mapPath.
+        /// </summary>
+        public static void Init(string mapPath)
         {
             ReadMapFromJSON(mapPath);
 
             //Connecting the map together.
+            //When deserializing the map and creating a new Node, not every Node that is connected to the new node is instanced. Each node knows that they have x connections in
+            //y directions but they don't know what node instance they point to. They just know their name. 
+            //That's why after deserialzing, we need to complete the connections one by one.
             Node aux;
             Console.WriteLine("Building map...");
             foreach (Node n in nodes)
@@ -49,7 +55,6 @@ namespace MMOTFG_Bot.Navigation
                     Console.WriteLine("Node " + n.Name + " leads to node " + aux.Name + " via " + connection.Key);
                 }
             }
-
             currentNode = nodes[0];
         }
 
