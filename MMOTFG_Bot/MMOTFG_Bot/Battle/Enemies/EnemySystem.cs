@@ -18,7 +18,7 @@ namespace MMOTFG_Bot.Battle.Enemies
             {
                 return enemyDict[name];
             }
-            else return new Enemy();
+            else return new Error();
         }
     }
 }

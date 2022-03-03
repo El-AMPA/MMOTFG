@@ -6,8 +6,8 @@ namespace MMOTFG_Bot
 {
     class Enemy : Battler
     {
-        public string imageName;
-        public string imageCaption;
+        public string imageName = null;
+        public string imageCaption = null;
 
         public float droppedMoney;
         public ObtainableItem droppedItem;

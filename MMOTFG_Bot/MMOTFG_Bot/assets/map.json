@@ -82,6 +82,10 @@
       {
         "EventType": "eSendText",
         "Description": "Toma eventos."
+      },
+      {
+        "EventType": "eStartBattle",
+        "Enemy": "Peter"
       }
     ]
   }
