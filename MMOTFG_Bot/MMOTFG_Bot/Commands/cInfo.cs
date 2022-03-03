@@ -6,7 +6,7 @@ namespace MMOTFG_Bot.Commands
 {
     class cInfo : ICommand
     {
-        public override void Init()
+        public override void SetKeywords()
         {
             key_words = new string[] {
                 "/info"

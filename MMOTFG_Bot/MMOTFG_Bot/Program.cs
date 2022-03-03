@@ -119,7 +119,7 @@ namespace MMOTFG_Bot
 
 			//set attack keywords
 			cAttack cAttack = new cAttack();
-			cAttack.setKeywords(player.attackNames.ConvertAll(s => s.ToLower()).ToArray());
+			cAttack.setKeywords(new Player().attackNames.ConvertAll(s => s.ToLower()).ToArray());
 			commandList.Add(cAttack);
 
 			Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);

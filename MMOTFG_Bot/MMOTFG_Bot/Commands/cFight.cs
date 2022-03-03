@@ -7,7 +7,7 @@ namespace MMOTFG_Bot.Commands
 {
     class cFight : ICommand
     {
-        public override void Init()
+        public override void SetKeywords()
         {
             key_words = new string[] {
                 "/fight"

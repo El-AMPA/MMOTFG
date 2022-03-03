@@ -21,7 +21,6 @@ namespace MMOTFG_Bot
             enemy = e;
             battleActive = true;
             await TelegramCommunicator.SendImage(chatId, e.imageName, e.imageCaption);
-            Console.WriteLine("tiroriroriroriro chan chan chan");
         }
 
         public static async void setPlayerOptions(long chatId)
@@ -92,7 +91,8 @@ namespace MMOTFG_Bot
                         await InventorySystem.AddItem(chatId, enemy.droppedItem.name, enemy.droppedItemAmount);
                     }
                     await TelegramCommunicator.SendText(chatId, msg);
-                }              
+                }
+                await TelegramCommunicator.RemoveReplyMarkup(chatId);
             }
             else
             {

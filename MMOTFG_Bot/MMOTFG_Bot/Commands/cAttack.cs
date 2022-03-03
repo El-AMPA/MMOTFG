@@ -6,7 +6,7 @@ namespace MMOTFG_Bot.Commands
 {
     class cAttack : ICommand
     {
-        public override void Init()
+        public override void SetKeywords()
         {
             //las keywords son los ataques que tenga el jugador
         }
