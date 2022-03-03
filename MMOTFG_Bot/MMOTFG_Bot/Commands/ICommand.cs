@@ -4,9 +4,14 @@
     {
         protected string[] key_words;
 
-        public abstract void Init();
+        /// <summary>
+        /// Sets the keywords that will be recognized by this command
+        /// </summary>
+        public abstract void SetKeywords();
 
-        //Checks if the string command exists in the key_words of the specific command
+        /// <summary>
+        /// Checks if the 'command' string exists in the registred key_words of this command
+        /// </summary>
         public bool ContainsKeyWord(string command, long chatId, string[] args = null)
         {
             foreach (string p in key_words)
@@ -20,10 +25,17 @@
             }
             return false;
         }
+
+        /// <summary>
+        /// Applies the effect of this command
+        /// </summary>
         internal abstract void Execute(string command, long chatId, string[] args = null);
 
-        //Determines wether the given order is formatted correctly or not.
-        //(/add 10a apples isn't formatted correctly. This method should read this text and determine that it's not correct)
+
+        /// <summary>
+        /// Determines wether the given order is formatted correctly or not.
+        /// /add 10a apples isn't formatted correctly. This method should read this text and determine that it's not correct)
+        /// </summary>
         internal abstract bool IsFormattedCorrectly(string[] args);
     }
 }

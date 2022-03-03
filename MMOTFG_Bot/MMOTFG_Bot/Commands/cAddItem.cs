@@ -6,7 +6,7 @@ namespace MMOTFG_Bot.Commands
 {
     class cAddItem : ICommand
     {
-        public override void Init()
+        public override void SetKeywords()
         {
             key_words = new string[] {
                 "/add"
