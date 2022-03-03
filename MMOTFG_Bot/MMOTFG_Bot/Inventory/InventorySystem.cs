@@ -222,6 +222,12 @@ namespace MMOTFG_Bot
 
         public static async Task EquipGear(long chatId, EquipableItem item)
         {
+            //If the item isn't contained in the inventory, there is no point in continuing.
+            if (!InventoryRecords.Exists(x => x.InventoryItem.iD == item.iD))
+            {
+                await TelegramCommunicator.SendText(chatId, "Item " + item.name + " couldn't be equipped as it was not found in your inventory");
+                return;
+            }
             if (equipment[(int)item.gearSlot] != null)
             {
                 equipment[(int)item.gearSlot].OnUnequip(chatId);
