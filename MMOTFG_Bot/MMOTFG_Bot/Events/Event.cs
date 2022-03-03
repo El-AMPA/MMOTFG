@@ -7,6 +7,8 @@ using JsonSubTypes;
 
 namespace MMOTFG_Bot.Events
 {
+    //If you want to create a new Event class, add it below so JsonSubtypes recognizes it
+    //when deserializing the map.
     [JsonConverter(typeof(JsonSubtypes), "EventType")]
     [JsonSubtypes.KnownSubType(typeof(eGiveItem), "eGiveItem")]
     [JsonSubtypes.KnownSubType(typeof(eSendAudio), "eSendAudio")]
@@ -19,7 +21,7 @@ namespace MMOTFG_Bot.Events
     //Thus, if it were a pure abstract class, it would just send an exception.
     class Event
     {
-        public virtual async void Execute(long chatId)
+        public virtual void Execute(long chatId)
         {
 
         }

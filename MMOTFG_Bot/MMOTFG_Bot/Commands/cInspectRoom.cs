@@ -6,27 +6,28 @@ using MMOTFG_Bot.Navigation;
 namespace MMOTFG_Bot.Commands
 {
     /// <summary>
-    /// Moves the player in the specified direction
+    /// Sends the 'OnInspectText' field of the current node of the player 
     /// </summary>
-    class cNavigate : ICommand
+    class cInspectRoom : ICommand
     {
         public override void SetKeywords()
         {
-            key_words = new string[]{
-                "/go",
+            key_words = new string[] {
+                "/inspect",
+                "/look_around",
+                "/look"
             };
         }
 
         internal override void Execute(string command, long chatId, string[] args = null)
         {
-            Map.Navigate(chatId, args[0]);
+            Map.OnInspect(chatId);
         }
 
         internal override bool IsFormattedCorrectly(string[] args)
         {
-            if (args.Length != 1) return false;
-
-            return true;
+            if (args.Length == 0) return true;
+            return false;
         }
     }
 }

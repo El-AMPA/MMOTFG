@@ -4,6 +4,9 @@ using System.Text;
 
 namespace MMOTFG_Bot.Events
 {
+    /// <summary>
+    /// Sends a text message to the user.
+    /// </summary>
     class eSendText : Event
     {
         public string Description

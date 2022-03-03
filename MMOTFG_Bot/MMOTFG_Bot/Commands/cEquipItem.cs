@@ -8,7 +8,7 @@ namespace MMOTFG_Bot.Commands
     //TO-DO: ESTO ESTÁ SIN TERMINAR. NO ES DEFINITIVO.
     class cEquipItem : ICommand
     {
-        public override void Init()
+        public override void SetKeywords()
         {
             key_words = new string[]{
                 "/equip",

@@ -4,9 +4,12 @@ using System.Text;
 
 namespace MMOTFG_Bot.Commands
 {
+    /// <summary>
+    /// Shows the inventory of the player.
+    /// </summary>
     class cShowInventory : ICommand
     {
-        public override void Init()
+        public override void SetKeywords()
         {
             key_words = new string[] {
                 "/show_inventory"

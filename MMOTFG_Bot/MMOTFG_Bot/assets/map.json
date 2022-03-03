@@ -1,70 +1,84 @@
-{
-  "Nodes": [
-    {
-      "Name": "Corridor",
-      "NodeConnections": {
-        "north": {
-          "ConnectingNode": "Corridor2",
-          "OnExitEvent": [
-            {
-              "EventType": "eSendText",
-              "Description": "La sala esta oscura... El aroma a pienso es insoportable, pero tu determinacion nunca ha sido mas fuerte."
-            },
-            {
-              "EventType": "eSendText",
-              "Description": "Intentas avanzar por la sala sigilosamente, pero de forma inesperada, notas una respiracion en tu nuca..."
-            },
-            {
-              "EventType": "eSendImage",
-              "Descrption": "I will smite thee heathen.",
-              "ImageName": "Dog1.png"
-            }
-          ]
-        }
+[
+  {
+    "Name": "Corridor1",
+    "NodeConnections": {
+      "north": {
+        "ConnectingNode": "Corridor2"
+      },
+      "trapdoor": {
+        "ConnectingNode": "BossArena"
       }
     },
-    {
-      "Name": "TestNode2",
-      "NodeConnections": {
-        "north": {
-          "ConnectingNode": "TestNode2",
-          "OnArriveEvent": [
-            {
-              "EventType": "eSendText",
-              "Description": "Si Alvar."
-            },
-            {
-              "EventType": "eSendText",
-              "Description": "Intentas avanzar por la sala sigilosamente, pero de forma inesperada, notas una respiracion en tu nuca..."
-            },
-            {
-              "EventType": "eSendImage",
-              "Descrption": "I will smite thee heathen.",
-              "ImageName": "Dog1.png"
-            }
-          ]
-        },
-        "trapdoor": {
-          "ConnectingNode": "TestNode2",
-          "OnArriveEvent": [
-            {
-              "TypeDiscriminator": 1,
-              "ItemLots": [
-                {
-                  "item": "health_potion",
-                  "quantity": 3,
-                  "chanceToObtain": 1
-                },
-                {
-                  "item": "mana_potion",
-                  "quantity": 1,
-                  "chanceToObtain": 0.5
-                }
-              ]
-            }
-          ]
-        }
+    "OnInspectText": "Estás en una mazmorra muy dank y dark. Al norte puedes seguir avanzando por el pasillo. También puedes usar una trampilla, ¿me pregunto a donde llevará ...?"
+  },
+  {
+    "Name": "Corridor2",
+    "NodeConnections": {
+      "north": {
+        "ConnectingNode": "BossArena"
+      },
+      "south": {
+        "ConnectingNode": "Corridor1"
       }
-    }
-  ]
-}
+    },
+    "OnArriveEvent": [
+      {
+        "EventType": "eSendText",
+        "Description": "Notas un tufo a pienso horrible. Es inaguantable. En el suelo encuentras un objeto."
+      },
+      {
+        "EventType": "eGiveItem",
+        "ItemLots": [
+          {
+            "Item": "health_potion",
+            "Quantity": 2,
+            "ChanceToObtain": 1
+          },
+          {
+            "Item": "mana_potion",
+            "Quantity": 1,
+            "ChanceToObtain": 0.5
+          }
+        ]
+      }
+    ],
+    "OnInspectText": "El olor a pienso es realmente inaguantable. Debería continuar."
+  },
+  {
+    "Name": "BossArena",
+    "NodeConnections": {
+      "south": {
+        "ConnectingNode": "Corridor2"
+      }
+    },
+    "OnArriveEvent": [
+      {
+        "EventType": "eSendText",
+        "Description": "Al entrar, notas una fuerte respiración en tu espalda."
+      },
+      {
+        "EventType": "eSendImage",
+        "Description": "I will smite thee",
+        "ImageName": "Dog1.png"
+      },
+      {
+        "EventType": "eSendAudio",
+        "Description": "No se que poner me quedé sin ideas.",
+        "AudioName": "DoggoMusic.mp3"
+      }
+    ],
+    "OnExitEvent": [
+      {
+        "EventType": "eSendImageCollection",
+        "ImagesNames": [
+          "Dog1.png",
+          "Dog2.png"
+        ]
+      },
+      {
+        "EventType": "eSendText",
+        "Description": "Toma eventos."
+      }
+    ]
+  }
+]

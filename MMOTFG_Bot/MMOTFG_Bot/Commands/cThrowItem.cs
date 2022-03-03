@@ -4,9 +4,13 @@ using System.Text;
 
 namespace MMOTFG_Bot.Commands
 {
+    /// <summary>
+    /// Throws away an item a specified amount of times.
+    /// If the user adds "all", it throws away ALL instances of that item.
+    /// </summary>
     class cThrowItem : ICommand
     {
-        public override void Init()
+        public override void SetKeywords()
         {
             key_words = new string[] {
                 "/throw",
