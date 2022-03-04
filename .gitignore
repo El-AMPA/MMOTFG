@@ -349,5 +349,5 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
-#File with secret token
-token.txt
+#Files with secret tokens
+private/
