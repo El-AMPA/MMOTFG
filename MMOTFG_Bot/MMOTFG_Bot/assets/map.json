@@ -1,0 +1,84 @@
+[
+  {
+    "Name": "Corridor1",
+    "NodeConnections": {
+      "north": {
+        "ConnectingNode": "Corridor2"
+      },
+      "trapdoor": {
+        "ConnectingNode": "BossArena"
+      }
+    },
+    "OnInspectText": "Estás en una mazmorra muy dank y dark. Al norte puedes seguir avanzando por el pasillo. También puedes usar una trampilla, ¿me pregunto a donde llevará ...?"
+  },
+  {
+    "Name": "Corridor2",
+    "NodeConnections": {
+      "north": {
+        "ConnectingNode": "BossArena"
+      },
+      "south": {
+        "ConnectingNode": "Corridor1"
+      }
+    },
+    "OnArriveEvent": [
+      {
+        "EventType": "eSendText",
+        "Description": "Notas un tufo a pienso horrible. Es inaguantable. En el suelo encuentras un objeto."
+      },
+      {
+        "EventType": "eGiveItem",
+        "ItemLots": [
+          {
+            "Item": "health_potion",
+            "Quantity": 2,
+            "ChanceToObtain": 1
+          },
+          {
+            "Item": "mana_potion",
+            "Quantity": 1,
+            "ChanceToObtain": 0.5
+          }
+        ]
+      }
+    ],
+    "OnInspectText": "El olor a pienso es realmente inaguantable. Debería continuar."
+  },
+  {
+    "Name": "BossArena",
+    "NodeConnections": {
+      "south": {
+        "ConnectingNode": "Corridor2"
+      }
+    },
+    "OnArriveEvent": [
+      {
+        "EventType": "eSendText",
+        "Description": "Al entrar, notas una fuerte respiración en tu espalda."
+      },
+      {
+        "EventType": "eSendImage",
+        "Description": "I will smite thee",
+        "ImageName": "Dog1.png"
+      },
+      {
+        "EventType": "eSendAudio",
+        "Description": "No se que poner me quedé sin ideas.",
+        "AudioName": "DoggoMusic.mp3"
+      }
+    ],
+    "OnExitEvent": [
+      {
+        "EventType": "eSendImageCollection",
+        "ImagesNames": [
+          "Dog1.png",
+          "Dog2.png"
+        ]
+      },
+      {
+        "EventType": "eSendText",
+        "Description": "Toma eventos."
+      }
+    ]
+  }
+]

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using MMOTFG_Bot.Items;
 
 namespace MMOTFG_Bot
@@ -39,7 +40,7 @@ namespace MMOTFG_Bot
             return obtainableItems.TryGetValue(s, out item);
         }
 
-        public static async void AddItem(long chatId, string itemString, int quantityToAdd)
+        public static async Task AddItem(long chatId, string itemString, int quantityToAdd)
         {
             ObtainableItem item;
             if (StringToItem(itemString, out item))
@@ -89,11 +90,17 @@ namespace MMOTFG_Bot
             else await TelegramCommunicator.SendText(chatId, "Item " + itemString + " doesn't exist");
         }
 
-        public static async void ConsumeItems(long chatId, string itemString, int quantityToConsume, string command, string[] args = null)
+        public static async Task ConsumeItems(long chatId, string itemString, int quantityToConsume, string command, string[] args = null)
         {
             ObtainableItem item;
             if (StringToItem(itemString, out item))
             {
+                if (!item.UnderstandsCommand(command))
+                {
+                    await TelegramCommunicator.SendText(chatId, "Can't do that with that item");
+                    return;
+                }
+
                 //If the item isn't contained in the inventory, there is no point in continuing.
                 if (!InventoryRecords.Exists(x => x.InventoryItem.iD == item.iD))
                 {
@@ -139,7 +146,7 @@ namespace MMOTFG_Bot
             else await TelegramCommunicator.SendText(chatId, "Item " + itemString + " doesn't exist");
         }
 
-        public static async void ThrowAwayItem(long chatId, string itemString, int quantityToThrowAway)
+        public static async Task ThrowAwayItem(long chatId, string itemString, int quantityToThrowAway)
         {
             ObtainableItem item;
             if (StringToItem(itemString, out item))
@@ -198,7 +205,7 @@ namespace MMOTFG_Bot
             return numItems;
         }
 
-        public static async void ShowInventory(long chatId)
+        public static async Task ShowInventory(long chatId)
         {
             string message = "User inventory:\n";
             foreach (InventoryRecord i in InventoryRecords)
@@ -209,7 +216,7 @@ namespace MMOTFG_Bot
             if (message != "") await TelegramCommunicator.SendText(chatId, message);
         }
 
-        public static async void UnequipGear(long chatId, EQUIPMENT_SLOT slot)
+        public static async Task UnequipGear(long chatId, EQUIPMENT_SLOT slot)
         {
             if(equipment[(int)slot] != null)
             {
@@ -219,7 +226,7 @@ namespace MMOTFG_Bot
             }
         }
 
-        public static async void EquipGear(long chatId, EquipableItem item)
+        public static async Task EquipGear(long chatId, EquipableItem item)
         {
             if (equipment[(int)item.gearSlot] != null) UnequipGear(chatId, item.gearSlot);
             await TelegramCommunicator.SendText(chatId, "You've equipped " + item.name + " into your " + item.gearSlot + " gear slot.");

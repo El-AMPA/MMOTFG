@@ -1,4 +1,5 @@
 ﻿using MMOTFG_Bot.Commands;
+using MMOTFG_Bot.Navigation;
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -17,11 +18,11 @@ namespace MMOTFG_Bot
 {
 	class Program
 	{
-		static Map mapa = new Map();
 		static Battle battle = null;
 
 		//TO-DO: Esto es un poco bastante feo.
-		static ICommand[] commandList = { new cUseItem(), new cAddItem(), new cThrowItem(), new cShowInventory(), new cEquipItem()};
+		static ICommand[] commandList = { new cUseItem(), new cAddItem(), new cThrowItem(), new cShowInventory(), new cEquipItem(),
+			new cNavigate(), new cDirections(), new cInspectRoom()};
 
 		static async Task Main(string[] args)
 		{
@@ -67,7 +68,8 @@ namespace MMOTFG_Bot
 			//Module initializers
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
-			foreach (ICommand c in commandList) c.Init();
+			Map.Init("assets/map.json");
+			foreach (ICommand c in commandList) c.SetKeywords();
 
 			Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);
 

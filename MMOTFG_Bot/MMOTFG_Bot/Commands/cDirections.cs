@@ -1,32 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MMOTFG_Bot.Navigation;
 
 namespace MMOTFG_Bot.Commands
 {
     /// <summary>
-    /// Shows the inventory of the player.
+    /// Shows the available directions from a given node.
     /// </summary>
-    class cShowInventory : ICommand
+    class cDirections : ICommand
     {
         public override void SetKeywords()
         {
             key_words = new string[] {
-                "/show_inventory"
+                "/directions"
             };
         }
 
         internal override void Execute(string command, long chatId, string[] args = null)
         {
-            InventorySystem.ShowInventory(chatId);
+            Map.GetDirections(chatId);
         }
 
         internal override bool IsFormattedCorrectly(string[] args)
         {
-            //Format: /show_inventory
-            if (args.Length != 0) return false;
-
-            return true;
+            if (args.Length == 0) return true;
+            return false;
         }
     }
 }
