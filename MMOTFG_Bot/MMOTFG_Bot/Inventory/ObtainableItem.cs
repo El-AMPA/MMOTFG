@@ -14,6 +14,18 @@ namespace MMOTFG_Bot
         public string name { get; set; }
         public int maxStackQuantity { get; set; }
 
+        public bool UnderstandsCommand(string command)
+        {
+            foreach (KeyValuePair<string, Action<long, string[]>> a in key_words)
+            {
+                if (a.Key == command)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool ProcessCommand(string command, long chatId, string[] args = null)
         {
             foreach (KeyValuePair<string, Action<long, string[]>> a in key_words)
