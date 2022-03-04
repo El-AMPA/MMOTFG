@@ -11,7 +11,8 @@ using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
-using System.Data.SqlClient;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 
 namespace MMOTFG_Bot
 {
@@ -25,66 +26,6 @@ namespace MMOTFG_Bot
 
 		static async Task Main(string[] args)
 		{
-            //<------CÓDIGO DE SQL------>
-            //Server = tcp:localhost,Port; Initial Catalog = databaseName; "
-            //	  + "User ID =UserID;Password =Password";
-
-            //Referencia a las connectionStrings
-            //https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlconnection.connectionstring?view=dotnet-plat-ext-6.0
-
-            string connectionString =
-            "Server=tcp:sqldatabase,1433;Initial Catalog=model;"
-            + "User ID =sa;Password = 22MMOTFGDatabasePassword23;"
-            + "Timeout = 10";
-
-            // Provide the query string with a parameter placeholder.
-            //string queryString =
-            //	"SELECT ProductID, UnitPrice, ProductName from dbo.products "
-            //		+ "WHERE UnitPrice > @pricePoint "
-            //		+ "ORDER BY UnitPrice DESC;";
-            string queryString =
-                "CREATE TABLE ola (@pricepoint int);";
-
-            // Specify the parameter value.
-            int paramValue = 5;
-
-            Console.WriteLine("Creando conexion");
-
-            // Create and open the connection in a using block. This
-            // ensures that all resources will be closed and disposed
-            // when the code exits.
-            using (SqlConnection connection =
-                new SqlConnection(connectionString))
-            {
-                // Create the Command and Parameter objects.
-                SqlCommand sqlCommand = new SqlCommand(queryString, connection);
-                sqlCommand.Parameters.AddWithValue("@pricePoint", paramValue);
-
-                // Open the connection in a try/catch block.
-                // Create and execute the DataReader, writing the result
-                // set to the console window.
-                try
-                {
-                    connection.Open();
-                    Console.WriteLine("Conectado");
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        Console.WriteLine("Leyendo");
-                        Console.WriteLine("\t{0}\t{1}\t{2}",
-                            reader[0], reader[1], reader[2]);
-                    }
-                    reader.Close();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error:");
-                    Console.WriteLine(ex.Message);
-                }
-                //Console.ReadLine();
-            }
-            //<------FIN DEL CÓDIGO DE SQL------>
-
             /*Si estamos depurando en visual studio, tenemos que cambiar la ruta relativa en PC
 			* para que funcione igual que en el contenedor de Docker*/
             if (Environment.GetEnvironmentVariable("PLATFORM_PC") != null)
@@ -97,70 +38,17 @@ namespace MMOTFG_Bot
                 Console.WriteLine("Estamos en Docker");
             }
 
-            //Event arriveEvent = new Event();
-            //arriveEvent.addAction(new DescriptorAction("Nunca te gustó mucho la entrada a la facultad, pero depsués de tantos años ya te has acostumbrado."));
-            //MapNode entranceNode = new MapNode();
-            //entranceNode.onArriveEvent = arriveEvent;
-            //mapa.addNode("entrance", entranceNode);
 
-            //arriveEvent = new Event();
-            //arriveEvent.addAction(new DescriptorAction("Al aula cinco ya no le queda ni un ápice del brillo que tenía en 2018. Te sientes triste solo de mirar a través de la puerta."));
-            //MapNode aulaNode = new MapNode();
-            //aulaNode.onArriveEvent = arriveEvent;
-            //Event exitEvent = new Event();
-            //exitEvent.addAction(new DescriptorAction("Al salir del aula cinco sientes al fantasma de Fede acechándote. Yikes dawg"));
-            //aulaNode.onExitEvent = exitEvent;
-            //mapa.addNode("aula5", aulaNode);
-            //Event lookEvent = new Event();
-            //lookEvent.addAction(new DescriptorAction("Encima de la mesa del profesor, observas que hay un pen-drive abandonado. Decides cogerlo"));
-
-            //ItemInfo.setItemName(ItemID.PenDrive, "pendrive misterioso");
-            //Event onUseEvent = new Event();
-            //onUseEvent.addAction(new DescriptorAction("El pendrive contiene el examen de consolas con la solución de la última práctica. ¡Menudo éxito!"));
-            //ItemInfo.addConsumeEvent(ItemID.PenDrive, onUseEvent);
-
-            //lookEvent.addAction(new GiveItemAction(ItemID.PenDrive));
-            //aulaNode.onLookEvent = lookEvent;
-
-            //mapa.connectNode("entrance", "aula5", Direction.North);
-            //mapa.connectNode("aula5", "entrance", Direction.South);
-
-            //mapa.setPosition("entrance");
-
-            // char c;
-            // while (true)
-            // {
-            //     c = (char)Console.Read();
-            //     switch (c)
-            //     {
-            //         case ('w'):
-            //             mapa.navigate(Direction.North);
-            //             break;
-            //         case ('s'):
-            //             mapa.navigate(Direction.South);
-            //             break;
-            //         case ('d'):
-            //             mapa.navigate(Direction.East);
-            //             break;
-            //         case ('a'):
-            //             mapa.navigate(Direction.West);
-            //             break;
-            //         case ('l'):
-            //             mapa.lookAround();
-            //             break;
-            //         case ('u'):
-            //             if (!Inventory.useItem(ItemID.PenDrive))
-            //             {
-            //                 Console.WriteLine("Ibas a usar un objeto, pero llevas el bolsillo más vacío que la sección de calificaciones del campus virtual");
-            //             }
-            //             break;
-            //     }
-            // }
+			//----CÓDIGO FIREBASE----
+			FirebaseApp.Create(new AppOptions()
+			{
+				Credential = GoogleCredential.FromAccessToken("assets/private/firebase-admin.json")
+			});
 
             string token = "";
             try
             {
-                token = System.IO.File.ReadAllText("assets/token.txt");
+                token = System.IO.File.ReadAllText("assets/private/token.txt");
             }
             catch (FileNotFoundException e)
             {
