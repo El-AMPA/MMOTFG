@@ -11,8 +11,7 @@ using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
-using FirebaseAdmin;
-using Google.Apis.Auth.OAuth2;
+using Google.Cloud.Firestore;
 
 namespace MMOTFG_Bot
 {
@@ -26,37 +25,43 @@ namespace MMOTFG_Bot
 
 		static async Task Main(string[] args)
 		{
-            /*Si estamos depurando en visual studio, tenemos que cambiar la ruta relativa en PC
+			/*Si estamos depurando en visual studio, tenemos que cambiar la ruta relativa en PC
 			* para que funcione igual que en el contenedor de Docker*/
-            if (Environment.GetEnvironmentVariable("PLATFORM_PC") != null)
-            {
-                Console.WriteLine("Estamos en PC");
-                Directory.SetCurrentDirectory("./../../..");
-            }
-            else
-            {
-                Console.WriteLine("Estamos en Docker");
-            }
-
-
-			//----CÓDIGO FIREBASE----
-			FirebaseApp.Create(new AppOptions()
+			if (Environment.GetEnvironmentVariable("PLATFORM_PC") != null)
 			{
-				Credential = GoogleCredential.FromAccessToken("assets/private/firebase-admin.json")
-			});
+				Console.WriteLine("Estamos en PC");
+				Directory.SetCurrentDirectory("./../../..");
+			}
+			else
+			{
+				Console.WriteLine("Estamos en Docker");
+			}
 
-            string token = "";
-            try
-            {
-                token = System.IO.File.ReadAllText("assets/private/token.txt");
-            }
-            catch (FileNotFoundException e)
-            {
-                Console.WriteLine("No se ha encontrado el archivo token.txt en la carpeta assets.");
-                Environment.Exit(-1);
-            }
+			//----EJEMPLO CÓDIGO FIREBASE (sacarlo de aquí en algún momento)----
+			Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", "assets/private/firebase-admin.json");
+			FirestoreDb db = FirestoreDb.Create("mmotfg-database");
 
-            var botClient = new TelegramBotClient(token);
+			DocumentReference docRef = db.Collection("ejemplo").Document("firestore");
+			Dictionary<string, long> pruebaFirestore = new Dictionary<string, long>{
+				{"pejota", 6595 },
+				{"moviles", 2223}
+			};
+
+			await docRef.SetAsync(pruebaFirestore);
+			//----FIN DE CÓDIGO FIREBASE----
+
+			string token = "";
+			try
+			{
+				token = System.IO.File.ReadAllText("assets/private/token.txt");
+			}
+			catch (FileNotFoundException e)
+			{
+				Console.WriteLine("No se ha encontrado el archivo token.txt en la carpeta assets.");
+				Environment.Exit(-1);
+			}
+
+			var botClient = new TelegramBotClient(token);
 			var me = await botClient.GetMeAsync();
 
 			//Module initializers
@@ -73,7 +78,7 @@ namespace MMOTFG_Bot
 			BotCommand command = new BotCommand();
 
 			Console.WriteLine($"Start listening for @{me.Username}");
-            Thread.Sleep(Timeout.Infinite);
+			Thread.Sleep(Timeout.Infinite);
 
 			cts.Cancel();
 		}
@@ -108,7 +113,7 @@ namespace MMOTFG_Bot
 
 		static async Task BotOnInlineQueryReceived(ITelegramBotClient botClient, InlineQuery query)
 		{
-            InlineQueryResult[] results = {
+			InlineQueryResult[] results = {
 					//// displayed result
 					//new InlineQueryResultArticle(
 					//	id: "0",
@@ -119,7 +124,7 @@ namespace MMOTFG_Bot
 					//)
 				};
 
-            await botClient.AnswerInlineQueryAsync(
+			await botClient.AnswerInlineQueryAsync(
 				inlineQueryId: query.Id,
 				results: results,
 				isPersonal: true,
@@ -141,26 +146,26 @@ namespace MMOTFG_Bot
 				string[] args = new string[subStrings.Count - 1];
 				subStrings.CopyTo(1, args, 0, args.Length);
 
-                //TO-DO: Integrarlo con los comandos.
-                //Descomentar esto y comentar lo de abajo si se quiere probar el sistema de combate.
+				//TO-DO: Integrarlo con los comandos.
+				//Descomentar esto y comentar lo de abajo si se quiere probar el sistema de combate.
 
-                //switch (subStrings[0])
-                //{
-                //    case "/fight":
-                //        Player player = new Player();
-                //        Enemy enemy = new Enemy();
-                //        battle = new Battle(player, enemy);
-                //        battle.setPlayerOptions(chatId);
-                //        break;
-                //    default:
-                //        if (battle != null)
-                //        {
-                //            battle.playerAttack(chatId, subStrings[0]);
-                //        }
-                //        break;
-                //}
+				//switch (subStrings[0])
+				//{
+				//    case "/fight":
+				//        Player player = new Player();
+				//        Enemy enemy = new Enemy();
+				//        battle = new Battle(player, enemy);
+				//        battle.setPlayerOptions(chatId);
+				//        break;
+				//    default:
+				//        if (battle != null)
+				//        {
+				//            battle.playerAttack(chatId, subStrings[0]);
+				//        }
+				//        break;
+				//}
 
-                foreach (ICommand c in commandList)
+				foreach (ICommand c in commandList)
 				{
 					if (c.ContainsKeyWord(command, chatId, args)) break;
 				}
