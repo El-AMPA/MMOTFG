@@ -15,11 +15,13 @@ namespace MMOTFG_Bot.Items
 
         private async void drinkPotion(long chatId, string[] args)
         {
+            BattleSystem.player.changeMP(5);
             await TelegramCommunicator.SendText(chatId, "Gained 5MP.");
         }
 
         private async void eatPotion(long chatId, string[] args)
         {
+            BattleSystem.player.changeMP(-2);
             await TelegramCommunicator.SendText(chatId, "Why would you eat a potion you freak.\n Your MP has been reduced by 2." +
                 " As if we had an MP system lmao.");
         }

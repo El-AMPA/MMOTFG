@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ namespace MMOTFG_Bot
 			{
 				InputOnlineFile inputOnlineFile = new InputOnlineFile(stream);
 				//ImageCaption supports emojis! 👏👏
-				await botClient.SendPhotoAsync(chatId, inputOnlineFile, imageCaption, ParseMode.Html);
+				botClient.SendPhotoAsync(chatId, inputOnlineFile, imageCaption, ParseMode.Html).Wait();
 				stream.Close();
 			}
 		}
@@ -54,7 +55,7 @@ namespace MMOTFG_Bot
 				media.Add(new InputMediaPhoto(new InputMedia(stream, imageName)));
 			}
 
-			await botClient.SendMediaGroupAsync(chatId, media);
+			botClient.SendMediaGroupAsync(chatId, media).Wait();
 
 			foreach (var stream in streams) stream.Close();
 		}
@@ -67,25 +68,34 @@ namespace MMOTFG_Bot
 			using (var stream = System.IO.File.OpenRead(assetsPath + audioName))
 			{
 				InputOnlineFile inputOnlineFile = new InputOnlineFile(stream);
-				await botClient.SendAudioAsync(chatId, inputOnlineFile, audioCaption, ParseMode.Html);
+
+				botClient.SendAudioAsync(chatId, inputOnlineFile, audioCaption, ParseMode.Html).Wait();
 				stream.Close();
 			}
 		}
 
 		static public async Task SendText(long chatId, string text)
         {
-			await botClient.SendTextMessageAsync(chatId, text, ParseMode.Html);
+			botClient.SendTextMessageAsync(chatId, text, ParseMode.Html).Wait();
         }
 
 		static public async Task SendButtons(long chatId, int buttonNum, string[] buttonNames)
         {
-			var keyboard = new KeyboardButton[buttonNum][];
-			for(int i = 0; i< buttonNum; i++)
+			var keyboard = new KeyboardButton[buttonNum/2][];
+			for(int i = 0; i< buttonNum; i+=2)
             {
-				keyboard[i] = new KeyboardButton[] { new KeyboardButton(buttonNames[i]) };
+				keyboard[i/2] = new KeyboardButton[] { 
+					new KeyboardButton(buttonNames[i]),
+					new KeyboardButton(buttonNames[i+1])
+				};
             }
 			var rkm = new ReplyKeyboardMarkup(keyboard);
-			await botClient.SendTextMessageAsync(chatId, "Text", replyMarkup: rkm);
+			botClient.SendTextMessageAsync(chatId, "Battle starts!", replyMarkup: rkm).Wait();
 		}
+
+		static public async Task RemoveReplyMarkup(long chatId)
+        {
+			botClient.SendTextMessageAsync(chatId, "Battle ends!", replyMarkup: new ReplyKeyboardRemove()).Wait();
+        }
 	}
 }

@@ -60,15 +60,15 @@ namespace MMOTFG_Bot.Navigation
         /// </summary>
         public void OnExit(long chatId)
         {
-            if(OnExitEvent != null) foreach (Event e in OnExitEvent) e.Execute(chatId);
+            if (OnExitEvent != null) foreach (Event e in OnExitEvent) e.Execute(chatId);
         }
 
         /// <summary>
-        /// Triggers the OnArrive events when entering the node
+        /// Triggers the OnArrive events when entering the node (TO-DO : estos dos métodos son iguales, no repetir código)
         /// </summary>
         public void OnArrive(long chatId)
         {
-            if(OnArriveEvent != null) foreach (Event e in OnArriveEvent) e.Execute(chatId);
+            if (OnArriveEvent != null) foreach (Event e in OnArriveEvent) e.Execute(chatId);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace MMOTFG_Bot.Navigation
             //y directions but they don't know what node they point to. They just know their name.
 
             NodeConnection connection;
-            if(NodeConnections.TryGetValue(direction, out connection)) connection.Node = node;
+            if (NodeConnections.TryGetValue(direction, out connection)) connection.Node = node;
         }
 
         /// <summary>
