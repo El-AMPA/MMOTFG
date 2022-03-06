@@ -95,6 +95,12 @@ namespace MMOTFG_Bot
             ObtainableItem item;
             if (StringToItem(itemString, out item))
             {
+                if (!item.UnderstandsCommand(command))
+                {
+                    await TelegramCommunicator.SendText(chatId, "Can't do that with that item");
+                    return;
+                }
+
                 //If the item isn't contained in the inventory, there is no point in continuing.
                 if (!InventoryRecords.Exists(x => x.InventoryItem.iD == item.iD))
                 {
