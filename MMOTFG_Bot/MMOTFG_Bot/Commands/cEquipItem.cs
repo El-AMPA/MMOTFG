@@ -15,6 +15,7 @@ namespace MMOTFG_Bot.Commands
             };
         }
 
+        //TO-DO: como usan cosas async a lo mejor los execute tendrían que ser async
         internal override void Execute(string command, long chatId, string[] args = null)
         {
             ObtainableItem item;
@@ -23,6 +24,7 @@ namespace MMOTFG_Bot.Commands
                 EquipableItem eItem = (EquipableItem)item; //lol. Si funciona doy gracias. O pido perdon.
                 InventorySystem.EquipGear(chatId, eItem);
             }
+            else TelegramCommunicator.SendText(chatId, "The specified item doesn't exist");
         }
 
         internal override bool IsFormattedCorrectly(string[] args)

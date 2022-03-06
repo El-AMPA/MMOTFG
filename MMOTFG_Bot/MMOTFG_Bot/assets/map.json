@@ -65,6 +65,10 @@
         "EventType": "eSendAudio",
         "Description": "No se que poner me quedé sin ideas.",
         "AudioName": "DoggoMusic.mp3"
+      },
+      {
+        "EventType": "eStartBattle",
+        "Enemy": "Manuela"
       }
     ],
     "OnExitEvent": [
@@ -78,6 +82,10 @@
       {
         "EventType": "eSendText",
         "Description": "Toma eventos."
+      },
+      {
+        "EventType": "eStartBattle",
+        "Enemy": "Peter"
       }
     ]
   }

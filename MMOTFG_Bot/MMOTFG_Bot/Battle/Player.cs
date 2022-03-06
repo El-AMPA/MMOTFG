@@ -4,28 +4,51 @@ using System.Text;
 
 namespace MMOTFG_Bot
 {
-    class Player
+    class Player : Battler
     {
-        public float[] stats = new float[] {0,0};
-        public Attack[] attacks;
-
-        public int attackNum;
-        public List<string> attackNames;
+        public List<string> attackNames = new List<string>();
+        public List<float> attackmpCosts = new List<float>();
 
         public Player()
         {
-            stats[(int)StatNames.HP] = 100;
-            stats[(int)StatNames.ATK] = 10;
+            name = "Player";
+
+            stats = new float[] { 100, 10, 50 };
+
+            originalStats = (float[])stats.Clone();
 
             attacks = new Attack[]{
-                new Attack("Tortazo", 1.5f),
-                new Attack("Patada", 2),
-                new Attack("Cabezazo", 5),
-                new Attack("Overkill", 100)
+                new Attack("Tortazo", 1.5f, 0),
+                new Attack("Patada", 2, 1),
+                new StatReducingAttack("Burla", 0, 5),
+                new Attack("Overkill", 100, 100)
             };
 
             attackNum = attacks.Length;
-            attackNames = new List<string>{"Tortazo", "Patada", "Cabezazo", "Overkill"};
+            foreach(Attack a in attacks)
+            {
+                attackNames.Add(a.name);
+                attackmpCosts.Add(a.mpCost);
+            }
+        }
+
+        public override async void OnKill(long chatId)
+        {
+            //Recuperas toda la vida y mp
+            stats[(int)StatName.HP] = originalStats[(int)StatName.HP];
+            stats[(int)StatName.MP] = originalStats[(int)StatName.MP];
+            await TelegramCommunicator.SendText(chatId, "You died!");
+        }
+
+        public void OnBattleOver()
+        {
+            //reseteamos los stats (excepto HP/MP) a su estado original
+            for (int i = 0; i < Stats.statNum; i++)
+            {
+                StatName sn = (StatName)i;
+                if (sn != StatName.HP && sn != StatName.MP)
+                    stats[i] = originalStats[i];
+            }
         }
     }
 }

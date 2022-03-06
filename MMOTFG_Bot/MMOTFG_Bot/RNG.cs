@@ -8,9 +8,9 @@ namespace MMOTFG_Bot
     {
         static private Random rng = new Random();
         
-        static public int Next(int minRange, int maxRange)
+        static public int Next(int minInclusive, int maxExclusive)
         {
-            return rng.Next(minRange, maxRange);
+            return rng.Next(minInclusive, maxExclusive);
         }
     }
 }

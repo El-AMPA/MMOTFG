@@ -18,10 +18,8 @@ namespace MMOTFG_Bot
 {
 	class Program
 	{
-		static Battle battle = null;
-
-		//TO-DO: Esto es un poco bastante feo.
-		static ICommand[] commandList = { new cUseItem(), new cAddItem(), new cThrowItem(), new cShowInventory(), new cEquipItem(),
+		static List<ICommand> commandList = new List<ICommand>{ new cUseItem(), new cAddItem(), new cThrowItem(),
+            new cShowInventory(), new cEquipItem(), new cInfo(), new cStatus(), new cFight(),
 			new cNavigate(), new cDirections(), new cInspectRoom()};
 
 		static async Task Main(string[] args)
@@ -66,10 +64,16 @@ namespace MMOTFG_Bot
 			var me = await botClient.GetMeAsync();
 
 			//Module initializers
+			BattleSystem.Init();
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
 			Map.Init("assets/map.json");
 			foreach (ICommand c in commandList) c.SetKeywords();
+
+			//set attack keywords
+			cAttack cAttack = new cAttack();
+			cAttack.setKeywords(new Player().attackNames.ConvertAll(s => s.ToLower()).ToArray());
+			commandList.Add(cAttack);
 
 			Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);
 
@@ -96,7 +100,7 @@ namespace MMOTFG_Bot
 				// UpdateType.PreCheckoutQuery:
 				// UpdateType.Poll:
 				UpdateType.Message => BotOnMessageReceived(botClient, update.Message),
-				//UpdateType.EditedMessage => BotOnMessageReceived(botClient, update.EditedMessage),
+				UpdateType.EditedMessage => BotOnMessageReceived(botClient, update.EditedMessage),
 				//UpdateType.CallbackQuery => BotOnCallbackQueryReceived(botClient, update.CallbackQuery),
 				UpdateType.InlineQuery => BotOnInlineQueryReceived(botClient, update.InlineQuery),
 				//UpdateType.ChosenInlineResult => BotOnChosenInlineResultReceived(botClient, update.ChosenInlineResult),
@@ -148,48 +152,11 @@ namespace MMOTFG_Bot
 				string[] args = new string[subStrings.Count - 1];
 				subStrings.CopyTo(1, args, 0, args.Length);
 
-				//TO-DO: Integrarlo con los comandos.
-				//Descomentar esto y comentar lo de abajo si se quiere probar el sistema de combate.
-
-				//switch (subStrings[0])
-				//{
-				//    case "/fight":
-				//        Player player = new Player();
-				//        Enemy enemy = new Enemy();
-				//        battle = new Battle(player, enemy);
-				//        battle.setPlayerOptions(chatId);
-				//        break;
-				//    default:
-				//        if (battle != null)
-				//        {
-				//            battle.playerAttack(chatId, subStrings[0]);
-				//        }
-				//        break;
-				//}
-
 				foreach (ICommand c in commandList)
-				{
-					if (c.ContainsKeyWord(command, chatId, args)) break;
-				}
-
-				//switch (command)
-				//{
-				//	case ("/add"):
-				//		Console.WriteLine("Adding item");
-				//		Potion potion = new Potion();
-				//		inventorySystem.AddItem(chatId, potion, 3);
-				//	break;
-				//	case ("/show"):
-				//		if (subStrings[1] == "inventory") inventorySystem.ShowInventory(chatId);
-				//	break;
-				//	case "/fight":
-				//		Player player = new Player();
-				//		Enemy enemy = new Enemy();
-				//		Battle battle = new Battle(player, enemy);
-
-				//	break;
-				//}
-			}
+                {
+                    if (c.ContainsKeyWord(command, chatId, args)) break;
+                }
+            }
 		}
 
 		static Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)

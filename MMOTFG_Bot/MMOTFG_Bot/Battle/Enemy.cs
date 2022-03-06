@@ -4,24 +4,25 @@ using System.Text;
 
 namespace MMOTFG_Bot
 {
-    class Enemy
+    class Enemy : Battler
     {
-        public float[] stats = new float[] { 0, 0 };
-        public Attack[] attacks;
+        public string imageName = null;
+        public string imageCaption = null;
 
-        public int attackNum;
+        public float droppedMoney;
+        public ObtainableItem droppedItem;
+        public int droppedItemAmount;
 
-        public Enemy()
+        public Enemy() { }
+
+        //la idea de esto es que los ataques estén ordenados de menor a mayor MP con el básico costando 0 siempre
+        public Attack nextAttack()
         {
-            stats[(int)StatNames.HP] = 50;
-            stats[(int)StatNames.ATK] = 10;
-
-            attacks = new Attack[]{
-                new Attack("Arañazo", 1),
-                new Attack("Super Arañazo", 2)
-            };
-
-            attackNum = attacks.Length;
-        }
+            int i = attackNum - 1;
+            while (attacks[i].mpCost > stats[(int)StatName.MP])
+                i--;
+            int attack = RNG.Next(0, i+1);
+            return attacks[attack];
+        }       
     }
 }

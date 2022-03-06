@@ -228,9 +228,21 @@ namespace MMOTFG_Bot
 
         public static async Task EquipGear(long chatId, EquipableItem item)
         {
-            if (equipment[(int)item.gearSlot] != null) UnequipGear(chatId, item.gearSlot);
+            //If the item isn't contained in the inventory, there is no point in continuing.
+            if (!InventoryRecords.Exists(x => x.InventoryItem.iD == item.iD))
+            {
+                await TelegramCommunicator.SendText(chatId, "Item " + item.name + " couldn't be equipped as it was not found in your inventory");
+                return;
+            }
+            if (equipment[(int)item.gearSlot] != null)
+            {
+                equipment[(int)item.gearSlot].OnUnequip(chatId);
+                UnequipGear(chatId, item.gearSlot);
+
+            }
             await TelegramCommunicator.SendText(chatId, "You've equipped " + item.name + " into your " + item.gearSlot + " gear slot.");
             equipment[(int)item.gearSlot] = item;
+            item.OnEquip(chatId);
             //TO-DO: Aplicar los efectos de equipar un objeto.
         }
 
