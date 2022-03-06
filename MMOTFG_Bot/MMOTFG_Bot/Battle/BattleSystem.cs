@@ -16,6 +16,13 @@ namespace MMOTFG_Bot
             player = new Player();
         }
 
+        public static bool IsPlayerInBattle(long chatId)
+        {
+            //nos imaginamos que buscamos en la base de datos para ver el jugador que queremos buscar
+            //beep boop beep beep....
+            return battleActive; //TO-DO: Pues eso
+        }
+
         public static async void startBattle(long chatId, Enemy e)
         {
             enemy = e;
