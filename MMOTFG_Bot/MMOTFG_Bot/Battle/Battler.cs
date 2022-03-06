@@ -24,14 +24,14 @@ namespace MMOTFG_Bot
         {
             float hp = stats[(int)StatName.HP];
             float maxHP = originalStats[(int)StatName.HP];
-            stats[(int)StatName.HP] = Math.Clamp(hp + change, 0, maxHP);
+            stats[(int)StatName.HP] = (float)Math.Round(Math.Clamp(hp + change, 0, maxHP),2);
         }
 
         public void changeMP(float change)
         {
             float mp = stats[(int)StatName.MP];
             float maxMP = originalStats[(int)StatName.MP];
-            stats[(int)StatName.MP] = Math.Clamp(mp + change, 0, maxMP);
+            stats[(int)StatName.MP] = (float)Math.Round(Math.Clamp(mp + change, 0, maxMP), 2);
         }
 
         //para eventos al recibir daño

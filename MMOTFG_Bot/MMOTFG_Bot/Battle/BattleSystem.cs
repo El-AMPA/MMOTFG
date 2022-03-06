@@ -102,6 +102,7 @@ namespace MMOTFG_Bot
                     await TelegramCommunicator.SendText(chatId, msg);
                 }
                 await TelegramCommunicator.RemoveReplyMarkup(chatId);
+                player.OnBattleOver();
             }
             else
             {

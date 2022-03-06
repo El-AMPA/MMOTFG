@@ -100,7 +100,7 @@ namespace MMOTFG_Bot
 				// UpdateType.PreCheckoutQuery:
 				// UpdateType.Poll:
 				UpdateType.Message => BotOnMessageReceived(botClient, update.Message),
-				//UpdateType.EditedMessage => BotOnMessageReceived(botClient, update.EditedMessage),
+				UpdateType.EditedMessage => BotOnMessageReceived(botClient, update.EditedMessage),
 				//UpdateType.CallbackQuery => BotOnCallbackQueryReceived(botClient, update.CallbackQuery),
 				UpdateType.InlineQuery => BotOnInlineQueryReceived(botClient, update.InlineQuery),
 				//UpdateType.ChosenInlineResult => BotOnChosenInlineResultReceived(botClient, update.ChosenInlineResult),
