@@ -28,9 +28,13 @@ namespace MMOTFG_Bot
             ThunderfuryBleesedBladeOfTheWindseeker tFury= new ThunderfuryBleesedBladeOfTheWindseeker();
             tFury.Init();
 
+            SulfurasHandOfRagnaros hRag = new SulfurasHandOfRagnaros();
+            hRag.Init();
+
             obtainableItems.Add(hPotion.name, hPotion);
             obtainableItems.Add(mPotion.name, mPotion);
             obtainableItems.Add(tFury.name, tFury);
+            obtainableItems.Add(hRag.name, hRag);
         }
 
         //TO-DO: Repensar si es mejor dejarlo como está o que al sistema de inventario le llegue la clase Objeto ya directamente. Es bastante inflexible solo poder recibir un string y
@@ -38,6 +42,11 @@ namespace MMOTFG_Bot
         public static bool StringToItem(string s, out ObtainableItem item)
         {
             return obtainableItems.TryGetValue(s, out item);
+        }
+
+        public static bool StringToEquipmentSlot(string s, out EQUIPMENT_SLOT slot)
+        {
+            return Enum.TryParse(s, true, out slot);
         }
 
         public static async Task AddItem(long chatId, string itemString, int quantityToAdd)
@@ -218,11 +227,28 @@ namespace MMOTFG_Bot
 
         public static async Task UnequipGear(long chatId, EQUIPMENT_SLOT slot)
         {
-            if(equipment[(int)slot] != null)
+            if (equipment[(int)slot] != null)
             {
-                await TelegramCommunicator.SendText(chatId, "You've unequipped " + equipment[(int)slot].name + " from your " + slot + " gear slot.");
+                EquipableItem item = equipment[(int)slot];
+                item.OnUnequip(chatId);
+
+                string msg = "You have unequipped " + item.name + " from your " + item.gearSlot.ToString().ToLower() + " slot.";
+                if (item.statModifiers.Count > 0)
+                {
+                    foreach (var stat in item.statModifiers)
+                    {
+                        msg += "\n" + stat.Item2 + " ";
+                        if (stat.Item1 >= 0) msg += "-" + stat.Item1;
+                        else msg += "+" + Math.Abs(stat.Item1);
+                    }
+                }
+                await TelegramCommunicator.SendText(chatId, msg);
+
                 equipment[(int)slot] = null;
-                //TO-DO: Aplicar los efectos de desequipar un objeto.
+            }
+            else
+            {
+                await TelegramCommunicator.SendText(chatId, "Couldn't unequip an item from your " + slot.ToString().ToLower() + " gear slot because it's empty.");
             }
         }
 
@@ -236,14 +262,68 @@ namespace MMOTFG_Bot
             }
             if (equipment[(int)item.gearSlot] != null)
             {
-                equipment[(int)item.gearSlot].OnUnequip(chatId);
-                UnequipGear(chatId, item.gearSlot);
-
+                if (item.iD == equipment[(int)item.gearSlot].iD) await TelegramCommunicator.SendText(chatId, "You are already using that item");
+                else await SwapGear(chatId, item);
             }
-            await TelegramCommunicator.SendText(chatId, "You've equipped " + item.name + " into your " + item.gearSlot + " gear slot.");
-            equipment[(int)item.gearSlot] = item;
-            item.OnEquip(chatId);
-            //TO-DO: Aplicar los efectos de equipar un objeto.
+            else
+            {
+                item.OnEquip(chatId);
+
+                string msg = "You have equipped " + item.name + "on your " + item.gearSlot.ToString().ToLower() + " slot.";
+                if (item.statModifiers.Count > 0)
+                {
+                    foreach (var stat in item.statModifiers)
+                    {
+                        msg += "\n" + stat.Item2 + " ";
+                        if (stat.Item1 >= 0) msg += "+" + stat.Item1;
+                        else msg += stat.Item1;
+                    }
+                }
+                await TelegramCommunicator.SendText(chatId, msg);
+
+                equipment[(int)item.gearSlot] = item;
+            }
+        }
+
+        private static async Task SwapGear(long chatId, EquipableItem newItem)
+        {
+            EquipableItem oldItem = equipment[(int)newItem.gearSlot];
+            string msg = "You've swapped " + oldItem.name + " for " + newItem.name;
+            //List<(int, StatName)> statChanges = oldItem.statModifiers;
+            List<(int, StatName)> auxChanges = new List<(int, StatName)>();
+
+            for (int k = 0; k < oldItem.statModifiers.Count; k++)
+            {
+                auxChanges.Add((-oldItem.statModifiers[k].Item1, oldItem.statModifiers[k].Item2));
+            }
+
+            foreach (var statsNewItem in newItem.statModifiers)
+            {
+                bool found = false;
+                for(int k = 0; k < oldItem.statModifiers.Count && !found; k++)
+                {
+                    //Both items change the same stat
+                    if(statsNewItem.Item2 == oldItem.statModifiers[k].Item2)
+                    {
+                        auxChanges[k] = (statsNewItem.Item1 - oldItem.statModifiers[k].Item1, oldItem.statModifiers[k].Item2);
+                        found = true;
+                    }
+                }
+                //NewItem modifies stats that OldItem doesn't modify
+                if (!found) auxChanges.Add(statsNewItem);
+            }
+
+            foreach(var stat in auxChanges)
+            {
+                msg += "\n" + stat.Item2 + " ";
+                if (stat.Item1 >= 0) msg += "+" + stat.Item1;
+                else msg += stat.Item1;
+            }
+            await TelegramCommunicator.SendText(chatId, msg);
+
+            equipment[(int)newItem.gearSlot].OnUnequip(chatId);
+            equipment[(int)newItem.gearSlot] = newItem;
+            equipment[(int)newItem.gearSlot].OnEquip(chatId);
         }
 
         public class InventoryRecord

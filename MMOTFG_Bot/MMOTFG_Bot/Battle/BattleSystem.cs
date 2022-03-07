@@ -147,5 +147,16 @@ namespace MMOTFG_Bot
 
             await TelegramCommunicator.SendText(chatId, s);
         }
+        
+        public static async void showStats(long chatId)
+        {
+            string msg = "Player stats:";
+            for(int k = 0; k < player.stats.Length; k++)
+            {
+                msg += "\n" + ((StatName)k).ToString().ToLower() + " " + player.stats[k];
+            }
+
+            await TelegramCommunicator.SendText(chatId, msg);
+        }
     }
 }

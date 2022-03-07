@@ -6,12 +6,19 @@ namespace MMOTFG_Bot.Items
 {
     class SulfurasHandOfRagnaros : EquipableItem
     {
+        public override void Init()
+        {
+            gearSlot = EQUIPMENT_SLOT.WEAPON;
+            statModifiers = new List<(int, StatName)>
+            {
+                (15, StatName.ATK),
+                (-2, StatName.MP)
+            };
+        }
+
         public SulfurasHandOfRagnaros()
         {
-            //base.Init();
-            //iD = Guid.NewGuid();
-            //gearSlot = EQUIPMENT_SLOT.WEAPON;
-            //key_words.Add(new KeyValuePair<string, Action<long, string[]>>("/equip", Eat));
+            name = "sulfuras";
         }
     }
 }

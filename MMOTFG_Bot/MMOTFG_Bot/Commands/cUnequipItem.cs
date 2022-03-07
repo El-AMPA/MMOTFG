@@ -5,31 +5,29 @@ using MMOTFG_Bot.Items;
 
 namespace MMOTFG_Bot.Commands
 {
-    //TO-DO: ESTO ESTÁ SIN TERMINAR. NO ES DEFINITIVO.
-    class cEquipItem : ICommand
+    class cUnequipItem : ICommand
     {
         public override void SetKeywords()
         {
             key_words = new string[]{
-                "/equip"
+                "/unequip",
             };
         }
 
         //TO-DO: como usan cosas async a lo mejor los execute tendrían que ser async
         internal async override void Execute(string command, long chatId, string[] args = null)
         {
-            ObtainableItem item;
-            if (InventorySystem.StringToItem(args[0], out item))
+            EQUIPMENT_SLOT slot;
+            if (InventorySystem.StringToEquipmentSlot(args[0], out slot))
             {
-                EquipableItem eItem = (EquipableItem)item; //lol. Si funciona doy gracias. O pido perdon.
-                await InventorySystem.EquipGear(chatId, eItem);
+                await InventorySystem.UnequipGear(chatId, slot);
             }
-            else await TelegramCommunicator.SendText(chatId, "The specified item doesn't exist");
+            else await TelegramCommunicator.SendText(chatId, "The specified slot doesn't exist");
         }
 
         internal override bool IsFormattedCorrectly(string[] args)
         {
-            //Format: /consume itemName
+            //Format: /unequip weapon
             if (args.Length != 1) return false;
 
             return true;
