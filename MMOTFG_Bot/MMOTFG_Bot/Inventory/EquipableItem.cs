@@ -22,7 +22,13 @@ namespace MMOTFG_Bot.Items
         {
             foreach (var stat in statModifiers)
             {
-                BattleSystem.player.stats[(int)stat.Item2] += stat.Item1;
+                if ((stat.Item2 == StatName.HP || stat.Item2 == StatName.MP))
+                {
+                    float currentPercent = BattleSystem.player.stats[(int)stat.Item2] / BattleSystem.player.originalStats[(int)stat.Item2];
+                    BattleSystem.player.originalStats[(int)stat.Item2] += stat.Item1;
+                    BattleSystem.player.stats[(int)stat.Item2] = (int)(BattleSystem.player.originalStats[(int)stat.Item2] * currentPercent);
+                }
+                else BattleSystem.player.originalStats[(int)stat.Item2] += stat.Item1;
             }
         }
 
@@ -30,7 +36,13 @@ namespace MMOTFG_Bot.Items
         {
             foreach(var stat in statModifiers)
             {
-                BattleSystem.player.stats[(int)stat.Item2] -= stat.Item1;
+                if ((stat.Item2 == StatName.HP || stat.Item2 == StatName.MP))
+                {
+                    float currentPercent = BattleSystem.player.stats[(int)stat.Item2] / BattleSystem.player.originalStats[(int)stat.Item2];
+                    BattleSystem.player.originalStats[(int)stat.Item2] -= stat.Item1;
+                    BattleSystem.player.stats[(int)stat.Item2] = (int)(BattleSystem.player.originalStats[(int)stat.Item2] * currentPercent);
+                }
+                else BattleSystem.player.originalStats[(int)stat.Item2] -= stat.Item1;
             }
         }
     }
