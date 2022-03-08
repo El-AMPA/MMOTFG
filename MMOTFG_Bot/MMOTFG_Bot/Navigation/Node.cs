@@ -43,17 +43,18 @@ namespace MMOTFG_Bot.Navigation
             set;
         }
 
+        public List<Event> OnInspectEvent
+        {
+            get;
+            set;
+        }
+
         public string Name
         {
             get;
             set;
         } = "";
 
-        public string OnInspectText
-        {
-            get;
-            set;
-        } = "";
 
         /// <summary>
         /// Triggers the OnExit events when leaving the node
@@ -69,6 +70,15 @@ namespace MMOTFG_Bot.Navigation
         public void OnArrive(long chatId)
         {
             if (OnArriveEvent != null) foreach (Event e in OnArriveEvent) e.Execute(chatId);
+        }
+
+        /// <summary>
+        /// Triggers the OnInspect events when inspecting the node
+        /// </summary>
+        public async void OnInspect(long chatId)
+        {
+            if (OnInspectEvent != null) foreach (Event e in OnInspectEvent) e.Execute(chatId);
+            else await TelegramCommunicator.SendText(chatId, "There is nothing of interest in here.");
         }
 
         /// <summary>
