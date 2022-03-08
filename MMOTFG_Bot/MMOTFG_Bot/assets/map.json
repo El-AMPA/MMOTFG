@@ -9,7 +9,26 @@
         "ConnectingNode": "BossArena"
       }
     },
-    "OnInspectText": "Estás en una mazmorra muy dank y dark. Al norte puedes seguir avanzando por el pasillo. También puedes usar una trampilla, ¿me pregunto a donde llevará ...?"
+    "OnInspectEvent": [
+      {
+        "EventType": "eSendText",
+        "Description": "Estás en una mazmorra muy dank y dark. Al norte puedes seguir avanzando por el pasillo. También puedes usar una trampilla, ¿me pregunto a donde llevará ...?"
+      },
+      {
+        "EventType": "eSendText",
+        "Description": "Bajo la gruesa capa de polvo vislumbras un destello. Tras rebuscar con la mano encuentras una poción de maná. Como los devs no han implementado variables de progreso puedes farmear pociones spammeando el comando. Let's gooooooooo!'"
+      },
+      {
+        "EventType": "eGiveItem",
+        "ItemLots": [
+          {
+            "Item": "health_potion",
+            "Quantity": 1,
+            "ChanceToObtain": 1
+          }
+        ]
+      }
+    ]
   },
   {
     "Name": "Corridor2",
@@ -41,8 +60,7 @@
           }
         ]
       }
-    ],
-    "OnInspectText": "El olor a pienso es realmente inaguantable. Debería continuar."
+    ]
   },
   {
     "Name": "BossArena",
