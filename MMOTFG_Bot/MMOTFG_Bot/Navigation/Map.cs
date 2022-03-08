@@ -83,13 +83,9 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Sends the 'OnInspectText' field of the current node of the player 
         /// </summary>
-        public async static void OnInspect(long chatId)
+        public static void OnInspect(long chatId)
         {
-            if (currentNode.OnInspectText != "")
-            {
-                await TelegramCommunicator.SendText(chatId, currentNode.OnInspectText);
-            }
-            else await TelegramCommunicator.SendText(chatId, "There is nothing of interest around here");
+            currentNode.OnInspect(chatId);
         }
 
         /// <summary>
