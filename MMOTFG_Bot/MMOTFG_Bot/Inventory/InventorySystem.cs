@@ -93,7 +93,7 @@ namespace MMOTFG_Bot
                         }
                     }
                 }
-                if (quantityToAdd == 0) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was added to the inventory.");
+                if (quantityToAdd == 1) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was added to the inventory.");
                 else await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was added " + (quantityToAdd - quantityToAddAux) + " times");
             }
             else await TelegramCommunicator.SendText(chatId, "Item " + itemString + " doesn't exist");
@@ -223,6 +223,19 @@ namespace MMOTFG_Bot
             foreach (InventoryRecord i in InventoryRecords)
             {
                 message += i.InventoryItem.name + " x" + i.Quantity + "\n";
+            }
+
+            if (message != "") await TelegramCommunicator.SendText(chatId, message);
+        }
+
+        public static async Task ShowGear(long chatId)
+        {
+            string message = "User equipment:\n";
+            for(int k = 0; k < equipment.Length; k++)
+            {
+                message += "\n"+(EQUIPMENT_SLOT)k + ": ";
+                if (equipment[k] == null) message += " empty";
+                else message += equipment[k].name;
             }
 
             if (message != "") await TelegramCommunicator.SendText(chatId, message);

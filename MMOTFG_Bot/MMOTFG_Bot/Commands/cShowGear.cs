@@ -4,23 +4,20 @@ using System.Text;
 
 namespace MMOTFG_Bot.Commands
 {
-    /// <summary>
-    /// Shows the inventory of the player.
-    /// </summary>
-    class cShowInventory : ICommand
+    class cShowGear : ICommand
     {
         public override void SetKeywords()
         {
             key_words = new string[] {
-                "/inventory",
-                "/show_inventory",
-                "/items"
+                "/gear",
+                "/show_gear",
+                "/equipment"
             };
         }
 
         internal override async void Execute(string command, long chatId, string[] args = null)
         {
-            await InventorySystem.ShowInventory(chatId);
+            await InventorySystem.ShowGear(chatId);
         }
 
         internal override bool IsFormattedCorrectly(string[] args)
