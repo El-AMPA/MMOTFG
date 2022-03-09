@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MMOTFG_Bot.Items;
 
 namespace MMOTFG_Bot.Commands
 {
@@ -17,15 +18,23 @@ namespace MMOTFG_Bot.Commands
 
         internal override async void Execute(string command, long chatId, string[] args = null)
         {
-            await InventorySystem.ShowGear(chatId);
+            if (args.Length == 0) await InventorySystem.ShowGear(chatId);
+            else {
+                EQUIPMENT_SLOT slot;
+                InventorySystem.StringToEquipmentSlot(args[0], out slot);
+                await InventorySystem.ShowGear(chatId, slot);
+            }
+
         }
 
         internal override bool IsFormattedCorrectly(string[] args)
         {
-            //Format: /show_inventory
-            if (args.Length != 0) return false;
+            //Format: /gear (weapon) optional
+            if (args.Length == 0) return true;
 
-            return true;
+            else if (args.Length == 1 && InventorySystem.StringToEquipmentSlot(args[0], out _)) return true;
+
+            return false;
         }
     }
 }

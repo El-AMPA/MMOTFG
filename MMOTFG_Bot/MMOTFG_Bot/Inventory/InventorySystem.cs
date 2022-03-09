@@ -240,6 +240,14 @@ namespace MMOTFG_Bot
 
             if (message != "") await TelegramCommunicator.SendText(chatId, message);
         }
+        public static async Task ShowGear(long chatId, EQUIPMENT_SLOT slot)
+        {
+            string message = "User equipment on " + slot + " slot: ";
+            if (equipment[(int)slot] == null) message += " empty";
+            else message += equipment[(int)slot].name;
+
+            if (message != "") await TelegramCommunicator.SendText(chatId, message);
+        }
 
         public static async Task UnequipGear(long chatId, EQUIPMENT_SLOT slot)
         {
