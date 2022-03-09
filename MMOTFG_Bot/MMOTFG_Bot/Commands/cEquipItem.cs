@@ -15,7 +15,6 @@ namespace MMOTFG_Bot.Commands
             };
         }
 
-        //TO-DO: como usan cosas async a lo mejor los execute tendrían que ser async
         internal async override void Execute(string command, long chatId, string[] args = null)
         {
             ObtainableItem item;

@@ -228,6 +228,9 @@ namespace MMOTFG_Bot
             if (message != "") await TelegramCommunicator.SendText(chatId, message);
         }
 
+        /// <summary>
+        /// Shows the player's equipped items from all gear slots
+        /// </summary>
         public static async Task ShowGear(long chatId)
         {
             string message = "User equipment:\n";
@@ -240,6 +243,10 @@ namespace MMOTFG_Bot
 
             if (message != "") await TelegramCommunicator.SendText(chatId, message);
         }
+
+        /// <summary>
+        /// Shows the player's equipped items from the specified gear slot
+        /// </summary>
         public static async Task ShowGear(long chatId, EQUIPMENT_SLOT slot)
         {
             string message = "User equipment on " + slot + " slot: ";
@@ -249,6 +256,9 @@ namespace MMOTFG_Bot
             if (message != "") await TelegramCommunicator.SendText(chatId, message);
         }
 
+        /// <summary>
+        /// Unequips the item worn on the specified gear slot
+        /// </summary>
         public static async Task UnequipGear(long chatId, EQUIPMENT_SLOT slot)
         {
             if (equipment[(int)slot] != null)
@@ -279,6 +289,9 @@ namespace MMOTFG_Bot
             }
         }
 
+        /// <summary>
+        /// Equips a piece of gear in its gear slot
+        /// </summary>
         public static async Task EquipGear(long chatId, EquipableItem item)
         {
             if(!InventoryRecords.Exists(x => x.InventoryItem.iD == item.iD))
@@ -316,11 +329,13 @@ namespace MMOTFG_Bot
             }
         }
 
+        /// <summary>
+        /// Swaps the current equipped piece of gear for a new one. Shows the change of stats.
+        /// </summary>
         private static async Task SwapGear(long chatId, EquipableItem newItem)
         {
             EquipableItem oldItem = equipment[(int)newItem.gearSlot];
             string msg = "You've swapped " + oldItem.name + " for " + newItem.name;
-            //List<(int, StatName)> statChanges = oldItem.statModifiers;
             List<(int, StatName)> auxChanges = new List<(int, StatName)>();
 
             for (int k = 0; k < oldItem.statModifiers.Count; k++)
@@ -333,7 +348,7 @@ namespace MMOTFG_Bot
                 bool found = false;
                 for(int k = 0; k < oldItem.statModifiers.Count && !found; k++)
                 {
-                    //Both items change the same stat
+                    //If both items change the same stat
                     if(statsNewItem.Item2 == oldItem.statModifiers[k].Item2)
                     {
                         auxChanges[k] = (statsNewItem.Item1 - oldItem.statModifiers[k].Item1, oldItem.statModifiers[k].Item2);
