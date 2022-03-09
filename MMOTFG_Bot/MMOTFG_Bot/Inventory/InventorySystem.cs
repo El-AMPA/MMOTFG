@@ -99,12 +99,12 @@ namespace MMOTFG_Bot
             else await TelegramCommunicator.SendText(chatId, "Item " + itemString + " doesn't exist");
         }
 
-        public static async Task ConsumeItems(long chatId, string itemString, int quantityToConsume, string command, string[] args = null)
+        public static async Task ConsumeItem(long chatId, string itemString, int quantityToConsume, string command = null, string[] args = null)
         {
             ObtainableItem item;
             if (StringToItem(itemString, out item))
             {
-                if (!item.UnderstandsCommand(command))
+                if (command != null && !item.UnderstandsCommand(command))
                 {
                     await TelegramCommunicator.SendText(chatId, "Can't do that with that item");
                     return;
@@ -132,9 +132,12 @@ namespace MMOTFG_Bot
                     // Add to the stack (either the full quanity, or the amount that would make it reach the stack maximum)
                     int quantityToConsumeToStack = Math.Min(quantityToConsumeAux, inventoryRecord.Quantity);
 
-                    for (int k = 0; k < quantityToConsumeToStack; k++)
+                    if(command != null)
                     {
-                        item.ProcessCommand(command, chatId, args);
+                        for (int k = 0; k < quantityToConsumeToStack; k++)
+                        {
+                            item.ProcessCommand(command, chatId, args);
+                        }
                     }
                     inventoryRecord.AddToQuantity(-quantityToConsumeToStack);
 
@@ -245,6 +248,9 @@ namespace MMOTFG_Bot
                 await TelegramCommunicator.SendText(chatId, msg);
 
                 equipment[(int)slot] = null;
+
+                //Remove the item from the inventory
+                await AddItem(chatId, item.name, 1);
             }
             else
             {
@@ -254,34 +260,38 @@ namespace MMOTFG_Bot
 
         public static async Task EquipGear(long chatId, EquipableItem item)
         {
-            //If the item isn't contained in the inventory, there is no point in continuing.
-            if (!InventoryRecords.Exists(x => x.InventoryItem.iD == item.iD))
+            if(!InventoryRecords.Exists(x => x.InventoryItem.iD == item.iD))
             {
                 await TelegramCommunicator.SendText(chatId, "Item " + item.name + " couldn't be equipped as it was not found in your inventory");
-                return;
-            }
-            if (equipment[(int)item.gearSlot] != null)
-            {
-                if (item.iD == equipment[(int)item.gearSlot].iD) await TelegramCommunicator.SendText(chatId, "You are already using that item");
-                else await SwapGear(chatId, item);
             }
             else
             {
-                item.OnEquip(chatId);
-
-                string msg = "You have equipped " + item.name + "on your " + item.gearSlot.ToString().ToLower() + " slot.";
-                if (item.statModifiers.Count > 0)
+                if (equipment[(int)item.gearSlot] != null)
                 {
-                    foreach (var stat in item.statModifiers)
-                    {
-                        msg += "\n" + stat.Item2 + " ";
-                        if (stat.Item1 >= 0) msg += "+" + stat.Item1;
-                        else msg += stat.Item1;
-                    }
+                    if (item.iD == equipment[(int)item.gearSlot].iD) await TelegramCommunicator.SendText(chatId, "You are already using that item");
+                    else await SwapGear(chatId, item);
                 }
-                await TelegramCommunicator.SendText(chatId, msg);
+                else
+                {
+                    item.OnEquip(chatId);
 
-                equipment[(int)item.gearSlot] = item;
+                    string msg = "You have equipped " + item.name + "on your " + item.gearSlot.ToString().ToLower() + " slot.";
+                    if (item.statModifiers.Count > 0)
+                    {
+                        foreach (var stat in item.statModifiers)
+                        {
+                            msg += "\n" + stat.Item2 + " ";
+                            if (stat.Item1 >= 0) msg += "+" + stat.Item1;
+                            else msg += stat.Item1;
+                        }
+                    }
+                    await TelegramCommunicator.SendText(chatId, msg);
+
+                    equipment[(int)item.gearSlot] = item;
+
+                    //Remove the item from the inventory
+                    await ConsumeItem(chatId, item.name, 1);
+                }
             }
         }
 
@@ -320,6 +330,11 @@ namespace MMOTFG_Bot
                 else msg += stat.Item1;
             }
             await TelegramCommunicator.SendText(chatId, msg);
+
+            //Add the unequipped item to the inventory
+            await AddItem(chatId, oldItem.name, 1);
+            //Remove the item from the inventory
+            await ConsumeItem(chatId, newItem.name, 1);
 
             equipment[(int)newItem.gearSlot].OnUnequip(chatId);
             equipment[(int)newItem.gearSlot] = newItem;
