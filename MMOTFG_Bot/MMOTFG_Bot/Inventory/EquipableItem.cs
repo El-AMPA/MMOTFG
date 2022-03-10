@@ -28,7 +28,11 @@ namespace MMOTFG_Bot.Items
                     BattleSystem.player.originalStats[(int)stat.Item2] += stat.Item1;
                     BattleSystem.player.stats[(int)stat.Item2] = (int)(BattleSystem.player.originalStats[(int)stat.Item2] * currentPercent);
                 }
-                else BattleSystem.player.originalStats[(int)stat.Item2] += stat.Item1;
+                else
+                {
+                    BattleSystem.player.stats[(int)stat.Item2] += stat.Item1;
+                    BattleSystem.player.originalStats[(int)stat.Item2] += stat.Item1;
+                }
             }
         }
 
@@ -42,7 +46,11 @@ namespace MMOTFG_Bot.Items
                     BattleSystem.player.originalStats[(int)stat.Item2] -= stat.Item1;
                     BattleSystem.player.stats[(int)stat.Item2] = (int)(BattleSystem.player.originalStats[(int)stat.Item2] * currentPercent);
                 }
-                else BattleSystem.player.originalStats[(int)stat.Item2] -= stat.Item1;
+                else
+                {
+                    BattleSystem.player.stats[(int)stat.Item2] -= stat.Item1;
+                    BattleSystem.player.originalStats[(int)stat.Item2] -= stat.Item1;
+                }
             }
         }
     }
