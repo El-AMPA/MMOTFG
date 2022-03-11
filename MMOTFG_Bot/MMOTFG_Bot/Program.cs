@@ -19,8 +19,8 @@ namespace MMOTFG_Bot
 	class Program
 	{
 		static List<ICommand> commandList = new List<ICommand>{ new cUseItem(), new cAddItem(), new cThrowItem(),
-            new cShowInventory(), new cEquipItem(), new cInfo(), new cStatus(), new cFight(),
-			new cNavigate(), new cDirections(), new cInspectRoom()};
+            new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
+			new cNavigate(), new cDirections(), new cInspectRoom(), new cShowGear()};
 
 		static async Task Main(string[] args)
 		{

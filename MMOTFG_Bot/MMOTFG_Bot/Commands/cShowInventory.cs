@@ -12,13 +12,15 @@ namespace MMOTFG_Bot.Commands
         public override void SetKeywords()
         {
             key_words = new string[] {
-                "/show_inventory"
+                "/inventory",
+                "/show_inventory",
+                "/items"
             };
         }
 
-        internal override void Execute(string command, long chatId, string[] args = null)
+        internal override async void Execute(string command, long chatId, string[] args = null)
         {
-            InventorySystem.ShowInventory(chatId);
+            await InventorySystem.ShowInventory(chatId);
         }
 
         internal override bool IsFormattedCorrectly(string[] args)

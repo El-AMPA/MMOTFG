@@ -10,7 +10,6 @@ namespace MMOTFG_Bot.Items
         {
             name = "health_potion";
             maxStackQuantity = 5;
-            iD = Guid.NewGuid();
         }
 
         private async void drinkPotion(long chatId, string[] args)
