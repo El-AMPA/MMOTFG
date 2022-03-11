@@ -20,7 +20,7 @@ namespace MMOTFG_Bot.Commands
             ObtainableItem item;
             if (InventorySystem.StringToItem(args[0], out item))
             {
-                EquipableItem eItem = (EquipableItem)item; //lol. Si funciona doy gracias. O pido perdon.
+                EquipableItem eItem = (EquipableItem)item;
                 await InventorySystem.EquipGear(chatId, eItem);
             }
             else await TelegramCommunicator.SendText(chatId, "The specified item doesn't exist");
