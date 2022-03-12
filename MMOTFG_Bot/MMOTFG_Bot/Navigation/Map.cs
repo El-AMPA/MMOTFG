@@ -110,7 +110,7 @@ namespace MMOTFG_Bot.Navigation
             string mapText = ""; //Text of the entire .json file
             try
             {
-                mapText = File.ReadAllText(path, Encoding.GetEncoding("iso-8859-1")); //This encoding supports spanish characters "ñ, á ..."
+                mapText = File.ReadAllText(path, Encoding.GetEncoding(65001)); // Encoding: UTF-8
             }
             catch (FileNotFoundException e)
             {
