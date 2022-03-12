@@ -41,6 +41,7 @@ namespace MMOTFG_Bot
 
         public ObtainableItem()
         {
+            iD = Guid.NewGuid();
             maxStackQuantity = 1;
         }
     }

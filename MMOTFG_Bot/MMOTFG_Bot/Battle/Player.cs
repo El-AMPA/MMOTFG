@@ -34,7 +34,21 @@ namespace MMOTFG_Bot
 
         public override async void OnKill(long chatId)
         {
+            //Recuperas toda la vida y mp
+            stats[(int)StatName.HP] = originalStats[(int)StatName.HP];
+            stats[(int)StatName.MP] = originalStats[(int)StatName.MP];
             await TelegramCommunicator.SendText(chatId, "You died!");
+        }
+
+        public void OnBattleOver()
+        {
+            //reseteamos los stats (excepto HP/MP) a su estado original
+            for (int i = 0; i < Stats.statNum; i++)
+            {
+                StatName sn = (StatName)i;
+                if (sn != StatName.HP && sn != StatName.MP)
+                    stats[i] = originalStats[i];
+            }
         }
     }
 }

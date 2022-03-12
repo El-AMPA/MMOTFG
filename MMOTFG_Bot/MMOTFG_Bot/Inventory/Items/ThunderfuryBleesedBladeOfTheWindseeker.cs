@@ -8,26 +8,17 @@ namespace MMOTFG_Bot.Items
     {
         public override void Init()
         {
-            base.Init();
-            iD = Guid.NewGuid();
             gearSlot = EQUIPMENT_SLOT.WEAPON;
-            key_words.Add(new KeyValuePair<string, Action<long, string[]>>("/equip", Eat));
-        }
-
-        private async void Eat(long chatId, string[] args)
-        {
-            await TelegramCommunicator.SendText(chatId, "Om nom nom");
-        }
-
-        public override async void OnEquip(long chatId, string[] args = null)
-        {
-            await TelegramCommunicator.SendText(chatId, "You have equipped the TBBOTW. Attack +100");
-            BattleSystem.player.stats[(int)StatName.ATK] += 100;
+            statModifiers = new List<(int, StatName)>
+            {
+                (10, StatName.ATK),
+                (-5, StatName.HP)
+            };
         }
 
         public ThunderfuryBleesedBladeOfTheWindseeker()
         {
-            name = "thunderfury_blessed_blade_of_the_windseeker";
+            name = "tfury";
         }
     }
 }

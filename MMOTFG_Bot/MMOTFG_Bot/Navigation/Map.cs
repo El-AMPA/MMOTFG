@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.IO;
 using System.Text;
+using MMOTFG_Bot.Battle;
 
 namespace MMOTFG_Bot.Navigation
 {
@@ -20,16 +21,23 @@ namespace MMOTFG_Bot.Navigation
         /// </summary>
         public async static void Navigate(long chatId, string dir)
         {
-            //If currentNode doesn't have a connection in that direction, it doesn't move the player.
-            if(currentNode.GetConnectingNode(dir, out nextNode))
+            if (BattleSystem.IsPlayerInBattle(chatId))
             {
-                currentNode.OnExit(chatId);
-                currentNode = nextNode;
-                currentNode.OnArrive(chatId);
+                await TelegramCommunicator.SendText(chatId, "I can't run away from battles!");
             }
             else
             {
-                await TelegramCommunicator.SendText(chatId, "Can't move in that direction");
+                //If currentNode doesn't have a connection in that direction, it doesn't move the player.
+                if (currentNode.GetConnectingNode(dir, out nextNode))
+                {
+                    currentNode.OnExit(chatId);
+                    currentNode = nextNode;
+                    currentNode.OnArrive(chatId);
+                }
+                else
+                {
+                    await TelegramCommunicator.SendText(chatId, "Can't move in that direction");
+                }
             }
         }
 
@@ -75,13 +83,9 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Sends the 'OnInspectText' field of the current node of the player 
         /// </summary>
-        public async static void OnInspect(long chatId)
+        public static void OnInspect(long chatId)
         {
-            if (currentNode.OnInspectText != "")
-            {
-                await TelegramCommunicator.SendText(chatId, currentNode.OnInspectText);
-            }
-            else await TelegramCommunicator.SendText(chatId, "There is nothing of interest around here");
+            currentNode.OnInspect(chatId);
         }
 
         /// <summary>
