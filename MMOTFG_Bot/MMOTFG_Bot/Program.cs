@@ -12,18 +12,17 @@ using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
-using Google.Cloud.Firestore;
 
 namespace MMOTFG_Bot
 {
 	class Program
 	{
-		static List<ICommand> commandList = new List<ICommand>{ new cUseItem(), new cAddItem(), new cThrowItem(),
+		static List<ICommand> commandList = new List<ICommand>{new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
             new cShowInventory(), new cEquipItem(), new cInfo(), new cStatus(), new cFight(),
 			new cNavigate(), new cDirections(), new cInspectRoom()};
 
 		static async Task Main(string[] args)
-		{
+		{	
 			/*Si estamos depurando en visual studio, tenemos que cambiar la ruta relativa en PC
 			* para que funcione igual que en el contenedor de Docker*/
 			if (Environment.GetEnvironmentVariable("PLATFORM_PC") != null)
@@ -36,18 +35,63 @@ namespace MMOTFG_Bot
 				Console.WriteLine("Estamos en Docker");
 			}
 
-			//----EJEMPLO CÓDIGO FIREBASE (sacarlo de aquí en algún momento)----
-			Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", "assets/private/firebase-admin.json");
-			FirestoreDb db = FirestoreDb.Create("mmotfg-database");
 
-			DocumentReference docRef = db.Collection("ejemplo").Document("firestore");
-			Dictionary<string, long> pruebaFirestore = new Dictionary<string, long>{
-				{"pejota", 6595 },
-				{"moviles", 2223}
-			};
 
-			await docRef.SetAsync(pruebaFirestore);
-			//----FIN DE CÓDIGO FIREBASE----
+
+
+			DatabaseManager.Init();
+
+			//Dictionary<string, Dictionary<string,string>> prueba = new Dictionary<string, Dictionary<string, string>>
+			//{+		[1]	{projects/mmotfg-database/databases/(default)/documents/Estructura/players/ObjectList/escudo}	object {Google.Cloud.Firestore.DocumentReference}
+
+			//	{ "y se puede", new Dictionary<string, string>{ {"agregar sin pisar","nice" } } },
+			//};
+
+			//await DatabaseManager.addAsync<string, Dictionary<string, string>>(prueba);
+
+
+
+
+			//Dictionary<string, object> wr = new Dictionary<string, object> {
+
+			//	{"uno",1 },
+			//	{ "uve", "v"},
+			//	{
+			//	"mapa", new Dictionary<string, int>{
+			//			{"vaya", 2 },
+
+			//	}},
+			//	{"que", "chulo" } 
+			//};
+
+			//await DatabaseManager.addDocumentToCollection(wr, "mmmh", "Estructura2");
+
+			//Dictionary<string, object> wr2 = new Dictionary<string, object> {
+
+			//	{"hhg",1000 },
+			//};
+
+			//await DatabaseManager.modifyDocumentFromCollection(wr2, "mmmh", "Estructura2");
+
+			//Dictionary<string, object>[] ret = await DatabaseManager.getDocumentByFieldValue("nombre", "alba", "prueba");
+
+			//Dictionary<string, object> returned = await DatabaseManager.getDocument("prueba1", "Estructura");
+			//Dictionary<string, object> mapaRaw = (Dictionary<string, object>)returned["mapa"];
+			//Dictionary<string, string> mapa = new Dictionary<string, string>();
+
+			//foreach (KeyValuePair<string, object> pair in mapaRaw)
+			//{
+			//	mapa[(string)pair.Key] = (string)pair.Value;
+			//}
+
+
+			//Console.WriteLine("{0}: {1}", 1,1 );
+
+			//foreach (KeyValuePair<string, object> pair in returned)
+			//{
+			//	Console.WriteLine("{0}: {1}", pair.Key, pair.Value);
+			//}
+
 
 			string token = "";
 			try
@@ -100,7 +144,7 @@ namespace MMOTFG_Bot
 				// UpdateType.PreCheckoutQuery:
 				// UpdateType.Poll:
 				UpdateType.Message => BotOnMessageReceived(botClient, update.Message),
-				//UpdateType.EditedMessage => BotOnMessageReceived(botClient, update.EditedMessage),
+				UpdateType.EditedMessage => BotOnMessageReceived(botClient, update.EditedMessage),
 				//UpdateType.CallbackQuery => BotOnCallbackQueryReceived(botClient, update.CallbackQuery),
 				UpdateType.InlineQuery => BotOnInlineQueryReceived(botClient, update.InlineQuery),
 				//UpdateType.ChosenInlineResult => BotOnChosenInlineResultReceived(botClient, update.ChosenInlineResult),

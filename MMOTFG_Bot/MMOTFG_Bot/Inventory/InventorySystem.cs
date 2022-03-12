@@ -16,22 +16,57 @@ namespace MMOTFG_Bot
 
         public static void Init()
         {
-            //TO-DO: ESTO ES FEO DE COJONES ME ESTOY MURIENDO DE VERLO
-            equipment = new EquipableItem[Enum.GetNames(typeof(EQUIPMENT_SLOT)).Length];
+			//TO-DO: ESTO ES FEO DE COJONES ME ESTOY MURIENDO DE VERLO
+			equipment = new EquipableItem[Enum.GetNames(typeof(EQUIPMENT_SLOT)).Length];
 
-            HealthPotion hPotion = new HealthPotion();
-            hPotion.Init();
+			HealthPotion hPotion = new HealthPotion();
+			hPotion.Init();
 
-            ManaPotion mPotion = new ManaPotion();
-            mPotion.Init();
+			ManaPotion mPotion = new ManaPotion();
+			mPotion.Init();
 
-            ThunderfuryBleesedBladeOfTheWindseeker tFury= new ThunderfuryBleesedBladeOfTheWindseeker();
-            tFury.Init();
+			ThunderfuryBleesedBladeOfTheWindseeker tFury = new ThunderfuryBleesedBladeOfTheWindseeker();
+			tFury.Init();
 
-            obtainableItems.Add(hPotion.name, hPotion);
-            obtainableItems.Add(mPotion.name, mPotion);
-            obtainableItems.Add(tFury.name, tFury);
-        }
+			obtainableItems.Add(hPotion.name, hPotion);
+			obtainableItems.Add(mPotion.name, mPotion);
+			obtainableItems.Add(tFury.name, tFury);
+		}
+   //     public static async Task saveToDatabase(long chatId)
+   //     {
+   //         //TO-DO: ESTO ES FEO DE COJONES ME ESTOY MURIENDO DE VERLO
+   //         equipment = new EquipableItem[Enum.GetNames(typeof(EQUIPMENT_SLOT)).Length];
+
+   //         HealthPotion hPotion = new HealthPotion();
+   //         hPotion.Init();
+
+   //         ManaPotion mPotion = new ManaPotion();
+   //         mPotion.Init();
+
+   //         ThunderfuryBleesedBladeOfTheWindseeker tFury = new ThunderfuryBleesedBladeOfTheWindseeker();
+   //         tFury.Init();
+
+   //         obtainableItems.Add(hPotion.name, hPotion);
+   //         obtainableItems.Add(mPotion.name, mPotion);
+   //         obtainableItems.Add(tFury.name, tFury);
+
+   //         Dictionary<string, object> player = await DatabaseManager.getDocumentByUniqueValue("telegramId", chatId.ToString(), "PlayersPrueba");
+
+   //         string[] itemsNames = new string[obtainableItems.Count];
+
+   //         int i = 0;
+
+   //         foreach(KeyValuePair<string,ObtainableItem> it in obtainableItems)
+			//{
+   //             itemsNames[i] = it.Key;
+   //             i++;
+			//}
+
+   //         player.Add("Inventory", itemsNames);
+
+   //         await DatabaseManager.modifyDocumentFromCollection(player, chatId.ToString(), "PlayersPrueba");
+   //     }
+
 
         //TO-DO: Repensar si es mejor dejarlo como está o que al sistema de inventario le llegue la clase Objeto ya directamente. Es bastante inflexible solo poder recibir un string y
         //traducirlo aquí
