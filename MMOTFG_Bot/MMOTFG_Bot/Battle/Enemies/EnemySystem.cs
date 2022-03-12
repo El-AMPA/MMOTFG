@@ -9,7 +9,13 @@ namespace MMOTFG_Bot.Battle.Enemies
         static Dictionary<string, Enemy> enemyDict = new Dictionary<string, Enemy>
         {
             {"Manuela", new Manuela()},
-            {"Peter", new Peter()}
+            {"Peter", new Peter()},
+            {"Fedejimbo", new Fedejimbo()},
+            {"Sein", new Sein()},
+            {"Stratospeers", new Stratospeers()},
+            {"Cleonft", new Cleonft()},
+            {"Tinky.exe", new Tinkyexe()},
+            {"Thiccboi", new Thiccboi()}
         };
 
         public static Enemy getEnemy(string name)

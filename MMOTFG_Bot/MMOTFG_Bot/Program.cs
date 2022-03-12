@@ -36,19 +36,6 @@ namespace MMOTFG_Bot
 				Console.WriteLine("Estamos en Docker");
 			}
 
-			//----EJEMPLO CÓDIGO FIREBASE (sacarlo de aquí en algún momento)----
-			Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", "assets/private/firebase-admin.json");
-			FirestoreDb db = FirestoreDb.Create("mmotfg-database");
-
-			DocumentReference docRef = db.Collection("ejemplo").Document("firestore");
-			Dictionary<string, long> pruebaFirestore = new Dictionary<string, long>{
-				{"pejota", 6595 },
-				{"moviles", 2223}
-			};
-
-			await docRef.SetAsync(pruebaFirestore);
-			//----FIN DE CÓDIGO FIREBASE----
-
 			string token = "";
 			try
 			{
