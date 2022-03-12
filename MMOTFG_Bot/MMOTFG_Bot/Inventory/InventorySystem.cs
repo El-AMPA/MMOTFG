@@ -36,7 +36,7 @@ namespace MMOTFG_Bot
 			obtainableItems.Add(tFury.name, tFury);            
             obtainableItems.Add(hRag.name, hRag);
         }
-		}
+		
    //     public static async Task saveToDatabase(long chatId)
    //     {
    //         //TO-DO: ESTO ES FEO DE COJONES ME ESTOY MURIENDO DE VERLO
