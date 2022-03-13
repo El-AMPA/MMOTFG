@@ -36,46 +36,66 @@ namespace MMOTFG_Bot
 			obtainableItems.Add(tFury.name, tFury);            
             obtainableItems.Add(hRag.name, hRag);
         }
-		
-   //     public static async Task saveToDatabase(long chatId)
-   //     {
-   //         //TO-DO: ESTO ES FEO DE COJONES ME ESTOY MURIENDO DE VERLO
-   //         equipment = new EquipableItem[Enum.GetNames(typeof(EQUIPMENT_SLOT)).Length];
 
-   //         HealthPotion hPotion = new HealthPotion();
-   //         hPotion.Init();
+		public static async Task CreatePlayerInventory(long chatId)
+		{
+			//Dictionary<string, object> player = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId.ToString(), DbConstants.COLLEC_DEBUG);
 
-   //         ManaPotion mPotion = new ManaPotion();
-   //         mPotion.Init();
+			//string[] itemsNames = new string[obtainableItems.Count];
 
-   //         ThunderfuryBleesedBladeOfTheWindseeker tFury = new ThunderfuryBleesedBladeOfTheWindseeker();
-   //         tFury.Init();
-
-   //         obtainableItems.Add(hPotion.name, hPotion);
-   //         obtainableItems.Add(mPotion.name, mPotion);
-   //         obtainableItems.Add(tFury.name, tFury);
-
-   //         Dictionary<string, object> player = await DatabaseManager.getDocumentByUniqueValue("telegramId", chatId.ToString(), "PlayersPrueba");
-
-   //         string[] itemsNames = new string[obtainableItems.Count];
-
-   //         int i = 0;
-
-   //         foreach(KeyValuePair<string,ObtainableItem> it in obtainableItems)
+			//int i = 0;
+                
+			//foreach (KeyValuePair<string, ObtainableItem> it in obtainableItems)
 			//{
-   //             itemsNames[i] = it.Key;
-   //             i++;
+			//	itemsNames[i] = it.Key;
+			//	i++;
 			//}
 
-   //         player.Add("Inventory", itemsNames);
+			//player.Add(DbConstants.PLAYER_FIELD_INVENTORY, itemsNames);
 
-   //         await DatabaseManager.modifyDocumentFromCollection(player, chatId.ToString(), "PlayersPrueba");
-   //     }
+			//await DatabaseManager.ModifyDocumentFromCollection(player, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+		}
+
+        public static async Task SavePlayerInventory(long chatId)
+		{
+            //TO-DO esto en el save no va
+            Dictionary<string, object> player = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID,
+                chatId.ToString(), DbConstants.COLLEC_DEBUG);
+
+            player.Remove(DbConstants.PLAYER_FIELD_INVENTORY);
+            player.Remove(DbConstants.PLAYER_FIELD_EQUIPABLE_ITEMS);
+
+            //preparamos los objetos stackeables normales
+            Dictionary<string, object>[] invRecordsToSave = new Dictionary<string, object>[InventoryRecords.Count];
+
+            int i = 0;
+            foreach (InventoryRecord temp in InventoryRecords)
+			{
+                invRecordsToSave[i] = temp.getSerializable();
+                i++;
+			}
+            player.Add(DbConstants.PLAYER_FIELD_INVENTORY, invRecordsToSave);
 
 
-        //TO-DO: Repensar si es mejor dejarlo como está o que al sistema de inventario le llegue la clase Objeto ya directamente. Es bastante inflexible solo poder recibir un string y
-        //traducirlo aquí
-        public static bool StringToItem(string s, out ObtainableItem item)
+            //preparamos los equipables
+            string[] equipItemsToSave = new string[equipment.Length];
+
+            i = 0;
+            foreach (EquipableItem temp in equipment)
+            {
+                if (temp != null) equipItemsToSave[i] = temp.name;
+                i++;
+            
+            }
+            player.Add(DbConstants.PLAYER_FIELD_EQUIPABLE_ITEMS, equipItemsToSave);
+
+            //actualizamos
+            await DatabaseManager.ModifyDocumentFromCollection(player, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+        }
+
+		//TO-DO: Repensar si es mejor dejarlo como está o que al sistema de inventario le llegue la clase Objeto ya directamente. Es bastante inflexible solo poder recibir un string y
+		//traducirlo aquí
+		public static bool StringToItem(string s, out ObtainableItem item)
         {
             return obtainableItems.TryGetValue(s, out item);
         }
@@ -426,6 +446,14 @@ namespace MMOTFG_Bot
             {
                 Quantity += amountToAdd;
             }
+
+            public Dictionary<String, object> getSerializable()
+			{
+                return new Dictionary<string, object>
+                {
+                    {InventoryItem.name, Quantity}
+                };
+			}
 
         }
     }

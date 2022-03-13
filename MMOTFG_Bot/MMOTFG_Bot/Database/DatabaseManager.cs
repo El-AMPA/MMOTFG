@@ -26,7 +26,14 @@ namespace MMOTFG_Bot
 			//docRefBase = db.Collection("Estructura").Document("players").Collection("PlayerList").Document("Pedro");
 		}
 
-		public static async Task<bool> addDocumentToCollection(Dictionary<string, object> document, string documentID, string collection)
+		/// <summary>
+		/// Adds a document to an already existing collection
+		/// </summary>
+		/// <param name="document">Dictionary containing the info of the document to be added</param>
+		/// <param name="documentID">Unique ID of the document to be added to the collectiong. <b>MUST BE UNIQUE</b>. Also what you will use to retrieve it later</param>
+		/// <param name="collection">Name of the collection to which you are adding the document, should be in <see cref="DbConstants"/></param>
+		/// <returns>True if the element could be added to the collection, False otherwise</returns>
+		public static async Task<bool> AddDocumentToCollection(Dictionary<string, object> document, string documentID, string collection)
 		{
 			DocumentReference docRef = db.Collection(collection).Document(documentID);
 
@@ -44,7 +51,15 @@ namespace MMOTFG_Bot
 
 		}
 
-		public static async Task modifyDocumentFromCollection(Dictionary<string, object> updates, string documentID, string collection)
+		/// <summary>
+		/// Changes or adds fields to an already existing document.
+		/// If a field already exists in the database, it will be updated.
+		/// If it doesn't exist, it will be created.
+		/// </summary>
+		/// <param name="updates">Dictionary containing the info of changes to be made</param>
+		/// <param name="documentID">ID of the document to be modified</param>
+		/// <param name="collection">Name of the collection that has the document, should be in <see cref="DbConstants"/></param>
+		public static async Task ModifyDocumentFromCollection(Dictionary<string, object> updates, string documentID, string collection)
 		{
 			CollectionReference colRef = db.Collection(collection);
 
@@ -66,7 +81,13 @@ namespace MMOTFG_Bot
 
 		}
 
-		public static async Task<Dictionary<string, object>> getDocument(string documentID, string collection)
+		/// <summary>
+		/// Gets the specified document from the specified collection
+		/// </summary>
+		/// <param name="documentID">ID of the document to be retrieved</param>
+		/// <param name="collection">Name of the collection to which you are adding the document, should be in <see cref="DbConstants"/></param>
+		/// <returns>A dictionary containing the data from the given document, null if there are any errors</returns>
+		public static async Task<Dictionary<string, object>> GetDocument(string documentID, string collection)
 		{
 			CollectionReference colRef = db.Collection(collection);
 
@@ -99,7 +120,15 @@ namespace MMOTFG_Bot
 		}
 
 
-		public static async Task<Dictionary<string, object>[]> getDocumentsByFieldValue(string field, object value, string collection)
+		/// <summary>
+		/// Gets the documents that have the given field-value pair from the specified collection 
+		/// </summary>
+		/// <param name="field">Field that will be searched, should be in <see cref="DbConstants"/></param>
+		/// <param name="value">Value to match</param>
+		/// <param name="collection">Name of the collection to search, should be in <see cref="DbConstants"/></param>
+		/// <returns>An array of dictionaries with the data of all the documents that match, null if there are any errors</returns>
+		/// 
+		public static async Task<Dictionary<string, object>[]> GetDocumentsByFieldValue(string field, object value, string collection)
 		{
 			CollectionReference colRef = db.Collection(collection);
 
@@ -127,7 +156,14 @@ namespace MMOTFG_Bot
 			return ret;
 		}
 
-		public static async Task<Dictionary<string, object>> getDocumentByUniqueValue(string field, object value, string collection)
+		/// <summary>
+		/// Gets the document that have the given field-value pair from the specified collection
+		/// </summary>
+		/// <param name="field">Field that will be searched, should be in <see cref="DbConstants"/>)</param>
+		/// <param name="value">Value to match</param>
+		/// <param name="collection">Name of the collection to search, should be in <see cref="DbConstants"/></param>
+		/// <returns>A dictionary containing the data from the given document, null if there are more than one or there are any errors</returns>
+		public static async Task<Dictionary<string, object>> GetDocumentByUniqueValue(string field, object value, string collection)
 		{
 			CollectionReference colRef = db.Collection(collection);
 

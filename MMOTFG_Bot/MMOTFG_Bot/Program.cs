@@ -17,7 +17,7 @@ namespace MMOTFG_Bot
 {
 	class Program
 	{
-		static List<ICommand> commandList = new List<ICommand>{new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
+		static List<ICommand> commandList = new List<ICommand> { new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
             new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
 			new cNavigate(), new cDirections(), new cInspectRoom(), new cShowGear()};
 
@@ -35,62 +35,6 @@ namespace MMOTFG_Bot
 				Console.WriteLine("Estamos en Docker");
 			}
 
-
-
-
-
-			DatabaseManager.Init();
-
-			//Dictionary<string, Dictionary<string,string>> prueba = new Dictionary<string, Dictionary<string, string>>
-			//{+		[1]	{projects/mmotfg-database/databases/(default)/documents/Estructura/players/ObjectList/escudo}	object {Google.Cloud.Firestore.DocumentReference}
-
-			//	{ "y se puede", new Dictionary<string, string>{ {"agregar sin pisar","nice" } } },
-			//};
-
-			//await DatabaseManager.addAsync<string, Dictionary<string, string>>(prueba);
-
-
-
-
-			//Dictionary<string, object> wr = new Dictionary<string, object> {
-
-			//	{"uno",1 },
-			//	{ "uve", "v"},
-			//	{
-			//	"mapa", new Dictionary<string, int>{
-			//			{"vaya", 2 },
-
-			//	}},
-			//	{"que", "chulo" } 
-			//};
-
-			//await DatabaseManager.addDocumentToCollection(wr, "mmmh", "Estructura2");
-
-			//Dictionary<string, object> wr2 = new Dictionary<string, object> {
-
-			//	{"hhg",1000 },
-			//};
-
-			//await DatabaseManager.modifyDocumentFromCollection(wr2, "mmmh", "Estructura2");
-
-			//Dictionary<string, object>[] ret = await DatabaseManager.getDocumentByFieldValue("nombre", "alba", "prueba");
-
-			//Dictionary<string, object> returned = await DatabaseManager.getDocument("prueba1", "Estructura");
-			//Dictionary<string, object> mapaRaw = (Dictionary<string, object>)returned["mapa"];
-			//Dictionary<string, string> mapa = new Dictionary<string, string>();
-
-			//foreach (KeyValuePair<string, object> pair in mapaRaw)
-			//{
-			//	mapa[(string)pair.Key] = (string)pair.Value;
-			//}
-
-
-			//Console.WriteLine("{0}: {1}", 1,1 );
-
-			//foreach (KeyValuePair<string, object> pair in returned)
-			//{
-			//	Console.WriteLine("{0}: {1}", pair.Key, pair.Value);
-			//}
 
 
 			string token = "";
@@ -112,6 +56,7 @@ namespace MMOTFG_Bot
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
 			Map.Init("assets/map.json");
+			DatabaseManager.Init();
 			foreach (ICommand c in commandList) c.SetKeywords();
 
 			//set attack keywords
