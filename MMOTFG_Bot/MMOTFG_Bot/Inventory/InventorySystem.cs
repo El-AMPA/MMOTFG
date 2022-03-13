@@ -16,65 +16,76 @@ namespace MMOTFG_Bot
 
         public static void Init()
         {
-			//TO-DO: ESTO ES FEO DE COJONES ME ESTOY MURIENDO DE VERLO
-			equipment = new EquipableItem[Enum.GetNames(typeof(EQUIPMENT_SLOT)).Length];
+            //TO-DO: ESTO ES FEO DE COJONES ME ESTOY MURIENDO DE VERLO
+            equipment = new EquipableItem[Enum.GetNames(typeof(EQUIPMENT_SLOT)).Length];
 
-			HealthPotion hPotion = new HealthPotion();
-			hPotion.Init();
+            HealthPotion hPotion = new HealthPotion();
+            hPotion.Init();
 
-			ManaPotion mPotion = new ManaPotion();
-			mPotion.Init();
+            ManaPotion mPotion = new ManaPotion();
+            mPotion.Init();
 
-			ThunderfuryBleesedBladeOfTheWindseeker tFury = new ThunderfuryBleesedBladeOfTheWindseeker();
-			tFury.Init();
+            ThunderfuryBleesedBladeOfTheWindseeker tFury = new ThunderfuryBleesedBladeOfTheWindseeker();
+            tFury.Init();
 
             SulfurasHandOfRagnaros hRag = new SulfurasHandOfRagnaros();
             hRag.Init();
 
-			obtainableItems.Add(hPotion.name, hPotion);
-			obtainableItems.Add(mPotion.name, mPotion);
-			obtainableItems.Add(tFury.name, tFury);            
+            obtainableItems.Add(hPotion.name, hPotion);
+            obtainableItems.Add(mPotion.name, mPotion);
+            obtainableItems.Add(tFury.name, tFury);
             obtainableItems.Add(hRag.name, hRag);
         }
 
-		public static async Task CreatePlayerInventory(long chatId)
-		{
-			//Dictionary<string, object> player = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+        /// <summary>
+        /// Resets the inventory Records and the equipment for a different player
+        /// </summary>
+        private static void Reset()
+        {
+            InventoryRecords = new List<InventoryRecord>();
+            equipment = new EquipableItem[Enum.GetNames(typeof(EQUIPMENT_SLOT)).Length];
+        }
 
-			//string[] itemsNames = new string[obtainableItems.Count];
+        public static async Task LoadPlayerInventory(long chatId)
+        {
+            Reset();
 
-			//int i = 0;
-                
-			//foreach (KeyValuePair<string, ObtainableItem> it in obtainableItems)
-			//{
-			//	itemsNames[i] = it.Key;
-			//	i++;
-			//}
-
-			//player.Add(DbConstants.PLAYER_FIELD_INVENTORY, itemsNames);
-
-			//await DatabaseManager.ModifyDocumentFromCollection(player, chatId.ToString(), DbConstants.COLLEC_DEBUG);
-		}
-
-        public static async Task SavePlayerInventory(long chatId)
-		{
-            //TO-DO esto en el save no va
             Dictionary<string, object> player = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID,
                 chatId.ToString(), DbConstants.COLLEC_DEBUG);
 
-            player.Remove(DbConstants.PLAYER_FIELD_INVENTORY);
-            player.Remove(DbConstants.PLAYER_FIELD_EQUIPABLE_ITEMS);
+
+            //Inventario "normal" (no equipables)
+            Dictionary<string, object>[] dbInventory = (Dictionary<string, object>[])player["inventory"];
+
+            foreach (Dictionary<string, object> itemAmountDict in dbInventory)
+            {
+                foreach (KeyValuePair<string, object> itemAmountEntry in itemAmountDict)
+                {
+                    ObtainableItem item;
+                    StringToItem(itemAmountEntry.Key, out item);
+                    InventoryRecords.Add(new InventoryRecord(item, (int)itemAmountEntry.Value));
+                }
+            }
+
+        }
+
+        public static async Task SavePlayerInventory(long chatId)
+        {
+            Dictionary<string, object> update = new Dictionary<string, object>();
+
+            update.Remove(DbConstants.PLAYER_FIELD_INVENTORY);
+            update.Remove(DbConstants.PLAYER_FIELD_EQUIPABLE_ITEMS);
 
             //preparamos los objetos stackeables normales
             Dictionary<string, object>[] invRecordsToSave = new Dictionary<string, object>[InventoryRecords.Count];
 
             int i = 0;
             foreach (InventoryRecord temp in InventoryRecords)
-			{
+            {
                 invRecordsToSave[i] = temp.getSerializable();
                 i++;
-			}
-            player.Add(DbConstants.PLAYER_FIELD_INVENTORY, invRecordsToSave);
+            }
+            update.Add(DbConstants.PLAYER_FIELD_INVENTORY, invRecordsToSave);
 
 
             //preparamos los equipables
@@ -85,17 +96,17 @@ namespace MMOTFG_Bot
             {
                 if (temp != null) equipItemsToSave[i] = temp.name;
                 i++;
-            
+
             }
-            player.Add(DbConstants.PLAYER_FIELD_EQUIPABLE_ITEMS, equipItemsToSave);
+            update.Add(DbConstants.PLAYER_FIELD_EQUIPABLE_ITEMS, equipItemsToSave);
 
             //actualizamos
-            await DatabaseManager.ModifyDocumentFromCollection(player, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
         }
 
-		//TO-DO: Repensar si es mejor dejarlo como está o que al sistema de inventario le llegue la clase Objeto ya directamente. Es bastante inflexible solo poder recibir un string y
-		//traducirlo aquí
-		public static bool StringToItem(string s, out ObtainableItem item)
+        //TO-DO: Repensar si es mejor dejarlo como está o que al sistema de inventario le llegue la clase Objeto ya directamente. Es bastante inflexible solo poder recibir un string y
+        //traducirlo aquí
+        public static bool StringToItem(string s, out ObtainableItem item)
         {
             return obtainableItems.TryGetValue(s, out item);
         }
@@ -188,7 +199,7 @@ namespace MMOTFG_Bot
                     // Add to the stack (either the full quanity, or the amount that would make it reach the stack maximum)
                     int quantityToConsumeToStack = Math.Min(quantityToConsumeAux, inventoryRecord.Quantity);
 
-                    if(command != null)
+                    if (command != null)
                     {
                         for (int k = 0; k < quantityToConsumeToStack; k++)
                         {
@@ -290,9 +301,9 @@ namespace MMOTFG_Bot
         public static async Task ShowGear(long chatId)
         {
             string message = "User equipment:\n";
-            for(int k = 0; k < equipment.Length; k++)
+            for (int k = 0; k < equipment.Length; k++)
             {
-                message += "\n"+(EQUIPMENT_SLOT)k + ": ";
+                message += "\n" + (EQUIPMENT_SLOT)k + ": ";
                 if (equipment[k] == null) message += " empty";
                 else message += equipment[k].name;
             }
@@ -350,7 +361,7 @@ namespace MMOTFG_Bot
         /// </summary>
         public static async Task EquipGear(long chatId, EquipableItem item)
         {
-            if(!InventoryRecords.Exists(x => x.InventoryItem.iD == item.iD))
+            if (!InventoryRecords.Exists(x => x.InventoryItem.iD == item.iD))
             {
                 await TelegramCommunicator.SendText(chatId, "Item " + item.name + " couldn't be equipped as it was not found in your inventory");
             }
@@ -402,10 +413,10 @@ namespace MMOTFG_Bot
             foreach (var statsNewItem in newItem.statModifiers)
             {
                 bool found = false;
-                for(int k = 0; k < oldItem.statModifiers.Count && !found; k++)
+                for (int k = 0; k < oldItem.statModifiers.Count && !found; k++)
                 {
                     //If both items change the same stat
-                    if(statsNewItem.Item2 == oldItem.statModifiers[k].Item2)
+                    if (statsNewItem.Item2 == oldItem.statModifiers[k].Item2)
                     {
                         auxChanges[k] = (statsNewItem.Item1 - oldItem.statModifiers[k].Item1, oldItem.statModifiers[k].Item2);
                         found = true;
@@ -415,7 +426,7 @@ namespace MMOTFG_Bot
                 if (!found) auxChanges.Add(statsNewItem);
             }
 
-            foreach(var stat in auxChanges)
+            foreach (var stat in auxChanges)
             {
                 msg += "\n" + stat.Item2 + " ";
                 if (stat.Item1 >= 0) msg += "+" + stat.Item1;
@@ -448,12 +459,12 @@ namespace MMOTFG_Bot
             }
 
             public Dictionary<String, object> getSerializable()
-			{
+            {
                 return new Dictionary<string, object>
                 {
                     {InventoryItem.name, Quantity}
                 };
-			}
+            }
 
         }
     }

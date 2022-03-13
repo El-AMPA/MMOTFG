@@ -37,8 +37,6 @@ namespace MMOTFG_Bot.Commands
 				return;
 			}
 
-			await InventorySystem.CreatePlayerInventory(chatId);
-
 			await TelegramCommunicator.SendText(chatId, String.Format("Madre mia {0}, tremendo personaje acabas de crearte", charName));
 			Console.WriteLine("Telegram user {0} just created characater with name {1}", chatId, charName);
 		}

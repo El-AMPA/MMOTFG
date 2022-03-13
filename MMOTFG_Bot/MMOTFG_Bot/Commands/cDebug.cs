@@ -22,9 +22,9 @@ namespace MMOTFG_Bot.Commands
 
 			switch (arg0)
 			{
-				case "a":
+				case "save":
 					await InventorySystem.SavePlayerInventory(chatId);
-					Console.WriteLine("--- using debug command ---");
+					Console.WriteLine("--- using debug command {0} ---", arg0);
 					break;
 			}
 				
