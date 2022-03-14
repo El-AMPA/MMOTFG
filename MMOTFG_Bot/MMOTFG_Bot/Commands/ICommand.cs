@@ -37,5 +37,9 @@
         /// /add 10a apples isn't formatted correctly. This method should read this text and determine that it's not correct)
         /// </summary>
         internal abstract bool IsFormattedCorrectly(string[] args);
+
+        internal string[] getKeywords() {
+            return key_words;
+        }
     }
 }
