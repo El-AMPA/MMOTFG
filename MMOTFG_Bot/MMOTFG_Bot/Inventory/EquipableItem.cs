@@ -6,21 +6,52 @@ namespace MMOTFG_Bot.Items
 {
     abstract class EquipableItem : ObtainableItem
     {
-        public EQUIPMENT_SLOT gearSlot;
-
-        public override void Init()
+        public EQUIPMENT_SLOT gearSlot
         {
-            //key_words.Add(new KeyValuePair<string, Action<long, string[]>>("/equip", Equip));
+            get;
+            set;
         }
 
-        public virtual async void OnEquip(long chatId, string[] args = null)
+        public List<(int, StatName)> statModifiers
         {
-
+            get;
+            protected set;
         }
 
-        public virtual async void OnUnequip(long chatId, string[] args = null)
+        public void OnEquip(long chatId, string[] args = null)
         {
+            foreach (var stat in statModifiers)
+            {
+                if ((stat.Item2 == StatName.HP || stat.Item2 == StatName.MP))
+                {
+                    float currentPercent = BattleSystem.player.stats[(int)stat.Item2] / BattleSystem.player.originalStats[(int)stat.Item2];
+                    BattleSystem.player.originalStats[(int)stat.Item2] += stat.Item1;
+                    BattleSystem.player.stats[(int)stat.Item2] = (int)(BattleSystem.player.originalStats[(int)stat.Item2] * currentPercent);
+                }
+                else
+                {
+                    BattleSystem.player.stats[(int)stat.Item2] += stat.Item1;
+                    BattleSystem.player.originalStats[(int)stat.Item2] += stat.Item1;
+                }
+            }
+        }
 
+        public void OnUnequip(long chatId, string[] args = null)
+        {
+            foreach(var stat in statModifiers)
+            {
+                if ((stat.Item2 == StatName.HP || stat.Item2 == StatName.MP))
+                {
+                    float currentPercent = BattleSystem.player.stats[(int)stat.Item2] / BattleSystem.player.originalStats[(int)stat.Item2];
+                    BattleSystem.player.originalStats[(int)stat.Item2] -= stat.Item1;
+                    BattleSystem.player.stats[(int)stat.Item2] = (int)(BattleSystem.player.originalStats[(int)stat.Item2] * currentPercent);
+                }
+                else
+                {
+                    BattleSystem.player.stats[(int)stat.Item2] -= stat.Item1;
+                    BattleSystem.player.originalStats[(int)stat.Item2] -= stat.Item1;
+                }
+            }
         }
     }
 }
