@@ -24,7 +24,6 @@ namespace MMOTFG_Bot.Commands
 
 			Dictionary<string, object> dict = new Dictionary<string, object>
 			{
-
 				{ DbConstants.PLAYER_FIELD_NAME , charName},
 				{ DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId.ToString()}
 			};
