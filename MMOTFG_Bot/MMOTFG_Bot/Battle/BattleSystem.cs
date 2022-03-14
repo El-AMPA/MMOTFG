@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using static MMOTFG_Bot.StatName;
 
 namespace MMOTFG_Bot
 {
@@ -53,7 +54,7 @@ namespace MMOTFG_Bot
             int atkNum = player.attackNames.IndexOf(attackName);
             if (atkNum == -1) return;
             Attack attack = player.attacks[atkNum];
-            if (attack.mpCost > player.stats[(int)StatName.MP])
+            if (attack.mpCost > player.getStat(MP))
             {
                 await TelegramCommunicator.SendText(chatId, "Not enough MP for that attack");
                 return;
@@ -71,7 +72,7 @@ namespace MMOTFG_Bot
 
         private static async void useAttack(long chatId, Attack attack, Battler user, Battler target)
         {
-            user.changeMP(-attack.mpCost);
+            user.changeStat(MP, -attack.mpCost);
             attack.setUser(user);
             attack.setTarget(target);
             float damage = (float)Math.Round(attack.getDamage(), 2);
@@ -80,12 +81,12 @@ namespace MMOTFG_Bot
             if (damage != 0)
             {
                 message += $" {target.name} took {damage} damage.";
-                target.changeHP(-damage);
+                target.changeStat(HP, -damage);
             }
             await TelegramCommunicator.SendText(chatId, message);
             attack.OnAttack(chatId);
 
-            if (target.stats[(int)StatName.HP] <= 0)
+            if (target.getStat(HP) <= 0)
             {
                 target.OnKill(chatId);
                 battleActive = false;
@@ -107,7 +108,7 @@ namespace MMOTFG_Bot
             else
             {
                 target.OnHit(chatId);
-                if(damage != 0) await TelegramCommunicator.SendText(chatId, $"{target.name} HP: {getStatBar(target, StatName.HP)}");
+                if(damage != 0) await TelegramCommunicator.SendText(chatId, $"{target.name} HP: {getStatBar(target, HP)}");
                 if(user == player) enemyAttack(chatId);
                 else
                 {
@@ -119,7 +120,7 @@ namespace MMOTFG_Bot
 
         private static string getStatBar(Battler b, StatName s)
         {
-            int green = (int)(10 * b.stats[(int)s] / b.originalStats[(int)s]);
+            int green = (int)(10 * b.getStat(s) / b.getOriginalStat(s));
             string bar = "";
             for (int i = 0; i < 10; i++)
             {
@@ -139,9 +140,9 @@ namespace MMOTFG_Bot
             for(int i = 0; i < Stats.statNum; i++)
             {
                 StatName sn = (StatName)i;
-                s += $"{Enum.GetName(typeof(StatName), i)}: {b.stats[i]}";
-                if (sn == StatName.HP || sn == StatName.MP)
-                    s += $"/{b.originalStats[i]}";
+                s += $"{Enum.GetName(typeof(StatName), i)}: {b.getStat(sn)}";
+                if (sn == HP || sn == MP)
+                    s += $"/{b.getOriginalStat(sn)}";
                 s += "\n";
             }
 

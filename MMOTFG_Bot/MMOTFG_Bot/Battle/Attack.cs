@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using static MMOTFG_Bot.StatName;
 
 namespace MMOTFG_Bot
 {
@@ -31,7 +32,7 @@ namespace MMOTFG_Bot
 
         public virtual float getDamage()
         {
-            return user.stats[(int)StatName.ATK] * power;
+            return user.getStat(ATK) * power;
         }
 
         public virtual async void OnAttack(long chatId) { }

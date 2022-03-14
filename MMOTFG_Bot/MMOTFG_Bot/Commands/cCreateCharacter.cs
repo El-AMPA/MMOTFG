@@ -38,6 +38,8 @@ namespace MMOTFG_Bot.Commands
 
 			await TelegramCommunicator.SendText(chatId, String.Format("Madre mia {0}, tremendo personaje acabas de crearte", charName));
 			Console.WriteLine("Telegram user {0} just created characater with name {1}", chatId, charName);
+
+			await InventorySystem.CreatePlayerInventory(chatId);
 		}
 
 		internal override bool IsFormattedCorrectly(string[] args)
