@@ -8,8 +8,6 @@ namespace MMOTFG_Bot.Items
     {
         public override void Init()
         {
-            base.Init();
-            iD = Guid.NewGuid();
             gearSlot = EQUIPMENT_SLOT.LEGS;
             statModifiers = new List<(int, StatName)>
             {
