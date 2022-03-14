@@ -46,6 +46,9 @@ namespace MMOTFG_Bot
             equipment = new EquipableItem[Enum.GetNames(typeof(EQUIPMENT_SLOT)).Length];
         }
 
+        /// <summary>
+        /// Loads to memory the inventory of the player with the given chatId
+        /// </summary>
         public static async Task LoadPlayerInventory(long chatId)
         {
             Reset();
@@ -83,6 +86,9 @@ namespace MMOTFG_Bot
             }
         }
 
+        /// <summary>
+        /// Saves to the database the data (currently on memory) of the player with the given chatId
+        /// </summary>
         public static async Task SavePlayerInventory(long chatId)
         {
             Dictionary<string, object> update = new Dictionary<string, object>();
@@ -117,6 +123,15 @@ namespace MMOTFG_Bot
             //actualizamos
             await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
         }
+
+        /// <summary>
+        /// Creates and saves to the database an empty inventory for the given player
+        /// </summary>
+        public static async Task CreatePlayerInventory(long chatId)
+		{
+            Reset();
+            await SavePlayerInventory(chatId);
+		}
 
         //TO-DO: Repensar si es mejor dejarlo como está o que al sistema de inventario le llegue la clase Objeto ya directamente. Es bastante inflexible solo poder recibir un string y
         //traducirlo aquí

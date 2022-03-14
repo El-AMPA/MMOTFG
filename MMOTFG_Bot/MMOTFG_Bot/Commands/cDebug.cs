@@ -20,10 +20,18 @@ namespace MMOTFG_Bot.Commands
 
 			string arg0 = args[0];
 
-			switch (arg0)
+			switch (arg0.ToLower())
 			{
-				case "save":
-					await InventorySystem.SavePlayerInventory(chatId);
+				case "mapsave":
+					await Navigation.Map.SavePlayerPosition(chatId);
+					Console.WriteLine("--- using debug command {0} ---", arg0);
+					break;
+				case "mapload":
+					await Navigation.Map.LoadPlayerPosition(chatId);
+					Console.WriteLine("--- using debug command {0} ---", arg0);
+					break;
+				case "resetinv":
+					await InventorySystem.CreatePlayerInventory(chatId);
 					Console.WriteLine("--- using debug command {0} ---", arg0);
 					break;
 			}

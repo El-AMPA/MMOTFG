@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Text;
 using MMOTFG_Bot.Battle;
+using System.Threading.Tasks;
 
 namespace MMOTFG_Bot.Navigation
 {
@@ -127,6 +128,31 @@ namespace MMOTFG_Bot.Navigation
                 Console.WriteLine("ERROR: map.json isn't formatted correctly. \nError message:" + e.Message);
                 Environment.Exit(-1);
             }
+        }
+
+        /// <summary>
+        /// Saves the actual node of the given player to the database
+        /// </summary>
+        public static async Task SavePlayerPosition(long chatId)
+		{
+            Dictionary<string, object> update = new Dictionary<string, object>();
+
+            update.Add(DbConstants.PLAYER_FIELD_ACTUAL_NODE, currentNode.Name);
+
+            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+        }
+
+        /// <summary>
+        /// Loads the actual node of the given player from the database
+        /// </summary>
+        public static async Task LoadPlayerPosition(long chatId)
+        {
+            Dictionary<string, object> player = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID,
+                chatId.ToString(), DbConstants.COLLEC_DEBUG);
+
+            string currNodeName = player[DbConstants.PLAYER_FIELD_ACTUAL_NODE].ToString();
+
+            currentNode = nodes.Find(x => (x.Name == currNodeName));
         }
     }
 }

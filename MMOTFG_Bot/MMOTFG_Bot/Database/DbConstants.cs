@@ -20,5 +20,6 @@ namespace MMOTFG_Bot
 		readonly public static string PLAYER_FIELD_TELEGRAM_ID = "telegramId";
 		readonly public static string PLAYER_FIELD_INVENTORY = "inventory";
 		readonly public static string PLAYER_FIELD_EQUIPABLE_ITEMS = "equipable_items";
+		readonly public static string PLAYER_FIELD_ACTUAL_NODE = "actual_node";
 	}
 }
