@@ -333,7 +333,7 @@ namespace MMOTFG_Bot
                 {
                     item.OnEquip(chatId);
 
-                    string msg = "You have equipped " + item.name + "on your " + item.gearSlot.ToString().ToLower() + " slot.";
+                    string msg = "You have equipped " + item.name + " on your " + item.gearSlot.ToString().ToLower() + " slot.";
                     if (item.statModifiers.Count > 0)
                     {
                         foreach (var stat in item.statModifiers)
