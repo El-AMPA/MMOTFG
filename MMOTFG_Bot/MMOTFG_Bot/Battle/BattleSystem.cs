@@ -40,6 +40,7 @@ namespace MMOTFG_Bot
             battleActive = (bool)dbPlayer[DbConstants.PLAYER_FIELD_BATTLE_ACTIVE];
 
             player.loadSerializable((Dictionary<string, object>) dbPlayer[DbConstants.PLAYER_FIELD_BATTLE_INFO]);
+            player.setName((string)dbPlayer[DbConstants.PLAYER_FIELD_NAME]);
 
             if (dbPlayer.ContainsKey(DbConstants.PLAYER_FIELD_ENEMY) && dbPlayer[DbConstants.PLAYER_FIELD_ENEMY] != null) enemy.loadSerializable((Dictionary<string, object>)dbPlayer[DbConstants.PLAYER_FIELD_ENEMY]);
         }

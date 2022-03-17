@@ -52,8 +52,6 @@ namespace MMOTFG_Bot
 
             enemyInfo.Add(DbConstants.BATTLE_INFO_FIELD_OG_STATS, statsTemp);
 
-            enemyInfo.Add(DbConstants.ENEMY_FIELD_IMAGE, imageName);
-            enemyInfo.Add(DbConstants.ENEMY_FIELD_IMAGE_CAPTION, imageCaption);
             enemyInfo.Add(DbConstants.ENEMY_FIELD_NAME, name);
 
             enemyInfo.Add(DbConstants.ENEMY_FIELD_MONEY_DROP, droppedMoney);
@@ -85,8 +83,6 @@ namespace MMOTFG_Bot
                 originalStats[(int)index] = Convert.ToSingle(keyValue.Value);
             }
 
-            imageName = eInfo[DbConstants.ENEMY_FIELD_IMAGE].ToString();
-            imageCaption = eInfo[DbConstants.ENEMY_FIELD_IMAGE_CAPTION].ToString();
             name = eInfo[DbConstants.ENEMY_FIELD_NAME].ToString();
 
             droppedMoney = Convert.ToSingle(eInfo[DbConstants.ENEMY_FIELD_MONEY_DROP]);

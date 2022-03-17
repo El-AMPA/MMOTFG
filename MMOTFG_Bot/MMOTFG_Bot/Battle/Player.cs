@@ -85,6 +85,11 @@ namespace MMOTFG_Bot
 
         }
 
+        public void setName(string playerName)
+		{
+            name = playerName;
+		}
+
         public override async void OnKill(long chatId)
         {
             //Recuperas toda la vida y mp

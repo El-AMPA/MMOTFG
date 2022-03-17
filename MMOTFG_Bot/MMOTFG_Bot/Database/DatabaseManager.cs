@@ -189,5 +189,34 @@ namespace MMOTFG_Bot
 			
 			return ret;
 		}
+
+		/// <summary>
+		/// Erases the document with the given id from the database
+		/// </summary>
+		/// <param name="documentId">ID of the document to be deleted</param>
+		/// <param name="collection">Name of the collection to search, should be in <see cref="DbConstants"/></param>
+		/// <returns>True if the deletios was successful, false otherwise</returns>
+		public static async Task<bool> DeleteDocumentById(string documentId, string collection)
+		{
+			CollectionReference colRef = db.Collection(collection);
+
+			if (colRef == null)
+			{
+				Console.WriteLine("Collection {0} doesnt exist, remember its case sentitive.", collection);
+				return false;
+			}
+
+			DocumentReference docRef = colRef.Document(documentId);
+
+			if (docRef == null)
+			{
+				Console.WriteLine("Document {0} doesnt exist in collection {1}, remember its case sentitive.", documentId, collection);
+				return false;
+			}
+
+			await docRef.DeleteAsync();
+
+			return true;
+		}
 	}
 }

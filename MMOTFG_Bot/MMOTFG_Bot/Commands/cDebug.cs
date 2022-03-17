@@ -11,7 +11,7 @@ namespace MMOTFG_Bot.Commands
 		public override void SetKeywords()
 		{
 			key_words = new string[] {
-				"/debug"
+				"debug"
 			};
 		}
 
@@ -26,13 +26,10 @@ namespace MMOTFG_Bot.Commands
 					await InventorySystem.CreatePlayerInventory(chatId);
 					Console.WriteLine("--- using debug command {0} ---", arg0);
 					break;
-				case "loadcom":
-					await BattleSystem.LoadPlayerBattle(chatId);
+				case "delete":
+					await DatabaseManager.DeleteDocumentById(chatId.ToString(), DbConstants.COLLEC_DEBUG);
 					Console.WriteLine("--- using debug command {0} ---", arg0);
-					break;
-				case "savecom":
-					await BattleSystem.SavePlayerBattle(chatId);
-					Console.WriteLine("--- using debug command {0} ---", arg0);
+					await TelegramCommunicator.SendText(chatId, "hasta siempre 😭");
 					break;
 			}
 				

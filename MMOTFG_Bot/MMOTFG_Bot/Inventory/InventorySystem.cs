@@ -381,7 +381,7 @@ namespace MMOTFG_Bot
         public static async Task UnequipGear(long chatId, EQUIPMENT_SLOT slot)
         {
             await LoadPlayerInventory(chatId);
-            if (BattleSystem.IsPlayerInBattle(chatId))
+            if (await BattleSystem.IsPlayerInBattle(chatId))
             {
                 await TelegramCommunicator.SendText(chatId, "Can't unequip your gear in battle");
             }
@@ -406,15 +406,16 @@ namespace MMOTFG_Bot
 
                     equipment[(int)slot] = null;
 
-                //Remove the item from the inventory
-                await AddItem(chatId, item.name, 1);
-                await SavePlayerInventory(chatId);
-                await BattleSystem.SavePlayerBattle(chatId);
+                    //Remove the item from the inventory
+                    await AddItem(chatId, item.name, 1);
+                    await SavePlayerInventory(chatId);
+                    await BattleSystem.SavePlayerBattle(chatId);
+                }
+                else
+                {
+                    await TelegramCommunicator.SendText(chatId, "Couldn't unequip an item from your " + slot.ToString().ToLower() + " gear slot because it's empty.");
+                }
             }
-            else
-            {
-                await TelegramCommunicator.SendText(chatId, "Couldn't unequip an item from your " + slot.ToString().ToLower() + " gear slot because it's empty.");
-            }            
         }
 
         /// <summary>
@@ -423,7 +424,7 @@ namespace MMOTFG_Bot
         public static async Task EquipGear(long chatId, EquipableItem item)
         {
             await LoadPlayerInventory(chatId);
-            if (BattleSystem.IsPlayerInBattle(chatId))
+            if (await BattleSystem.IsPlayerInBattle(chatId))
             {
                 await TelegramCommunicator.SendText(chatId, "Can't equip gear in battle");
             }

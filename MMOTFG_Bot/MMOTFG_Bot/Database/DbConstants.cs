@@ -27,8 +27,6 @@ namespace MMOTFG_Bot
 		readonly public static string BATTLE_INFO_FIELD_OG_STATS = "og_stats";
 		readonly public static string PLAYER_FIELD_ENEMY = "enemy";
 		readonly public static string ENEMY_FIELD_NAME = "name";
-		readonly public static string ENEMY_FIELD_IMAGE = "image";
-		readonly public static string ENEMY_FIELD_IMAGE_CAPTION = "image_caption";
 		readonly public static string ENEMY_FIELD_MONEY_DROP = "money_drop";
 		readonly public static string ENEMY_FIELD_ITEM_DROP = "item_drop";
 		readonly public static string ENEMY_FIELD_ITEM_DROP_AMOUNT = "item_drop_amount";
