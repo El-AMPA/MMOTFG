@@ -11,7 +11,7 @@ namespace MMOTFG_Bot.Commands
         public override void SetKeywords()
         {
             key_words = new string[]{
-                "/equip"
+                "equip"
             };
         }
 

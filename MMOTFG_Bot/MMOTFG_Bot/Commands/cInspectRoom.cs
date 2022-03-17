@@ -13,9 +13,9 @@ namespace MMOTFG_Bot.Commands
         public override void SetKeywords()
         {
             key_words = new string[] {
-                "/inspect",
-                "/look_around",
-                "/look"
+                "inspect",
+                "look_around",
+                "look"
             };
         }
 
