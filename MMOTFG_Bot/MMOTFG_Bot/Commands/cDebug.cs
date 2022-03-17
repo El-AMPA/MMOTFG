@@ -22,16 +22,16 @@ namespace MMOTFG_Bot.Commands
 
 			switch (arg0.ToLower())
 			{
-				case "mapsave":
-					await Navigation.Map.SavePlayerPosition(chatId);
-					Console.WriteLine("--- using debug command {0} ---", arg0);
-					break;
-				case "mapload":
-					await Navigation.Map.LoadPlayerPosition(chatId);
-					Console.WriteLine("--- using debug command {0} ---", arg0);
-					break;
 				case "resetinv":
 					await InventorySystem.CreatePlayerInventory(chatId);
+					Console.WriteLine("--- using debug command {0} ---", arg0);
+					break;
+				case "loadcom":
+					await BattleSystem.LoadPlayerBattle(chatId);
+					Console.WriteLine("--- using debug command {0} ---", arg0);
+					break;
+				case "savecom":
+					await BattleSystem.SavePlayerBattle(chatId);
 					Console.WriteLine("--- using debug command {0} ---", arg0);
 					break;
 			}

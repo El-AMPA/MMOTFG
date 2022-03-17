@@ -13,6 +13,7 @@ namespace MMOTFG_Bot
         private static List<InventoryRecord> InventoryRecords = new List<InventoryRecord>();
         private static Dictionary<string, ObtainableItem> obtainableItems = new Dictionary<string, ObtainableItem>();
         private static EquipableItem[] equipment;
+        private static long currentChatid = -1;
 
         public static void Init()
         {
@@ -44,6 +45,7 @@ namespace MMOTFG_Bot
         {
             InventoryRecords = new List<InventoryRecord>();
             equipment = new EquipableItem[Enum.GetNames(typeof(EQUIPMENT_SLOT)).Length];
+            currentChatid = -1;
         }
 
         /// <summary>
@@ -51,6 +53,8 @@ namespace MMOTFG_Bot
         /// </summary>
         public static async Task LoadPlayerInventory(long chatId)
         {
+            if (currentChatid == chatId) return;
+
             Reset();
 
             Dictionary<string, object> player = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID,
@@ -71,19 +75,23 @@ namespace MMOTFG_Bot
             }
 
             //Inventario de equipables
-            List<object> dbEquipment = (List<object>)(player[DbConstants.PLAYER_FIELD_EQUIPABLE_ITEMS]);
+            Dictionary<string, object> dbEquipment = (Dictionary<string, object>)(player[DbConstants.PLAYER_FIELD_EQUIPABLE_ITEMS]);
 
-            int i = 0;
 
-            foreach (object equipable in dbEquipment)
+            foreach (KeyValuePair<string, object> equiItem in dbEquipment)
             {
-                if (equipable != null) { 
-                    ObtainableItem item;
-                    StringToItem(equipable.ToString(), out item);
-                    equipment[i] = (EquipableItem)item;
+                ObtainableItem item = null;
+                object index;
+                Enum.TryParse(typeof(EQUIPMENT_SLOT), equiItem.Key.ToString(), true, out index);
+
+                if (equiItem.Value != null) { 
+                    StringToItem(equiItem.Value.ToString(), out item);               
                 }
-                i++;
+
+                equipment[Convert.ToInt32(index)] = (EquipableItem)item;
             }
+
+            currentChatid = chatId;
         }
 
         /// <summary>
@@ -109,14 +117,12 @@ namespace MMOTFG_Bot
 
 
             //preparamos los equipables
-            string[] equipItemsToSave = new string[equipment.Length];
+            Dictionary<string, object> equipItemsToSave = new Dictionary<string, object>();
 
-            i = 0;
-            foreach (EquipableItem temp in equipment)
+            foreach (int equipNumbers in Enum.GetValues(typeof(EQUIPMENT_SLOT)))
             {
-                if (temp != null) equipItemsToSave[i] = temp.name;
-                i++;
-
+                object itemName = equipment[equipNumbers] is null ? null : equipment[equipNumbers].name;
+                equipItemsToSave.Add(Enum.GetName(typeof(EQUIPMENT_SLOT), equipNumbers), itemName);
             }
             update.Add(DbConstants.PLAYER_FIELD_EQUIPABLE_ITEMS, equipItemsToSave);
 
@@ -397,6 +403,7 @@ namespace MMOTFG_Bot
                 //Remove the item from the inventory
                 await AddItem(chatId, item.name, 1);
                 await SavePlayerInventory(chatId);
+                await BattleSystem.SavePlayerBattle(chatId);
             }
             else
             {
@@ -444,6 +451,7 @@ namespace MMOTFG_Bot
                 }
 
                 await SavePlayerInventory(chatId);
+                await BattleSystem.SavePlayerBattle(chatId);
             }
         }
 
@@ -493,6 +501,7 @@ namespace MMOTFG_Bot
             equipment[(int)newItem.gearSlot].OnUnequip(chatId);
             equipment[(int)newItem.gearSlot] = newItem;
             equipment[(int)newItem.gearSlot].OnEquip(chatId);
+            await BattleSystem.SavePlayerBattle(chatId);
         }
 
         public class InventoryRecord

@@ -32,6 +32,59 @@ namespace MMOTFG_Bot
             }
         }
 
+        public Dictionary<string, object> getSerializable()
+		{
+            Dictionary<string, object> combatInfo = new Dictionary<string,object>();
+
+            Dictionary<string, float> statsTemp = new Dictionary<string, float>();
+
+            int i = 0;
+			foreach (float sValue in stats)
+			{
+                statsTemp.Add(Enum.GetName(typeof(StatName),i), sValue);
+                i++;
+			}
+
+            combatInfo.Add(DbConstants.BATTLE_INFO_FIELD_CUR_STATS, statsTemp);
+
+            statsTemp = new Dictionary<string, float>();
+
+            i = 0;
+            foreach (float sValue in originalStats)
+            {
+                statsTemp.Add(Enum.GetName(typeof(StatName), i), sValue);
+                i++;
+            }
+
+            combatInfo.Add(DbConstants.BATTLE_INFO_FIELD_OG_STATS, statsTemp);
+
+            return combatInfo;
+		}
+
+        public void loadSerializable(Dictionary<string, object> cInfo)
+        {
+            Dictionary<string, object> statsDB = (Dictionary<string, object>)cInfo[DbConstants.BATTLE_INFO_FIELD_CUR_STATS];
+
+			foreach (KeyValuePair<string,object> keyValue in statsDB)
+			{    
+                StatName index;
+                Enum.TryParse(keyValue.Key, true, out index);
+
+                stats[(int)index] = Convert.ToSingle(keyValue.Value);
+            }
+
+            statsDB = (Dictionary<string, object>)cInfo[DbConstants.BATTLE_INFO_FIELD_OG_STATS];
+
+            foreach (KeyValuePair<string, object> keyValue in statsDB)
+            {
+                StatName index;
+                Enum.TryParse(keyValue.Key, true, out index);
+
+                originalStats[(int)index] = Convert.ToSingle(keyValue.Value);
+            }
+
+        }
+
         public override async void OnKill(long chatId)
         {
             //Recuperas toda la vida y mp

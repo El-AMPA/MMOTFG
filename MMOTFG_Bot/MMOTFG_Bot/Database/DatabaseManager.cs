@@ -175,7 +175,7 @@ namespace MMOTFG_Bot
 
 			QuerySnapshot querySnap = await colRef.WhereEqualTo(field, value).GetSnapshotAsync();
 
-			if (colRef == null) { 
+			if (querySnap.Documents.Count <= 0) { 
 				Console.WriteLine("A document with {0} : {1} doesnt exist in collection {2}.", field, value.ToString(), collection);
 				return null;
 			}
