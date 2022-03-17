@@ -149,6 +149,7 @@ namespace MMOTFG_Bot
 			{
 				List<string> subStrings = message.Text.ToLower().Split(' ').ToList();
 				string command = subStrings[0];
+				if (command[0] == '/') command = command.Substring(1);
 				string[] args = new string[subStrings.Count - 1];
 				subStrings.CopyTo(1, args, 0, args.Length);
 

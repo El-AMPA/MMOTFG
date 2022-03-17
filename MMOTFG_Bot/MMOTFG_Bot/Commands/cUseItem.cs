@@ -13,10 +13,10 @@ namespace MMOTFG_Bot.Commands
         public override void SetKeywords()
         {
             key_words = new string[]{
-                "/consume",
-                "/use",
-                "/eat",
-                "/drink" 
+                "consume",
+                "use",
+                "eat",
+                "drink" 
             };
         }
 

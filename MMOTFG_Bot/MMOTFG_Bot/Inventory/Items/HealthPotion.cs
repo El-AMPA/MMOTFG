@@ -27,8 +27,8 @@ namespace MMOTFG_Bot.Items
 
         public override void Init()
         {
-            key_words.Add(new KeyValuePair<string, Action<long, string[]>>("/drink", drinkPotion));
-            key_words.Add(new KeyValuePair<string, Action<long, string[]>>("/eat", eatPotion));
+            key_words.Add(new KeyValuePair<string, Action<long, string[]>>("drink", drinkPotion));
+            key_words.Add(new KeyValuePair<string, Action<long, string[]>>("eat", eatPotion));
         }
     }
 }
