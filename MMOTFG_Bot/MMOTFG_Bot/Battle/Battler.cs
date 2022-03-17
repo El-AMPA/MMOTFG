@@ -20,6 +20,12 @@ namespace MMOTFG_Bot
         {
         }
 
+        public void onCreate()
+        {
+            attackNum = attacks.Length;
+            originalStats = (float[])stats.Clone();
+        }
+
         public void changeHP(float change)
         {
             float hp = stats[(int)StatName.HP];

@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Manuela",
+    "Stats": [ 1, 1, 1 ],
+    "ImageName": "manuela.jpg",
+    "ImageCaption": "lol",
+    "Attacks": [
+      {
+        "Name": "Booooomba",
+        "Power": 1,
+        "MpCost": 1
+      }
+    ]
+  }
+]

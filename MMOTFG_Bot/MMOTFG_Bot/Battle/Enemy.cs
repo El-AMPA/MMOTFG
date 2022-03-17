@@ -14,7 +14,7 @@ namespace MMOTFG_Bot
         public int droppedItemAmount;
 
         public Enemy() { }
-
+    
         //la idea de esto es que los ataques estén ordenados de menor a mayor MP con el básico costando 0 siempre
         public Attack nextAttack()
         {

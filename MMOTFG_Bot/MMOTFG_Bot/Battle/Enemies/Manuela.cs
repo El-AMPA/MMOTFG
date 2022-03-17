@@ -17,14 +17,13 @@ namespace MMOTFG_Bot.Battle.Enemies
             droppedItemAmount = 2;
 
             stats = new float[]{50, 10, 25};
-            originalStats = (float[])stats.Clone();
-
+            
             attacks = new Attack[]{
                 new Attack("Arañazo", 1, 0),
                 new Attack("Super Arañazo", 2, 1)
             };
 
-            attackNum = attacks.Length;
+            onCreate();
         }
 
         public override async void OnHit(long chatId)

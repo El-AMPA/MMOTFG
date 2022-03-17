@@ -13,6 +13,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
 using Google.Cloud.Firestore;
+using MMOTFG_Bot.Battle.Enemies;
 
 namespace MMOTFG_Bot
 {
@@ -68,6 +69,7 @@ namespace MMOTFG_Bot
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
 			Map.Init("assets/map.json");
+			EnemySystem.Init("assets/enemies.json");
 			foreach (ICommand c in commandList) c.SetKeywords();
 
 			//set attack keywords
