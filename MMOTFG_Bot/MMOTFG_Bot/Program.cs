@@ -142,10 +142,12 @@ namespace MMOTFG_Bot
 				string[] args = new string[subStrings.Count - 1];
 				subStrings.CopyTo(1, args, 0, args.Length);
 
+				bool understoodCommand = false;
 				foreach (ICommand c in commandList)
                 {
-                    if (c.ContainsKeyWord(command, chatId, args)) break;
+					if (c.ContainsKeyWord(command, chatId, args)) understoodCommand = true;
                 }
+				if (!understoodCommand) await TelegramCommunicator.SendText(chatId, "That command doesn't exist");
             }
 		}
 

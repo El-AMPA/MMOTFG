@@ -1,4 +1,6 @@
-﻿namespace MMOTFG_Bot
+﻿using System.Threading.Tasks;
+
+namespace MMOTFG_Bot
 {
     abstract class ICommand
     {
@@ -18,8 +20,8 @@
             {
                 if (command == p)
                 {
-                    if (!IsFormattedCorrectly(args)) return false;
-                    Execute(command, chatId, args);
+                    if (!IsFormattedCorrectly(args)) TelegramCommunicator.SendText(chatId, "Use of that command is incorrect"); //TO-DO: Ho-lee-sheet esto es un cacao. Revisar lo de las async Task porque no pueden tener out ni ref ni na
+                    else Execute(command, chatId, args);
                     return true;
                 }
             }

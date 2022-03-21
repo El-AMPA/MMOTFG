@@ -15,7 +15,9 @@ namespace MMOTFG_Bot.Commands
             key_words = new string[] {
                 "inspect",
                 "look_around",
-                "look"
+                "look",
+                "ins",
+                "i"
             };
         }
 
