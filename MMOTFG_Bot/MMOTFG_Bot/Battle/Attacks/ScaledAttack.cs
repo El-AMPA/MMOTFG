@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using static MMOTFG_Bot.StatName;
 
 namespace MMOTFG_Bot
 {
@@ -11,7 +12,7 @@ namespace MMOTFG_Bot
         public override float getDamage()
         {
             //ataque que se hace más fuerte cuanta menos vida le queda al usuario
-            return user.stats[(int)StatName.ATK] * power * user.originalStats[(int)StatName.HP] / user.stats[(int)StatName.HP];
+            return user.getStat(ATK) * power * user.getOriginalStat(HP) / user.getStat(HP);
         }
     }
 }

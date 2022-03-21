@@ -12,18 +12,17 @@ using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
-using Google.Cloud.Firestore;
 
 namespace MMOTFG_Bot
 {
 	class Program
 	{
-		static List<ICommand> commandList = new List<ICommand>{ new cUseItem(), new cAddItem(), new cThrowItem(),
+		static List<ICommand> commandList = new List<ICommand> { new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
             new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
 			new cNavigate(), new cDirections(), new cInspectRoom(), new cShowGear()};
 
 		static async Task Main(string[] args)
-		{
+		{	
 			/*Si estamos depurando en visual studio, tenemos que cambiar la ruta relativa en PC
 			* para que funcione igual que en el contenedor de Docker*/
 			if (Environment.GetEnvironmentVariable("PLATFORM_PC") != null)
@@ -36,18 +35,7 @@ namespace MMOTFG_Bot
 				Console.WriteLine("Estamos en Docker");
 			}
 
-			//----EJEMPLO CÓDIGO FIREBASE (sacarlo de aquí en algún momento)----
-			Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", "assets/private/firebase-admin.json");
-			FirestoreDb db = FirestoreDb.Create("mmotfg-database");
 
-			DocumentReference docRef = db.Collection("ejemplo").Document("firestore");
-			Dictionary<string, long> pruebaFirestore = new Dictionary<string, long>{
-				{"pejota", 6595 },
-				{"moviles", 2223}
-			};
-
-			await docRef.SetAsync(pruebaFirestore);
-			//----FIN DE CÓDIGO FIREBASE----
 
 			string token = "";
 			try
@@ -68,6 +56,7 @@ namespace MMOTFG_Bot
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
 			Map.Init("assets/map.json");
+			DatabaseManager.Init();
 			foreach (ICommand c in commandList) c.SetKeywords();
 
 			//set attack keywords
