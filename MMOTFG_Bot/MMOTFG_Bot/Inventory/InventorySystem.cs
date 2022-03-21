@@ -208,7 +208,6 @@ namespace MMOTFG_Bot
         public static async Task ConsumeItem(long chatId, string itemString, int quantityToConsume, string command = null, string[] args = null)
         {
             await LoadPlayerInventory(chatId);
-
             ObtainableItem item;
             if (StringToItem(itemString, out item))
             {
@@ -230,6 +229,16 @@ namespace MMOTFG_Bot
                 {
                     quantityToConsume = await GetNumberOfItemsInInventory(chatId, item); //-1 = Every single item of that type
                     quantityToConsumeAux = quantityToConsume;
+                }
+                //Check if the player in currently in a battle
+                bool playerInBattle = await BattleSystem.IsPlayerInBattle(chatId);
+                if (playerInBattle)
+                { //If the user is on a battle, it can only use 1 item in it's turn.
+                    if (quantityToConsume > 1)
+                    {
+                        await TelegramCommunicator.SendText(chatId, "You can only use 1 item on your turn.");
+                        return;
+                    }
                 }
                 while (quantityToConsumeAux > 0 && InventoryRecords.Exists(x => (x.InventoryItem.iD == item.iD)))
                 {
@@ -262,6 +271,8 @@ namespace MMOTFG_Bot
                 }
                 if (quantityToConsume == 1) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was consumed.");
                 else await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was consumed " + (quantityToConsume - quantityToConsumeAux) + " times");
+                //enemie's turn
+                if (playerInBattle) BattleSystem.enemyAttack(chatId);
                 
                 await SavePlayerInventory(chatId);
             }

@@ -111,7 +111,7 @@ namespace MMOTFG_Bot
             useAttack(chatId, attack, player, enemy); 
         }
 
-        private static async void enemyAttack(long chatId)
+        public static async void enemyAttack(long chatId)
         {
             Attack attack = enemy.nextAttack();
 
