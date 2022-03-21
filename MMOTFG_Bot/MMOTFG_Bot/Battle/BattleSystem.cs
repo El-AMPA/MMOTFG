@@ -181,6 +181,12 @@ namespace MMOTFG_Bot
             return bar;
         }
 
+        public static async Task changePlayerStats(long chatId, StatName stat, float amount)
+        {
+            player.changeStat(stat, amount);
+            await SavePlayerBattle(chatId);
+        }
+
         public static async void showStatus(long chatId, Battler b)
         {
             await LoadPlayerBattle(chatId);
