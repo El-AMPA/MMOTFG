@@ -10,9 +10,9 @@ namespace MMOTFG_Bot.Commands
         public override void SetKeywords()
         {
             key_words = new string[] {
-                "/gear",
-                "/show_gear",
-                "/equipment"
+                "gear",
+                "show_gear",
+                "equipment"
             };
         }
 

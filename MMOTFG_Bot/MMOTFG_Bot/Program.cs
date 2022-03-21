@@ -12,14 +12,13 @@ using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
-using Google.Cloud.Firestore;
 
 namespace MMOTFG_Bot
 {
 	class Program
 	{
-		public static List<ICommand> commandList = new List<ICommand>{new cHelp(), new cUseItem(), new cAddItem(), new cThrowItem(),
-            new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
+		public static List<ICommand> commandList = new List<ICommand>{new cDebug(), new cCreateCharacter(), new cHelp(), new cUseItem(), new cAddItem(), new cThrowItem(),
+			new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
 			new cNavigate(), new cDirections(), new cInspectRoom(), new cShowGear()};
 
 		static async Task Main(string[] args)
@@ -36,18 +35,7 @@ namespace MMOTFG_Bot
 				Console.WriteLine("Estamos en Docker");
 			}
 
-			//----EJEMPLO CÓDIGO FIREBASE (sacarlo de aquí en algún momento)----
-			Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", "assets/private/firebase-admin.json");
-			FirestoreDb db = FirestoreDb.Create("mmotfg-database");
 
-			DocumentReference docRef = db.Collection("ejemplo").Document("firestore");
-			Dictionary<string, long> pruebaFirestore = new Dictionary<string, long>{
-				{"pejota", 6595 },
-				{"moviles", 2223}
-			};
-
-			await docRef.SetAsync(pruebaFirestore);
-			//----FIN DE CÓDIGO FIREBASE----
 
 			string token = "";
 			try
@@ -68,7 +56,11 @@ namespace MMOTFG_Bot
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
 			Map.Init("assets/map.json");
-			foreach (ICommand c in commandList) c.SetKeywords();
+			DatabaseManager.Init();
+			foreach (ICommand c in commandList) { 
+				c.SetKeywords();
+				c.setDescription();
+			}
 
 			//set attack keywords
 			cAttack cAttack = new cAttack();
@@ -145,18 +137,23 @@ namespace MMOTFG_Bot
 
 			Console.WriteLine("Received message: " + message.Text + " from " + senderName);
 
-			if(message.Type == MessageType.Text) //Si le mandas una imagen explota ahora mismo
+			if (message.Type == MessageType.Text) //Si le mandas una imagen explota ahora mismo
 			{
 				List<string> subStrings = message.Text.ToLower().Split(' ').ToList();
 				string command = subStrings[0];
+				if (command[0] == '/') command = command.Substring(1);
 				string[] args = new string[subStrings.Count - 1];
 				subStrings.CopyTo(1, args, 0, args.Length);
 
 				foreach (ICommand c in commandList)
-                {
-                    if (c.ContainsKeyWord(command, chatId, args)) break;
-                }
-            }
+				{
+					if (c.ContainsKeyWord(command))
+					{
+						c.TryExecute(command, chatId, args);
+						break;
+					}
+				}
+			}
 		}
 
 		static Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
