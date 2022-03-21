@@ -12,18 +12,17 @@ using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
-using Google.Cloud.Firestore;
 
 namespace MMOTFG_Bot
 {
 	class Program
 	{
-		static List<ICommand> commandList = new List<ICommand>{ new cUseItem(), new cAddItem(), new cThrowItem(),
+		static List<ICommand> commandList = new List<ICommand> { new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
             new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
 			new cNavigate(), new cDirections(), new cInspectRoom(), new cShowGear()};
 
 		static async Task Main(string[] args)
-		{
+		{	
 			/*Si estamos depurando en visual studio, tenemos que cambiar la ruta relativa en PC
 			* para que funcione igual que en el contenedor de Docker*/
 			if (Environment.GetEnvironmentVariable("PLATFORM_PC") != null)
@@ -55,6 +54,7 @@ namespace MMOTFG_Bot
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
 			Map.Init("assets/map.json");
+			DatabaseManager.Init();
 			foreach (ICommand c in commandList) c.SetKeywords();
 
 			//set attack keywords
@@ -136,6 +136,7 @@ namespace MMOTFG_Bot
 			{
 				List<string> subStrings = message.Text.ToLower().Split(' ').ToList();
 				string command = subStrings[0];
+				if (command[0] == '/') command = command.Substring(1);
 				string[] args = new string[subStrings.Count - 1];
 				subStrings.CopyTo(1, args, 0, args.Length);
 

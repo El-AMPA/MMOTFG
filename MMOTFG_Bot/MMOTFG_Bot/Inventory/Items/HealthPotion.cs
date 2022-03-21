@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using static MMOTFG_Bot.StatName;
 
 namespace MMOTFG_Bot.Items
 {
@@ -14,21 +15,20 @@ namespace MMOTFG_Bot.Items
 
         private async void drinkPotion(long chatId, string[] args)
         {
-            BattleSystem.player.changeHP(500);
+            BattleSystem.player.changeStat(HP, 500);
             await TelegramCommunicator.SendText(chatId, "Gained 500HP.");
         }
 
         private async void eatPotion(long chatId, string[] args)
         {
-            BattleSystem.player.changeHP(-2);
-            await TelegramCommunicator.SendText(chatId, "Why would you eat a potion you freak.\n Your health has been reduced by 2 points." +
-                ". As if we had an HP system lmao.");
+            BattleSystem.player.changeStat(HP, -2);
+            await TelegramCommunicator.SendText(chatId, "Why would you eat a potion you freak.\n Your health has been reduced by 2 points.");
         }
 
         public override void Init()
         {
-            key_words.Add(new KeyValuePair<string, Action<long, string[]>>("/drink", drinkPotion));
-            key_words.Add(new KeyValuePair<string, Action<long, string[]>>("/eat", eatPotion));
+            key_words.Add(new KeyValuePair<string, Action<long, string[]>>("drink", drinkPotion));
+            key_words.Add(new KeyValuePair<string, Action<long, string[]>>("eat", eatPotion));
         }
     }
 }

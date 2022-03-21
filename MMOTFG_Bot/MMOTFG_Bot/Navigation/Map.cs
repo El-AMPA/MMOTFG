@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Text;
 using MMOTFG_Bot.Battle;
+using System.Threading.Tasks;
 
 namespace MMOTFG_Bot.Navigation
 {
@@ -15,13 +16,16 @@ namespace MMOTFG_Bot.Navigation
         private static Node currentNode;
         private static Node nextNode;
         private static List<Node> nodes;
+        private static Node startingNode;
 
         /// <summary>
         /// Moves the player in the specified direction
         /// </summary>
         public async static void Navigate(long chatId, string dir)
         {
-            if (BattleSystem.IsPlayerInBattle(chatId))
+            await LoadPlayerPosition(chatId);
+
+            if (await BattleSystem.IsPlayerInBattle(chatId))
             {
                 await TelegramCommunicator.SendText(chatId, "I can't run away from battles!");
             }
@@ -33,6 +37,7 @@ namespace MMOTFG_Bot.Navigation
                     currentNode.OnExit(chatId);
                     currentNode = nextNode;
                     currentNode.OnArrive(chatId);
+                    await SavePlayerPosition(chatId);
                 }
                 else
                 {
@@ -63,7 +68,7 @@ namespace MMOTFG_Bot.Navigation
                     Console.WriteLine("Node " + n.Name + " leads to node " + aux.Name + " via " + connection.Key);
                 }
             }
-            currentNode = nodes[0];
+            startingNode = nodes[0];
         }
 
         /// <summary>
@@ -71,6 +76,8 @@ namespace MMOTFG_Bot.Navigation
         /// </summary>
         public async static void GetDirections(long chatId)
         {
+            await LoadPlayerPosition(chatId);
+
             string msg = "Available directions:";
             foreach (var connection in currentNode.NodeConnections)
             {
@@ -83,8 +90,9 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Sends the 'OnInspectText' field of the current node of the player 
         /// </summary>
-        public static void OnInspect(long chatId)
+        public async static void OnInspect(long chatId)
         {
+            await LoadPlayerPosition(chatId);
             currentNode.OnInspect(chatId);
         }
 
@@ -127,6 +135,43 @@ namespace MMOTFG_Bot.Navigation
                 Console.WriteLine("ERROR: map.json isn't formatted correctly. \nError message:" + e.Message);
                 Environment.Exit(-1);
             }
+        }
+
+        /// <summary>
+        /// Saves the actual node of the given player to the database
+        /// </summary>
+        public static async Task SavePlayerPosition(long chatId)
+		{
+            Dictionary<string, object> update = new Dictionary<string, object>();
+
+            update.Add(DbConstants.PLAYER_FIELD_ACTUAL_NODE, currentNode.Name);
+
+            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+        }
+
+        /// <summary>
+        /// Loads the actual node of the given player from the database
+        /// </summary>
+        public static async Task LoadPlayerPosition(long chatId)
+        {
+            Dictionary<string, object> player = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID,
+                chatId.ToString(), DbConstants.COLLEC_DEBUG);
+
+            string currNodeName = player[DbConstants.PLAYER_FIELD_ACTUAL_NODE].ToString();
+
+            currentNode = nodes.Find(x => (x.Name == currNodeName));
+        }
+
+        /// <summary>
+        /// Creates the node field in the player document in the database
+        /// </summary>
+        public static async Task CreatePlayerPosition(long chatId)
+		{
+            Dictionary<string, object> update = new Dictionary<string, object>();
+
+            update.Add(DbConstants.PLAYER_FIELD_ACTUAL_NODE, startingNode.Name);
+
+            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
         }
     }
 }

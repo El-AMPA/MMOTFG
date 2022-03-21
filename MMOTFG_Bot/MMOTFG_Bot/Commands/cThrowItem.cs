@@ -13,9 +13,9 @@ namespace MMOTFG_Bot.Commands
         public override void SetKeywords()
         {
             key_words = new string[] {
-                "/throw",
-                "/delete",
-                "/throw_away"
+                "throw",
+                "delete",
+                "throw_away"
             };
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using static MMOTFG_Bot.StatName;
 
 namespace MMOTFG_Bot
 {
@@ -11,7 +12,7 @@ namespace MMOTFG_Bot
         public override async void OnAttack(long chatId) 
         {
             await TelegramCommunicator.SendText(chatId, $"{target.name}'s attack was lowered!");
-            target.stats[(int)StatName.ATK] /= 2;
+            target.setStat(ATK, target.getStat(ATK)/2);
         }
     }
 }
