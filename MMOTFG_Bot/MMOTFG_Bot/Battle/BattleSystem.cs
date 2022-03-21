@@ -16,6 +16,7 @@ namespace MMOTFG_Bot
         public static void Init()
         {
             player = new Player();
+            enemy = new Enemy();
         }
 
         public static async Task SavePlayerBattle(long chatId)
@@ -42,7 +43,11 @@ namespace MMOTFG_Bot
             player.loadSerializable((Dictionary<string, object>) dbPlayer[DbConstants.PLAYER_FIELD_BATTLE_INFO]);
             player.setName((string)dbPlayer[DbConstants.PLAYER_FIELD_NAME]);
 
-            if (dbPlayer.ContainsKey(DbConstants.PLAYER_FIELD_ENEMY) && dbPlayer[DbConstants.PLAYER_FIELD_ENEMY] != null) enemy.loadSerializable((Dictionary<string, object>)dbPlayer[DbConstants.PLAYER_FIELD_ENEMY]);
+            if (dbPlayer[DbConstants.PLAYER_FIELD_ENEMY] != null) {
+                string enemyName = ((Dictionary<string, object>)dbPlayer[DbConstants.PLAYER_FIELD_ENEMY])[DbConstants.ENEMY_FIELD_NAME].ToString();
+                enemy = MMOTFG_Bot.Battle.Enemies.EnemySystem.getEnemy(enemyName);
+                enemy.loadSerializable((Dictionary<string, object>)dbPlayer[DbConstants.PLAYER_FIELD_ENEMY]);
+            }
         }
 
         public static async Task CreatePlayerBattle(long chatId)
@@ -51,6 +56,7 @@ namespace MMOTFG_Bot
 
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_ACTIVE, false);
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_INFO, player.getSerializable());
+            update.Add(DbConstants.PLAYER_FIELD_ENEMY, null);
 
             await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
         }
