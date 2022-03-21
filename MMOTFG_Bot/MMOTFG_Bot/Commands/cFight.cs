@@ -7,6 +7,10 @@ namespace MMOTFG_Bot.Commands
 {
     class cFight : ICommand
     {
+        public override void setDescription()
+        {
+            commandDescription = @"No hay info de este comando";
+        }
         public override void SetKeywords()
         {
             key_words = new string[] {

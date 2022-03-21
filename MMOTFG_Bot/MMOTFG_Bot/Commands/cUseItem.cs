@@ -10,6 +10,10 @@ namespace MMOTFG_Bot.Commands
     /// </summary>
     class cUseItem : ICommand
     {
+        public override void setDescription()
+        {
+            commandDescription = @"No hay info de este comando";
+        }
         public override void SetKeywords()
         {
             key_words = new string[]{

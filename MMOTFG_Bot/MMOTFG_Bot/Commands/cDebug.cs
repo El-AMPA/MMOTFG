@@ -8,6 +8,11 @@ namespace MMOTFG_Bot.Commands
  /// </summary>
 	class cDebug : ICommand
 	{
+		public override void setDescription()
+		{
+			commandDescription = @"Debug es un comando que se usa para debugear";
+		}
+
 		public override void SetKeywords()
 		{
 			key_words = new string[] {
