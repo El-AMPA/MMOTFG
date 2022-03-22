@@ -32,10 +32,34 @@ namespace MMOTFG_Bot
             SulfurasHandOfRagnaros hRag = new SulfurasHandOfRagnaros();
             hRag.Init();
 
+            CamisetaDeEvangelion camisetaEvangelion = new CamisetaDeEvangelion();
+            camisetaEvangelion.Init();
+
+            JoyConConDrift joyCon = new JoyConConDrift();
+            joyCon.Init();
+
+            VaquerosNormales vaqueros = new VaquerosNormales();
+            vaqueros.Init();
+
+            ZapatillasGastadas zapas = new ZapatillasGastadas();
+            zapas.Init();
+
+            CollarDeJorge collarJorge = new CollarDeJorge();
+            collarJorge.Init();
+
+            Tatirana rana = new Tatirana();
+            rana.Init();
+
             obtainableItems.Add(hPotion.name, hPotion);
             obtainableItems.Add(mPotion.name, mPotion);
             obtainableItems.Add(tFury.name, tFury);
             obtainableItems.Add(hRag.name, hRag);
+            obtainableItems.Add(camisetaEvangelion.name, camisetaEvangelion);
+            obtainableItems.Add(joyCon.name, joyCon);
+            obtainableItems.Add(vaqueros.name, vaqueros);
+            obtainableItems.Add(zapas.name, zapas);
+            obtainableItems.Add(collarJorge.name, collarJorge);
+            obtainableItems.Add(rana.name, rana);
         }
 
         /// <summary>
