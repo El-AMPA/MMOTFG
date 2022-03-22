@@ -19,7 +19,7 @@ namespace MMOTFG_Bot
 	{
 		static List<ICommand> commandList = new List<ICommand> { new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
             new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
-			new cNavigate(), new cDirections(), new cInspectRoom(), new cShowGear()};
+			new cNavigate(), new cDirections(), new cInspectRoom(), new cShowGear(), new cTestHyperlink()};
 
 		static async Task Main(string[] args)
 		{	
@@ -136,7 +136,7 @@ namespace MMOTFG_Bot
 
 			if(message.Type == MessageType.Text) //Si le mandas una imagen explota ahora mismo
 			{
-				List<string> subStrings = message.Text.ToLower().Split(' ').ToList();
+				List<string> subStrings = message.Text.ToLower().Replace('_', ' ').Split(' ').ToList();
 				string command = subStrings[0];
 				if (command[0] == '/') command = command.Substring(1);
 				string[] args = new string[subStrings.Count - 1];

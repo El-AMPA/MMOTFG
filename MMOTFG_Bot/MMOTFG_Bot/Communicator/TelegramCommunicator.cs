@@ -74,9 +74,9 @@ namespace MMOTFG_Bot
 			}
 		}
 
-		static public async Task SendText(long chatId, string text)
+		static public async Task SendText(long chatId, string text, ParseMode parseMode = ParseMode.Html)
         {
-			botClient.SendTextMessageAsync(chatId, text, ParseMode.Html).Wait();
+			botClient.SendTextMessageAsync(chatId, text, parseMode).Wait();
         }
 
 		static public async Task SendButtons(long chatId, int buttonNum, string[] buttonNames)

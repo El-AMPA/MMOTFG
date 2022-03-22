@@ -81,7 +81,7 @@ namespace MMOTFG_Bot.Navigation
             string msg = "Available directions:";
             foreach (var connection in currentNode.NodeConnections)
             {
-                msg += "\n" + connection.Key;
+                msg += "\n/go_" + connection.Key;
             }
 
             await TelegramCommunicator.SendText(chatId, msg);

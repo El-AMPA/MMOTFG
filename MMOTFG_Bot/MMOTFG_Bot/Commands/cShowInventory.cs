@@ -13,7 +13,6 @@ namespace MMOTFG_Bot.Commands
         {
             key_words = new string[] {
                 "inventory",
-                "show_inventory",
                 "items",
                 "inv"
             };
