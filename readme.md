@@ -65,8 +65,8 @@ Los distintos eventos que puede tener un nodo son OnArriveEvent, OnInspectEvent 
 Cada uno de estos eventos podrá contener un número indefinido de acciones, que pueden ser de distintos tipos:  
 **eSendText**: Envía un texto al jugador, definido en el campo Description.  
 **eSendImage**: Envía una imagen al jugador, cuyo nombre de archivo estará definido en el campo ImageName. Se puede acompañar de un texto al añadirlo en el campo Description.   
-**eSendAudio**: Envía un archivo de audio al jugador, cuyo nombre de archivo estará definido en el campo AudioName. Se puede acompañar de un texto al añadirlo en el campo Description.
-**eGiveItem**: Le da objetos al jugador. Los objetos deben estar dentro de una lista llamada ItemLots, en la que cada elemento contendrá un campo Item con el nombre del objeto en el campo Item, la cantidad en el campo Quantity y las posibilidades de que el jugador reciba el objeto en el campo ChanceToObtain.
+**eSendAudio**: Envía un archivo de audio al jugador, cuyo nombre de archivo estará definido en el campo AudioName. Se puede acompañar de un texto al añadirlo en el campo Description.  
+**eGiveItem**: Le da objetos al jugador. Los objetos deben estar dentro de una lista llamada ItemLots, en la que cada elemento contendrá un campo Item con el nombre del objeto en el campo Item, la cantidad en el campo Quantity y las posibilidades de que el jugador reciba el objeto en el campo ChanceToObtain.  
 **eStartBattle**: Comienza una batalla contra un enemigo, cuyo nombre irá en el campo Enemy. 
 
 - El proyecto se puede ejecutar y compilar directamente o ejecutarse mediante un contenedor de Docker con el script dockerBuildandRunBot.bat. Este script utiliza MSBuild para compilar el proyecto mediante la configuración proporcionada por el Dockerfile que está dentro del proyecto y posteriormente lanza un contenedor configurado para que contenga también todos los archivos de la caperta assets. Esto es especialmente útil a la hora de alojar un bot creado con MMOTFG.
