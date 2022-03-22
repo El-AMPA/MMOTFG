@@ -1,10 +1,20 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace MMOTFG_Bot
-{
-    public enum StatName { HP, ATK, MP };
+{   
+    public enum StatName {
+        [EnumMember(Value = "HP")]
+        HP,
+        [EnumMember(Value = "ATK")]
+        ATK,
+        [EnumMember(Value = "MP")]
+        MP
+    };
 
     static class Stats
     {

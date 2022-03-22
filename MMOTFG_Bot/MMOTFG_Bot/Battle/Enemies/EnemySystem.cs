@@ -47,7 +47,8 @@ namespace MMOTFG_Bot.Battle.Enemies
 
             try
             {
-                enemies = JsonConvert.DeserializeObject<List<Enemy>>(enemyText); //Deserializes the .json file into an array of nodes.
+                enemies = JsonConvert.DeserializeObject<List<Enemy>>(enemyText, 
+                    new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate}); //Deserializes the .json file into an array of nodes.
                 foreach (Enemy e in enemies) e.onCreate();
             }
             catch (JsonException e)

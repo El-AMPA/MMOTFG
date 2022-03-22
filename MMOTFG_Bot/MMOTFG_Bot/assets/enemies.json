@@ -1,14 +1,35 @@
 [
   {
     "Name": "Manuela",
-    "Stats": [ 1, 1, 1 ],
+    "Stats": [ 100, 1, 10 ],
     "ImageName": "manuela.jpg",
     "ImageCaption": "lol",
     "Attacks": [
       {
-        "Name": "Booooomba",
+        //default attack
+      },
+      {
+        "AttackType": "aStatChanging",
+        "Name": "Swords Dance",
+        "Power": 0,
+        "MpCost": 1,
+        "StatToChange": "ATK",
+        "AffectsSelf": true,
+        "Multiple": 2
+      },
+      {
+        "AttackType": "aScaled",
+        "Name": "FixedDamage",
         "Power": 1,
-        "MpCost": 1
+        "MpCost": 1,
+        "FixedDamage": 10
+      },
+      {
+        "AttackType": "aScaled",
+        "Name": "MpScale",
+        "Power": 1,
+        "MpCost": 1,
+        "StatToScale": "MP"
       }
     ]
   }

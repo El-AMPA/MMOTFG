@@ -18,7 +18,7 @@ namespace MMOTFG_Bot
             attacks = new Attack[]{
                 new Attack("Tortazo", 1.5f, 0),
                 new Attack("Patada", 2, 1),
-                new StatReducingAttack("Burla", 0, 5),
+                new aStatChanging("Burla", 0, 5),
                 new Attack("Overkill", 100, 100)
             };
 

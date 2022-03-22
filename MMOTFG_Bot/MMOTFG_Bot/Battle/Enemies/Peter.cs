@@ -20,7 +20,7 @@ namespace MMOTFG_Bot.Battle.Enemies
             originalStats = (float[])stats.Clone();
 
             attacks = new Attack[]{
-                new ScaledAttack("PeterTorta", 1, 0)
+                new aScaled("PeterTorta", 1, 0)
             };
 
             attackNum = attacks.Length;
