@@ -189,7 +189,7 @@
     "OnArriveEvent":[
       {
         "EventType": "eSendText",
-        "Description": "Este es el pasillo de las chicas. No debería estar aquí, pero tampoco es que vaya a ser el primer guarro que se cuela por aquí."
+        "Description": "Este es el pasillo de las chicas. No debería estar aquí, pero tampoco es que vaya a ser el primer guarro que se cuela."
       }
     ],
     "OnInspectEvent":[
