@@ -181,7 +181,7 @@ namespace MMOTFG_Bot
             return bar;
         }
 
-        public static async void showStatus(long chatId, Battler b)
+        public async static Task showStatus(long chatId, Battler b)
         {
             await LoadPlayerBattle(chatId);
             if (!battleActive && b != player){

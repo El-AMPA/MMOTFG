@@ -14,10 +14,10 @@ namespace MMOTFG_Bot.Commands
             };
         }
 
-        internal override void Execute(string command, long chatId, string[] args = null)
+        internal async override void Execute(string command, long chatId, string[] args = null)
         {
-            if (args.Length == 0) BattleSystem.showStatus(chatId, BattleSystem.player);
-            else BattleSystem.showStatus(chatId, BattleSystem.enemy);
+            await BattleSystem.showStatus(chatId, BattleSystem.player);
+            await InventorySystem.ShowGear(chatId);
         }
 
         internal override bool IsFormattedCorrectly(string[] args)
