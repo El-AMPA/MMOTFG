@@ -12,7 +12,8 @@ namespace MMOTFG_Bot.Commands
 	{
 		public override void setDescription()
 		{
-			commandDescription = @"No hay info de este comando";
+			commandDescription = @"Crea un nuevo personaje. Solo se puede usar si no hay uno ya creado.
+Uso: create [nombre del personaje]";
 		}
 		public override void SetKeywords()
 		{

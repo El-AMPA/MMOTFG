@@ -9,7 +9,8 @@ namespace MMOTFG_Bot.Commands
     {
         public override void setDescription()
         {
-            commandDescription = @"No hay info de este comando";
+            commandDescription = @"Muestra los objetos equipados actualmente
+Uso: gear / show_gear / equipment";
         }
         public override void SetKeywords()
         {

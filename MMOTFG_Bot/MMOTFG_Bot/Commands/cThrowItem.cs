@@ -12,7 +12,8 @@ namespace MMOTFG_Bot.Commands
     {
         public override void setDescription()
         {
-            commandDescription = @"No hay info de este comando";
+            commandDescription = @"Tira un objeto. Los objetos que se tiren no se pueden recuperar
+Uso: throw/ delete/ throw_away [nombre del objeto]";
         }
         public override void SetKeywords()
         {

@@ -12,7 +12,8 @@ namespace MMOTFG_Bot.Commands
     {
         public override void setDescription()
         {
-            commandDescription = @"No hay info de este comando";
+            commandDescription = @"Usa un objeto. Dependiendo de la palabra usada, pueden ocurrir diferentes cosas.
+Uso: consume / use / eat / drink [nombre del objeto]";
         }
         public override void SetKeywords()
         {

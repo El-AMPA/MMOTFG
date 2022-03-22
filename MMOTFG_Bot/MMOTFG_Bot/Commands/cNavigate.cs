@@ -12,7 +12,8 @@ namespace MMOTFG_Bot.Commands
     {
         public override void setDescription()
         {
-            commandDescription = @"No hay info de este comando";
+            commandDescription = @"Te mueves en la dirección indicada. Para una lista de estas direcciones, usa /directions
+Uso: go [direccion]";
         }
         public override void SetKeywords()
         {

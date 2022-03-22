@@ -9,7 +9,8 @@ namespace MMOTFG_Bot.Commands
     {
         public override void setDescription()
         {
-            commandDescription = @"No hay info de este comando";
+            commandDescription = @"Desequipa un objeto de cierta ranura del equipamiento
+Uso: unequip [nombre de la ranura]";
         }
         public override void SetKeywords()
         {

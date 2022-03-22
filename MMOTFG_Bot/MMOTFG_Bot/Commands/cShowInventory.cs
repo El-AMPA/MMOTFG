@@ -11,7 +11,8 @@ namespace MMOTFG_Bot.Commands
     {
         public override void setDescription()
         {
-            commandDescription = @"No hay info de este comando";
+            commandDescription = @"Muestra el inventario del jugador
+Uso: inventory / show_inventory / items";
         }
         public override void SetKeywords()
         {

@@ -8,7 +8,7 @@ namespace MMOTFG_Bot.Commands
     {
         public override void setDescription()
         {
-            commandDescription = @"No hay info de este comando";
+            commandDescription = @"Muestra las estadísticas del jugador";
         }
         public override void SetKeywords()
         {

@@ -12,7 +12,8 @@ namespace MMOTFG_Bot.Commands
     {
         public override void setDescription()
         {
-            commandDescription = @"No hay info de este comando";
+            commandDescription = @"Inspecciona la sala actual
+Uso: inpect / look_around / look";
         }
         public override void SetKeywords()
         {
