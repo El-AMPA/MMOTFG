@@ -1,0 +1,33 @@
+[
+    {
+        "Item1": "north",
+        "Item2": [
+            "n",
+            "nrth",
+            "nrt"
+        ]
+    },
+    {
+        "Item1": "south",
+        "Item2": [
+            "s",
+            "sth",
+            "sou"
+        ]
+    },
+    {
+        "Item1": "east",
+        "Item2": [
+            "e",
+            "est"
+        ]
+    },
+    {
+        "Item1": "west",
+        "Item2": [
+            "w",
+            "wst",
+            "wes"
+        ]
+    }
+]

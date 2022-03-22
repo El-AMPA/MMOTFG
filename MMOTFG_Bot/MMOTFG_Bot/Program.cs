@@ -19,7 +19,7 @@ namespace MMOTFG_Bot
 	{
 		static List<ICommand> commandList = new List<ICommand> { new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
             new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
-			new cNavigate(), new cDirections(), new cInspectRoom(), new cShowGear(), new cTestHyperlink()};
+			new cNavigate(), new cDirections(), new cInspectRoom(), new cTestHyperlink()};
 
 		static async Task Main(string[] args)
 		{	
@@ -55,7 +55,7 @@ namespace MMOTFG_Bot
 			BattleSystem.Init();
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
-			Map.Init("assets/map.json");
+			Map.Init("assets/map.json", "assets/directionSynonyms.json");
 			DatabaseManager.Init();
 			foreach (ICommand c in commandList) c.SetKeywords();
 

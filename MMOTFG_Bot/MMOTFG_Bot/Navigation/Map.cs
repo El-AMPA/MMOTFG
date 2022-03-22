@@ -16,6 +16,7 @@ namespace MMOTFG_Bot.Navigation
         private static Node currentNode;
         private static Node nextNode;
         private static List<Node> nodes;
+        private static Dictionary<string, string> directionSynonyms = new Dictionary<string, string>();
         private static Node startingNode;
 
         /// <summary>
@@ -31,6 +32,7 @@ namespace MMOTFG_Bot.Navigation
             }
             else
             {
+                dir = GetSynonymDirection(dir);
                 //If currentNode doesn't have a connection in that direction, it doesn't move the player.
                 if (currentNode.GetConnectingNode(dir, out nextNode))
                 {
@@ -49,9 +51,10 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Builds the map reading it from the file specified by mapPath.
         /// </summary>
-        public static void Init(string mapPath)
+        public static void Init(string mapPath, string synonymsPath = "")
         {
             ReadMapFromJSON(mapPath);
+            if(synonymsPath != "")ReadDirectionsSynonymsFromJSON(synonymsPath);
 
             //Connecting the map together.
             //When deserializing the map and creating a new Node, not every Node that is connected to the new node is instanced. Each node knows that they have x connections in
@@ -113,12 +116,13 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Deserializes the .json file specified by path and constructs the map.
         /// </summary>
-        private static void ReadMapFromJSON(string path)
+        private static void ReadMapFromJSON(string mapPath)
         {
-            string mapText = ""; //Text of the entire .json file
+            //Map reading
+            string mapText = ""; //Text of the entire .json file of the map
             try
             {
-                mapText = File.ReadAllText(path, Encoding.GetEncoding(65001)); // Encoding: UTF-8
+                mapText = File.ReadAllText(mapPath, Encoding.GetEncoding(65001)); // Encoding: UTF-8
             }
             catch (FileNotFoundException e)
             {
@@ -134,6 +138,47 @@ namespace MMOTFG_Bot.Navigation
             {
                 Console.WriteLine("ERROR: map.json isn't formatted correctly. \nError message:" + e.Message);
                 Environment.Exit(-1);
+            }
+        }
+
+        private static string GetSynonymDirection(string dir)
+        {
+            string synonym;
+            if (directionSynonyms.TryGetValue(dir, out synonym)) return synonym;
+            else return dir;
+        }
+
+        private static void ReadDirectionsSynonymsFromJSON(string synonymsPath)
+        {
+            string synonymsText = "";
+            ValueTuple<string, string[]>[] synonymsAux = { }; //Needs to be initialized
+
+            try
+            {
+                synonymsText = File.ReadAllText(synonymsPath, Encoding.GetEncoding(65001)); // Encoding: UTF-8
+            }
+            catch (FileNotFoundException e)
+            {
+                Console.WriteLine("ERROR: directionsSynonyms.json couldn't be found in assets folder.");
+                Environment.Exit(-1);
+            }
+
+            try
+            {
+                synonymsAux = JsonConvert.DeserializeObject<ValueTuple<string, string[]>[]>(synonymsText); //Deserializes the .json file into a Dictionary that will be used for obtaining the synonyms for each direction
+            }
+            catch (JsonException e)
+            {
+                Console.WriteLine("ERROR: directionSynonyms.json isn't formatted correctly. \nError message:" + e.Message);
+                Environment.Exit(-1);
+            }
+
+            foreach(var synonymList in synonymsAux)
+            {
+                foreach(string synonym in synonymList.Item2)
+                {
+                    directionSynonyms.Add(synonym, synonymList.Item1);
+                }
             }
         }
 

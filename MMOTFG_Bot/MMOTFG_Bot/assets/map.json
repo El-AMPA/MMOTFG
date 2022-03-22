@@ -12,11 +12,11 @@
     "OnInspectEvent": [
       {
         "EventType": "eSendText",
-        "Description": "Estás en una mazmorra muy dank y dark. Al norte puedes seguir avanzando por el pasillo. También puedes usar una trampilla, ¿me pregunto a donde llevará ...?"
+        "Description": "Estï¿½s en una mazmorra muy dank y dark. Al norte puedes seguir avanzando por el pasillo. Tambiï¿½n puedes usar una trampilla, ï¿½me pregunto a donde llevarï¿½ ...?"
       },
       {
         "EventType": "eSendText",
-        "Description": "Bajo la gruesa capa de polvo vislumbras un destello. Tras rebuscar con la mano encuentras una poción de maná. Como los devs no han implementado variables de progreso puedes farmear pociones spammeando el comando. Let's gooooooooo!'"
+        "Description": "Bajo la gruesa capa de polvo vislumbras un destello. Tras rebuscar con la mano encuentras una pociï¿½n de manï¿½. Como los devs no han implementado variables de progreso puedes farmear pociones spammeando el comando. Let's gooooooooo!'"
       },
       {
         "EventType": "eGiveItem",
@@ -72,17 +72,7 @@
     "OnArriveEvent": [
       {
         "EventType": "eSendText",
-        "Description": "Al entrar, notas una fuerte respiración en tu espalda."
-      },
-      {
-        "EventType": "eSendImage",
-        "Description": "I will smite thee",
-        "ImageName": "Dog1.png"
-      },
-      {
-        "EventType": "eSendAudio",
-        "Description": "No se que poner me quedé sin ideas.",
-        "AudioName": "DoggoMusic.mp3"
+        "Description": "Al entrar, notas una fuerte respiraciï¿½n en tu espalda."
       },
       {
         "EventType": "eStartBattle",
@@ -90,13 +80,6 @@
       }
     ],
     "OnExitEvent": [
-      {
-        "EventType": "eSendImageCollection",
-        "ImagesNames": [
-          "Dog1.png",
-          "Dog2.png"
-        ]
-      },
       {
         "EventType": "eSendText",
         "Description": "Toma eventos."
