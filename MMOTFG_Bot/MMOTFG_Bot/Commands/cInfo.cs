@@ -6,6 +6,11 @@ namespace MMOTFG_Bot.Commands
 {
     class cInfo : ICommand
     {
+        public override void setDescription()
+        {
+            commandDescription = @"Obtiene informacion sobre un objeto, estadistica, etcetera.
+Uso: info [cosa para la que quieres mas info]";
+        }
         public override void SetKeywords()
         {
             key_words = new string[] {

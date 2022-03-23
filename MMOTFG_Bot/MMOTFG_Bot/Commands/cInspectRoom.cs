@@ -10,6 +10,11 @@ namespace MMOTFG_Bot.Commands
     /// </summary>
     class cInspectRoom : ICommand
     {
+        public override void setDescription()
+        {
+            commandDescription = @"Inspecciona la sala actual
+Uso: inpect / look_around / look";
+        }
         public override void SetKeywords()
         {
             key_words = new string[] {

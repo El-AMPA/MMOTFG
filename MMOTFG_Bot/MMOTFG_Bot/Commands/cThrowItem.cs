@@ -10,6 +10,11 @@ namespace MMOTFG_Bot.Commands
     /// </summary>
     class cThrowItem : ICommand
     {
+        public override void setDescription()
+        {
+            commandDescription = @"Tira un objeto. Los objetos que se tiren no se pueden recuperar
+Uso: throw/ delete/ throw_away [nombre del objeto]";
+        }
         public override void SetKeywords()
         {
             key_words = new string[] {

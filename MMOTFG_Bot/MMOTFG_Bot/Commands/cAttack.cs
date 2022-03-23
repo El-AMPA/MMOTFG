@@ -6,6 +6,10 @@ namespace MMOTFG_Bot.Commands
 {
     class cAttack : ICommand
     {
+        public override void setDescription()
+        {
+            commandDescription = @"No hay info de este comando";
+        }
         public override void SetKeywords()
         {
             //las keywords son los ataques que tenga el jugador

@@ -8,6 +8,11 @@ namespace MMOTFG_Bot.Commands
     //TO-DO: ESTO ESTÁ SIN TERMINAR. NO ES DEFINITIVO.
     class cEquipItem : ICommand
     {
+        public override void setDescription()
+        {
+            commandDescription = @"Equipa un objeto en la ranura de equipamiento correspondiente.
+Uso: equip [nombre del objeto]";
+        }
         public override void SetKeywords()
         {
             key_words = new string[]{

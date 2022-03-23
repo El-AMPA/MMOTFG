@@ -19,10 +19,10 @@ namespace MMOTFG_Bot
 	{
 		static List<ICommand> commandList = new List<ICommand> { new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
             new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
-			new cNavigate(), new cDirections(), new cInspectRoom()};
+			new cNavigate(), new cDirections(), new cInspectRoom(), new cHelp()};
 
 		static async Task Main(string[] args)
-		{	
+		{
 			/*Si estamos depurando en visual studio, tenemos que cambiar la ruta relativa en PC
 			* para que funcione igual que en el contenedor de Docker*/
 			if (Environment.GetEnvironmentVariable("PLATFORM_PC") != null)
@@ -55,7 +55,10 @@ namespace MMOTFG_Bot
 			InventorySystem.Init();
 			Map.Init("assets/map.json", "assets/directionSynonyms.json");
 			DatabaseManager.Init();
-			foreach (ICommand c in commandList) c.SetKeywords();
+			foreach (ICommand c in commandList) { 
+				c.SetKeywords();
+				c.setDescription();
+			}
 
 			//set attack keywords
 			cAttack cAttack = new cAttack();
@@ -132,7 +135,7 @@ namespace MMOTFG_Bot
 
 			Console.WriteLine("Received message: " + message.Text + " from " + senderName);
 
-			if(message.Type == MessageType.Text) //Si le mandas una imagen explota ahora mismo
+			if (message.Type == MessageType.Text) //Si le mandas una imagen explota ahora mismo
 			{
 				List<string> subStrings = processMessage(message.Text);
 				string command = subStrings[0];
@@ -141,11 +144,14 @@ namespace MMOTFG_Bot
 
 				bool understoodCommand = false;
 				foreach (ICommand c in commandList)
-                {
-					if (c.ContainsKeyWord(command, chatId, args)) understoodCommand = true;
-                }
-				if (!understoodCommand) await TelegramCommunicator.SendText(chatId, "That command doesn't exist");
-            }
+				{
+					if (c.ContainsKeyWord(command))
+					{
+						c.TryExecute(command, chatId, args);
+						break;
+					}
+				}
+			}
 		}
 
 		/// <summary>
