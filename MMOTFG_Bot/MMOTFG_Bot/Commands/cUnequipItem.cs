@@ -26,17 +26,19 @@ namespace MMOTFG_Bot.Commands
             else
             {
                 ObtainableItem item;
-                if(InventorySystem.StringToItem(args[0], out item))
+                //Check if the args provided is an equippable item
+                if (InventorySystem.StringToItem(args[0], out item))
                 {
+                    //If it's valid, unequip the item from the player's gear
                     await InventorySystem.unequipGear(chatId, (EquipableItem)item);
                 }
-                else await TelegramCommunicator.SendText(chatId, "The specified item doesn't exist");
+                else await TelegramCommunicator.SendText(chatId, "The specified equippable item or gear slot doesn't exist");
             }
         }
 
         internal override bool IsFormattedCorrectly(string[] args)
         {
-            //Format: /unequip weapon
+            //Format: /unequip gear_slot || /unequip equippable_item
             if (args.Length != 1) return false;
 
             return true;

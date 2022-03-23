@@ -141,6 +141,9 @@ namespace MMOTFG_Bot.Navigation
             }
         }
 
+        /// <summary>
+        /// Returns a synonym of the specified direction. If it doesn't exist, it just returns the original direction provided.
+        /// </summary>
         private static string GetSynonymDirection(string dir)
         {
             string synonym;
@@ -148,13 +151,36 @@ namespace MMOTFG_Bot.Navigation
             else return dir;
         }
 
+        private struct DirectionSynonym
+        {
+            public string Direction
+            {
+                get;
+                set;
+            }
+            public string[] Synonyms
+            {
+                get;
+                set;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes the .json file containing all synonyms for directions.
+        /// </summary>
         private static void ReadDirectionsSynonymsFromJSON(string synonymsPath)
         {
             string synonymsText = "";
-            ValueTuple<string, string[]>[] synonymsAux = { }; //Needs to be initialized
+
+            //Auxiliary array containing a collection of synonyms for each direction
+            // north: {n, nrth, nor}
+            // south: {s, sth, sou}
+            // ...
+            DirectionSynonym[] synonymsAux = { }; //Needs to be initialized
 
             try
             {
+                //Dumps the file into a string
                 synonymsText = File.ReadAllText(synonymsPath, Encoding.GetEncoding(65001)); // Encoding: UTF-8
             }
             catch (FileNotFoundException e)
@@ -165,7 +191,8 @@ namespace MMOTFG_Bot.Navigation
 
             try
             {
-                synonymsAux = JsonConvert.DeserializeObject<ValueTuple<string, string[]>[]>(synonymsText); //Deserializes the .json file into a Dictionary that will be used for obtaining the synonyms for each direction
+                //Deserializes the .json file into a Dictionary that will be used for obtaining the synonyms for each direction
+                synonymsAux = JsonConvert.DeserializeObject<DirectionSynonym[]>(synonymsText); 
             }
             catch (JsonException e)
             {
@@ -173,11 +200,16 @@ namespace MMOTFG_Bot.Navigation
                 Environment.Exit(-1);
             }
 
+            //Converts the structure of synonymsAux into a more comfortable structure for finding synonyms. A dictionary<string, string>, so the new structure works like so:
+            // n -> north
+            // nor -> north
+            // s -> south
+            // ...
             foreach(var synonymList in synonymsAux)
             {
-                foreach(string synonym in synonymList.Item2)
+                foreach(string synonym in synonymList.Synonyms)
                 {
-                    directionSynonyms.Add(synonym, synonymList.Item1);
+                    directionSynonyms.Add(synonym, synonymList.Direction);
                 }
             }
         }

@@ -1,30 +1,30 @@
 [
     {
-        "Item1": "north",
-        "Item2": [
+        "Direction": "north",
+        "Synonyms": [
             "n",
             "nrth",
             "nrt"
         ]
     },
     {
-        "Item1": "south",
-        "Item2": [
+        "Direction": "south",
+        "Synonyms": [
             "s",
             "sth",
             "sou"
         ]
     },
     {
-        "Item1": "east",
-        "Item2": [
+        "Direction": "east",
+        "Synonyms": [
             "e",
             "est"
         ]
     },
     {
-        "Item1": "west",
-        "Item2": [
+        "Direction": "west",
+        "Synonyms": [
             "w",
             "wst",
             "wes"

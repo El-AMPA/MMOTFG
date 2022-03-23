@@ -20,7 +20,7 @@ namespace MMOTFG_Bot
             {
                 if (command == p)
                 {
-                    if (!IsFormattedCorrectly(args)) TelegramCommunicator.SendText(chatId, "Use of that command is incorrect"); //TO-DO: Ho-lee-sheet esto es un cacao. Revisar lo de las async Task porque no pueden tener out ni ref ni na
+                    if (!IsFormattedCorrectly(args)) TelegramCommunicator.SendText(chatId, "Use of that command is incorrect"); //TO-DO: Ho-lee-sheet esto es un cacao. En la historia de pasar async void a async Task revisar esto porque ahora es un cacao
                     else Execute(command, chatId, args);
                     return true;
                 }

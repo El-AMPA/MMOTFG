@@ -14,7 +14,7 @@ namespace MMOTFG_Bot.Commands
         {
             key_words = new string[] {
                 "throw",
-                "delete",
+                "delete"
             };
         }
 
