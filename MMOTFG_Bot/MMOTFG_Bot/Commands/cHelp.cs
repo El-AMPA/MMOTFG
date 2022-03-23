@@ -8,15 +8,16 @@ namespace MMOTFG_Bot.Commands
 	{
 		public override void setDescription()
 		{
-			commandDescription = @"Help se usa para obtener la lista de comandos o informacion sobre un comando en concreto
-Uso: help [nombre del comando]";
+			commandDescription = @"Help is used to list all available commands or look up further information on a specific command
+Use: help [command name]";
 		}
 
 
 		public override void SetKeywords()
 		{
 			key_words = new string[] {
-				"help"
+				"help",
+				"h"
 			};
 
 		}
@@ -28,23 +29,21 @@ Uso: help [nombre del comando]";
 			if (args.Length == 0)
 			{
 
-				response = "Lista de comandos disponibles:\n";
+				response = "List of available commands with its synonyms:\n";
 
 				foreach (ICommand c in Program.commandList)
 				{
-					string sameCommand = "";
+					string sameCommand = "/help_";
 
 					foreach (string comStr in c.getKeywords())
 					{
-						sameCommand = sameCommand + "  " + comStr;
+						sameCommand = sameCommand + comStr + " ";
 					}
 
 					response += sameCommand + "\n";
 				}
 
-				response += @"
-Para mas informacion sobre un comando concreto, usa:
-help [nombre comando]";
+				response += @"For further information on a given command, please use help [command name]";
 
 				await TelegramCommunicator.SendText(chatId, response);
 			}

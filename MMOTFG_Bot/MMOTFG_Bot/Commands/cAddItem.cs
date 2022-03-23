@@ -8,8 +8,8 @@ namespace MMOTFG_Bot.Commands
     {
         public override void setDescription()
         {
-            commandDescription = @"Añade un item a tu inventario
-Uso: add [nombre item]";
+            commandDescription = @"Adds an item to your inventory. Only for lazy devs :)
+Use: add [item name]";
         }
 
         public override void SetKeywords()

@@ -12,8 +12,8 @@ namespace MMOTFG_Bot.Commands
     {
         public override void setDescription()
         {
-            commandDescription = @"Usa un objeto. Dependiendo de la palabra usada, pueden ocurrir diferentes cosas.
-Uso: consume / use / eat / drink [nombre del objeto]";
+            commandDescription = @"Uses an item. Depending on the word you provide, different things can happen.
+Use: consume / use / eat / drink [item name]";
         }
         public override void SetKeywords()
         {

@@ -9,7 +9,7 @@ namespace MMOTFG_Bot.Commands
     {
         public override void setDescription()
         {
-            commandDescription = @"No hay info de este comando";
+            commandDescription = @"There is no specific information on this command";
         }
         public override void SetKeywords()
         {

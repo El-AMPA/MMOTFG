@@ -12,7 +12,7 @@ namespace MMOTFG_Bot.Commands
     {
         public override void setDescription()
         {
-            commandDescription = @"Directions devuelve los caminos que puede tomar el jugador";
+            commandDescription = @"Lists all available directions from your current room";
         }
         public override void SetKeywords()
         {
