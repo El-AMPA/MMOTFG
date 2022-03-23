@@ -148,11 +148,15 @@ namespace MMOTFG_Bot
             }
 		}
 
+		/// <summary>
+		/// Processes the message recieved from the user by filtering out certain chars and splitting it into words
+		/// </summary>
 		private static List<string> processMessage(string message)
         {
 			List<string> processedMsg = message.ToLower().Split(' ').ToList();
 
-            if (processedMsg[0].Contains('_'))
+			//If we want to process a hyperlink type command (/equip_sulfuras_hand_of_ragnaros), we only need to split it by the first '_'
+            if (processedMsg[0].Contains('_') && processedMsg[0][0] != '_')
             {
 				List<string> aux = processedMsg[0].Split('_', 2).ToList();
 				processedMsg.RemoveAt(0);

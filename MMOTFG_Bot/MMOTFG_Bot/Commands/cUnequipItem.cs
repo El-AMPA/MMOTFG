@@ -17,19 +17,20 @@ namespace MMOTFG_Bot.Commands
         internal async override void Execute(string command, long chatId, string[] args = null)
         {
             EQUIPMENT_SLOT slot;
+            //Check if the args provided is an equipment slot
             if (InventorySystem.StringToEquipmentSlot(args[0], out slot))
             {
-                await InventorySystem.UnequipGear(chatId, slot);
+                //If it's valid, unequip the item from that given slot.
+                await InventorySystem.unequipGear(chatId, slot);
             }
             else
             {
                 ObtainableItem item;
                 if(InventorySystem.StringToItem(args[0], out item))
                 {
-                    if (await InventorySystem.isItemEquipped(chatId, args[0])) await InventorySystem.UnequipGear(chatId, ((EquipableItem)item).gearSlot);
-                    else await TelegramCommunicator.SendText(chatId, "You are not wearing that item\nDid you mean /unequip_" + InventorySystem.getItemFromEquipmentSlot(chatId, ((EquipableItem)item).gearSlot).Result.name + " ?");
+                    await InventorySystem.unequipGear(chatId, (EquipableItem)item);
                 }
-                else await TelegramCommunicator.SendText(chatId, "The specified slot doesn't exist");
+                else await TelegramCommunicator.SendText(chatId, "The specified item doesn't exist");
             }
         }
 
