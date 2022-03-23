@@ -111,7 +111,7 @@ namespace MMOTFG_Bot
             useAttack(chatId, attack, player, enemy); 
         }
 
-        private static async void enemyAttack(long chatId)
+        public static async void enemyAttack(long chatId)
         {
             Attack attack = enemy.nextAttack();
 
@@ -181,7 +181,13 @@ namespace MMOTFG_Bot
             return bar;
         }
 
-        public async static Task showStatus(long chatId, Battler b)
+        public static async Task changePlayerStats(long chatId, StatName stat, float amount)
+        {
+            player.changeStat(stat, amount);
+            await SavePlayerBattle(chatId);
+        }
+
+        public static async Task showStatus(long chatId, Battler b)
         {
             await LoadPlayerBattle(chatId);
             if (!battleActive && b != player){

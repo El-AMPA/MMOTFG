@@ -22,7 +22,7 @@ namespace MMOTFG_Bot.Commands
 
         internal async override void Execute(string command, long chatId, string[] args = null)
         {
-            if(args.Length == 1) await InventorySystem .ConsumeItem(chatId, args[0], 1, command, args);
+            if(args.Length == 1) await InventorySystem.ConsumeItem(chatId, args[0], 1, command, args);
             else
             {
                 if(args[1] == "all") await InventorySystem.ConsumeItem(chatId, args[0], -1, command, args);
