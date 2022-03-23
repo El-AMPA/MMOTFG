@@ -17,7 +17,7 @@ namespace MMOTFG_Bot
 {
 	class Program
 	{
-		static List<ICommand> commandList = new List<ICommand> { new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
+		public static List<ICommand> commandList = new List<ICommand> { new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
             new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
 			new cNavigate(), new cDirections(), new cInspectRoom(), new cHelp()};
 
@@ -142,15 +142,18 @@ namespace MMOTFG_Bot
 				string[] args = new string[subStrings.Count - 1];
 				subStrings.CopyTo(1, args, 0, args.Length);
 
-				bool understoodCommand = false;
+				bool recognizedCommand = false;
 				foreach (ICommand c in commandList)
 				{
 					if (c.ContainsKeyWord(command))
 					{
-						c.TryExecute(command, chatId, args);
-						break;
+						recognizedCommand = true;
+						if (c.TryExecute(command, chatId, args)) break;
+							
+						else await TelegramCommunicator.SendText(chatId, "Incorrect use of that command.\nUse /help_" + command + " for further information.");	
 					}
 				}
+				if (!recognizedCommand) await TelegramCommunicator.SendText(chatId, "Unrecognized command.\n Try /help if you don't know what to use");
 			}
 		}
 
