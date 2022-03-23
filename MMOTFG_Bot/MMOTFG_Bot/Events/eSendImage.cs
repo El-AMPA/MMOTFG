@@ -9,11 +9,11 @@ namespace MMOTFG_Bot.Events
     /// </summary>
     class eSendImage : Event
     {
-        public string Descrption
+        public string Description
         {
             get;
             set;
-        } = "";
+        }
 
         public string ImageName
         {
@@ -23,7 +23,7 @@ namespace MMOTFG_Bot.Events
 
         public async override void Execute(long chatId)
         {
-            await TelegramCommunicator.SendImage(chatId, ImageName, Descrption);
+            await TelegramCommunicator.SendImage(chatId, ImageName, Description);
         }
     }
 }

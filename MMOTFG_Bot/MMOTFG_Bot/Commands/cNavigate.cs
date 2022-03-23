@@ -10,10 +10,15 @@ namespace MMOTFG_Bot.Commands
     /// </summary>
     class cNavigate : ICommand
     {
+        public override void setDescription()
+        {
+            commandDescription = @"Te mueves en la dirección indicada. Para una lista de estas direcciones, usa /directions
+Uso: go [direccion]";
+        }
         public override void SetKeywords()
         {
             key_words = new string[]{
-                "/go",
+                "go",
             };
         }
 

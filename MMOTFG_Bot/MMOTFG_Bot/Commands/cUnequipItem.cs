@@ -7,10 +7,15 @@ namespace MMOTFG_Bot.Commands
 {
     class cUnequipItem : ICommand
     {
+        public override void setDescription()
+        {
+            commandDescription = @"Desequipa un objeto de cierta ranura del equipamiento
+Uso: unequip [nombre de la ranura]";
+        }
         public override void SetKeywords()
         {
             key_words = new string[]{
-                "/unequip",
+                "unequip",
             };
         }
 

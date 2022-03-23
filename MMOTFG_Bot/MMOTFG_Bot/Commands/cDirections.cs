@@ -10,10 +10,14 @@ namespace MMOTFG_Bot.Commands
     /// </summary>
     class cDirections : ICommand
     {
+        public override void setDescription()
+        {
+            commandDescription = @"Directions devuelve los caminos que puede tomar el jugador";
+        }
         public override void SetKeywords()
         {
             key_words = new string[] {
-                "/directions"
+                "directions"
             };
         }
 
