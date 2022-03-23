@@ -30,22 +30,22 @@
         "EventType":"eGiveItem",
         "ItemLots": [
           {
-            "Item": "ZapatillasGastadas",
+            "Item": "zapatillas_gastadas",
             "Quantity": 1,
             "ChanceToObtain": 1
           },
           {
-            "Item": "VaquerosNormales",
+            "Item": "vaqueros_normales",
             "Quantity": 1,
             "ChanceToObtain": 1
           },
           {
-            "Item": "CamisetaDeEvangelion",
+            "Item": "camiseta_de_evangelion",
             "Quantity": 1,
             "ChanceToObtain": 1
           },
           {
-            "Item": "JoyconConDrift",
+            "Item": "joycon_con_drift",
             "Quantity": 1,
             "ChanceToObtain": 1
           }

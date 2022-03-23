@@ -134,9 +134,8 @@ namespace MMOTFG_Bot
 
 			if(message.Type == MessageType.Text) //Si le mandas una imagen explota ahora mismo
 			{
-				List<string> subStrings = message.Text.ToLower().Replace('_', ' ').Split(' ').ToList();
+				List<string> subStrings = processMessage(message.Text);
 				string command = subStrings[0];
-				if (command[0] == '/') command = command.Substring(1);
 				string[] args = new string[subStrings.Count - 1];
 				subStrings.CopyTo(1, args, 0, args.Length);
 
@@ -148,6 +147,21 @@ namespace MMOTFG_Bot
 				if (!understoodCommand) await TelegramCommunicator.SendText(chatId, "That command doesn't exist");
             }
 		}
+
+		private static List<string> processMessage(string message)
+        {
+			List<string> processedMsg = message.ToLower().Split(' ').ToList();
+
+            if (processedMsg[0].Contains('_'))
+            {
+				List<string> aux = processedMsg[0].Split('_', 2).ToList();
+				processedMsg.RemoveAt(0);
+				processedMsg.Insert(0, aux[1]);
+				processedMsg.Insert(0, aux[0]);
+            }
+			if (processedMsg[0][0] == '/') processedMsg[0] = processedMsg[0].Substring(1);
+			return processedMsg;
+        }
 
 		static Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
 		{
