@@ -9,6 +9,11 @@ namespace MMOTFG_Bot.Commands
     /// </summary>
     class cShowInventory : ICommand
     {
+        public override void setDescription()
+        {
+            commandDescription = @"Muestra el inventario del jugador
+Uso: inventory / show_inventory / items";
+        }
         public override void SetKeywords()
         {
             key_words = new string[] {

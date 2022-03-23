@@ -10,6 +10,11 @@ namespace MMOTFG_Bot.Commands
 	/// </summary>
 	class cCreateCharacter : ICommand
 	{
+		public override void setDescription()
+		{
+			commandDescription = @"Crea un nuevo personaje. Solo se puede usar si no hay uno ya creado.
+Uso: create [nombre del personaje]";
+		}
 		public override void SetKeywords()
 		{
 			key_words = new string[] {

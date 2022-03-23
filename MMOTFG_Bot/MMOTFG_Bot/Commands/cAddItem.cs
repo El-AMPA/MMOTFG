@@ -6,6 +6,12 @@ namespace MMOTFG_Bot.Commands
 {
     class cAddItem : ICommand
     {
+        public override void setDescription()
+        {
+            commandDescription = @"Añade un item a tu inventario
+Uso: add [nombre item]";
+        }
+
         public override void SetKeywords()
         {
             key_words = new string[] {

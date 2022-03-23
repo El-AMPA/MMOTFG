@@ -10,6 +10,11 @@ namespace MMOTFG_Bot.Commands
     /// </summary>
     class cUseItem : ICommand
     {
+        public override void setDescription()
+        {
+            commandDescription = @"Usa un objeto. Dependiendo de la palabra usada, pueden ocurrir diferentes cosas.
+Uso: consume / use / eat / drink [nombre del objeto]";
+        }
         public override void SetKeywords()
         {
             key_words = new string[]{

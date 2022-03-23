@@ -7,6 +7,11 @@ namespace MMOTFG_Bot.Commands
 {
     class cShowGear : ICommand
     {
+        public override void setDescription()
+        {
+            commandDescription = @"Muestra los objetos equipados actualmente
+Uso: gear / show_gear / equipment";
+        }
         public override void SetKeywords()
         {
             key_words = new string[] {

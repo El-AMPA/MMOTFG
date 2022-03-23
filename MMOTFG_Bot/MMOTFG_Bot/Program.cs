@@ -17,12 +17,12 @@ namespace MMOTFG_Bot
 {
 	class Program
 	{
-		static List<ICommand> commandList = new List<ICommand> { new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
-            new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
+		public static List<ICommand> commandList = new List<ICommand>{new cDebug(), new cCreateCharacter(), new cHelp(), new cUseItem(), new cAddItem(), new cThrowItem(),
+			new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
 			new cNavigate(), new cDirections(), new cInspectRoom(), new cShowGear()};
 
 		static async Task Main(string[] args)
-		{	
+		{
 			/*Si estamos depurando en visual studio, tenemos que cambiar la ruta relativa en PC
 			* para que funcione igual que en el contenedor de Docker*/
 			if (Environment.GetEnvironmentVariable("PLATFORM_PC") != null)
@@ -55,7 +55,10 @@ namespace MMOTFG_Bot
 			InventorySystem.Init();
 			Map.Init("assets/map.json");
 			DatabaseManager.Init();
-			foreach (ICommand c in commandList) c.SetKeywords();
+			foreach (ICommand c in commandList) { 
+				c.SetKeywords();
+				c.setDescription();
+			}
 
 			//set attack keywords
 			cAttack cAttack = new cAttack();
@@ -132,7 +135,7 @@ namespace MMOTFG_Bot
 
 			Console.WriteLine("Received message: " + message.Text + " from " + senderName);
 
-			if(message.Type == MessageType.Text) //Si le mandas una imagen explota ahora mismo
+			if (message.Type == MessageType.Text) //Si le mandas una imagen explota ahora mismo
 			{
 				List<string> subStrings = message.Text.ToLower().Split(' ').ToList();
 				string command = subStrings[0];
@@ -141,10 +144,14 @@ namespace MMOTFG_Bot
 				subStrings.CopyTo(1, args, 0, args.Length);
 
 				foreach (ICommand c in commandList)
-                {
-                    if (c.ContainsKeyWord(command, chatId, args)) break;
-                }
-            }
+				{
+					if (c.ContainsKeyWord(command))
+					{
+						c.TryExecute(command, chatId, args);
+						break;
+					}
+				}
+			}
 		}
 
 		static Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)

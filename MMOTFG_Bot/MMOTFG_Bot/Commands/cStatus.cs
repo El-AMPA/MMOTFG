@@ -6,6 +6,10 @@ namespace MMOTFG_Bot.Commands
 {
     class cStatus : ICommand
     {
+        public override void setDescription()
+        {
+            commandDescription = @"Muestra las estadísticas del jugador";
+        }
         public override void SetKeywords()
         {
             key_words = new string[] {
