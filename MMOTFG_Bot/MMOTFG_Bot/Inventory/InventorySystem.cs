@@ -469,7 +469,7 @@ namespace MMOTFG_Bot
             EquipableItem currentItem = await getItemFromEquipmentSlot(chatId, item.gearSlot);
 
             //If there are NO items being equipped in that slot...
-            if(currentItem == null) await TelegramCommunicator.SendText(chatId, "You are not wearing anything on that slot");
+            if(currentItem == null) await TelegramCommunicator.SendText(chatId, "You are not wearing anything on your " + item.gearSlot + " slot");
 
             //If the currently equipped item is the same item you want to unequip... (This is what we expect the user to do)
             else if (currentItem.iD == item.iD) await unequipGear(chatId, item.gearSlot);
