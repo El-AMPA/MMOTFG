@@ -434,29 +434,40 @@ namespace MMOTFG_Bot
         /// </summary>
         public static async Task EquipGear(long chatId, EquipableItem item)
         {
+            //Load the player's inventory
             await LoadPlayerInventory(chatId);
+            //If the player is in the middle of a battle, it can't change it's equipment
             if (await BattleSystem.IsPlayerInBattle(chatId))
             {
                 await TelegramCommunicator.SendText(chatId, "Can't equip gear in battle");
             }
+            //If the player is not in a battle...
             else
             {
+                //Checks if the item is in the player's inventory. Parse from string
                 if (!InventoryRecords.Exists(x => x.InventoryItem.iD == item.iD))
                 {
                     await TelegramCommunicator.SendText(chatId, "Item " + item.name + " couldn't be equipped as it was not found in your inventory");
                 }
+                //If the item in in the player's inventory...
                 else
                 {
+                    //Check if the slot is currently being occupied
                     if (equipment[(int)item.gearSlot] != null)
                     {
+                        //If it's being occupied by the same item, just leave it as it is.
                         if (item.iD == equipment[(int)item.gearSlot].iD) await TelegramCommunicator.SendText(chatId, "You are already using that item");
+                        //If it's being occupied, swap the gear pieces.
                         else await SwapGear(chatId, item);
                     }
+                    //If the slot is free, occupy it with the new item.
                     else
                     {
+                        //Equip the new item
                         item.OnEquip(chatId);
 
                         string msg = "You have equipped " + item.name + "on your " + item.gearSlot.ToString().ToLower() + " slot.";
+                        //Apply the stat changes
                         if (item.statModifiers.Count > 0)
                         {
                             foreach (var stat in item.statModifiers)
@@ -471,12 +482,12 @@ namespace MMOTFG_Bot
                         equipment[(int)item.gearSlot] = item;
 
                         //Remove the item from the inventory
+                        //TO-DO: Kinda jank. Currently needed because consumeItem needs to load the currentBattle. If this wasn't added, ConsumeItem would override the stat changes from the item that was just equipped.
+                        await BattleSystem.SavePlayerBattle(chatId); 
                         await ConsumeItem(chatId, item.name, 1);
                     }
+                    await SavePlayerInventory(chatId);
                 }
-
-                await SavePlayerInventory(chatId);
-                await BattleSystem.SavePlayerBattle(chatId);
             }
         }
 
