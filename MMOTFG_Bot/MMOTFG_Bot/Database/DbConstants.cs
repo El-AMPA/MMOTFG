@@ -10,7 +10,7 @@ namespace MMOTFG_Bot
 
 	static class DbConstants
 	{
-		readonly public static string COLLEC_DEBUG = "PlayersPrueba";
+		readonly public static string COLLEC_DEBUG = "Players";
 
 		readonly public static string COLLEC_PLAYERS = "Players";
 		readonly public static string COLLEC_OBJECTS = "Objects";

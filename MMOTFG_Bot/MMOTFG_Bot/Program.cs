@@ -35,8 +35,6 @@ namespace MMOTFG_Bot
 				Console.WriteLine("Estamos en Docker");
 			}
 
-
-
 			string token = "";
 			try
 			{
