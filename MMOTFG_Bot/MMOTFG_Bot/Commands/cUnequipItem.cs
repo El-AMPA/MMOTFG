@@ -27,6 +27,7 @@ namespace MMOTFG_Bot.Commands
                 if(InventorySystem.StringToItem(args[0], out item))
                 {
                     if (await InventorySystem.isItemEquipped(chatId, args[0])) await InventorySystem.UnequipGear(chatId, ((EquipableItem)item).gearSlot);
+                    else await TelegramCommunicator.SendText(chatId, "You are not wearing that item\nDid you mean /unequip_" + InventorySystem.getItemFromEquipmentSlot(chatId, ((EquipableItem)item).gearSlot).Result.name + " ?");
                 }
                 else await TelegramCommunicator.SendText(chatId, "The specified slot doesn't exist");
             }

@@ -25,7 +25,7 @@ namespace MMOTFG_Bot
 
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_ACTIVE, battleActive);
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_INFO, player.getSerializable());
-            if (enemy == null) { 
+            if (!battleActive) { 
                 update.Add(DbConstants.PLAYER_FIELD_ENEMY, null); 
             }
             else update.Add(DbConstants.PLAYER_FIELD_ENEMY, enemy.getSerializable());

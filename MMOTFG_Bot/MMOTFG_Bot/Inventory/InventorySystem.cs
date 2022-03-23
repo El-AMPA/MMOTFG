@@ -228,6 +228,13 @@ namespace MMOTFG_Bot
             return false;
         }
 
+        public static async Task<EquipableItem> getItemFromEquipmentSlot(long chatId, EQUIPMENT_SLOT slot)
+        {
+            await LoadPlayerInventory(chatId);
+
+            return equipment[(int)slot];
+        }
+
         public static async Task ConsumeItem(long chatId, string itemString, int quantityToConsume, string command = null, string[] args = null)
         {
             await LoadPlayerInventory(chatId);
