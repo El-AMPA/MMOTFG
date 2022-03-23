@@ -25,7 +25,7 @@ namespace MMOTFG_Bot
 
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_ACTIVE, battleActive);
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_INFO, player.getSerializable());
-            if (enemy == null) { 
+            if (!battleActive) { 
                 update.Add(DbConstants.PLAYER_FIELD_ENEMY, null); 
             }
             else update.Add(DbConstants.PLAYER_FIELD_ENEMY, enemy.getSerializable());
@@ -111,7 +111,7 @@ namespace MMOTFG_Bot
             useAttack(chatId, attack, player, enemy); 
         }
 
-        private static async void enemyAttack(long chatId)
+        public static async void enemyAttack(long chatId)
         {
             Attack attack = enemy.nextAttack();
 
@@ -179,6 +179,12 @@ namespace MMOTFG_Bot
                 else bar += "\U0001F7E5"; //red
             }
             return bar;
+        }
+
+        public static async Task changePlayerStats(long chatId, StatName stat, float amount)
+        {
+            player.changeStat(stat, amount);
+            await SavePlayerBattle(chatId);
         }
 
         public static async void showStatus(long chatId, Battler b)
