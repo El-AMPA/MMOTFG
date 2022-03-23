@@ -27,21 +27,21 @@ Uso: create [nombre del personaje]";
 
 			string charName = args[0];
 
-			Dictionary<string,object>tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_NAME, charName, DbConstants.COLLEC_DEBUG);
+			Dictionary<string, object> tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+
+			if (tempDict != null)
+			{
+				await TelegramCommunicator.SendText(chatId, "Solo se puede tener un personaje por persona que la luz esta cara");
+				return;
+			}
+
+			tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_NAME, charName, DbConstants.COLLEC_DEBUG);
 
 			if(tempDict != null)
 			{
 				await TelegramCommunicator.SendText(chatId, "Ese nombre ya esta pillado, sé un poco mas original ;)");
 				return;
-			}
-
-			tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId.ToString(), DbConstants.COLLEC_DEBUG);
-
-			if (tempDict != null)
-			{
-				await TelegramCommunicator.SendText(chatId, "Solo se puede tener un personaje que la luz esta cara");
-				return;
-			}
+			}			
 
 			Dictionary<string, object> dict = new Dictionary<string, object>
 			{

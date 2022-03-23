@@ -17,7 +17,7 @@ namespace MMOTFG_Bot
 {
 	class Program
 	{
-		public static List<ICommand> commandList = new List<ICommand>{new cDebug(), new cCreateCharacter(), new cHelp(), new cUseItem(), new cAddItem(), new cThrowItem(),
+		public static List<ICommand> commandList = new List<ICommand>{new cDeleteCharacter(), new cDebug(), new cCreateCharacter(), new cHelp(), new cUseItem(), new cAddItem(), new cThrowItem(),
 			new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
 			new cNavigate(), new cDirections(), new cInspectRoom(), new cShowGear()};
 

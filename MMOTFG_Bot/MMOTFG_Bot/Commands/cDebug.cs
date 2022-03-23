@@ -31,11 +31,6 @@ namespace MMOTFG_Bot.Commands
 					await InventorySystem.CreatePlayerInventory(chatId);
 					Console.WriteLine("--- using debug command {0} ---", arg0);
 					break;
-				case "delete":
-					await DatabaseManager.DeleteDocumentById(chatId.ToString(), DbConstants.COLLEC_DEBUG);
-					Console.WriteLine("--- using debug command {0} ---", arg0);
-					await TelegramCommunicator.SendText(chatId, "hasta siempre 😭");
-					break;
 			}
 				
 
