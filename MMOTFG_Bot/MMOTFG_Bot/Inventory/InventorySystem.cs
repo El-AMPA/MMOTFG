@@ -205,6 +205,29 @@ namespace MMOTFG_Bot
             await SavePlayerInventory(chatId);
         }
 
+        public static async Task<bool> isItemInInventory(long chatId, string itemString)
+        {
+            await LoadPlayerInventory(chatId);
+            ObtainableItem item;
+            if (StringToItem(itemString, out item))
+            {
+                if (InventoryRecords.Exists(x => x.InventoryItem.iD == item.iD)) return true;
+            }
+            return false;
+        }
+
+        public static async Task<bool> isItemEquipped(long chatId, string itemString)
+        {
+            await LoadPlayerInventory(chatId);
+            ObtainableItem item;
+            if (StringToItem(itemString, out item))
+            {
+                EquipableItem eItem = (EquipableItem)item;
+                if (item.iD == equipment[(int)eItem.gearSlot].iD) return true;
+            }
+            return false;
+        }
+
         public static async Task ConsumeItem(long chatId, string itemString, int quantityToConsume, string command = null, string[] args = null)
         {
             await LoadPlayerInventory(chatId);

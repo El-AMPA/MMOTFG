@@ -21,7 +21,15 @@ namespace MMOTFG_Bot.Commands
             {
                 await InventorySystem.UnequipGear(chatId, slot);
             }
-            else await TelegramCommunicator.SendText(chatId, "The specified slot doesn't exist");
+            else
+            {
+                ObtainableItem item;
+                if(InventorySystem.StringToItem(args[0], out item))
+                {
+                    if (await InventorySystem.isItemEquipped(chatId, args[0])) await InventorySystem.UnequipGear(chatId, ((EquipableItem)item).gearSlot);
+                }
+                else await TelegramCommunicator.SendText(chatId, "The specified slot doesn't exist");
+            }
         }
 
         internal override bool IsFormattedCorrectly(string[] args)
