@@ -223,7 +223,7 @@ namespace MMOTFG_Bot.Navigation
 
             update.Add(DbConstants.PLAYER_FIELD_ACTUAL_NODE, currentNode.Name);
 
-            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
         }
 
         /// <summary>
@@ -232,7 +232,7 @@ namespace MMOTFG_Bot.Navigation
         public static async Task LoadPlayerPosition(long chatId)
         {
             Dictionary<string, object> player = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID,
-                chatId.ToString(), DbConstants.COLLEC_DEBUG);
+                chatId.ToString(), DbConstants.COLLEC_PLAYERS);
 
             string currNodeName = player[DbConstants.PLAYER_FIELD_ACTUAL_NODE].ToString();
 
@@ -248,7 +248,7 @@ namespace MMOTFG_Bot.Navigation
 
             update.Add(DbConstants.PLAYER_FIELD_ACTUAL_NODE, startingNode.Name);
 
-            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
         }
     }
 }

@@ -82,7 +82,7 @@ namespace MMOTFG_Bot
             Reset();
 
             Dictionary<string, object> player = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID,
-                chatId.ToString(), DbConstants.COLLEC_DEBUG);
+                chatId.ToString(), DbConstants.COLLEC_PLAYERS);
 
 
             //Inventario "normal" (no equipables)
@@ -151,7 +151,7 @@ namespace MMOTFG_Bot
             update.Add(DbConstants.PLAYER_FIELD_EQUIPABLE_ITEMS, equipItemsToSave);
 
             //actualizamos
-            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
         }
 
         /// <summary>

@@ -27,7 +27,7 @@ Use: create [character name]";
 
 			string charName = args[0];
 
-			Dictionary<string,object>tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_NAME, charName, DbConstants.COLLEC_DEBUG);
+			Dictionary<string,object>tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_NAME, charName, DbConstants.COLLEC_PLAYERS);
 
 			if(tempDict != null)
 			{
@@ -35,7 +35,7 @@ Use: create [character name]";
 				return;
 			}
 
-			tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+			tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
 
 			if (tempDict != null)
 			{
@@ -46,10 +46,11 @@ Use: create [character name]";
 			Dictionary<string, object> dict = new Dictionary<string, object>
 			{
 				{ DbConstants.PLAYER_FIELD_NAME , charName},
-				{ DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId.ToString()}
+				{ DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId.ToString()},
+				{ DbConstants.PLAYER_ISINPARTY_FLAG, false }
 			};
 
-			bool created = await DatabaseManager.AddDocumentToCollection(dict, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+			bool created = await DatabaseManager.AddDocumentToCollection(dict, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
 
 			if (!created)
 			{

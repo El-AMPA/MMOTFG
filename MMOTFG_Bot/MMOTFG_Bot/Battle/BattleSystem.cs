@@ -30,13 +30,13 @@ namespace MMOTFG_Bot
             }
             else update.Add(DbConstants.PLAYER_FIELD_ENEMY, enemy.getSerializable());
 
-            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
         }
 
         public static async Task LoadPlayerBattle(long chatId)
         {
             Dictionary<string, object> dbPlayer = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID,
-                chatId.ToString(), DbConstants.COLLEC_DEBUG);
+                chatId.ToString(), DbConstants.COLLEC_PLAYERS);
 
             battleActive = (bool)dbPlayer[DbConstants.PLAYER_FIELD_BATTLE_ACTIVE];
 
@@ -58,7 +58,7 @@ namespace MMOTFG_Bot
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_INFO, player.getSerializable());
             update.Add(DbConstants.PLAYER_FIELD_ENEMY, null);
 
-            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
         }
 
         public static async Task<bool> IsPlayerInBattle(long chatId)
