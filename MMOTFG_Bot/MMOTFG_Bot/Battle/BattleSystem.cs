@@ -145,8 +145,8 @@ namespace MMOTFG_Bot
                         msg += $"\nYou gained {enemy.droppedMoney}€";
                     if (enemy.droppedItem != null)
                     {
-                        msg += $"\nYou obtained {enemy.droppedItem.name} x{enemy.droppedItemAmount}";
-                        await InventorySystem.AddItem(chatId, enemy.droppedItem.name, enemy.droppedItemAmount);
+                        msg += $"\nYou obtained {enemy.droppedItem} x{enemy.droppedItemAmount}";
+                        await InventorySystem.AddItem(chatId, enemy.droppedItem, enemy.droppedItemAmount);
                     }
                     await TelegramCommunicator.SendText(chatId, msg);
                 }

@@ -8,7 +8,7 @@ namespace MMOTFG_Bot
     {
         //estudiar para el futuro
         //public Dictionary<string, float> stats = new Dictionary<string, float>();
-        
+
         //changes inside battle
         public float[] stats;
         protected float[] maxStats;
@@ -20,6 +20,10 @@ namespace MMOTFG_Bot
 
         public string name;
 
+        public Behaviour onHit;
+        public Behaviour onTurnEnd;
+        public Behaviour onKill;
+
         public Battler()
         {
         }
@@ -29,9 +33,12 @@ namespace MMOTFG_Bot
             attackNum = attacks.Length;
             maxStats = (float[])stats.Clone();
             originalStats = (float[])stats.Clone();
+            onHit?.setParent(this);
+            onKill?.setParent(this);
+            onTurnEnd?.setParent(this);
         }
 
-        public void setStat(StatName stat, float newValue, bool changeMax = true, bool permanent = false)
+        public void setStat(StatName stat, float newValue, bool changeMax = false, bool permanent = false)
         {
             int s = (int)stat;
             //When the max value is changed
@@ -41,7 +48,7 @@ namespace MMOTFG_Bot
                 if (Stats.isBounded(stat))
                 {
                     float currentPercent = stats[(int)stat] / maxStats[(int)stat];
-                    stats[(int)stat] = newValue * currentPercent;
+                    stats[(int)stat] = (float)Math.Round(newValue * currentPercent, 2);
                 }
                 else stats[s] = newValue;
                 maxStats[s] = newValue;
@@ -56,18 +63,20 @@ namespace MMOTFG_Bot
                     stats[s] = (float)Math.Round(Math.Clamp(newValue, 0, max), 2);
                 }
                 else stats[s] = newValue;
-            }        
+            }
             if (permanent) originalStats[s] = newValue;
         }
 
-        public void addToStat(StatName stat, float change, bool changeMax = true, bool permanent = false)
+        public void addToStat(StatName stat, float change, bool changeMax = false, bool permanent = false)
         {
-            setStat(stat, stats[(int)stat] + change, changeMax, permanent);
+            float statn = changeMax ? maxStats[(int)stat] : stats[(int)stat];
+            setStat(stat, statn + change, changeMax, permanent);
         }
 
-        public void multiplyStat(StatName stat, float mult, bool changeMax = true, bool permanent = false)
+        public void multiplyStat(StatName stat, float mult, bool changeMax = false, bool permanent = false)
         {
-            setStat(stat, stats[(int)stat] * mult, changeMax, permanent);
+            float statn = changeMax ? maxStats[(int)stat] : stats[(int)stat];
+            setStat(stat, statn * mult, changeMax, permanent);
         }
 
         public float getStat(StatName stat)
@@ -86,12 +95,18 @@ namespace MMOTFG_Bot
         }
 
         //para eventos al recibir daño
-        virtual public async void OnHit(long chatId) { }
+        virtual public async void OnHit(long chatId) {
+            if (onHit != null) await onHit.Execute(chatId);
+        }
 
         //para eventos al morir
-        virtual public async void OnKill(long chatId) { }
+        virtual public async void OnKill(long chatId) {
+            if (onKill != null) await onKill.Execute(chatId);
+        }
 
         //para eventos de final de turno
-        virtual public async void OnTurnEnd(long chatId) { }
+        virtual public async void OnTurnEnd(long chatId) {
+            if (onTurnEnd != null) await onTurnEnd.Execute(chatId);
+        }
     }
 }

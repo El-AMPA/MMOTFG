@@ -13,7 +13,7 @@ namespace MMOTFG_Bot.Battle.Enemies
             imageName = "sein.png";
             imageCaption = "¡Sein quiere jugar a pegarse!";
             droppedMoney = 6969;
-            droppedItem = new Items.HealthPotion();
+            droppedItem = "health_potion";
             droppedItemAmount = 2;
 
             stats = new float[]{100, 10, 25};

@@ -13,7 +13,7 @@ namespace MMOTFG_Bot.Battle.Enemies
             imageName = "fedejimbo.png";
             imageCaption = "¡Fedejimbo no te deja pasar de esta esquina!";
             droppedMoney = 666;
-            droppedItem = new Items.HealthPotion();
+            droppedItem = "health_potion";
             droppedItemAmount = 2;
 
             stats = new float[]{100, 10, 25};

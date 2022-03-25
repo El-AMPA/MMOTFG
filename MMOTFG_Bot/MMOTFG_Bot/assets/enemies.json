@@ -4,6 +4,8 @@
     "Stats": [ 100, 1, 10 ],
     "ImageName": "manuela.jpg",
     "ImageCaption": "lol",
+    "DroppedMoney": 1234,
+    "DroppedItem": "tfury",
     "Attacks": [
       {
         //default attack
@@ -20,7 +22,6 @@
       {
         "AttackType": "aScaled",
         "Name": "FixedDamage",
-        "Power": 1,
         "MpCost": 1,
         "FixedDamage": 10
       },
@@ -31,6 +32,20 @@
         "MpCost": 1,
         "StatToScale": "MP"
       }
-    ]
+    ],
+    "OnHit": {
+      "BehaviourType": "bChangeStat",
+      "StatToChange": "ATK",
+      "Multiple": 2,
+      "StatToDepend": "HP",
+      "Threshold": 0.5
+    },
+    "OnTurnEnd": {
+      "BehaviourType": "bChangeStat",
+      "StatToChange": "HP",
+      "Change": 5,
+      "ChangeMax": false,
+      "ActivateOnce": false
+    }
   }
 ]

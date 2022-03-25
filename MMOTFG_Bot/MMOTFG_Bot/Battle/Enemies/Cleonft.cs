@@ -13,7 +13,7 @@ namespace MMOTFG_Bot.Battle.Enemies
             imageName = "cleonft.png";
             imageCaption = "¡Cleonft viene a mintearte la carrera!";
             droppedMoney = 2223;
-            droppedItem = new Items.HealthPotion();
+            droppedItem = "health_potion";
             droppedItemAmount = 2;
 
             stats = new float[]{100, 5, 20};

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace MMOTFG_Bot
@@ -10,7 +11,8 @@ namespace MMOTFG_Bot
         public string imageCaption = null;
 
         public float droppedMoney;
-        public ObtainableItem droppedItem;
+        public string droppedItem;
+        [DefaultValue(1)]
         public int droppedItemAmount;
 
         public Enemy() { }
@@ -56,8 +58,7 @@ namespace MMOTFG_Bot
 
             enemyInfo.Add(DbConstants.ENEMY_FIELD_MONEY_DROP, droppedMoney);
 
-            if(droppedItem != null) enemyInfo.Add(DbConstants.ENEMY_FIELD_ITEM_DROP, droppedItem.name);
-            else enemyInfo.Add(DbConstants.ENEMY_FIELD_ITEM_DROP, "None");
+            enemyInfo.Add(DbConstants.ENEMY_FIELD_ITEM_DROP, droppedItem);
 
             enemyInfo.Add(DbConstants.ENEMY_FIELD_ITEM_DROP_AMOUNT, droppedItemAmount);
 
@@ -89,8 +90,7 @@ namespace MMOTFG_Bot
             name = eInfo[DbConstants.ENEMY_FIELD_NAME].ToString();
 
             droppedMoney = Convert.ToSingle(eInfo[DbConstants.ENEMY_FIELD_MONEY_DROP]);
-            string iName = eInfo[DbConstants.ENEMY_FIELD_ITEM_DROP].ToString();
-            InventorySystem.StringToItem(iName, out droppedItem);
+            droppedItem = eInfo[DbConstants.ENEMY_FIELD_ITEM_DROP].ToString();
 
             droppedItemAmount = Convert.ToInt32(eInfo[DbConstants.ENEMY_FIELD_ITEM_DROP_AMOUNT]);
         }

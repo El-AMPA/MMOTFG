@@ -13,7 +13,7 @@ namespace MMOTFG_Bot.Battle.Enemies
             imageName = "tinkyexe.png";
             imageCaption = "T̵i̶n̵k̴y̸";
             droppedMoney = 0;
-            droppedItem = new Items.HealthPotion();
+            droppedItem = "health_potion";
             droppedItemAmount = 2;
 
             stats = new float[]{100, 100, 100};

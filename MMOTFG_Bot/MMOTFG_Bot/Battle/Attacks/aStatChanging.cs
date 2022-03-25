@@ -12,14 +12,14 @@ namespace MMOTFG_Bot
         public aStatChanging(string name_, float power_, float mpCost_) : base(name_, power_, mpCost_) { }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public StatName statToChange = StatName.ATK;
+        public StatName statToChange;
 
-        public float multiple = 1;
+        public float multiple;
 
         [DefaultValue(true)]
-        public bool changeMax = true;
+        public bool changeMax;
 
-        public bool affectsSelf = false;
+        public bool affectsSelf;
 
         public override async void OnAttack(long chatId) 
         {

@@ -13,7 +13,7 @@ namespace MMOTFG_Bot.Battle.Enemies
             imageName = "stratospeers.png";
             imageCaption = "¡Los astronautas del PCE pasan de convivir contigo!";
             droppedMoney = 1920;
-            droppedItem = new Items.HealthPotion();
+            droppedItem = "health_potion";
             droppedItemAmount = 2;
 
             stats = new float[]{40, 10, 10};

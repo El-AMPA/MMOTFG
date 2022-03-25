@@ -13,7 +13,7 @@ namespace MMOTFG_Bot.Battle.Enemies
             imageName = "thiccboi.png";
             imageCaption = "¡El thiccboi abre la boca!";
             droppedMoney = 345;
-            droppedItem = new Items.HealthPotion();
+            droppedItem = "health_potion";
             droppedItemAmount = 2;
 
             stats = new float[]{100, 10, 25};

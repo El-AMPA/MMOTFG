@@ -19,7 +19,7 @@ namespace MMOTFG_Bot
                 new Attack("Tortazo", 1.5f, 0),
                 new Attack("Patada", 2, 1),
                 new aStatChanging("Burla", 0, 5),
-                new Attack("Overkill", 100, 100)
+                new Attack("Overkill", 100, 10)
             };
 
             foreach(Attack a in attacks)

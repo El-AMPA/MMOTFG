@@ -13,7 +13,7 @@ namespace MMOTFG_Bot.Battle.Enemies
             imageName = "peter.png";
             imageCaption = "\U0001F171eter te mira ominosamente...";
             droppedMoney = 1000000;
-            droppedItem = new Items.ThunderfuryBleesedBladeOfTheWindseeker();
+            droppedItem = "tfury";
             droppedItemAmount = 1;
 
             stats = new float[]{50, 1, 100};
