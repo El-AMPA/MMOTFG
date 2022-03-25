@@ -6,6 +6,8 @@ namespace MMOTFG_Bot.Commands
 {
 	class cHelp : ICommand
 	{
+		List<ICommand> commandsList;
+
 		public override void setDescription()
 		{
 			commandDescription = @"Help is used to list all available commands or look up further information on a specific command
@@ -31,7 +33,7 @@ Use: help [command name]";
 
 				response = "List of available commands with its synonyms:\n";
 
-				foreach (ICommand c in Program.commandList)
+				foreach (ICommand c in commandsList)
 				{
 					string sameCommand = "/help_";
 
@@ -68,6 +70,11 @@ Use: help [command name]";
 		{
 			if (args.Length < 2) return true;
 			return false;
+		}
+
+		public void setCommandList(List<ICommand> commands)
+		{
+			commandsList = commands;
 		}
 	}
 }
