@@ -19,8 +19,7 @@ Use: throw [item name]";
         public override void SetKeywords()
         {
             key_words = new string[] {
-                "throw",
-                "delete"
+                "throw"
             };
         }
 
