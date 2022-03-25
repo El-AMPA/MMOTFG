@@ -12,8 +12,8 @@ namespace MMOTFG_Bot.Commands
     {
         public override void setDescription()
         {
-            commandDescription = @"Usa un objeto. Dependiendo de la palabra usada, pueden ocurrir diferentes cosas.
-Uso: consume / use / eat / drink [nombre del objeto]";
+            commandDescription = @"Uses an item. Depending on the word you provide, different things can happen.
+Use: consume / use / eat / drink [item name]";
         }
         public override void SetKeywords()
         {
@@ -25,13 +25,13 @@ Uso: consume / use / eat / drink [nombre del objeto]";
             };
         }
 
-        internal override void Execute(string command, long chatId, string[] args = null)
+        internal async override void Execute(string command, long chatId, string[] args = null)
         {
-            if(args.Length == 1) InventorySystem.ConsumeItem(chatId, args[0], 1, command, args);
+            if(args.Length == 1) await InventorySystem.ConsumeItem(chatId, args[0], 1, command, args);
             else
             {
-                if(args[1] == "all") InventorySystem.ConsumeItem(chatId, args[0], -1, command, args);
-                else InventorySystem.ConsumeItem(chatId, args[0], int.Parse(args[1]), command, args);
+                if(args[1] == "all") await InventorySystem.ConsumeItem(chatId, args[0], -1, command, args);
+                else await InventorySystem.ConsumeItem(chatId, args[0], int.Parse(args[1]), command, args);
             }
         }
 

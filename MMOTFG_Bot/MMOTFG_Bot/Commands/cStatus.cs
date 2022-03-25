@@ -8,19 +8,21 @@ namespace MMOTFG_Bot.Commands
     {
         public override void setDescription()
         {
-            commandDescription = @"Muestra las estadísticas del jugador";
+            commandDescription = @"Lists the player's stats.
+use: stats";
         }
         public override void SetKeywords()
         {
             key_words = new string[] {
-                "status"
+                "status",
+                "s"
             };
         }
 
-        internal override void Execute(string command, long chatId, string[] args = null)
+        internal async override void Execute(string command, long chatId, string[] args = null)
         {
-            if (args.Length == 0) BattleSystem.showStatus(chatId, BattleSystem.player);
-            else BattleSystem.showStatus(chatId, BattleSystem.enemy);
+            await BattleSystem.showStatus(chatId, BattleSystem.player);
+            await InventorySystem.ShowGear(chatId);
         }
 
         internal override bool IsFormattedCorrectly(string[] args)

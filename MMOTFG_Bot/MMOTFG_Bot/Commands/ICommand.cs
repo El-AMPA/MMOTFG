@@ -1,4 +1,6 @@
-﻿namespace MMOTFG_Bot
+﻿using System.Threading.Tasks;
+
+namespace MMOTFG_Bot
 {
     abstract class ICommand
     {

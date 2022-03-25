@@ -229,10 +229,16 @@ namespace MMOTFG_Bot
             await SavePlayerInventory(chatId);
         }
 
-        public static async Task ConsumeItem(long chatId, string itemString, int quantityToConsume, string command = null, string[] args = null)
+        public static async Task<EquipableItem> getItemFromEquipmentSlot(long chatId, EQUIPMENT_SLOT slot)
         {
             await LoadPlayerInventory(chatId);
 
+            return equipment[(int)slot];
+        }
+
+        public static async Task ConsumeItem(long chatId, string itemString, int quantityToConsume, string command = null, string[] args = null)
+        {
+            await LoadPlayerInventory(chatId);
             ObtainableItem item;
             if (StringToItem(itemString, out item))
             {
@@ -254,6 +260,16 @@ namespace MMOTFG_Bot
                 {
                     quantityToConsume = await GetNumberOfItemsInInventory(chatId, item); //-1 = Every single item of that type
                     quantityToConsumeAux = quantityToConsume;
+                }
+                //Check if the player in currently in a battle
+                bool playerInBattle = await BattleSystem.IsPlayerInBattle(chatId);
+                if (playerInBattle)
+                { //If the user is on a battle, it can only use 1 item in it's turn.
+                    if (quantityToConsume > 1)
+                    {
+                        await TelegramCommunicator.SendText(chatId, "You can only use 1 item on your turn.");
+                        return;
+                    }
                 }
                 while (quantityToConsumeAux > 0 && InventoryRecords.Exists(x => (x.InventoryItem.iD == item.iD)))
                 {
@@ -286,6 +302,8 @@ namespace MMOTFG_Bot
                 }
                 if (quantityToConsume == 1) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was consumed.");
                 else await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was consumed " + (quantityToConsume - quantityToConsumeAux) + " times");
+                //enemie's turn
+                if (playerInBattle) BattleSystem.enemyAttack(chatId);
                 
                 await SavePlayerInventory(chatId);
             }
@@ -402,7 +420,7 @@ namespace MMOTFG_Bot
         /// <summary>
         /// Unequips the item worn on the specified gear slot
         /// </summary>
-        public static async Task UnequipGear(long chatId, EQUIPMENT_SLOT slot)
+        public static async Task unequipGear(long chatId, EQUIPMENT_SLOT slot)
         {
             await LoadPlayerInventory(chatId);
             if (await BattleSystem.IsPlayerInBattle(chatId))
@@ -443,33 +461,62 @@ namespace MMOTFG_Bot
         }
 
         /// <summary>
+        /// Unequips the item worn on the gear slot of the specified Equippable Item
+        /// </summary>
+        public static async Task unequipGear(long chatId, EquipableItem item)
+        {
+            //Get the currently equipped item
+            EquipableItem currentItem = await getItemFromEquipmentSlot(chatId, item.gearSlot);
+
+            //If there are NO items being equipped in that slot...
+            if(currentItem == null) await TelegramCommunicator.SendText(chatId, "You are not wearing anything on your " + item.gearSlot + " slot");
+
+            //If the currently equipped item is the same item you want to unequip... (This is what we expect the user to do)
+            else if (currentItem.iD == item.iD) await unequipGear(chatId, item.gearSlot);
+
+            //If there is an item currently being equipped on that slot but it's not the requested item to unequip
+            else await TelegramCommunicator.SendText(chatId, "You are not wearing that item\nDid you mean /unequip_" + currentItem.name + " ?");
+        }
+
+        /// <summary>
         /// Equips a piece of gear in its gear slot
         /// </summary>
         public static async Task EquipGear(long chatId, EquipableItem item)
         {
+            //Load the player's inventory
             await LoadPlayerInventory(chatId);
+            //If the player is in the middle of a battle, it can't change it's equipment
             if (await BattleSystem.IsPlayerInBattle(chatId))
             {
                 await TelegramCommunicator.SendText(chatId, "Can't equip gear in battle");
             }
+            //If the player is not in a battle...
             else
             {
+                //Checks if the item is in the player's inventory. Parse from string
                 if (!InventoryRecords.Exists(x => x.InventoryItem.iD == item.iD))
                 {
                     await TelegramCommunicator.SendText(chatId, "Item " + item.name + " couldn't be equipped as it was not found in your inventory");
                 }
+                //If the item in in the player's inventory...
                 else
                 {
+                    //Check if the slot is currently being occupied
                     if (equipment[(int)item.gearSlot] != null)
                     {
+                        //If it's being occupied by the same item, just leave it as it is.
                         if (item.iD == equipment[(int)item.gearSlot].iD) await TelegramCommunicator.SendText(chatId, "You are already using that item");
+                        //If it's being occupied, swap the gear pieces.
                         else await SwapGear(chatId, item);
                     }
+                    //If the slot is free, occupy it with the new item.
                     else
                     {
+                        //Equip the new item
                         item.OnEquip(chatId);
 
                         string msg = "You have equipped " + item.name + "on your " + item.gearSlot.ToString().ToLower() + " slot.";
+                        //Apply the stat changes
                         if (item.statModifiers.Count > 0)
                         {
                             foreach (var stat in item.statModifiers)
@@ -484,12 +531,12 @@ namespace MMOTFG_Bot
                         equipment[(int)item.gearSlot] = item;
 
                         //Remove the item from the inventory
+                        //TO-DO: Kinda jank. Currently needed because consumeItem needs to load the currentBattle. If this wasn't added, ConsumeItem would override the stat changes from the item that was just equipped.
+                        await BattleSystem.SavePlayerBattle(chatId); 
                         await ConsumeItem(chatId, item.name, 1);
                     }
+                    await SavePlayerInventory(chatId);
                 }
-
-                await SavePlayerInventory(chatId);
-                await BattleSystem.SavePlayerBattle(chatId);
             }
         }
 

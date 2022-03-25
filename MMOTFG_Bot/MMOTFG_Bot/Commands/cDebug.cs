@@ -10,7 +10,7 @@ namespace MMOTFG_Bot.Commands
 	{
 		public override void setDescription()
 		{
-			commandDescription = @"Debug es un comando que se usa para debugear";
+			commandDescription = @"Used for debugging. Only for lazy devs :)";
 		}
 
 		public override void SetKeywords()
@@ -30,6 +30,11 @@ namespace MMOTFG_Bot.Commands
 				case "resetinv":
 					await InventorySystem.CreatePlayerInventory(chatId);
 					Console.WriteLine("--- using debug command {0} ---", arg0);
+					break;
+				case "delete":
+					await DatabaseManager.DeleteDocumentById(chatId.ToString(), DbConstants.COLLEC_DEBUG);
+					Console.WriteLine("--- using debug command {0} ---", arg0);
+					await TelegramCommunicator.SendText(chatId, "hasta siempre 😭");
 					break;
 			}
 				
