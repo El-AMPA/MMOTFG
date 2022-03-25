@@ -12,15 +12,16 @@ namespace MMOTFG_Bot.Commands
     {
         public override void setDescription()
         {
-            commandDescription = @"Inspecciona la sala actual
-Uso: inpect / look_around / look";
+            commandDescription = @"Inspects the current room
+Use: inpect";
         }
         public override void SetKeywords()
         {
             key_words = new string[] {
                 "inspect",
-                "look_around",
-                "look"
+                "look",
+                "ins",
+                "i"
             };
         }
 

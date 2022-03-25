@@ -1,0 +1,33 @@
+[
+    {
+        "Direction": "north",
+        "Synonyms": [
+            "n",
+            "nrth",
+            "nrt"
+        ]
+    },
+    {
+        "Direction": "south",
+        "Synonyms": [
+            "s",
+            "sth",
+            "sou"
+        ]
+    },
+    {
+        "Direction": "east",
+        "Synonyms": [
+            "e",
+            "est"
+        ]
+    },
+    {
+        "Direction": "west",
+        "Synonyms": [
+            "w",
+            "wst",
+            "wes"
+        ]
+    }
+]

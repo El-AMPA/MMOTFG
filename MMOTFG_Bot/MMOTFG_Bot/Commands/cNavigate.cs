@@ -12,13 +12,14 @@ namespace MMOTFG_Bot.Commands
     {
         public override void setDescription()
         {
-            commandDescription = @"Te mueves en la dirección indicada. Para una lista de estas direcciones, usa /directions
-Uso: go [direccion]";
+            commandDescription = @"Moves the player in the given direction. For all available directions, use /directions
+Use: go [direccion]";
         }
         public override void SetKeywords()
         {
             key_words = new string[]{
                 "go",
+                "g"
             };
         }
 

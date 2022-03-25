@@ -187,7 +187,7 @@ namespace MMOTFG_Bot
             await SavePlayerBattle(chatId);
         }
 
-        public static async void showStatus(long chatId, Battler b)
+        public static async Task showStatus(long chatId, Battler b)
         {
             await LoadPlayerBattle(chatId);
             if (!battleActive && b != player){

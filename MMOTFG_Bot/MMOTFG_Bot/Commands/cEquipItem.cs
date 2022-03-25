@@ -10,8 +10,8 @@ namespace MMOTFG_Bot.Commands
     {
         public override void setDescription()
         {
-            commandDescription = @"Equipa un objeto en la ranura de equipamiento correspondiente.
-Uso: equip [nombre del objeto]";
+            commandDescription = @"Equips an item on its gear slot.
+Use: equip [item name]";
         }
         public override void SetKeywords()
         {

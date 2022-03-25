@@ -229,6 +229,13 @@ namespace MMOTFG_Bot
             await SavePlayerInventory(chatId);
         }
 
+        public static async Task<EquipableItem> getItemFromEquipmentSlot(long chatId, EQUIPMENT_SLOT slot)
+        {
+            await LoadPlayerInventory(chatId);
+
+            return equipment[(int)slot];
+        }
+
         public static async Task ConsumeItem(long chatId, string itemString, int quantityToConsume, string command = null, string[] args = null)
         {
             await LoadPlayerInventory(chatId);
@@ -413,7 +420,7 @@ namespace MMOTFG_Bot
         /// <summary>
         /// Unequips the item worn on the specified gear slot
         /// </summary>
-        public static async Task UnequipGear(long chatId, EQUIPMENT_SLOT slot)
+        public static async Task unequipGear(long chatId, EQUIPMENT_SLOT slot)
         {
             await LoadPlayerInventory(chatId);
             if (await BattleSystem.IsPlayerInBattle(chatId))
@@ -451,6 +458,24 @@ namespace MMOTFG_Bot
                     await TelegramCommunicator.SendText(chatId, "Couldn't unequip an item from your " + slot.ToString().ToLower() + " gear slot because it's empty.");
                 }
             }
+        }
+
+        /// <summary>
+        /// Unequips the item worn on the gear slot of the specified Equippable Item
+        /// </summary>
+        public static async Task unequipGear(long chatId, EquipableItem item)
+        {
+            //Get the currently equipped item
+            EquipableItem currentItem = await getItemFromEquipmentSlot(chatId, item.gearSlot);
+
+            //If there are NO items being equipped in that slot...
+            if(currentItem == null) await TelegramCommunicator.SendText(chatId, "You are not wearing anything on your " + item.gearSlot + " slot");
+
+            //If the currently equipped item is the same item you want to unequip... (This is what we expect the user to do)
+            else if (currentItem.iD == item.iD) await unequipGear(chatId, item.gearSlot);
+
+            //If there is an item currently being equipped on that slot but it's not the requested item to unequip
+            else await TelegramCommunicator.SendText(chatId, "You are not wearing that item\nDid you mean /unequip_" + currentItem.name + " ?");
         }
 
         /// <summary>
