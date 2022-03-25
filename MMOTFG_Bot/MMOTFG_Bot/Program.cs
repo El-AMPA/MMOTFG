@@ -17,9 +17,11 @@ namespace MMOTFG_Bot
 {
 	class Program
 	{
-		public static List<ICommand> commandList = new List<ICommand> { new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
+		static cHelp helpCommand = new cHelp();
+
+		public static List<ICommand> commandList = new List<ICommand> {new cDeleteCharacter(), new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
             new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
-			new cNavigate(), new cDirections(), new cInspectRoom(), new cHelp()};
+			new cNavigate(), new cDirections(), new cInspectRoom(), helpCommand};
 
 		static async Task Main(string[] args)
 		{
@@ -59,10 +61,12 @@ namespace MMOTFG_Bot
 				c.SetKeywords();
 				c.setDescription();
 			}
+			helpCommand.setCommandList(new List<ICommand>(commandList));
 
 			//set attack keywords
 			cAttack cAttack = new cAttack();
 			cAttack.setKeywords(new Player().attackNames.ConvertAll(s => s.ToLower()).ToArray());
+			cAttack.setDescription();
 			commandList.Add(cAttack);
 
 			Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);
