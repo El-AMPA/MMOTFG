@@ -120,7 +120,7 @@ namespace MMOTFG_Bot
 
         private static async void useAttack(long chatId, Attack attack, Battler user, Battler target)
         {
-            user.changeStat(MP, -attack.mpCost);
+            user.addToStat(MP, -attack.mpCost);
             attack.setUser(user);
             attack.setTarget(target);
             float damage = (float)Math.Round(attack.getDamage(), 2);
@@ -129,7 +129,7 @@ namespace MMOTFG_Bot
             if (damage != 0)
             {
                 message += $" {target.name} took {damage} damage.";
-                target.changeStat(HP, -damage);
+                target.addToStat(HP, -damage);
             }
             await TelegramCommunicator.SendText(chatId, message);
             attack.OnAttack(chatId);
@@ -183,7 +183,7 @@ namespace MMOTFG_Bot
 
         public static async Task changePlayerStats(long chatId, StatName stat, float amount)
         {
-            player.changeStat(stat, amount);
+            player.addToStat(stat, amount);
             await SavePlayerBattle(chatId);
         }
 

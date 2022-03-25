@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace MMOTFG_Bot
@@ -15,6 +16,9 @@ namespace MMOTFG_Bot
 
         public float multiple = 1;
 
+        [DefaultValue(true)]
+        public bool changeMax = true;
+
         public bool affectsSelf = false;
 
         public override async void OnAttack(long chatId) 
@@ -22,7 +26,7 @@ namespace MMOTFG_Bot
             string stat = statToChange.ToString();
             Battler tgt = affectsSelf ? user : target;
             await TelegramCommunicator.SendText(chatId, $"{tgt.name}'s {stat} was multiplied by {multiple}!");
-            tgt.stats[(int)statToChange] *= multiple;
+            tgt.multiplyStat(statToChange, multiple, changeMax);
         }
     }
 }

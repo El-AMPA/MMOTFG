@@ -55,7 +55,10 @@ namespace MMOTFG_Bot
             enemyInfo.Add(DbConstants.ENEMY_FIELD_NAME, name);
 
             enemyInfo.Add(DbConstants.ENEMY_FIELD_MONEY_DROP, droppedMoney);
-            enemyInfo.Add(DbConstants.ENEMY_FIELD_ITEM_DROP, droppedItem.name);
+
+            if(droppedItem != null) enemyInfo.Add(DbConstants.ENEMY_FIELD_ITEM_DROP, droppedItem.name);
+            else enemyInfo.Add(DbConstants.ENEMY_FIELD_ITEM_DROP, "None");
+
             enemyInfo.Add(DbConstants.ENEMY_FIELD_ITEM_DROP_AMOUNT, droppedItemAmount);
 
             return enemyInfo;

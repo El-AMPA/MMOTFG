@@ -18,6 +18,13 @@ namespace MMOTFG_Bot
 
     static class Stats
     {
+        private static List<StatName> boundedStats = new List<StatName> { StatName.HP, StatName.MP };
+
         public static int statNum = Enum.GetNames(typeof(StatName)).Length;
+
+        public static bool isBounded(StatName stat)
+        {
+            return boundedStats.Contains(stat);
+        }
     }
 }

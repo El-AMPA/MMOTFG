@@ -21,7 +21,7 @@ namespace MMOTFG_Bot
             if (fixedDamage != 0) return fixedDamage;
 
             //ataque que escala con el otro stat
-            return user.stats[(int)statToScale] * power;
+            return user.getStat(statToScale) * power;
         }
     }
 }

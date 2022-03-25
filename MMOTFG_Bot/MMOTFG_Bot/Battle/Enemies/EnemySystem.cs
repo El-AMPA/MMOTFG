@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace MMOTFG_Bot.Battle.Enemies
@@ -65,7 +66,7 @@ namespace MMOTFG_Bot.Battle.Enemies
             {
                 return e;
             }
-            else return new Error();
+            else return enemies.First();
         }
     }
 }

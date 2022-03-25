@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using static MMOTFG_Bot.StatName;
 
 namespace MMOTFG_Bot
 {
@@ -9,7 +8,11 @@ namespace MMOTFG_Bot
     {
         //estudiar para el futuro
         //public Dictionary<string, float> stats = new Dictionary<string, float>();
-        protected float[] stats;
+        
+        //changes inside battle
+        public float[] stats;
+        protected float[] maxStats;
+        //permanent changes
         protected float[] originalStats;
         public Attack[] attacks;
 
@@ -24,31 +27,47 @@ namespace MMOTFG_Bot
         public void onCreate()
         {
             attackNum = attacks.Length;
+            maxStats = (float[])stats.Clone();
             originalStats = (float[])stats.Clone();
         }
 
-        public void setStat(StatName stat, float newValue)
+        public void setStat(StatName stat, float newValue, bool changeMax = true, bool permanent = false)
         {
-            //si es un stat que no puede pasarse de cierto límite
-            if (stat == HP || stat == MP)
+            int s = (int)stat;
+            //When the max value is changed
+            if (changeMax)
             {
-                float max = originalStats[(int)stat];
-                stats[(int)stat] = (float)Math.Round(Math.Clamp(newValue, 0, max), 2);
+                //Proportion is maintained for bounded stats
+                if (Stats.isBounded(stat))
+                {
+                    float currentPercent = stats[(int)stat] / maxStats[(int)stat];
+                    stats[(int)stat] = newValue * currentPercent;
+                }
+                else stats[s] = newValue;
+                maxStats[s] = newValue;
             }
-            stats[(int)stat] = newValue;
+            //When the current value is changed
+            else
+            {
+                //Bounded stats are clamped
+                if (Stats.isBounded(stat))
+                {
+                    float max = maxStats[s];
+                    stats[s] = (float)Math.Round(Math.Clamp(newValue, 0, max), 2);
+                }
+                else stats[s] = newValue;
+            }        
+            if (permanent) originalStats[s] = newValue;
         }
 
-        public void changeStat(StatName stat, float change)
+        public void addToStat(StatName stat, float change, bool changeMax = true, bool permanent = false)
         {
-            //si es un stat que no puede pasarse de cierto límite
-            if (stat == HP || stat == MP)
-            {
-                float current = stats[(int)stat];
-                float max = originalStats[(int)stat];
-                stats[(int)stat] = (float)Math.Round(Math.Clamp(current + change, 0, max), 2);
-            }
+            setStat(stat, stats[(int)stat] + change, changeMax, permanent);
+        }
 
-            else stats[(int)stat] += change;
+        public void multiplyStat(StatName stat, float mult, bool changeMax = true, bool permanent = false)
+        {
+            setStat(stat, stats[(int)stat] * mult, changeMax, permanent);
         }
 
         public float getStat(StatName stat)
@@ -56,33 +75,9 @@ namespace MMOTFG_Bot
             return stats[(int)stat];
         }
 
-        public void setOriginalStat(StatName stat, float newValue)
+        public float getMaxStat(StatName stat)
         {
-            //se mantiene la proporción para el MP y el HP
-            if (stat == HP || stat == MP)
-            {
-                float currentPercent = stats[(int)stat] / originalStats[(int)stat];
-                stats[(int)stat] = newValue * currentPercent;
-            }
-            else stats[(int)stat] = newValue;
-            originalStats[(int)stat] = newValue;
-        }
-
-        public void changeOriginalStat(StatName stat, float change)
-        {
-            //se mantiene la proporción para el MP y el HP
-            if (stat == HP || stat == MP)
-            {
-                float currentPercent = stats[(int)stat] / originalStats[(int)stat];
-                originalStats[(int)stat] += change;
-                stats[(int)stat] = originalStats[(int)stat] * currentPercent;
-            }
-
-            else
-            {
-                originalStats[(int)stat] += change;
-                stats[(int)stat] = originalStats[(int)stat];
-            }
+            return maxStats[(int)stat];
         }
 
         public float getOriginalStat(StatName stat)
