@@ -17,6 +17,9 @@ namespace MMOTFG_Bot
 {
 	class Program
 	{
+		private static bool processedNewEvents = false;
+		private static long launchTime;
+
 		public static List<ICommand> commandList = new List<ICommand> { new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
             new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
 			new cNavigate(), new cDirections(), new cInspectRoom(), new cHelp()};
@@ -48,6 +51,7 @@ namespace MMOTFG_Bot
 
 			var botClient = new TelegramBotClient(token);
 			var me = await botClient.GetMeAsync();
+			launchTime = DateTime.UtcNow.Ticks;
 
 			//Module initializers
 			BattleSystem.Init();
@@ -57,12 +61,12 @@ namespace MMOTFG_Bot
 			DatabaseManager.Init();
 			foreach (ICommand c in commandList) { 
 				c.SetKeywords();
-				c.setDescription();
+				c.SetDescription();
 			}
 
 			//set attack keywords
 			cAttack cAttack = new cAttack();
-			cAttack.setKeywords(new Player().attackNames.ConvertAll(s => s.ToLower()).ToArray());
+			cAttack.SetKeywords(new Player().attackNames.ConvertAll(s => s.ToLower()).ToArray());
 			commandList.Add(cAttack);
 
 			Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);
@@ -133,11 +137,17 @@ namespace MMOTFG_Bot
 			var senderName = message.From.FirstName;
 			var senderID = message.From.Id;
 
+            if (!processedNewEvents) //Don't process messages with a date prior to the program's launch date
+            {
+				if (message.Date.Ticks < launchTime) return;
+				else processedNewEvents = true;
+            }
+
 			Console.WriteLine("Received message: " + message.Text + " from " + senderName);
 
 			if (message.Type == MessageType.Text) //Si le mandas una imagen explota ahora mismo
 			{
-				List<string> subStrings = processMessage(message.Text);
+				List<string> subStrings = ProcessMessage(message.Text);
 				string command = subStrings[0];
 				string[] args = new string[subStrings.Count - 1];
 				subStrings.CopyTo(1, args, 0, args.Length);
@@ -148,7 +158,7 @@ namespace MMOTFG_Bot
 					if (c.ContainsKeyWord(command))
 					{
 						recognizedCommand = true;
-						if (c.TryExecute(command, chatId, args)) break;
+						if (await c.TryExecute(command, chatId, args)) break;
 							
 						else await TelegramCommunicator.SendText(chatId, "Incorrect use of that command.\nUse /help_" + command + " for further information.");	
 					}
@@ -160,7 +170,7 @@ namespace MMOTFG_Bot
 		/// <summary>
 		/// Processes the message recieved from the user by filtering out certain chars and splitting it into words
 		/// </summary>
-		private static List<string> processMessage(string message)
+		private static List<string> ProcessMessage(string message)
         {
 			List<string> processedMsg = message.ToLower().Split(' ').ToList();
 

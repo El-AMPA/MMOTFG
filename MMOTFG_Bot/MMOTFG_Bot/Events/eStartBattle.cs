@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MMOTFG_Bot.Events
 {
@@ -10,11 +11,11 @@ namespace MMOTFG_Bot.Events
     /// </summary>
     class eStartBattle : Event
     {
-        public string Enemy;
+        public string Enemy = "";
 
-        public async override void Execute(long chatId)
+        public async override Task Execute(long chatId)
         {
-            BattleSystem.startBattle(chatId, EnemySystem.getEnemy(Enemy));
+            await BattleSystem.StartBattle(chatId, EnemySystem.getEnemy(Enemy));
         }
     }
 }

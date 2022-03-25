@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using MMOTFG_Bot.Navigation;
 
 namespace MMOTFG_Bot.Commands
@@ -10,7 +11,7 @@ namespace MMOTFG_Bot.Commands
     /// </summary>
     class cNavigate : ICommand
     {
-        public override void setDescription()
+        public override void SetDescription()
         {
             commandDescription = @"Moves the player in the given direction. For all available directions, use /directions
 Use: go [direccion]";
@@ -23,9 +24,9 @@ Use: go [direccion]";
             };
         }
 
-        internal override void Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, long chatId, string[] args = null)
         {
-            Map.Navigate(chatId, args[0]);
+            await Map.Navigate(chatId, args[0]);
         }
 
         internal override bool IsFormattedCorrectly(string[] args)

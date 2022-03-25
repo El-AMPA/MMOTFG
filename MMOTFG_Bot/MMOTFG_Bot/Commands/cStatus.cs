@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MMOTFG_Bot.Commands
 {
     class cStatus : ICommand
     {
-        public override void setDescription()
+        public override void SetDescription()
         {
             commandDescription = @"Lists the player's stats.
 use: stats";
@@ -19,9 +20,9 @@ use: stats";
             };
         }
 
-        internal async override void Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, long chatId, string[] args = null)
         {
-            await BattleSystem.showStatus(chatId, BattleSystem.player);
+            await BattleSystem.ShowStatus(chatId, BattleSystem.player);
             await InventorySystem.ShowGear(chatId);
         }
 

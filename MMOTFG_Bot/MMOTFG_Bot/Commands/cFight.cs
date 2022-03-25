@@ -2,12 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MMOTFG_Bot.Commands
 {
     class cFight : ICommand
     {
-        public override void setDescription()
+        public override void SetDescription()
         {
             commandDescription = @"There is no specific information on this command";
         }
@@ -18,10 +19,10 @@ namespace MMOTFG_Bot.Commands
             };
         }
 
-        internal override void Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, long chatId, string[] args = null)
         {
             //habría que preguntar al mapa qué enemigo hay en esta sala
-            BattleSystem.startBattle(chatId, new Manuela());
+            await BattleSystem.StartBattle(chatId, new Manuela());
         }
 
         internal override bool IsFormattedCorrectly(string[] args)

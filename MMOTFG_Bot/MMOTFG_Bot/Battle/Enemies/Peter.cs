@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MMOTFG_Bot.Battle.Enemies
 {
@@ -26,7 +27,7 @@ namespace MMOTFG_Bot.Battle.Enemies
             attackNum = attacks.Length;
         }
 
-        public override async void OnHit(long chatId)
+        public override async Task OnHit(long chatId)
         {
             if (stats[(int)StatName.HP] < 25)
             {

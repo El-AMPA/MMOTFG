@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MMOTFG_Bot.Commands
 {
@@ -10,7 +11,7 @@ namespace MMOTFG_Bot.Commands
     /// </summary>
     class cThrowItem : ICommand
     {
-        public override void setDescription()
+        public override void SetDescription()
         {
             commandDescription = @"Throws away an item from your inventory. Deleted items can't be recovered.
 Use: throw [item name]";
@@ -23,7 +24,7 @@ Use: throw [item name]";
             };
         }
 
-        internal override async void Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, long chatId, string[] args = null)
         {
             if(args.Length == 1) await InventorySystem.ThrowAwayItem(chatId, args[0], 1);
             else
@@ -42,8 +43,7 @@ Use: throw [item name]";
 
             if (args[1] == "all") return true;
 
-            int numberToUse;
-            if (!int.TryParse(args[1], out numberToUse)) return false;
+            if (!int.TryParse(args[1], out int numberToUse)) return false;
             if (numberToUse <= 0) return false;
 
             return true;
