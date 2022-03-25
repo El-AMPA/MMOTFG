@@ -31,7 +31,7 @@ Use: create [character name]";
 
 			if(tempDict != null)
 			{
-				await TelegramCommunicator.SendText(chatId, "Ese nombre ya esta pillado, sé un poco mas original ;)");
+				await TelegramCommunicator.SendText(chatId, "That name is already in use");
 				return;
 			}
 
@@ -39,7 +39,7 @@ Use: create [character name]";
 
 			if (tempDict != null)
 			{
-				await TelegramCommunicator.SendText(chatId, "Solo se puede tener un personaje que la luz esta cara");
+				await TelegramCommunicator.SendText(chatId, "You can only have one character per player");
 				return;
 			}
 
@@ -53,12 +53,12 @@ Use: create [character name]";
 
 			if (!created)
 			{
-				await TelegramCommunicator.SendText(chatId, "Error al crear el personaje");
+				await TelegramCommunicator.SendText(chatId, "Error: Cant add that character to the database");
 				Console.WriteLine("Error when trying to add character with telegramId {} to the database", chatId);
 				return;
 			}
 
-			await TelegramCommunicator.SendText(chatId, String.Format("Madre mia {0}, tremendo personaje acabas de crearte", charName));
+			await TelegramCommunicator.SendText(chatId, String.Format("Hello {0}, ready for a good time?", charName));
 			Console.WriteLine("Telegram user {0} just created characater with name {1}", chatId, charName);
 
 			await InventorySystem.CreatePlayerInventory(chatId);
