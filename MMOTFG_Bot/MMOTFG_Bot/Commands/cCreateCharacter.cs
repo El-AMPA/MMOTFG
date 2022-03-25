@@ -47,7 +47,8 @@ Use: create [character name]";
 			{
 				{ DbConstants.PLAYER_FIELD_NAME , charName},
 				{ DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId.ToString()},
-				{ DbConstants.PLAYER_ISINPARTY_FLAG, false }
+				{ DbConstants.PLAYER_ISINPARTY_FLAG, false },
+				{ DbConstants.PLAYER_PARTY_CODE, null }
 			};
 
 			bool created = await DatabaseManager.AddDocumentToCollection(dict, chatId.ToString(), DbConstants.COLLEC_PLAYERS);

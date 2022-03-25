@@ -23,6 +23,7 @@ namespace MMOTFG_Bot
 		readonly public static string PLAYER_FIELD_BATTLE_ACTIVE = "is_in_battle";
 		readonly public static string PLAYER_FIELD_BATTLE_INFO = "player_battle_info";
 		readonly public static string PLAYER_ISINPARTY_FLAG = "is_in_party";
+		readonly public static string PLAYER_PARTY_CODE = "player_party_code";
 		readonly public static string BATTLE_INFO_FIELD_CUR_STATS = "cur_stats";
 		readonly public static string BATTLE_INFO_FIELD_OG_STATS = "og_stats";
 		readonly public static string PLAYER_FIELD_ENEMY = "enemy";
@@ -31,6 +32,7 @@ namespace MMOTFG_Bot
 		readonly public static string ENEMY_FIELD_ITEM_DROP = "item_drop";
 		readonly public static string ENEMY_FIELD_ITEM_DROP_AMOUNT = "item_drop_amount";
 		readonly public static string PARTY_FIELD_CODE = "party_code";
+		readonly public static string PARTY_FIELD_LEADER = "party_leaderId";
 		readonly public static string PARTY_FIELD_MEMBERS = "party_members";
 
 	}
