@@ -8,24 +8,24 @@ namespace MMOTFG_Bot.Commands
 	/// <summary>
 	/// Shows the available directions from a given node.
 	/// </summary>
-	class cCreateParty : ICommand
+	class cJoinParty : ICommand
 	{
 		public override void setDescription()
 		{
-			commandDescription = @"Creates a new party. Can only be used if you are in a dungeon entrance.
-Use: createParty [party code]. Party codes must be unique.";
+			commandDescription = @"Joins a party. Can only be used if you are in a dungeon entrance.
+Use: joinParty [party code]. A party with that code must exist.";
 		}
 		public override void SetKeywords()
 		{
 			key_words = new string[] {
-				"createparty"
+				"joinparty"
 			};
 		}
 
 		async internal override void Execute(string command, long chatId, string[] args = null)
 		{
 			string partyCode = args[0];
-			await PartySystem.CreateParty(partyCode, chatId);
+			await PartySystem.JoinParty(partyCode, chatId);
 		}
 
 		internal override bool IsFormattedCorrectly(string[] args)
