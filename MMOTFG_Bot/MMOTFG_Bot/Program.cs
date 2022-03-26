@@ -54,7 +54,7 @@ namespace MMOTFG_Bot
 			BattleSystem.Init();
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
-			Map.Init("assets/map.json");
+			Map.Init("assets/mapejemplo.json");
 			EnemySystem.Init("assets/enemies.json");
 			DatabaseManager.Init();
 			foreach (ICommand c in commandList) { 

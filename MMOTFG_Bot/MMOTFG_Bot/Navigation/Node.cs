@@ -13,7 +13,7 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Edge of the map graph.
         /// </summary>
-        internal class NodeConnection
+        internal struct NodeConnection
         {
             public string ConnectingNode
             {
@@ -24,6 +24,37 @@ namespace MMOTFG_Bot.Navigation
             public Node Node;
         }
 
+        internal struct TriggerCondition
+        {
+            public string Name
+            {
+                get;
+                set;
+            }
+
+            public bool Condition
+            {
+                get;
+                set;
+            }
+        }
+
+        internal struct EventCollection
+        {
+            public Event[] events
+            {
+                get;
+                set;
+            }
+
+            public TriggerCondition triggerCondition
+            {
+                get;
+                set;
+            }
+            
+        }
+
         //TO-DO: Revisar si realmente merece la pena dejarlo como diccionario o pensar en otra estructura.
         public Dictionary<string, NodeConnection> NodeConnections
         {
@@ -31,19 +62,19 @@ namespace MMOTFG_Bot.Navigation
             set;
         }
 
-        public List<Event> OnArriveEvent
+        public List<EventCollection> OnArriveEvent
         {
             get;
             set;
         }
 
-        public List<Event> OnExitEvent
+        public List<EventCollection> OnExitEvent
         {
             get;
             set;
         }
 
-        public List<Event> OnInspectEvent
+        public List<EventCollection> OnInspectEvent
         {
             get;
             set;
@@ -61,7 +92,7 @@ namespace MMOTFG_Bot.Navigation
         /// </summary>
         public void OnExit(long chatId)
         {
-            if (OnExitEvent != null) foreach (Event e in OnExitEvent) e.Execute(chatId);
+            //if (OnExitEvent != null) foreach (Event e in OnExitEvent) e.Execute(chatId);
         }
 
         /// <summary>
@@ -69,7 +100,7 @@ namespace MMOTFG_Bot.Navigation
         /// </summary>
         public void OnArrive(long chatId)
         {
-            if (OnArriveEvent != null) foreach (Event e in OnArriveEvent) e.Execute(chatId);
+            //if (OnArriveEvent != null) foreach (Event e in OnArriveEvent) e.Execute(chatId);
         }
 
         /// <summary>
@@ -77,8 +108,8 @@ namespace MMOTFG_Bot.Navigation
         /// </summary>
         public async void OnInspect(long chatId)
         {
-            if (OnInspectEvent != null) foreach (Event e in OnInspectEvent) e.Execute(chatId);
-            else await TelegramCommunicator.SendText(chatId, "There is nothing of interest in here.");
+            //if (OnInspectEvent != null) foreach (Event e in OnInspectEvent) e.Execute(chatId);
+            //else await TelegramCommunicator.SendText(chatId, "There is nothing of interest in here.");
         }
 
         /// <summary>

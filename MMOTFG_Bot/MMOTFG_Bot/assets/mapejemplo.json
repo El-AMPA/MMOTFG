@@ -1,109 +1,100 @@
 [
   {
-    "Name": "Corridor1",
-    "NodeConnections": {
-      "north": {
-        "ConnectingNode": "Corridor2"
-      },
-      "trapdoor": {
-        "ConnectingNode": "BossArena"
+    "Name":"Entrance",
+    "NodeConnections":{
+      "north":{
+        "ConnectingNode":"Corridor0"
       }
     },
-    "OnInspectEvent": [
+    "OnArriveEvent":[
       {
-        "EventType": "eSendText",
-        "Description": "Est�s en una mazmorra muy dank y dark. Al norte puedes seguir avanzando por el pasillo. Tambi�n puedes usar una trampilla, �me pregunto a donde llevar� ...?"
-      },
-      {
-        "EventType": "eSendText",
-        "Description": "Bajo la gruesa capa de polvo vislumbras un destello. Tras rebuscar con la mano encuentras una poci�n de man�. Como los devs no han implementado variables de progreso puedes farmear pociones spammeando el comando. Let's gooooooooo!'"
-      },
-      {
-        "EventType": "eGiveItem",
-        "ItemLots": [
+        "Events":[
           {
-            "Item": "health_potion",
-            "Quantity": 1,
-            "ChanceToObtain": 1
+            "EventType":"eSendText",
+            "Description":"Arrived at dungeon entrance"
           }
         ]
-      }
-    ]
-  },
-  {
-    "Name": "Corridor2",
-    "NodeConnections": {
-      "north": {
-        "ConnectingNode": "BossArena"
-      },
-      "south": {
-        "ConnectingNode": "Corridor1"
-      }
-    },
-    "OnArriveEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Notas un tufo a pienso horrible. Es inaguantable. En el suelo encuentras un objeto."
-      },
-      {
-        "EventType": "eGiveItem",
-        "ItemLots": [
-          {
-            "Item": "health_potion",
-            "Quantity": 2,
-            "ChanceToObtain": 1
-          },
-          {
-            "Item": "mana_potion",
-            "Quantity": 1,
-            "ChanceToObtain": 0.5
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "Name": "BossArena",
-    "NodeConnections": {
-      "south": {
-        "ConnectingNode": "Corridor2"
-      }
-    },
-    "OnArriveEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Al entrar, notas una fuerte respiraci�n en tu espalda."
-      },
-      {
-        "EventType": "eSendImage",
-        "Description": "I will smite thee",
-        "ImageName": "Dog1.png"
-      },
-      {
-        "EventType": "eSendAudio",
-        "Description": "No se que poner me qued� sin ideas.",
-        "AudioName": "DoggoMusic.mp3"
-      },
-      {
-        "EventType": "eStartBattle",
-        "Enemy": "Manuela"
       }
     ],
-    "OnExitEvent": [
+    "OnExitEvent":[
       {
-        "EventType": "eSendImageCollection",
-        "ImagesNames": [
-          "Dog1.png",
-          "Dog2.png"
+        "Events":[
+          {
+            "EventType":"eSendText",
+            "Description":"Left dungeon entrance"
+          }
         ]
+      }
+    ]
+  },
+  {
+    "Name": "Corridor0",
+    "NodeConnections": {
+      "north":{
+        "ConnectingNode":"Corridor1"
+      },
+      "south":{
+        "ConnectingNode":"Entrance"
+      }
+    },
+    "OnArriveEvent": [
+      {
+        "Events":[
+          {
+            "EventType":"eSendText",
+            "Description":"Acabas de entrar aquí por primera vez: Corridor 0"
+          }
+        ],
+        "TriggerCondition":{
+          "Name": "Visited",
+          "Condition":"False"
+        }
       },
       {
-        "EventType": "eSendText",
-        "Description": "Toma eventos."
+        "Events":[
+          {
+            "EventType":"eSendText",
+            "Description":"Ya has pasado antes por aqui: Corridor 0"
+          }
+        ],
+        "TriggerCondition":{
+          "Name":"Visited",
+          "Condition":"True"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "Corridor1",
+    "NodeConnections": {
+      "south":{
+        "ConnectingNode":"Corridor0"
+      }
+    },
+    "OnArriveEvent": [
+      {
+        "Events":[
+          {
+            "EventType":"eSendText",
+            "Description":"Acabas de entrar aquí por primera vez: Corridor 1"
+          }
+        ],
+        "TriggerCondition":{
+          "Name": "Visited",
+          "Condition":"False"
+        }
       },
       {
-        "EventType": "eStartBattle",
-        "Enemy": "Peter"
+        "Events":[
+          {
+            "EventType":"eSendText",
+            "Description":"Ya has pasado antes por aqui: Corridor 1"
+          }
+        ],
+        "TriggerCondition":{
+          "Name":"Visited",
+          "Condition":"True"
+        }
       }
     ]
   }
