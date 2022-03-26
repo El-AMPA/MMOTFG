@@ -133,6 +133,23 @@ namespace MMOTFG_Bot
 			await DatabaseManager.DeleteDocumentById(code, DbConstants.COLLEC_PARTIES);
 		}
 
+		public static async Task ShowParty(long chatId)
+        {
+			if(!await IsInParty(chatId))
+            {
+				await TelegramCommunicator.SendText(chatId, "You are not in a party!");
+				return;
+            }
+
+			var party = await DatabaseManager.GetDocument(await GetPartyCode(chatId), DbConstants.COLLEC_PARTIES);
+			string partyInfo = "PARTY " + (string)party[DbConstants.PARTY_FIELD_CODE] + '\n';
+			partyInfo += "LEADER: " + await GetPlayerName((long)party[DbConstants.PARTY_FIELD_LEADER]) + '\n' + "MEMBERS: \n";
+			foreach(long id in (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS])
+				partyInfo += await GetPlayerName(id) + '\n';
+
+			await TelegramCommunicator.SendText(chatId, partyInfo);
+		}
+
 		/// <summary>
 		/// Returns the code of the player's party.
 		/// </summary>
