@@ -12,7 +12,6 @@ using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
-using MMOTFG_Bot.Battle.Enemies;
 
 namespace MMOTFG_Bot
 {
@@ -51,11 +50,11 @@ namespace MMOTFG_Bot
 			var me = await botClient.GetMeAsync();
 
 			//Module initializers
-			BattleSystem.Init();
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
 			Map.Init("assets/map.json");
-			EnemySystem.Init("assets/enemies.json");
+			JSONSystem.Init("assets/enemies.json", "assets/player.json");
+			BattleSystem.Init();
 			DatabaseManager.Init();
 			foreach (ICommand c in commandList) { 
 				c.SetKeywords();
@@ -64,7 +63,7 @@ namespace MMOTFG_Bot
 
 			//set attack keywords
 			cAttack cAttack = new cAttack();
-			cAttack.setKeywords(new Player().attackNames.ConvertAll(s => s.ToLower()).ToArray());
+			cAttack.setKeywords(JSONSystem.GetPlayer().attackNames.ConvertAll(s => s.ToLower()).ToArray());
 			commandList.Add(cAttack);
 
 			Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);

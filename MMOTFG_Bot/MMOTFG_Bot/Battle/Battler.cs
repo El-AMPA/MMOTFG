@@ -94,19 +94,19 @@ namespace MMOTFG_Bot
             return originalStats[(int)stat];
         }
 
-        //para eventos al recibir daño
-        virtual public async void OnHit(long chatId) {
-            if (onHit != null) await onHit.Execute(chatId);
-        }
-
-        //para eventos al morir
-        virtual public async void OnKill(long chatId) {
-            if (onKill != null) await onKill.Execute(chatId);
-        }
-
-        //para eventos de final de turno
-        virtual public async void OnTurnEnd(long chatId) {
-            if (onTurnEnd != null) await onTurnEnd.Execute(chatId);
+        //For events such as OnHit, OnKill or OnTurnEnd
+        public async void OnBehaviour(long chatId, Behaviour b) {
+            if (b != null)
+            {
+                //If behaviour has already happened or isn't activated by chance, skip
+                if (!b.flag || RNG.Next(0, 100) > b.chance * 100) return;
+                if (await b.Execute(chatId))
+                {
+                    if (b.message != null) await TelegramCommunicator.SendText(chatId, b.message);
+                    //Events that happen once are deactivated
+                    b.flag = !b.activateOnce;
+                }           
+            }
         }
     }
 }

@@ -22,21 +22,16 @@ namespace MMOTFG_Bot
 
         public float threshold;       
 
-        [DefaultValue(true)]
         public bool changeMax;
 
-        public override async Task Execute(long chatId) {
-            if (!flag) return;
-            if(threshold == 0 || (user.getStat(statToDepend)/user.getMaxStat(statToDepend)) <= threshold)
-            {             
-                if(multiple == 0) user.addToStat(statToChange, change, changeMax);
+        public override async Task<bool> Execute(long chatId) {
+            if (threshold == 0 || (user.getStat(statToDepend) / user.getMaxStat(statToDepend)) <= threshold)
+            {
+                if (multiple == 0) user.addToStat(statToChange, change, changeMax);
                 else user.multiplyStat(statToChange, multiple, changeMax);
-
-                string s = (multiple == 0) ? $"changed by {change}" : $"multiplied by {multiple}";
-                await TelegramCommunicator.SendText(chatId, $"{user.name}'s {statToChange} was {s}");
-
-                flag = !activateOnce;
+                return true;
             }
+            else return false;
         }
     }
 }

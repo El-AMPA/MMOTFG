@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.IO;
 using System.Text;
-using MMOTFG_Bot.Battle;
 using System.Threading.Tasks;
 
 namespace MMOTFG_Bot.Navigation

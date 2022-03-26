@@ -15,8 +15,7 @@ namespace MMOTFG_Bot
 
         public static void Init()
         {
-            player = new Player();
-            enemy = new Enemy();
+            player = JSONSystem.GetPlayer();
         }
 
         public static async Task SavePlayerBattle(long chatId)
@@ -45,7 +44,7 @@ namespace MMOTFG_Bot
 
             if (dbPlayer[DbConstants.PLAYER_FIELD_ENEMY] != null) {
                 string enemyName = ((Dictionary<string, object>)dbPlayer[DbConstants.PLAYER_FIELD_ENEMY])[DbConstants.ENEMY_FIELD_NAME].ToString();
-                enemy = MMOTFG_Bot.Battle.Enemies.EnemySystem.getEnemy(enemyName);
+                enemy = JSONSystem.getEnemy(enemyName);
                 enemy.loadSerializable((Dictionary<string, object>)dbPlayer[DbConstants.PLAYER_FIELD_ENEMY]);
             }
         }
@@ -136,7 +135,7 @@ namespace MMOTFG_Bot
 
             if (target.getStat(HP) <= 0)
             {
-                target.OnKill(chatId);
+                target.OnBehaviour(chatId, target.onKill);
                 battleActive = false;
                 if(target == enemy)
                 {
@@ -156,13 +155,13 @@ namespace MMOTFG_Bot
             }
             else
             {
-                target.OnHit(chatId);
+                target.OnBehaviour(chatId, target.onHit);
                 if(damage != 0) await TelegramCommunicator.SendText(chatId, $"{target.name} HP: {getStatBar(target, HP)}");
                 if(user == player) enemyAttack(chatId);
                 else
                 {
-                    user.OnTurnEnd(chatId);
-                    target.OnTurnEnd(chatId);
+                    user.OnBehaviour(chatId, user.onTurnEnd);
+                    target.OnBehaviour(chatId, target.onTurnEnd);
                 }
             }
 

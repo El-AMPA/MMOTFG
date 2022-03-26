@@ -17,7 +17,6 @@ namespace MMOTFG_Bot
     {
         [DefaultValue("Basic Attack")]
         public string name;
-        [DefaultValue(1)]
         public float power;
         public float mpCost;
         protected Battler user;
