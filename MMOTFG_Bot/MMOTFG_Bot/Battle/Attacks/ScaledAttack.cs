@@ -9,10 +9,10 @@ namespace MMOTFG_Bot
     {
         public ScaledAttack(string name_, float power_, float mpCost_) : base(name_, power_, mpCost_) { }
 
-        public override float getDamage()
+        public override float GetDamage()
         {
             //ataque que se hace más fuerte cuanta menos vida le queda al usuario
-            return user.getStat(ATK) * power * user.getOriginalStat(HP) / user.getStat(HP);
+            return user.GetStat(ATK) * power * user.GetOriginalStat(HP) / user.GetStat(HP);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using MMOTFG_Bot.Events;
 
 namespace MMOTFG_Bot.Navigation
@@ -59,25 +60,25 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Triggers the OnExit events when leaving the node
         /// </summary>
-        public void OnExit(long chatId)
+        public async Task OnExit(long chatId)
         {
-            if (OnExitEvent != null) foreach (Event e in OnExitEvent) e.Execute(chatId);
+            if (OnExitEvent != null) foreach (Event e in OnExitEvent) await e.Execute(chatId);
         }
 
         /// <summary>
         /// Triggers the OnArrive events when entering the node (TO-DO : estos dos métodos son iguales, no repetir código)
         /// </summary>
-        public void OnArrive(long chatId)
+        public async Task OnArrive(long chatId)
         {
-            if (OnArriveEvent != null) foreach (Event e in OnArriveEvent) e.Execute(chatId);
+            if (OnArriveEvent != null) foreach (Event e in OnArriveEvent) await e.Execute(chatId);
         }
 
         /// <summary>
         /// Triggers the OnInspect events when inspecting the node
         /// </summary>
-        public async void OnInspect(long chatId)
+        public async Task OnInspect(long chatId)
         {
-            if (OnInspectEvent != null) foreach (Event e in OnInspectEvent) e.Execute(chatId);
+            if (OnInspectEvent != null) foreach (Event e in OnInspectEvent) await e.Execute(chatId);
             else await TelegramCommunicator.SendText(chatId, "There is nothing of interest in here.");
         }
 
@@ -89,8 +90,7 @@ namespace MMOTFG_Bot.Navigation
             //When deserializing the map, the Nodes are not instantiated. Each node knows that they have x connections in
             //y directions but they don't know what node they point to. They just know their name.
 
-            NodeConnection connection;
-            if (NodeConnections.TryGetValue(direction, out connection)) connection.Node = node;
+            if (NodeConnections.TryGetValue(direction, out NodeConnection connection)) connection.Node = node;
         }
 
         /// <summary>
@@ -98,9 +98,8 @@ namespace MMOTFG_Bot.Navigation
         /// </summary>
         public bool GetConnectingNode(string direction, out Node connectingNode)
         {
-            NodeConnection connection;
             connectingNode = null;
-            if (NodeConnections.TryGetValue(direction, out connection))
+            if (NodeConnections.TryGetValue(direction, out NodeConnection connection))
             {
                 connectingNode = connection.Node;
                 return true;

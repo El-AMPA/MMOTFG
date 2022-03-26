@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MMOTFG_Bot.Events
 {
@@ -34,7 +35,7 @@ namespace MMOTFG_Bot.Events
             set;
         }
 
-        public async override void Execute(long chatId)
+        public override async Task Execute(long chatId)
         {
             foreach(ItemLot i in ItemLots)
             {
