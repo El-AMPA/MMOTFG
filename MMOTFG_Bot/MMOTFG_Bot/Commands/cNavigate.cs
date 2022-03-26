@@ -26,7 +26,18 @@ Use: go [direccion]";
 
         internal override async Task Execute(string command, long chatId, string[] args = null)
         {
-            await Map.Navigate(chatId, args[0]);
+            bool inParty = await PartySystem.IsInParty(chatId);
+            if (!inParty) await Map.Navigate(chatId, args[0]);
+            else
+            {
+                bool leader = await PartySystem.IsLeader(chatId);
+                if (!leader) await TelegramCommunicator.SendText(chatId, "Only the party leader can move.");
+                else
+                {
+                    string code = await PartySystem.GetPartyCode(chatId);
+                    await Map.Navigate(chatId, args[0], code);
+                }
+            }
         }
 
         internal override bool IsFormattedCorrectly(string[] args)
