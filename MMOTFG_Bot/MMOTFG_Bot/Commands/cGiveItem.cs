@@ -14,7 +14,7 @@ namespace MMOTFG_Bot.Commands
 		public override void SetDescription()
 		{
 			commandDescription = @"Gives an item on your inventory to a fellow party member.
-Use: give [item name] [player name]";
+Use: give [item name] [player name] [quantity]";
 		}
 		public override void SetKeywords()
 		{
@@ -45,8 +45,12 @@ Use: give [item name] [player name]";
 				await TelegramCommunicator.SendText(chatId, "That player is not in your party!");
 				return;
 			}
-			//You lose the item
 
+			int itemNumber = 1;
+			if (args.Length > 2) itemNumber = int.Parse(args[3]);
+			//chequear si hay suficientes items en el inventario
+
+			//Perder el item
 
 			//Your friend receives the item
 			await TelegramCommunicator.SendText((long)friendId, await PartySystem.GetPlayerName(chatId) + " has sent you something!");
@@ -55,7 +59,7 @@ Use: give [item name] [player name]";
 
 		internal override bool IsFormattedCorrectly(string[] args)
 		{
-			if (args.Length == 2) return true;
+			if (args.Length == 2 || args.Length == 3) return true;
 			return false;
 		}
 	}

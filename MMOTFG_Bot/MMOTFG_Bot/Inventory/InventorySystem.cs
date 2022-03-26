@@ -354,7 +354,6 @@ namespace MMOTFG_Bot
                 await SavePlayerInventory(chatId);
             }
             else await TelegramCommunicator.SendText(chatId, "Item " + itemString + " doesn't exist");
-
         }
 
         public static async Task<int> GetNumberOfItemsInInventory(long chatId, ObtainableItem item)
