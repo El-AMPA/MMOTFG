@@ -11,13 +11,27 @@
     },
     "OnInspectEvent": [
       {
-        "EventType": "eSendText",
-        "Description": "Est�s en una mazmorra muy dank y dark. Al norte puedes seguir avanzando por el pasillo. Tambi�n puedes usar una trampilla, �me pregunto a donde llevar� ...?"
+        "Events":[
+          {
+            "EventType":"eSendText",
+            "Description":"Arrived at dungeon entrance"
+          }
+        ]
       },
       {
-        "EventType": "eSendText",
-        "Description": "Bajo la gruesa capa de polvo vislumbras un destello. Tras rebuscar con la mano encuentras una poci�n de man�. Como los devs no han implementado variables de progreso puedes farmear pociones spammeando el comando. Let's gooooooooo!'"
-      },
+        "Events":[
+          {
+            "EventType":"eSendText",
+            "Description":"Because variable pipopi is active, you have been granted this beautiful message"
+          }
+        ],
+        "TriggerCondition":{
+          "Name":"Pipopi",
+          "Condition":"True"
+        }
+      }
+    ],
+    "OnExitEvent":[
       {
         "EventType": "eGiveItem",
         "ItemLots": [
@@ -57,6 +71,17 @@
             "Item": "mana_potion",
             "Quantity": 1,
             "ChanceToObtain": 0.5
+          }
+        ]
+      }
+    ],
+    "OnExitEvent":[
+      {
+        "Events":[
+          {
+            "EventType":"eSetCondition",
+            "Name": "Pipopi",
+            "SetAs":"True"
           }
         ]
       }
