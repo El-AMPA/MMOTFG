@@ -31,6 +31,8 @@ Use: delete [character name]";
 
 			if (arg0 == tempDict[DbConstants.PLAYER_FIELD_NAME].ToString())
 			{
+				bool inParty = await PartySystem.IsInParty(chatId);
+				if (inParty) await PartySystem.ExitParty(chatId);
 				await DatabaseManager.DeleteDocumentById(chatId.ToString(), DbConstants.COLLEC_PLAYERS);
 				await TelegramCommunicator.SendText(chatId, "Bye 😭");
 			}else

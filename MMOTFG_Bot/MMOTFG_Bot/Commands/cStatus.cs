@@ -22,8 +22,22 @@ use: stats";
 
         internal override async Task Execute(string command, long chatId, string[] args = null)
         {
-            await BattleSystem.ShowStatus(chatId, BattleSystem.player);
-            await InventorySystem.ShowGear(chatId);
+            if (args.Length == 0)
+            {
+                await BattleSystem.ShowStatus(chatId, BattleSystem.player);
+                await InventorySystem.ShowGear(chatId);
+            }
+            else
+            {
+                //Chequeamos si es alguien de la party
+                long? friendId = await PartySystem.GetFriendId(chatId, args[0]);
+                if(friendId != null)
+                {
+                    await BattleSystem.ShowStatus(chatId, BattleSystem.player, friendId);
+                    await InventorySystem.ShowGear(chatId, friendId);
+                }
+                else await BattleSystem.ShowStatus(chatId, BattleSystem.enemy);
+            }            
         }
 
         internal override bool IsFormattedCorrectly(string[] args)

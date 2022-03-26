@@ -163,10 +163,28 @@ namespace MMOTFG_Bot
 		/// </summary>
 		/// <param name="chatId"></param>
 		/// <returns></returns>
-		static async Task<string> GetPlayerName(long chatId)
+		public static async Task<string> GetPlayerName(long chatId)
         {
 			var player = await DatabaseManager.GetDocument(chatId.ToString(), DbConstants.COLLEC_PLAYERS);
 			return (string)player[DbConstants.PLAYER_FIELD_NAME];
+        }
+
+		public static async Task<long?> GetFriendId(long chatId, string name)
+        {
+			var player = await DatabaseManager.GetDocument(chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+			if (!await IsInParty(chatId)) return null;
+
+			string partyCode = (string)player[DbConstants.PLAYER_PARTY_CODE];
+			var party = await DatabaseManager.GetDocument(partyCode, DbConstants.COLLEC_PARTIES);
+			if(await PartyExists(partyCode)){
+				long aux = (long)party[DbConstants.PARTY_FIELD_LEADER];
+				if (name == await GetPlayerName(aux)) return aux;
+
+				List<object> members = (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
+				foreach(long id in members)
+					if (await GetPlayerName(id) == name) return id;	
+            }
+			return null;
         }
 
 		/// <summary>

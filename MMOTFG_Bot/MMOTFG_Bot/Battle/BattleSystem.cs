@@ -187,9 +187,11 @@ namespace MMOTFG_Bot
             await SavePlayerBattle(chatId);
         }
 
-        public static async Task ShowStatus(long chatId, Battler b)
+        public static async Task ShowStatus(long chatId, Battler b, long? statusId = null)
         {
-            await LoadPlayerBattle(chatId);
+            if (statusId == null) statusId = chatId;
+
+            await LoadPlayerBattle((long)statusId);
             if (!battleActive && b != player){
                 await TelegramCommunicator.SendText(chatId, "No battle currently active");
                 return;

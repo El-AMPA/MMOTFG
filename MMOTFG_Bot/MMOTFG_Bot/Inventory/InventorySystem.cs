@@ -385,10 +385,11 @@ namespace MMOTFG_Bot
         /// <summary>
         /// Shows the player's equipped items from all gear slots
         /// </summary>
-        public static async Task ShowGear(long chatId)
+        public static async Task ShowGear(long chatId, long? gearId = null)
         {
-            await LoadPlayerInventory(chatId);
-            string message = "User equipment:\n";
+            if (gearId == null) gearId = chatId;
+            await LoadPlayerInventory((long)gearId);
+            string message = await PartySystem.GetPlayerName((long)gearId) + " equipment:\n";
             for (int k = 0; k < equipment.Length; k++)
             {
                 message += "\n" + (EQUIPMENT_SLOT)k + ": ";
