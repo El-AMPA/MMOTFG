@@ -33,7 +33,7 @@ namespace MMOTFG_Bot
 				return;
 			}
 
-			await SetInParty(chatId, code);
+			await SetPlayerInParty(chatId, code);
 
 			await TelegramCommunicator.SendText(chatId, String.Format("The party with code {0} has been created!", code));
 			Console.WriteLine("Telegram user {0} just created party with name {1}", chatId, code);
@@ -41,13 +41,6 @@ namespace MMOTFG_Bot
 		
 		public static async Task JoinParty(string code, long chatId)
         {
-			bool partyExists = await PartyExists(code);
-			if (!partyExists)
-			{
-				await TelegramCommunicator.SendText(chatId, "The party you tried to join does not exist!");
-				return;
-			}
-
 			bool isInParty = await IsInParty(chatId);
 			if (isInParty)
 			{
@@ -55,7 +48,23 @@ namespace MMOTFG_Bot
 				return;
 			}
 
-			Dictionary<string, object> party = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PARTY_FIELD_CODE, code, DbConstants.COLLEC_PARTIES);
+			bool partyExists = await PartyExists(code);
+			if (!partyExists)
+			{
+				await TelegramCommunicator.SendText(chatId, "The party you tried to join does not exist!");
+				return;
+			}
+
+			await AddPartyMember(code, chatId);
+			await SetPlayerInParty(chatId, code);
+			await TelegramCommunicator.SendText(chatId, "You have joined the party with code " + code);
+			string name = await GetPlayerName(chatId);
+			await BroadcastMessage(name + " has joined the party!", code, chatId);
+		}
+
+		static async Task AddPartyMember(string code, long chatId)
+        {
+			var party = await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES);
 			List<object> members = (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
 			members.Add(chatId);
 			Dictionary<string, object> newMembersData = new Dictionary<string, object>
@@ -63,29 +72,126 @@ namespace MMOTFG_Bot
 				{ DbConstants.PARTY_FIELD_MEMBERS, members}
 			};
 			await DatabaseManager.ModifyDocumentFromCollection(newMembersData, code, DbConstants.COLLEC_PARTIES);
-			await SetInParty(chatId, code);
-			await TelegramCommunicator.SendText(chatId, "You have joined the party with code " + code);
 		}
 
-		public static async Task<bool> IsLeader(long chatId)
+		static async Task RemovePartyMember(string code, long chatId)
         {
-			Dictionary<string, object>[] tempDict = await DatabaseManager.GetDocumentsByFieldValue(DbConstants.PARTY_FIELD_LEADER, chatId, DbConstants.COLLEC_PARTIES);
-			return tempDict.GetLength(0) > 0;
+			var party = await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES);
+			List<object> members = (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
+			members.Remove(chatId);
+			Dictionary<string, object> newMembersData = new Dictionary<string, object>
+			{
+				{ DbConstants.PARTY_FIELD_MEMBERS, members}
+			};
+			await DatabaseManager.ModifyDocumentFromCollection(newMembersData, code, DbConstants.COLLEC_PARTIES);
+		}
+
+		public static async Task ExitParty(long chatId)
+        {
+			bool isInParty = await IsInParty(chatId);
+			if (!isInParty)
+			{
+				await TelegramCommunicator.SendText(chatId, "You are not in a party!");
+				return;
+			}
+
+			string code = await GetPartyCode(chatId);
+			string playerName = await GetPlayerName(chatId);
+			bool isLeader = await IsLeader(chatId);
+
+            if (!isLeader)
+            {
+				await RemovePartyMember(code, chatId);
+				await BroadcastMessage(playerName + " has left the party.", code);
+				await SetPlayerOutOfParty(chatId);
+				await TelegramCommunicator.SendText(chatId, "You have left the party.");
+            }
+            else
+            {
+				await BroadcastMessage("The leader exited the party. The party has been deleted", code, chatId);
+				await DeleteParty(code);
+				await TelegramCommunicator.SendText(chatId, "Your party has been deleted");
+				
+            }
+		}
+
+		static async Task DeleteParty(string code)
+        {
+			var party = await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES);
+
+			List<object> members = (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
+			members.Add(party[DbConstants.PARTY_FIELD_LEADER]);
+
+			foreach (long id in members) await SetPlayerOutOfParty(id);
+
+			await DatabaseManager.DeleteDocumentById(code, DbConstants.COLLEC_PARTIES);
+		}
+
+		/// <summary>
+		/// Returns the code of the player's party.
+		/// </summary>
+		/// <param name="chatId"></param>
+		/// <returns></returns>
+		static async Task<string> GetPartyCode(long chatId)
+        {
+			var player = await DatabaseManager.GetDocument(chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+			return (string)player[DbConstants.PLAYER_PARTY_CODE];
         }
 
+		/// <summary>
+		/// Returns true if the player is the leader of their party.
+		/// </summary>
+		/// <param name="chatId"></param>
+		/// <returns></returns>
+		public static async Task<bool> IsLeader(long chatId)
+        {
+			bool isInParty = await IsInParty(chatId);
+			string code = await GetPartyCode(chatId);
+
+			var party = await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES);
+			return chatId == (long)party[DbConstants.PARTY_FIELD_LEADER];
+        }
+
+		/// <summary>
+		/// Returns the given Id's player name.
+		/// </summary>
+		/// <param name="chatId"></param>
+		/// <returns></returns>
+		static async Task<string> GetPlayerName(long chatId)
+        {
+			var player = await DatabaseManager.GetDocument(chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+			return (string)player[DbConstants.PLAYER_FIELD_NAME];
+        }
+
+		/// <summary>
+		/// Returns true if the party exists, false otherwise.
+		/// </summary>
+		/// <param name="code"></param>
+		/// <returns></returns>
 		static async Task<bool> PartyExists(string code)
         {
-			Dictionary<string, object> tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PARTY_FIELD_CODE, code, DbConstants.COLLEC_PARTIES);
-			return tempDict != null;
+			var party = await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES);
+			return party != null;
 		}
 
+		/// <summary>
+		/// Returns true if the player is in a party, false otherwise.
+		/// </summary>
+		/// <param name="chatId"></param>
+		/// <returns></returns>
 		public static async Task<bool> IsInParty(long chatId)
         {
-			Dictionary<string, object> tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
-			return (bool)tempDict[DbConstants.PLAYER_ISINPARTY_FLAG];
+			var player = await DatabaseManager.GetDocument(chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+			return (bool)player[DbConstants.PLAYER_ISINPARTY_FLAG];
 		}
 
-		public static async Task SetInParty(long chatId, string code)
+		/// <summary>
+		/// Registers that the gicen player is in a party in the database.
+		/// </summary>
+		/// <param name="chatId">Id of the player</param>
+		/// <param name="code">Code of the party</param>
+		/// <returns></returns>
+		static async Task SetPlayerInParty(long chatId, string code)
         {
 			Dictionary<string, object> partyInfo = new Dictionary<string, object> { 
 				{ DbConstants.PLAYER_ISINPARTY_FLAG, true },
@@ -93,5 +199,34 @@ namespace MMOTFG_Bot
 			};
 			await DatabaseManager.ModifyDocumentFromCollection(partyInfo, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
         }
+
+		static async Task SetPlayerOutOfParty(long chatId)
+        {
+			Dictionary<string, object> partyInfo = new Dictionary<string, object> {
+				{ DbConstants.PLAYER_ISINPARTY_FLAG, false },
+				{ DbConstants.PLAYER_PARTY_CODE, null }
+			};
+			await DatabaseManager.ModifyDocumentFromCollection(partyInfo, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+		}
+
+		/// <summary>
+		/// Sends a message to everyone in the party. If a chatId is specified, the method will not send the message to said user.
+		/// </summary>
+		/// <param name="message">Message to be broadcasted</param>
+		/// <param name="code">Code of the party</param>
+		/// <param name="chatId">Id of the sender</param>
+		/// <returns></returns>
+		public static async Task BroadcastMessage(string message, string code, long chatId = 0)
+        {
+			var party = await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES);
+
+			List<object> members = (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
+			members.Add(party[DbConstants.PARTY_FIELD_LEADER]);
+
+			foreach(long id in members)
+            {
+				if (id != chatId) await TelegramCommunicator.SendText(id, message);
+            }
+		}
 	}
 }
