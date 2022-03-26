@@ -20,21 +20,21 @@ namespace MMOTFG_Bot
             mpCost = mpCost_;
         }
 
-        public void setUser(Battler user_)
+        public void SetUser(Battler user_)
         {
             user = user_;
         }
 
-        public void setTarget(Battler target_)
+        public void SetTarget(Battler target_)
         {
             target = target_;
         }
 
-        public virtual float getDamage()
+        public virtual float GetDamage()
         {
-            return user.getStat(ATK) * power;
+            return user.GetStat(ATK) * power;
         }
 
-        public virtual async void OnAttack(long chatId) { }
+        public virtual void OnAttack(long chatId) { }
     }
 }

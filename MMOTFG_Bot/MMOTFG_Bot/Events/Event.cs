@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using Newtonsoft.Json;
 using JsonSubTypes;
+using System.Threading.Tasks;
 
 namespace MMOTFG_Bot.Events
 {
@@ -23,9 +24,9 @@ namespace MMOTFG_Bot.Events
     //Thus, if it were a pure abstract class, it would just send an exception.
     class Event
     {
-        public virtual void Execute(long chatId)
+        public virtual Task Execute(long chatId)
         {
-
+            return Task.CompletedTask;
         }
     }
 }

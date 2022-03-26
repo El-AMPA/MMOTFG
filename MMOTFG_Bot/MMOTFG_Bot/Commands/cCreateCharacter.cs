@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using MMOTFG_Bot.Navigation;
 
 namespace MMOTFG_Bot.Commands
@@ -10,7 +11,7 @@ namespace MMOTFG_Bot.Commands
 	/// </summary>
 	class cCreateCharacter : ICommand
 	{
-		public override void setDescription()
+		public override void SetDescription()
 		{
 			commandDescription = @"Creates a new character. Can only be used if you haven't created one already.
 Use: create [character name]";
@@ -22,7 +23,7 @@ Use: create [character name]";
 			};
 		}
 
-		async internal override void Execute(string command, long chatId, string[] args = null)
+		internal override async Task Execute(string command, long chatId, string[] args = null)
 		{
 
 			string charName = args[0];

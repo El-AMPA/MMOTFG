@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MMOTFG_Bot
 {
@@ -16,7 +17,7 @@ namespace MMOTFG_Bot
             {"eat", "Comando que se usa para ingerir alimentos. No comas bebidas!!!1!"}
         };
 
-        public static async void showInfo(long chatId, string key)
+        public static async Task ShowInfo(long chatId, string key)
         {
             if (information.ContainsKey(key))
             {

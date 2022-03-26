@@ -12,7 +12,7 @@ namespace MMOTFG_Bot
         public override async void OnAttack(long chatId) 
         {
             await TelegramCommunicator.SendText(chatId, $"{target.name}'s attack was lowered!");
-            target.setStat(ATK, target.getStat(ATK)/2);
+            target.SetStat(ATK, target.GetStat(ATK)/2);
         }
     }
 }

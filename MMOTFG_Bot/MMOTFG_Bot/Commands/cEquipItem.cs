@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using MMOTFG_Bot.Items;
 
 namespace MMOTFG_Bot.Commands
@@ -8,7 +9,7 @@ namespace MMOTFG_Bot.Commands
     //TO-DO: ESTO ESTÁ SIN TERMINAR. NO ES DEFINITIVO.
     class cEquipItem : ICommand
     {
-        public override void setDescription()
+        public override void SetDescription()
         {
             commandDescription = @"Equips an item on its gear slot.
 Use: equip [item name]";
@@ -20,10 +21,9 @@ Use: equip [item name]";
             };
         }
 
-        internal async override void Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, long chatId, string[] args = null)
         {
-            ObtainableItem item;
-            if (InventorySystem.StringToItem(args[0], out item))
+            if (InventorySystem.StringToItem(args[0], out ObtainableItem item))
             {
                 EquipableItem eItem = (EquipableItem)item;
                 await InventorySystem.EquipGear(chatId, eItem);

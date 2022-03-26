@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MMOTFG_Bot.Commands
 {
     class cInfo : ICommand
     {
-        public override void setDescription()
+        public override void SetDescription()
         {
             commandDescription = @"Obtiene informacion sobre un objeto, estadistica, etcetera.
 Uso: info [cosa para la que quieres mas info]";
@@ -18,9 +19,9 @@ Uso: info [cosa para la que quieres mas info]";
             };
         }
 
-        internal override void Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, long chatId, string[] args = null)
         {
-            InformationSystem.showInfo(chatId, args[0]);
+            await InformationSystem.ShowInfo(chatId, args[0]);
         }
 
         internal override bool IsFormattedCorrectly(string[] args)

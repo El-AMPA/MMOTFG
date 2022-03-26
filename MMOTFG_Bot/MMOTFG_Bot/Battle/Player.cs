@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MMOTFG_Bot
 {
@@ -32,7 +33,7 @@ namespace MMOTFG_Bot
             }
         }
 
-        public Dictionary<string, object> getSerializable()
+        public Dictionary<string, object> GetSerializable()
 		{
             Dictionary<string, object> combatInfo = new Dictionary<string,object>();
 
@@ -61,14 +62,13 @@ namespace MMOTFG_Bot
             return combatInfo;
 		}
 
-        public void loadSerializable(Dictionary<string, object> cInfo)
+        public void LoadSerializable(Dictionary<string, object> cInfo)
         {
             Dictionary<string, object> statsDB = (Dictionary<string, object>)cInfo[DbConstants.BATTLE_INFO_FIELD_CUR_STATS];
 
 			foreach (KeyValuePair<string,object> keyValue in statsDB)
 			{    
-                StatName index;
-                Enum.TryParse(keyValue.Key, true, out index);
+                Enum.TryParse(keyValue.Key, true, out StatName index);
 
                 stats[(int)index] = Convert.ToSingle(keyValue.Value);
             }
@@ -77,20 +77,19 @@ namespace MMOTFG_Bot
 
             foreach (KeyValuePair<string, object> keyValue in statsDB)
             {
-                StatName index;
-                Enum.TryParse(keyValue.Key, true, out index);
+                Enum.TryParse(keyValue.Key, true, out StatName index);
 
                 originalStats[(int)index] = Convert.ToSingle(keyValue.Value);
             }
 
         }
 
-        public void setName(string playerName)
+        public void SetName(string playerName)
 		{
             name = playerName;
 		}
 
-        public override async void OnKill(long chatId)
+        public override async Task OnKill(long chatId)
         {
             //Recuperas toda la vida y mp
             stats[(int)StatName.HP] = originalStats[(int)StatName.HP];

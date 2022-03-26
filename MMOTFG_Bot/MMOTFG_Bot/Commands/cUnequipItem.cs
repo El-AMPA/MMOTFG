@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using MMOTFG_Bot.Items;
 
 namespace MMOTFG_Bot.Commands
 {
     class cUnequipItem : ICommand
     {
-        public override void setDescription()
+        public override void SetDescription()
         {
             commandDescription = @"Unequips an item from it's gear slot.
 Use: unequip [item name] / unequip [gear slot]";
@@ -19,23 +20,21 @@ Use: unequip [item name] / unequip [gear slot]";
             };
         }
 
-        internal async override void Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, long chatId, string[] args = null)
         {
-            EQUIPMENT_SLOT slot;
             //Check if the args provided is an equipment slot
-            if (InventorySystem.StringToEquipmentSlot(args[0], out slot))
+            if (InventorySystem.StringToEquipmentSlot(args[0], out EQUIPMENT_SLOT slot))
             {
                 //If it's valid, unequip the item from that given slot.
-                await InventorySystem.unequipGear(chatId, slot);
+                await InventorySystem.UnequipGear(chatId, slot);
             }
             else
             {
-                ObtainableItem item;
                 //Check if the args provided is an equippable item
-                if (InventorySystem.StringToItem(args[0], out item))
+                if (InventorySystem.StringToItem(args[0], out ObtainableItem item))
                 {
                     //If it's valid, unequip the item from the player's gear
-                    await InventorySystem.unequipGear(chatId, (EquipableItem)item);
+                    await InventorySystem.UnequipGear(chatId, (EquipableItem)item);
                 }
                 else await TelegramCommunicator.SendText(chatId, "The specified equippable item or gear slot doesn't exist");
             }
