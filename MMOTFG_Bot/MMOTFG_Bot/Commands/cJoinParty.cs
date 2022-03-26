@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MMOTFG_Bot.Navigation;
+﻿using System.Threading.Tasks;
 
 namespace MMOTFG_Bot.Commands
 {
@@ -10,7 +7,7 @@ namespace MMOTFG_Bot.Commands
 	/// </summary>
 	class cJoinParty : ICommand
 	{
-		public override void setDescription()
+		public override void SetDescription()
 		{
 			commandDescription = @"Joins a party. Can only be used if you are in a dungeon entrance.
 Use: joinParty [party code]. A party with that code must exist.";
@@ -22,7 +19,7 @@ Use: joinParty [party code]. A party with that code must exist.";
 			};
 		}
 
-		async internal override void Execute(string command, long chatId, string[] args = null)
+		internal override async Task Execute(string command, long chatId, string[] args = null)
 		{
 			string partyCode = args[0];
 			await PartySystem.JoinParty(partyCode, chatId);
