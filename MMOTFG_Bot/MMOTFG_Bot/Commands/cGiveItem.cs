@@ -46,15 +46,32 @@ Use: give [item name] [player name] [quantity]";
 				return;
 			}
 
-			int itemNumber = 1;
-			if (args.Length > 2) itemNumber = int.Parse(args[3]);
-			//chequear si hay suficientes items en el inventario
+			int itemsGiven = 0;
+			ObtainableItem item;
 
-			//Perder el item
+			if (InventorySystem.StringToItem(args[0], out item))
+			{
+				if (await InventorySystem.PlayerHasItem(chatId, item))
+				{
+					if (args.Length == 1) itemsGiven = await InventorySystem.ThrowAwayItem(chatId, item, 1);
+					else
+					{
+						if (args[1] == "all") itemsGiven = await InventorySystem.ThrowAwayItem(chatId, item, -1);
+						else itemsGiven = await InventorySystem.ThrowAwayItem(chatId, item, int.Parse(args[2]));
+					}
+					if (itemsGiven == 1) await TelegramCommunicator.SendText(chatId, "Item " + args[0] + " was sent to " + args[1] + ".");
+					else if (itemsGiven > 1) await TelegramCommunicator.SendText(chatId, "Item " + args[0] + " was sent to " + args[1] + " " + itemsGiven + " times.");
+				}
+				else await TelegramCommunicator.SendText(chatId, "Item " + item.name + " couldn't be found in your inventory.");
+			}
+			else await TelegramCommunicator.SendText(chatId, "Item " + args[1] + " doesn't exist");
 
 			//Your friend receives the item
-			await TelegramCommunicator.SendText((long)friendId, await PartySystem.GetPlayerName(chatId) + " has sent you something!");
-			await InventorySystem.AddItem((long)friendId, args[0], 1);
+			if(itemsGiven > 0)
+            {
+				await TelegramCommunicator.SendText((long)friendId, await PartySystem.GetPlayerName(chatId) + " has sent you something!");
+				await InventorySystem.AddItem((long)friendId, item, itemsGiven);
+			}
 		}
 
 		internal override bool IsFormattedCorrectly(string[] args)

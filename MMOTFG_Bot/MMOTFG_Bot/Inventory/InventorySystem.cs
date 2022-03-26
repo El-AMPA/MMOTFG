@@ -82,7 +82,7 @@ namespace MMOTFG_Bot
             Reset();
 
             Dictionary<string, object> player = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID,
-                chatId.ToString(), DbConstants.COLLEC_DEBUG);
+                chatId.ToString(), DbConstants.COLLEC_PLAYERS);
 
 
             //Inventario "normal" (no equipables)
@@ -149,7 +149,7 @@ namespace MMOTFG_Bot
             update.Add(DbConstants.PLAYER_FIELD_EQUIPABLE_ITEMS, equipItemsToSave);
 
             //actualizamos
-            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
         }
 
         /// <summary>
@@ -357,10 +357,11 @@ namespace MMOTFG_Bot
         /// <summary>
         /// Shows the player's equipped items from all gear slots
         /// </summary>
-        public static async Task ShowGear(long chatId)
+        public static async Task ShowGear(long chatId, long? gearId = null)
         {
-            await LoadPlayerInventory(chatId);
-            string message = "User equipment:\n";
+            if (gearId == null) gearId = chatId;
+            await LoadPlayerInventory((long)gearId);
+            string message = await PartySystem.GetPlayerName((long)gearId) + " equipment:\n";
             for (int k = 0; k < equipment.Length; k++)
             {
                 message += "\n" + (EQUIPMENT_SLOT)k + ": ";
