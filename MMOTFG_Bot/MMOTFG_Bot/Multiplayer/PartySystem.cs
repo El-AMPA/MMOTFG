@@ -62,6 +62,12 @@ namespace MMOTFG_Bot
 			await BroadcastMessage(name + " has joined the party!", code, chatId);
 		}
 
+		public static async Task<List<object>> GetPartyMembers(string code)
+        {
+			var party = await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES);
+			return (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
+		}
+
 		static async Task AddPartyMember(string code, long chatId)
         {
 			var party = await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES);
@@ -132,7 +138,7 @@ namespace MMOTFG_Bot
 		/// </summary>
 		/// <param name="chatId"></param>
 		/// <returns></returns>
-		static async Task<string> GetPartyCode(long chatId)
+		public static async Task<string> GetPartyCode(long chatId)
         {
 			var player = await DatabaseManager.GetDocument(chatId.ToString(), DbConstants.COLLEC_PLAYERS);
 			return (string)player[DbConstants.PLAYER_PARTY_CODE];

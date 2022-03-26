@@ -93,10 +93,15 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Sends the 'OnInspectText' field of the current node of the player 
         /// </summary>
-        public static async Task OnInspect(long chatId)
+        public static async Task OnInspect(long chatId, string partyCode = null)
         {
             await LoadPlayerPosition(chatId);
             await currentNode.OnInspect(chatId);
+            if (partyCode != null)
+            {
+                List<object> members = await PartySystem.GetPartyMembers(partyCode);
+                foreach (long id in members) await currentNode.OnInspect(id);
+            }
         }
 
         /// <summary>
