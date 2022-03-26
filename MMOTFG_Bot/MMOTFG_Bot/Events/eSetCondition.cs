@@ -23,7 +23,7 @@ namespace MMOTFG_Bot.Events
 
         public async override void Execute(long chatId)
         {
-            await TelegramCommunicator.SendText(chatId, Description);
+            await TelegramCommunicator.SendText(chatId, "Beep boop i'm changing your condición");
         }
     }
 }
