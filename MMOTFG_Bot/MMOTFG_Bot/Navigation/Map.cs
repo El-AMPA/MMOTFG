@@ -22,7 +22,7 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Moves the player in the specified direction
         /// </summary>
-        public async static void Navigate(long chatId, string dir)
+        public static async Task Navigate(long chatId, string dir)
         {
             await LoadPlayerPosition(chatId);
 
@@ -36,9 +36,9 @@ namespace MMOTFG_Bot.Navigation
                 //If currentNode doesn't have a connection in that direction, it doesn't move the player.
                 if (currentNode.GetConnectingNode(dir, out nextNode))
                 {
-                    currentNode.OnExit(chatId);
+                    await currentNode.OnExit(chatId);
                     currentNode = nextNode;
-                    currentNode.OnArrive(chatId);
+                    await currentNode.OnArrive(chatId);
                     await SavePlayerPosition(chatId);
                 }
                 else
@@ -77,7 +77,7 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Shows the available directions from CurrentNode.
         /// </summary>
-        public async static void GetDirections(long chatId)
+        public async static Task GetDirections(long chatId)
         {
             await LoadPlayerPosition(chatId);
 
@@ -93,10 +93,10 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Sends the 'OnInspectText' field of the current node of the player 
         /// </summary>
-        public async static void OnInspect(long chatId)
+        public static async Task OnInspect(long chatId)
         {
             await LoadPlayerPosition(chatId);
-            currentNode.OnInspect(chatId);
+            await currentNode.OnInspect(chatId);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace MMOTFG_Bot.Navigation
             {
                 mapText = File.ReadAllText(mapPath, Encoding.GetEncoding(65001)); // Encoding: UTF-8
             }
-            catch (FileNotFoundException e)
+            catch (FileNotFoundException)
             {
                 Console.WriteLine("ERROR: map.json couldn't be found in assets folder.");
                 Environment.Exit(-1);
@@ -146,8 +146,7 @@ namespace MMOTFG_Bot.Navigation
         /// </summary>
         private static string GetSynonymDirection(string dir)
         {
-            string synonym;
-            if (directionSynonyms.TryGetValue(dir, out synonym)) return synonym;
+            if (directionSynonyms.TryGetValue(dir, out string synonym)) return synonym;
             else return dir;
         }
 
@@ -183,7 +182,7 @@ namespace MMOTFG_Bot.Navigation
                 //Dumps the file into a string
                 synonymsText = File.ReadAllText(synonymsPath, Encoding.GetEncoding(65001)); // Encoding: UTF-8
             }
-            catch (FileNotFoundException e)
+            catch (FileNotFoundException)
             {
                 Console.WriteLine("ERROR: directionsSynonyms.json couldn't be found in assets folder.");
                 Environment.Exit(-1);

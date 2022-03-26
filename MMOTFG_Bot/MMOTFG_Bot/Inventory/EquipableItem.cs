@@ -22,7 +22,7 @@ namespace MMOTFG_Bot.Items
         {
             foreach (var stat in statModifiers)
             {
-                BattleSystem.player.changeOriginalStat(stat.Item2, stat.Item1);
+                BattleSystem.player.ChangeOriginalStat(stat.Item2, stat.Item1);
             }
         }
 
@@ -30,7 +30,7 @@ namespace MMOTFG_Bot.Items
         {
             foreach (var stat in statModifiers)
             {
-                BattleSystem.player.changeOriginalStat(stat.Item2, -stat.Item1);
+                BattleSystem.player.ChangeOriginalStat(stat.Item2, -stat.Item1);
             }
         }
     }

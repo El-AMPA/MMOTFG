@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MMOTFG_Bot.Commands
 {
     class cAddItem : ICommand
     {
-        public override void setDescription()
+        public override void SetDescription()
         {
             commandDescription = @"Adds an item to your inventory. Only for lazy devs :)
 Use: add [item name]";
@@ -19,10 +20,10 @@ Use: add [item name]";
             };
         }
 
-        internal override void Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, long chatId, string[] args = null)
         {
-            if(args.Length == 1) InventorySystem.AddItem(chatId, args[0], 1);
-            else InventorySystem.AddItem(chatId, args[0], int.Parse(args[1]));
+            if(args.Length == 1) await InventorySystem.AddItem(chatId, args[0], 1);
+            else await InventorySystem.AddItem(chatId, args[0], int.Parse(args[1]));
         }
 
         internal override bool IsFormattedCorrectly(string[] args)
@@ -32,8 +33,7 @@ Use: add [item name]";
 
             if (args.Length == 1) return true;
 
-            int numberToUse;
-            if (!int.TryParse(args[1], out numberToUse)) return false;
+            if (!int.TryParse(args[1], out int numberToUse)) return false;
             if (numberToUse <= 0) return false;
 
             return true;

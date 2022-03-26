@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MMOTFG_Bot.Commands
 {
@@ -8,7 +9,7 @@ namespace MMOTFG_Bot.Commands
 	{
 		List<ICommand> commandsList;
 
-		public override void setDescription()
+		public override void SetDescription()
 		{
 			commandDescription = @"Help is used to list all available commands or look up further information on a specific command
 Use: help [command name]";
@@ -24,9 +25,9 @@ Use: help [command name]";
 
 		}
 
-		internal async override void Execute(string command, long chatId, string[] args = null)
+		internal override async Task Execute(string command, long chatId, string[] args = null)
 		{
-			string response = "";
+			string response;
 
 			if (args.Length == 0)
 			{
@@ -37,7 +38,7 @@ Use: help [command name]";
 				{
 					string sameCommand = "/help_";
 
-					foreach (string comStr in c.getKeywords())
+					foreach (string comStr in c.GetKeywords())
 					{
 						sameCommand = sameCommand + comStr + " ";
 					}
@@ -55,7 +56,7 @@ Use: help [command name]";
 				{
 					if (c.ContainsKeyWord(args[0]))
 					{
-						response = c.getDescription();
+						response = c.GetDescription();
 						await TelegramCommunicator.SendText(chatId, response);
 						return;
 					}
