@@ -15,7 +15,7 @@ namespace MMOTFG_Bot
         protected float[] maxStats;
         //permanent changes
         protected float[] originalStats;
-        public Attack[] attacks;
+        public List<Attack> attacks;
 
         public int attackNum;
 
@@ -31,7 +31,9 @@ namespace MMOTFG_Bot
 
         public void OnCreate()
         {
-            attackNum = attacks.Length;
+            //attacks are automatically sorted by mpCost
+            attacks.Sort((a1, a2) => a1.mpCost.CompareTo(a2.mpCost));
+            attackNum = attacks.Count;
             maxStats = (float[])stats.Clone();
             originalStats = (float[])stats.Clone();
             onHit?.setParent(this);

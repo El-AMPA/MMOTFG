@@ -17,7 +17,7 @@ namespace MMOTFG_Bot
 
         public Enemy() { }
     
-        //la idea de esto es que los ataques estén ordenados de menor a mayor MP con el básico costando 0 siempre
+        //Gets a random attack the enemy has enough MP to use (basic attack should always cost 0 to avoid problems)
         public Attack nextAttack()
         {
             int i = attackNum - 1;

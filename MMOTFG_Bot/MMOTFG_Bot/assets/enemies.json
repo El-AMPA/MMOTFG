@@ -22,14 +22,14 @@
       {
         "AttackType": "aScaled",
         "Name": "FixedDamage",
-        "MpCost": 1,
+        "MpCost": 2,
         "FixedDamage": 10
       },
       {
         "AttackType": "aScaled",
         "Name": "MpScale",
         "Power": 1,
-        "MpCost": 1,
+        "MpCost": 3,
         "StatToScale": "MP"
       }
     ],

@@ -13,8 +13,10 @@ namespace MMOTFG_Bot
         [JsonConverter(typeof(StringEnumConverter))]
         public StatName statToChange;
 
+        //for additive change
         public float change;
 
+        //for multiplicative change
         public float multiple;
 
         [JsonConverter(typeof(StringEnumConverter))]
