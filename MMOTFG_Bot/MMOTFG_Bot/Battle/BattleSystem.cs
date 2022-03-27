@@ -23,7 +23,7 @@ namespace MMOTFG_Bot
             Dictionary<string, object> update = new Dictionary<string, object>();
 
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_ACTIVE, battleActive);
-            update.Add(DbConstants.PLAYER_FIELD_BATTLE_INFO, player.getSerializable());
+            update.Add(DbConstants.PLAYER_FIELD_BATTLE_INFO, player.GetSerializable());
             if (!battleActive) { 
                 update.Add(DbConstants.PLAYER_FIELD_ENEMY, null); 
             }
@@ -39,8 +39,8 @@ namespace MMOTFG_Bot
 
             battleActive = (bool)dbPlayer[DbConstants.PLAYER_FIELD_BATTLE_ACTIVE];
 
-            player.loadSerializable((Dictionary<string, object>) dbPlayer[DbConstants.PLAYER_FIELD_BATTLE_INFO]);
-            player.setName((string)dbPlayer[DbConstants.PLAYER_FIELD_NAME]);
+            player.LoadSerializable((Dictionary<string, object>) dbPlayer[DbConstants.PLAYER_FIELD_BATTLE_INFO]);
+            player.SetName((string)dbPlayer[DbConstants.PLAYER_FIELD_NAME]);
 
             if (dbPlayer[DbConstants.PLAYER_FIELD_ENEMY] != null) {
                 string enemyName = ((Dictionary<string, object>)dbPlayer[DbConstants.PLAYER_FIELD_ENEMY])[DbConstants.ENEMY_FIELD_NAME].ToString();
@@ -54,7 +54,7 @@ namespace MMOTFG_Bot
             Dictionary<string, object> update = new Dictionary<string, object>();
 
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_ACTIVE, false);
-            update.Add(DbConstants.PLAYER_FIELD_BATTLE_INFO, player.getSerializable());
+            update.Add(DbConstants.PLAYER_FIELD_BATTLE_INFO, player.GetSerializable());
             update.Add(DbConstants.PLAYER_FIELD_ENEMY, null);
 
             await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
@@ -69,17 +69,17 @@ namespace MMOTFG_Bot
             return battleActive; 
         }
 
-        public static async void startBattle(long chatId, Enemy e)
+        public static async Task StartBattle(long chatId, Enemy e)
         {
             enemy = e;
             battleActive = true;
             if(enemy.imageName != null)
                 await TelegramCommunicator.SendImage(chatId, e.imageName, e.imageCaption);
-            setPlayerOptions(chatId);
+            SetPlayerOptions(chatId);
             await SavePlayerBattle(chatId);
         }
 
-        public static async void setPlayerOptions(long chatId)
+        public static async void SetPlayerOptions(long chatId)
         {
             //List<string> attacksWithMP = new List<string>();
             //for(int i = 0; i < player.attackNum; i++)
@@ -89,7 +89,7 @@ namespace MMOTFG_Bot
             await TelegramCommunicator.SendButtons(chatId, player.attackNum, player.attackNames.ToArray());
         }
 
-        public static async void playerAttack(long chatId, string attackName)
+        public static async Task PlayerAttack(long chatId, string attackName)
         {
             await LoadPlayerBattle(chatId);
             if (!battleActive)
@@ -101,23 +101,23 @@ namespace MMOTFG_Bot
             int atkNum = player.attackNames.IndexOf(attackName);
             if (atkNum == -1) return;
             Attack attack = player.attacks[atkNum];
-            if (attack.mpCost > player.getStat(MP))
+            if (attack.mpCost > player.GetStat(MP))
             {
                 await TelegramCommunicator.SendText(chatId, "Not enough MP for that attack");
                 return;
             }
 
-            useAttack(chatId, attack, player, enemy); 
+            await UseAttack(chatId, attack, player, enemy); 
         }
 
-        public static async void enemyAttack(long chatId)
+        public static async Task EnemyAttack(long chatId)
         {
             Attack attack = enemy.nextAttack();
 
-            useAttack(chatId, attack, enemy, player);
+            await UseAttack(chatId, attack, enemy, player);
         }
 
-        private static async void useAttack(long chatId, Attack attack, Battler user, Battler target)
+        private static async Task UseAttack(long chatId, Attack attack, Battler user, Battler target)
         {
             user.addToStat(MP, -attack.mpCost);
             attack.setUser(user);
@@ -131,11 +131,11 @@ namespace MMOTFG_Bot
                 target.addToStat(HP, -damage);
             }
             await TelegramCommunicator.SendText(chatId, message);
-            attack.OnAttack(chatId);
+            await attack.OnAttack(chatId);
 
-            if (target.getStat(HP) <= 0)
+            if (target.GetStat(HP) <= 0)
             {
-                target.OnBehaviour(chatId, target.onKill);
+                await target.OnBehaviour(chatId, target.onKill);
                 battleActive = false;
                 if(target == enemy)
                 {
@@ -155,22 +155,22 @@ namespace MMOTFG_Bot
             }
             else
             {
-                target.OnBehaviour(chatId, target.onHit);
+                await target.OnBehaviour(chatId, target.onHit);
                 if(damage != 0) await TelegramCommunicator.SendText(chatId, $"{target.name} HP: {getStatBar(target, HP)}");
                 if(user == player) enemyAttack(chatId);
                 else
                 {
-                    user.OnBehaviour(chatId, user.onTurnEnd);
-                    target.OnBehaviour(chatId, target.onTurnEnd);
+                    await user.OnBehaviour(chatId, user.onTurnEnd);
+                    await target.OnBehaviour(chatId, target.onTurnEnd);
                 }
             }
 
             await SavePlayerBattle(chatId);
         }
 
-        private static string getStatBar(Battler b, StatName s)
+        private static string GetStatBar(Battler b, StatName s)
         {
-            int green = (int)(10 * b.getStat(s) / b.getOriginalStat(s));
+            int green = (int)(10 * b.GetStat(s) / b.GetOriginalStat(s));
             string bar = "";
             for (int i = 0; i < 10; i++)
             {
@@ -186,7 +186,7 @@ namespace MMOTFG_Bot
             await SavePlayerBattle(chatId);
         }
 
-        public static async void showStatus(long chatId, Battler b)
+        public static async Task ShowStatus(long chatId, Battler b)
         {
             await LoadPlayerBattle(chatId);
             if (!battleActive && b != player){
@@ -197,9 +197,9 @@ namespace MMOTFG_Bot
             for(int i = 0; i < Stats.statNum; i++)
             {
                 StatName sn = (StatName)i;
-                s += $"{Enum.GetName(typeof(StatName), i)}: {b.getStat(sn)}";
+                s += $"{Enum.GetName(typeof(StatName), i)}: {b.GetStat(sn)}";
                 if (sn == HP || sn == MP)
-                    s += $"/{b.getOriginalStat(sn)}";
+                    s += $"/{b.GetOriginalStat(sn)}";
                 s += "\n";
             }
 

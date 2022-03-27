@@ -33,7 +33,7 @@ namespace MMOTFG_Bot
 			{
 				InputOnlineFile inputOnlineFile = new InputOnlineFile(stream);
 				//ImageCaption supports emojis! 👏👏
-				botClient.SendPhotoAsync(chatId, inputOnlineFile, imageCaption, ParseMode.Html).Wait();
+				await botClient.SendPhotoAsync(chatId, inputOnlineFile, imageCaption, ParseMode.Html);
 				stream.Close();
 			}
 		}
@@ -55,7 +55,7 @@ namespace MMOTFG_Bot
 				media.Add(new InputMediaPhoto(new InputMedia(stream, imageName)));
 			}
 
-			botClient.SendMediaGroupAsync(chatId, media).Wait();
+			await botClient.SendMediaGroupAsync(chatId, media);
 
 			foreach (var stream in streams) stream.Close();
 		}
@@ -69,14 +69,14 @@ namespace MMOTFG_Bot
 			{
 				InputOnlineFile inputOnlineFile = new InputOnlineFile(stream);
 
-				botClient.SendAudioAsync(chatId, inputOnlineFile, audioCaption, ParseMode.Html).Wait();
+				await botClient.SendAudioAsync(chatId, inputOnlineFile, audioCaption, ParseMode.Html);
 				stream.Close();
 			}
 		}
 
-		static public async Task SendText(long chatId, string text)
+		static public async Task SendText(long chatId, string text, ParseMode parseMode = ParseMode.Html)
         {
-			botClient.SendTextMessageAsync(chatId, text, ParseMode.Html).Wait();
+			await botClient.SendTextMessageAsync(chatId, text, parseMode);
         }
 
 		static public async Task SendButtons(long chatId, int buttonNum, string[] buttonNames)
@@ -90,12 +90,12 @@ namespace MMOTFG_Bot
 				};
             }
 			var rkm = new ReplyKeyboardMarkup(keyboard);
-			botClient.SendTextMessageAsync(chatId, "Battle starts!", replyMarkup: rkm).Wait();
+			await botClient.SendTextMessageAsync(chatId, "Battle starts!", replyMarkup: rkm);
 		}
 
 		static public async Task RemoveReplyMarkup(long chatId)
         {
-			botClient.SendTextMessageAsync(chatId, "Battle ends!", replyMarkup: new ReplyKeyboardRemove()).Wait();
+			await botClient.SendTextMessageAsync(chatId, "Battle ends!", replyMarkup: new ReplyKeyboardRemove());
         }
 	}
 }

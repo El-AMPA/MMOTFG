@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using MMOTFG_Bot.Navigation;
 
 namespace MMOTFG_Bot.Commands
@@ -10,23 +11,24 @@ namespace MMOTFG_Bot.Commands
     /// </summary>
     class cInspectRoom : ICommand
     {
-        public override void setDescription()
+        public override void SetDescription()
         {
-            commandDescription = @"Inspecciona la sala actual
-Uso: inpect / look_around / look";
+            commandDescription = @"Inspects the current room
+Use: inpect";
         }
         public override void SetKeywords()
         {
             key_words = new string[] {
                 "inspect",
-                "look_around",
-                "look"
+                "look",
+                "ins",
+                "i"
             };
         }
 
-        internal override void Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, long chatId, string[] args = null)
         {
-            Map.OnInspect(chatId);
+            await Map.OnInspect(chatId);
         }
 
         internal override bool IsFormattedCorrectly(string[] args)

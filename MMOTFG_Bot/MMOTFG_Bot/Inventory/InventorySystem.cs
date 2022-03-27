@@ -92,8 +92,7 @@ namespace MMOTFG_Bot
             {
                 foreach (KeyValuePair<string, object> itemAmountEntry in itemAmountDict)
                 {
-                    ObtainableItem item;
-                    StringToItem(itemAmountEntry.Key, out item);
+                    StringToItem(itemAmountEntry.Key, out ObtainableItem item);
                     InventoryRecords.Add(new InventoryRecord(item, Convert.ToInt32(itemAmountEntry.Value)));
                 }
             }
@@ -105,8 +104,7 @@ namespace MMOTFG_Bot
             foreach (KeyValuePair<string, object> equiItem in dbEquipment)
             {
                 ObtainableItem item = null;
-                object index;
-                Enum.TryParse(typeof(EQUIPMENT_SLOT), equiItem.Key.ToString(), true, out index);
+                Enum.TryParse(typeof(EQUIPMENT_SLOT), equiItem.Key.ToString(), true, out object index);
 
                 if (equiItem.Value != null) { 
                     StringToItem(equiItem.Value.ToString(), out item);               
@@ -134,7 +132,7 @@ namespace MMOTFG_Bot
             int i = 0;
             foreach (InventoryRecord temp in InventoryRecords)
             {
-                invRecordsToSave[i] = temp.getSerializable();
+                invRecordsToSave[i] = temp.GetSerializable();
                 i++;
             }
             update.Add(DbConstants.PLAYER_FIELD_INVENTORY, invRecordsToSave);
@@ -179,8 +177,7 @@ namespace MMOTFG_Bot
         {
             await LoadPlayerInventory(chatId);
 
-            ObtainableItem item;
-            if (StringToItem(itemString, out item))
+            if (StringToItem(itemString, out ObtainableItem item))
             {
                 int quantityToAddAux = quantityToAdd;
                 while (quantityToAddAux > 0)
@@ -229,11 +226,17 @@ namespace MMOTFG_Bot
             await SavePlayerInventory(chatId);
         }
 
+        public static async Task<EquipableItem> GetItemFromEquipmentSlot(long chatId, EQUIPMENT_SLOT slot)
+        {
+            await LoadPlayerInventory(chatId);
+
+            return equipment[(int)slot];
+        }
+
         public static async Task ConsumeItem(long chatId, string itemString, int quantityToConsume, string command = null, string[] args = null)
         {
             await LoadPlayerInventory(chatId);
-            ObtainableItem item;
-            if (StringToItem(itemString, out item))
+            if (StringToItem(itemString, out ObtainableItem item))
             {
                 if (command != null && !item.UnderstandsCommand(command))
                 {
@@ -296,8 +299,8 @@ namespace MMOTFG_Bot
                 if (quantityToConsume == 1) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was consumed.");
                 else await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was consumed " + (quantityToConsume - quantityToConsumeAux) + " times");
                 //enemie's turn
-                if (playerInBattle) BattleSystem.enemyAttack(chatId);
-                
+                if (playerInBattle) await BattleSystem.EnemyAttack(chatId);
+
                 await SavePlayerInventory(chatId);
             }
             else await TelegramCommunicator.SendText(chatId, "Item " + itemString + " doesn't exist");
@@ -307,8 +310,7 @@ namespace MMOTFG_Bot
         {
             await LoadPlayerInventory(chatId);
 
-            ObtainableItem item;
-            if (StringToItem(itemString, out item))
+            if (StringToItem(itemString, out ObtainableItem item))
             {
                 //If the item isn't contained in the inventory, there is no point in continuing.
                 if (!InventoryRecords.Exists(x => x.InventoryItem.iD == item.iD))
@@ -348,11 +350,11 @@ namespace MMOTFG_Bot
                 }
                 if (quantityToThrowAway == 1) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was thrown away.");
                 else await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was thrown away " + (quantityToThrowAway - quantityToThrowAwayAux) + " times");
-                
+
                 await SavePlayerInventory(chatId);
             }
             else await TelegramCommunicator.SendText(chatId, "Item " + itemString + " doesn't exist");
-            
+
         }
 
         public static async Task<int> GetNumberOfItemsInInventory(long chatId, ObtainableItem item)
@@ -451,6 +453,24 @@ namespace MMOTFG_Bot
                     await TelegramCommunicator.SendText(chatId, "Couldn't unequip an item from your " + slot.ToString().ToLower() + " gear slot because it's empty.");
                 }
             }
+        }
+
+        /// <summary>
+        /// Unequips the item worn on the gear slot of the specified Equippable Item
+        /// </summary>
+        public static async Task UnequipGear(long chatId, EquipableItem item)
+        {
+            //Get the currently equipped item
+            EquipableItem currentItem = await GetItemFromEquipmentSlot(chatId, item.gearSlot);
+
+            //If there are NO items being equipped in that slot...
+            if(currentItem == null) await TelegramCommunicator.SendText(chatId, "You are not wearing anything on your " + item.gearSlot + " slot");
+
+            //If the currently equipped item is the same item you want to unequip... (This is what we expect the user to do)
+            else if (currentItem.iD == item.iD) await UnequipGear(chatId, item.gearSlot);
+
+            //If there is an item currently being equipped on that slot but it's not the requested item to unequip
+            else await TelegramCommunicator.SendText(chatId, "You are not wearing that item\nDid you mean /unequip_" + currentItem.name + " ?");
         }
 
         /// <summary>
@@ -578,7 +598,7 @@ namespace MMOTFG_Bot
                 Quantity += amountToAdd;
             }
 
-            public Dictionary<string, object> getSerializable()
+            public Dictionary<string, object> GetSerializable()
             {
                 return new Dictionary<string, object>
                 {

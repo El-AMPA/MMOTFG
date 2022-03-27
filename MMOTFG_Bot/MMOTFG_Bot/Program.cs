@@ -17,9 +17,13 @@ namespace MMOTFG_Bot
 {
 	class Program
 	{
-		public static List<ICommand> commandList = new List<ICommand>{new cDebug(), new cCreateCharacter(), new cHelp(), new cUseItem(), new cAddItem(), new cThrowItem(),
-			new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
-			new cNavigate(), new cDirections(), new cInspectRoom(), new cShowGear()};
+		private static bool processedNewEvents = false;
+		private static long launchTime;
+		static cHelp helpCommand = new cHelp();
+
+		public static List<ICommand> commandList = new List<ICommand> { new cDeleteCharacter(), new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
+            new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
+			new cNavigate(), new cDirections(), new cInspectRoom(), helpCommand};
 
 		static async Task Main(string[] args)
 		{
@@ -48,22 +52,25 @@ namespace MMOTFG_Bot
 
 			var botClient = new TelegramBotClient(token);
 			var me = await botClient.GetMeAsync();
+			launchTime = DateTime.UtcNow.Ticks;
 
 			//Module initializers
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
-			Map.Init("assets/map.json");
+			Map.Init("assets/map.json", "assets/directionSynonyms.json");
 			JSONSystem.Init("assets/enemies.json", "assets/player.json");
 			BattleSystem.Init();
 			DatabaseManager.Init();
 			foreach (ICommand c in commandList) { 
 				c.SetKeywords();
-				c.setDescription();
+				c.SetDescription();
 			}
+			helpCommand.setCommandList(new List<ICommand>(commandList));
 
 			//set attack keywords
 			cAttack cAttack = new cAttack();
 			cAttack.setKeywords(JSONSystem.GetPlayer().attackNames.ConvertAll(s => s.ToLower()).ToArray());
+			cAttack.SetDescription();
 			commandList.Add(cAttack);
 
 			Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);
@@ -134,26 +141,54 @@ namespace MMOTFG_Bot
 			var senderName = message.From.FirstName;
 			var senderID = message.From.Id;
 
+            if (!processedNewEvents) //Don't process messages with a date prior to the program's launch date
+            {
+				if (message.Date.Ticks < launchTime) return;
+				else processedNewEvents = true;
+            }
+
 			Console.WriteLine("Received message: " + message.Text + " from " + senderName);
 
 			if (message.Type == MessageType.Text) //Si le mandas una imagen explota ahora mismo
 			{
-				List<string> subStrings = message.Text.ToLower().Split(' ').ToList();
+				List<string> subStrings = ProcessMessage(message.Text);
 				string command = subStrings[0];
-				if (command[0] == '/') command = command.Substring(1);
 				string[] args = new string[subStrings.Count - 1];
 				subStrings.CopyTo(1, args, 0, args.Length);
 
+				bool recognizedCommand = false;
 				foreach (ICommand c in commandList)
 				{
 					if (c.ContainsKeyWord(command))
 					{
-						c.TryExecute(command, chatId, args);
-						break;
+						recognizedCommand = true;
+						if (await c.TryExecute(command, chatId, args)) break;
+							
+						else await TelegramCommunicator.SendText(chatId, "Incorrect use of that command.\nUse /help_" + command + " for further information.");	
 					}
 				}
+				if (!recognizedCommand) await TelegramCommunicator.SendText(chatId, "Unrecognized command.\n Try /help if you don't know what to use");
 			}
 		}
+
+		/// <summary>
+		/// Processes the message recieved from the user by filtering out certain chars and splitting it into words
+		/// </summary>
+		private static List<string> ProcessMessage(string message)
+        {
+			List<string> processedMsg = message.ToLower().Split(' ').ToList();
+
+			//If we want to process a hyperlink type command (/equip_sulfuras_hand_of_ragnaros), we only need to split it by the first '_'
+            if (processedMsg[0].Contains('_') && processedMsg[0][0] != '_')
+            {
+				List<string> aux = processedMsg[0].Split('_', 2).ToList();
+				processedMsg.RemoveAt(0);
+				processedMsg.Insert(0, aux[1]);
+				processedMsg.Insert(0, aux[0]);
+            }
+			if (processedMsg[0][0] == '/') processedMsg[0] = processedMsg[0].Substring(1);
+			return processedMsg;
+        }
 
 		static Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
 		{

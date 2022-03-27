@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MMOTFG_Bot.Commands
 {
@@ -10,10 +11,10 @@ namespace MMOTFG_Bot.Commands
     /// </summary>
     class cUseItem : ICommand
     {
-        public override void setDescription()
+        public override void SetDescription()
         {
-            commandDescription = @"Usa un objeto. Dependiendo de la palabra usada, pueden ocurrir diferentes cosas.
-Uso: consume / use / eat / drink [nombre del objeto]";
+            commandDescription = @"Uses an item. Depending on the word you provide, different things can happen.
+Use: consume / use / eat / drink [item name]";
         }
         public override void SetKeywords()
         {
@@ -25,7 +26,7 @@ Uso: consume / use / eat / drink [nombre del objeto]";
             };
         }
 
-        internal async override void Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, long chatId, string[] args = null)
         {
             if(args.Length == 1) await InventorySystem.ConsumeItem(chatId, args[0], 1, command, args);
             else
@@ -44,8 +45,7 @@ Uso: consume / use / eat / drink [nombre del objeto]";
 
             if (args[1] == "all") return true;
 
-            int numberToUse;
-            if (!int.TryParse(args[1], out numberToUse)) return false;
+            if (!int.TryParse(args[1], out int numberToUse)) return false;
             if (numberToUse <= 0) return false;
 
             return true;

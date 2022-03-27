@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MMOTFG_Bot.Commands
 {
@@ -9,21 +10,21 @@ namespace MMOTFG_Bot.Commands
     /// </summary>
     class cShowInventory : ICommand
     {
-        public override void setDescription()
+        public override void SetDescription()
         {
-            commandDescription = @"Muestra el inventario del jugador
-Uso: inventory / show_inventory / items";
+            commandDescription = @"Lists all items in the player's inventory
+Use: inventory";
         }
         public override void SetKeywords()
         {
             key_words = new string[] {
                 "inventory",
-                "show_inventory",
-                "items"
+                "items",
+                "inv"
             };
         }
 
-        internal override async void Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, long chatId, string[] args = null)
         {
             await InventorySystem.ShowInventory(chatId);
         }

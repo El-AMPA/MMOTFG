@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MMOTFG_Bot.Commands
 {/// <summary>
@@ -8,9 +9,9 @@ namespace MMOTFG_Bot.Commands
  /// </summary>
 	class cDebug : ICommand
 	{
-		public override void setDescription()
+		public override void SetDescription()
 		{
-			commandDescription = @"Debug es un comando que se usa para debugear";
+			commandDescription = @"Used for debugging. Only for lazy devs :)";
 		}
 
 		public override void SetKeywords()
@@ -20,7 +21,7 @@ namespace MMOTFG_Bot.Commands
 			};
 		}
 
-		async internal override void Execute(string command, long chatId, string[] args = null)
+		internal override async Task Execute(string command, long chatId, string[] args = null)
 		{			
 
 			string arg0 = args[0];

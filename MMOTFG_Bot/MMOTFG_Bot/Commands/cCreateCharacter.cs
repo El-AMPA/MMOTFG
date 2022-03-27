@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using MMOTFG_Bot.Navigation;
 
 namespace MMOTFG_Bot.Commands
@@ -10,10 +11,10 @@ namespace MMOTFG_Bot.Commands
 	/// </summary>
 	class cCreateCharacter : ICommand
 	{
-		public override void setDescription()
+		public override void SetDescription()
 		{
-			commandDescription = @"Crea un nuevo personaje. Solo se puede usar si no hay uno ya creado.
-Uso: create [nombre del personaje]";
+			commandDescription = @"Creates a new character. Can only be used if you haven't created one already.
+Use: create [character name]";
 		}
 		public override void SetKeywords()
 		{
@@ -22,7 +23,7 @@ Uso: create [nombre del personaje]";
 			};
 		}
 
-		async internal override void Execute(string command, long chatId, string[] args = null)
+		internal override async Task Execute(string command, long chatId, string[] args = null)
 		{
 
 			string charName = args[0];
@@ -31,7 +32,7 @@ Uso: create [nombre del personaje]";
 
 			if(tempDict != null)
 			{
-				await TelegramCommunicator.SendText(chatId, "Ese nombre ya esta pillado, sé un poco mas original ;)");
+				await TelegramCommunicator.SendText(chatId, "That name is already in use");
 				return;
 			}
 
@@ -39,7 +40,7 @@ Uso: create [nombre del personaje]";
 
 			if (tempDict != null)
 			{
-				await TelegramCommunicator.SendText(chatId, "Solo se puede tener un personaje que la luz esta cara");
+				await TelegramCommunicator.SendText(chatId, "You can only have one character per player");
 				return;
 			}
 
@@ -53,12 +54,12 @@ Uso: create [nombre del personaje]";
 
 			if (!created)
 			{
-				await TelegramCommunicator.SendText(chatId, "Error al crear el personaje");
+				await TelegramCommunicator.SendText(chatId, "Error: Cant add that character to the database");
 				Console.WriteLine("Error when trying to add character with telegramId {} to the database", chatId);
 				return;
 			}
 
-			await TelegramCommunicator.SendText(chatId, String.Format("Madre mia {0}, tremendo personaje acabas de crearte", charName));
+			await TelegramCommunicator.SendText(chatId, String.Format("Hello {0}, ready for a good time?", charName));
 			Console.WriteLine("Telegram user {0} just created characater with name {1}", chatId, charName);
 
 			await InventorySystem.CreatePlayerInventory(chatId);

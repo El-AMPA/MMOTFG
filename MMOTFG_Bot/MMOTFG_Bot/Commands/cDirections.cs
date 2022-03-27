@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using MMOTFG_Bot.Navigation;
 
 namespace MMOTFG_Bot.Commands
@@ -10,20 +11,22 @@ namespace MMOTFG_Bot.Commands
     /// </summary>
     class cDirections : ICommand
     {
-        public override void setDescription()
+        public override void SetDescription()
         {
-            commandDescription = @"Directions devuelve los caminos que puede tomar el jugador";
+            commandDescription = @"Lists all available directions from your current room";
         }
         public override void SetKeywords()
         {
             key_words = new string[] {
-                "directions"
+                "directions",
+                "dir",
+                "d"
             };
         }
 
-        internal override void Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, long chatId, string[] args = null)
         {
-            Map.GetDirections(chatId);
+            await Map.GetDirections(chatId);
         }
 
         internal override bool IsFormattedCorrectly(string[] args)

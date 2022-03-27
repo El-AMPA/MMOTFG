@@ -1,4 +1,6 @@
-﻿namespace MMOTFG_Bot
+﻿using System.Threading.Tasks;
+
+namespace MMOTFG_Bot
 {
     abstract class ICommand
     {
@@ -26,17 +28,17 @@
             return false;
         }
 
-        public bool TryExecute(string command, long chatId, string[] args = null)
+        public async Task<bool> TryExecute(string command, long chatId, string[] args = null)
 		{
             if (!IsFormattedCorrectly(args)) return false;
-            Execute(command, chatId, args);
+            await Execute(command, chatId, args);
             return true;
         }
 
         /// <summary>
         /// Applies the effect of this command
         /// </summary>
-        internal abstract void Execute(string command, long chatId, string[] args = null);
+        internal abstract Task Execute(string command, long chatId, string[] args = null);
 
 
         /// <summary>
@@ -45,16 +47,16 @@
         /// </summary>
         internal abstract bool IsFormattedCorrectly(string[] args);
 
-        internal string[] getKeywords() {
+        internal string[] GetKeywords() {
             return key_words;
         }
 
-        public string getDescription()
+        public string GetDescription()
 		{
             return commandDescription;
 		}
 
-        public abstract void setDescription();
+        public abstract void SetDescription();
 
     }
 }

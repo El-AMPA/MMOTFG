@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MMOTFG_Bot
 {
@@ -89,7 +90,7 @@ namespace MMOTFG_Bot
             return maxStats[(int)stat];
         }
 
-        public float getOriginalStat(StatName stat)
+        public float GetOriginalStat(StatName stat)
         {
             return originalStats[(int)stat];
         }

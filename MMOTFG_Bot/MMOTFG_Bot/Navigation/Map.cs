@@ -15,12 +15,13 @@ namespace MMOTFG_Bot.Navigation
         private static Node currentNode;
         private static Node nextNode;
         private static List<Node> nodes;
+        private static Dictionary<string, string> directionSynonyms = new Dictionary<string, string>();
         private static Node startingNode;
 
         /// <summary>
         /// Moves the player in the specified direction
         /// </summary>
-        public async static void Navigate(long chatId, string dir)
+        public static async Task Navigate(long chatId, string dir)
         {
             await LoadPlayerPosition(chatId);
 
@@ -30,12 +31,13 @@ namespace MMOTFG_Bot.Navigation
             }
             else
             {
+                dir = GetSynonymDirection(dir);
                 //If currentNode doesn't have a connection in that direction, it doesn't move the player.
                 if (currentNode.GetConnectingNode(dir, out nextNode))
                 {
-                    currentNode.OnExit(chatId);
+                    await currentNode.OnExit(chatId);
                     currentNode = nextNode;
-                    currentNode.OnArrive(chatId);
+                    await currentNode.OnArrive(chatId);
                     await SavePlayerPosition(chatId);
                 }
                 else
@@ -48,9 +50,10 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Builds the map reading it from the file specified by mapPath.
         /// </summary>
-        public static void Init(string mapPath)
+        public static void Init(string mapPath, string synonymsPath = "")
         {
             ReadMapFromJSON(mapPath);
+            if(synonymsPath != "")ReadDirectionsSynonymsFromJSON(synonymsPath);
 
             //Connecting the map together.
             //When deserializing the map and creating a new Node, not every Node that is connected to the new node is instanced. Each node knows that they have x connections in
@@ -73,14 +76,14 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Shows the available directions from CurrentNode.
         /// </summary>
-        public async static void GetDirections(long chatId)
+        public async static Task GetDirections(long chatId)
         {
             await LoadPlayerPosition(chatId);
 
             string msg = "Available directions:";
             foreach (var connection in currentNode.NodeConnections)
             {
-                msg += "\n" + connection.Key;
+                msg += "\n/go_" + connection.Key;
             }
 
             await TelegramCommunicator.SendText(chatId, msg);
@@ -89,10 +92,10 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Sends the 'OnInspectText' field of the current node of the player 
         /// </summary>
-        public async static void OnInspect(long chatId)
+        public static async Task OnInspect(long chatId)
         {
             await LoadPlayerPosition(chatId);
-            currentNode.OnInspect(chatId);
+            await currentNode.OnInspect(chatId);
         }
 
         /// <summary>
@@ -112,14 +115,15 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Deserializes the .json file specified by path and constructs the map.
         /// </summary>
-        private static void ReadMapFromJSON(string path)
+        private static void ReadMapFromJSON(string mapPath)
         {
-            string mapText = ""; //Text of the entire .json file
+            //Map reading
+            string mapText = ""; //Text of the entire .json file of the map
             try
             {
-                mapText = File.ReadAllText(path, Encoding.GetEncoding(65001)); // Encoding: UTF-8
+                mapText = File.ReadAllText(mapPath, Encoding.GetEncoding(65001)); // Encoding: UTF-8
             }
-            catch (FileNotFoundException e)
+            catch (FileNotFoundException)
             {
                 Console.WriteLine("ERROR: map.json couldn't be found in assets folder.");
                 Environment.Exit(-1);
@@ -133,6 +137,78 @@ namespace MMOTFG_Bot.Navigation
             {
                 Console.WriteLine("ERROR: map.json isn't formatted correctly. \nError message:" + e.Message);
                 Environment.Exit(-1);
+            }
+        }
+
+        /// <summary>
+        /// Returns a synonym of the specified direction. If it doesn't exist, it just returns the original direction provided.
+        /// </summary>
+        private static string GetSynonymDirection(string dir)
+        {
+            if (directionSynonyms.TryGetValue(dir, out string synonym)) return synonym;
+            else return dir;
+        }
+
+        private struct DirectionSynonym
+        {
+            public string Direction
+            {
+                get;
+                set;
+            }
+            public string[] Synonyms
+            {
+                get;
+                set;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes the .json file containing all synonyms for directions.
+        /// </summary>
+        private static void ReadDirectionsSynonymsFromJSON(string synonymsPath)
+        {
+            string synonymsText = "";
+
+            //Auxiliary array containing a collection of synonyms for each direction
+            // north: {n, nrth, nor}
+            // south: {s, sth, sou}
+            // ...
+            DirectionSynonym[] synonymsAux = { }; //Needs to be initialized
+
+            try
+            {
+                //Dumps the file into a string
+                synonymsText = File.ReadAllText(synonymsPath, Encoding.GetEncoding(65001)); // Encoding: UTF-8
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("ERROR: directionsSynonyms.json couldn't be found in assets folder.");
+                Environment.Exit(-1);
+            }
+
+            try
+            {
+                //Deserializes the .json file into a Dictionary that will be used for obtaining the synonyms for each direction
+                synonymsAux = JsonConvert.DeserializeObject<DirectionSynonym[]>(synonymsText); 
+            }
+            catch (JsonException e)
+            {
+                Console.WriteLine("ERROR: directionSynonyms.json isn't formatted correctly. \nError message:" + e.Message);
+                Environment.Exit(-1);
+            }
+
+            //Converts the structure of synonymsAux into a more comfortable structure for finding synonyms. A dictionary<string, string>, so the new structure works like so:
+            // n -> north
+            // nor -> north
+            // s -> south
+            // ...
+            foreach(var synonymList in synonymsAux)
+            {
+                foreach(string synonym in synonymList.Synonyms)
+                {
+                    directionSynonyms.Add(synonym, synonymList.Direction);
+                }
             }
         }
 
