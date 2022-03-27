@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace MMOTFG_Bot
@@ -10,12 +11,13 @@ namespace MMOTFG_Bot
         public string imageCaption = null;
 
         public float droppedMoney;
-        public ObtainableItem droppedItem;
+        public string droppedItem;
+        [DefaultValue(1)]
         public int droppedItemAmount;
 
         public Enemy() { }
-
-        //la idea de esto es que los ataques estén ordenados de menor a mayor MP con el básico costando 0 siempre
+    
+        //Gets a random attack the enemy has enough MP to use (basic attack should always cost 0 to avoid problems)
         public Attack nextAttack()
         {
             int i = attackNum - 1;
@@ -55,7 +57,9 @@ namespace MMOTFG_Bot
             enemyInfo.Add(DbConstants.ENEMY_FIELD_NAME, name);
 
             enemyInfo.Add(DbConstants.ENEMY_FIELD_MONEY_DROP, droppedMoney);
-            enemyInfo.Add(DbConstants.ENEMY_FIELD_ITEM_DROP, droppedItem.name);
+
+            enemyInfo.Add(DbConstants.ENEMY_FIELD_ITEM_DROP, droppedItem);
+
             enemyInfo.Add(DbConstants.ENEMY_FIELD_ITEM_DROP_AMOUNT, droppedItemAmount);
 
             return enemyInfo;
@@ -86,8 +90,7 @@ namespace MMOTFG_Bot
             name = eInfo[DbConstants.ENEMY_FIELD_NAME].ToString();
 
             droppedMoney = Convert.ToSingle(eInfo[DbConstants.ENEMY_FIELD_MONEY_DROP]);
-            string iName = eInfo[DbConstants.ENEMY_FIELD_ITEM_DROP].ToString();
-            InventorySystem.StringToItem(iName, out droppedItem);
+            droppedItem = eInfo[DbConstants.ENEMY_FIELD_ITEM_DROP].ToString();
 
             droppedItemAmount = Convert.ToInt32(eInfo[DbConstants.ENEMY_FIELD_ITEM_DROP_AMOUNT]);
         }

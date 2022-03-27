@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using static MMOTFG_Bot.StatName;
 
 namespace MMOTFG_Bot
 {
@@ -10,40 +9,77 @@ namespace MMOTFG_Bot
     {
         //estudiar para el futuro
         //public Dictionary<string, float> stats = new Dictionary<string, float>();
-        protected float[] stats;
+
+        //changes inside battle
+        public float[] stats;
+        protected float[] maxStats;
+        //permanent changes
         protected float[] originalStats;
-        public Attack[] attacks;
+        public List<Attack> attacks;
 
         public int attackNum;
 
         public string name;
 
+        public Behaviour onHit;
+        public Behaviour onTurnEnd;
+        public Behaviour onKill;
+
         public Battler()
         {
         }
 
-        public void SetStat(StatName stat, float newValue)
+        public void OnCreate()
         {
-            //si es un stat que no puede pasarse de cierto límite
-            if (stat == HP || stat == MP)
-            {
-                float max = originalStats[(int)stat];
-                stats[(int)stat] = (float)Math.Round(Math.Clamp(newValue, 0, max), 2);
-            }
-            stats[(int)stat] = newValue;
+            //attacks are automatically sorted by mpCost
+            attacks.Sort((a1, a2) => a1.mpCost.CompareTo(a2.mpCost));
+            attackNum = attacks.Count;
+            maxStats = (float[])stats.Clone();
+            originalStats = (float[])stats.Clone();
+            onHit?.setParent(this);
+            onKill?.setParent(this);
+            onTurnEnd?.setParent(this);
         }
 
-        public void changeStat(StatName stat, float change)
+        public void SetStat(StatName stat, float newValue, bool changeMax = false, bool permanent = false)
         {
-            //si es un stat que no puede pasarse de cierto límite
-            if (stat == HP || stat == MP)
+            int s = (int)stat;
+            //When the max value is changed
+            if (changeMax)
             {
-                float current = stats[(int)stat];
-                float max = originalStats[(int)stat];
-                stats[(int)stat] = (float)Math.Round(Math.Clamp(current + change, 0, max), 2);
+                //Proportion is maintained for bounded stats
+                if (Stats.isBounded(stat))
+                {
+                    float currentPercent = stats[(int)stat] / maxStats[(int)stat];
+                    stats[(int)stat] = (float)Math.Round(newValue * currentPercent, 2);
+                }
+                else stats[s] = newValue;
+                maxStats[s] = newValue;
             }
+            //When the current value is changed
+            else
+            {
+                //Bounded stats are clamped
+                if (Stats.isBounded(stat))
+                {
+                    float max = maxStats[s];
+                    stats[s] = (float)Math.Round(Math.Clamp(newValue, 0, max), 2);
+                }
+                else stats[s] = newValue;
+            }
+            if (permanent) originalStats[s] = newValue;
+        }
 
-            else stats[(int)stat] += change;
+        public void AddToStat(StatName stat, float change, bool changeMax = false, bool permanent = false)
+        {
+            float statn = changeMax ? maxStats[(int)stat] : stats[(int)stat];
+            SetStat(stat, statn + change, changeMax, permanent);
+        }
+
+        public void MultiplyStat(StatName stat, float mult, bool changeMax = false, bool permanent = false)
+        {
+            float statn = changeMax ? maxStats[(int)stat] : stats[(int)stat];
+            SetStat(stat, statn * mult, changeMax, permanent);
         }
 
         public float GetStat(StatName stat)
@@ -51,33 +87,9 @@ namespace MMOTFG_Bot
             return stats[(int)stat];
         }
 
-        public void SetOriginalStat(StatName stat, float newValue)
+        public float GetMaxStat(StatName stat)
         {
-            //se mantiene la proporción para el MP y el HP
-            if (stat == HP || stat == MP)
-            {
-                float currentPercent = stats[(int)stat] / originalStats[(int)stat];
-                stats[(int)stat] = newValue * currentPercent;
-            }
-            else stats[(int)stat] = newValue;
-            originalStats[(int)stat] = newValue;
-        }
-
-        public void ChangeOriginalStat(StatName stat, float change)
-        {
-            //se mantiene la proporción para el MP y el HP
-            if (stat == HP || stat == MP)
-            {
-                float currentPercent = stats[(int)stat] / originalStats[(int)stat];
-                originalStats[(int)stat] += change;
-                stats[(int)stat] = originalStats[(int)stat] * currentPercent;
-            }
-
-            else
-            {
-                originalStats[(int)stat] += change;
-                stats[(int)stat] = originalStats[(int)stat];
-            }
+            return maxStats[(int)stat];
         }
 
         public float GetOriginalStat(StatName stat)
@@ -85,13 +97,19 @@ namespace MMOTFG_Bot
             return originalStats[(int)stat];
         }
 
-        //para eventos al recibir daño
-        virtual public Task OnHit(long chatId) { return Task.CompletedTask; }
-
-        //para eventos al morir
-        virtual public Task  OnKill(long chatId) { return Task.CompletedTask; }
-
-        //para eventos de final de turno
-        virtual public Task OnTurnEnd(long chatId) { return Task.CompletedTask; }
+        //For events such as OnHit, OnKill or OnTurnEnd
+        public async Task OnBehaviour(long chatId, Behaviour b) {
+            if (b != null)
+            {
+                //If behaviour has already happened or isn't activated by chance, skip
+                if (!b.flag || RNG.Next(0, 100) > b.chance * 100) return;
+                if (await b.Execute(chatId))
+                {
+                    if (b.message != null) await TelegramCommunicator.SendText(chatId, b.message);
+                    //Events that happen once are deactivated
+                    b.flag = !b.activateOnce;
+                }           
+            }
+        }
     }
 }

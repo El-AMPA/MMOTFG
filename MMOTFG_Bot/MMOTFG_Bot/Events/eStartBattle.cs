@@ -1,5 +1,4 @@
-﻿using MMOTFG_Bot.Battle.Enemies;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +14,7 @@ namespace MMOTFG_Bot.Events
 
         public async override Task Execute(long chatId)
         {
-            await BattleSystem.StartBattle(chatId, EnemySystem.getEnemy(Enemy));
+            await BattleSystem.StartBattle(chatId, JSONSystem.getEnemy(Enemy));
         }
     }
 }

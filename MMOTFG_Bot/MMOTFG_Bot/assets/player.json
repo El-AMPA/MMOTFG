@@ -1,0 +1,31 @@
+﻿{
+  "Name": "Player",
+  "Stats": [ 100, 10, 50 ],
+  "Attacks": [
+    {
+      "Name": "Tortazo",
+      "Power": 1.5
+    },
+    {
+      "Name": "Patada",
+      "Power": 3,
+      "MpCost": 1
+    },
+    {
+      "AttackType": "aStatChanging",
+      "Name": "Burla",
+      "MpCost": 5,
+      "StatToChange": "ATK",
+      "Multiple": 0.5
+    },
+    {
+      "Name": "Overkill",
+      "Power": 100,
+      "MpCost": 10
+    }
+  ],
+  "OnKill": {
+    "BehaviourType": "bPlayerDeath",
+    "Message": "Has muerto..."
+  }
+}

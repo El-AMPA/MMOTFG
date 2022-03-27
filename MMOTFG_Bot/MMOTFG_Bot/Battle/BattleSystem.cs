@@ -15,8 +15,7 @@ namespace MMOTFG_Bot
 
         public static void Init()
         {
-            player = new Player();
-            enemy = new Enemy();
+            player = JSONSystem.GetPlayer();
         }
 
         public static async Task SavePlayerBattle(long chatId)
@@ -45,7 +44,7 @@ namespace MMOTFG_Bot
 
             if (dbPlayer[DbConstants.PLAYER_FIELD_ENEMY] != null) {
                 string enemyName = ((Dictionary<string, object>)dbPlayer[DbConstants.PLAYER_FIELD_ENEMY])[DbConstants.ENEMY_FIELD_NAME].ToString();
-                enemy = MMOTFG_Bot.Battle.Enemies.EnemySystem.getEnemy(enemyName);
+                enemy = JSONSystem.getEnemy(enemyName);
                 enemy.loadSerializable((Dictionary<string, object>)dbPlayer[DbConstants.PLAYER_FIELD_ENEMY]);
             }
         }
@@ -120,7 +119,7 @@ namespace MMOTFG_Bot
 
         private static async Task UseAttack(long chatId, Attack attack, Battler user, Battler target)
         {
-            user.changeStat(MP, -attack.mpCost);
+            user.AddToStat(MP, -attack.mpCost);
             attack.SetUser(user);
             attack.SetTarget(target);
             float damage = (float)Math.Round(attack.GetDamage(), 2);
@@ -129,14 +128,14 @@ namespace MMOTFG_Bot
             if (damage != 0)
             {
                 message += $" {target.name} took {damage} damage.";
-                target.changeStat(HP, -damage);
+                target.AddToStat(HP, -damage);
             }
             await TelegramCommunicator.SendText(chatId, message);
-            attack.OnAttack(chatId);
+            await attack.OnAttack(chatId);
 
             if (target.GetStat(HP) <= 0)
             {
-                await target.OnKill(chatId);
+                await target.OnBehaviour(chatId, target.onKill);
                 battleActive = false;
                 if(target == enemy)
                 {
@@ -145,8 +144,8 @@ namespace MMOTFG_Bot
                         msg += $"\nYou gained {enemy.droppedMoney}€";
                     if (enemy.droppedItem != null)
                     {
-                        msg += $"\nYou obtained {enemy.droppedItem.name} x{enemy.droppedItemAmount}";
-                        await InventorySystem.AddItem(chatId, enemy.droppedItem.name, enemy.droppedItemAmount);
+                        msg += $"\nYou obtained {enemy.droppedItem} x{enemy.droppedItemAmount}";
+                        await InventorySystem.AddItem(chatId, enemy.droppedItem, enemy.droppedItemAmount);
                     }
                     await TelegramCommunicator.SendText(chatId, msg);
                 }
@@ -156,13 +155,13 @@ namespace MMOTFG_Bot
             }
             else
             {
-                await target.OnHit(chatId);
+                await target.OnBehaviour(chatId, target.onHit);
                 if(damage != 0) await TelegramCommunicator.SendText(chatId, $"{target.name} HP: {GetStatBar(target, HP)}");
                 if(user == player) await EnemyAttack(chatId);
                 else
                 {
-                    await user.OnTurnEnd(chatId);
-                    await target.OnTurnEnd(chatId);
+                    await user.OnBehaviour(chatId, user.onTurnEnd);
+                    await target.OnBehaviour(chatId, target.onTurnEnd);
                 }
             }
 
@@ -183,7 +182,7 @@ namespace MMOTFG_Bot
 
         public static async Task changePlayerStats(long chatId, StatName stat, float amount)
         {
-            player.changeStat(stat, amount);
+            player.AddToStat(stat, amount);
             await SavePlayerBattle(chatId);
         }
 
