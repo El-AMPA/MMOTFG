@@ -598,7 +598,7 @@ namespace MMOTFG_Bot
                 Quantity += amountToAdd;
             }
 
-            public Dictionary<String, object> GetSerializable()
+            public Dictionary<string, object> GetSerializable()
             {
                 return new Dictionary<string, object>
                 {
