@@ -14,7 +14,7 @@ namespace MMOTFG_Bot.Events
 
         public async override Task Execute(long chatId)
         {
-            await BattleSystem.startBattle(chatId, JSONSystem.getEnemy(Enemy));
+            await BattleSystem.StartBattle(chatId, JSONSystem.getEnemy(Enemy));
         }
     }
 }

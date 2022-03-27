@@ -29,7 +29,7 @@ namespace MMOTFG_Bot
         {
         }
 
-        public void onCreate()
+        public void OnCreate()
         {
             attackNum = attacks.Length;
             maxStats = (float[])stats.Clone();
@@ -39,7 +39,7 @@ namespace MMOTFG_Bot
             onTurnEnd?.setParent(this);
         }
 
-        public void setStat(StatName stat, float newValue, bool changeMax = false, bool permanent = false)
+        public void SetStat(StatName stat, float newValue, bool changeMax = false, bool permanent = false)
         {
             int s = (int)stat;
             //When the max value is changed
@@ -68,24 +68,24 @@ namespace MMOTFG_Bot
             if (permanent) originalStats[s] = newValue;
         }
 
-        public void addToStat(StatName stat, float change, bool changeMax = false, bool permanent = false)
+        public void AddToStat(StatName stat, float change, bool changeMax = false, bool permanent = false)
         {
             float statn = changeMax ? maxStats[(int)stat] : stats[(int)stat];
-            setStat(stat, statn + change, changeMax, permanent);
+            SetStat(stat, statn + change, changeMax, permanent);
         }
 
-        public void multiplyStat(StatName stat, float mult, bool changeMax = false, bool permanent = false)
+        public void MultiplyStat(StatName stat, float mult, bool changeMax = false, bool permanent = false)
         {
             float statn = changeMax ? maxStats[(int)stat] : stats[(int)stat];
-            setStat(stat, statn * mult, changeMax, permanent);
+            SetStat(stat, statn * mult, changeMax, permanent);
         }
 
-        public float getStat(StatName stat)
+        public float GetStat(StatName stat)
         {
             return stats[(int)stat];
         }
 
-        public float getMaxStat(StatName stat)
+        public float GetMaxStat(StatName stat)
         {
             return maxStats[(int)stat];
         }
@@ -96,7 +96,7 @@ namespace MMOTFG_Bot
         }
 
         //For events such as OnHit, OnKill or OnTurnEnd
-        public async void OnBehaviour(long chatId, Behaviour b) {
+        public async Task OnBehaviour(long chatId, Behaviour b) {
             if (b != null)
             {
                 //If behaviour has already happened or isn't activated by chance, skip

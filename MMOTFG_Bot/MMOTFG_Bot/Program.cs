@@ -44,7 +44,7 @@ namespace MMOTFG_Bot
 			{
 				token = System.IO.File.ReadAllText("assets/private/token.txt");
 			}
-			catch (FileNotFoundException e)
+			catch (FileNotFoundException)
 			{
 				Console.WriteLine("No se ha encontrado el archivo token.txt en la carpeta assets.");
 				Environment.Exit(-1);
@@ -69,7 +69,7 @@ namespace MMOTFG_Bot
 
 			//set attack keywords
 			cAttack cAttack = new cAttack();
-			cAttack.setKeywords(JSONSystem.GetPlayer().attackNames.ConvertAll(s => s.ToLower()).ToArray());
+			cAttack.SetKeywords(JSONSystem.GetPlayer().attackNames.ConvertAll(s => s.ToLower()).ToArray());
 			cAttack.SetDescription();
 			commandList.Add(cAttack);
 

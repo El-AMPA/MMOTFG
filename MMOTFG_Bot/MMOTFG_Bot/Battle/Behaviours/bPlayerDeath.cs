@@ -12,8 +12,8 @@ namespace MMOTFG_Bot
     {
         public override async Task<bool> Execute(long chatId) {
             //Heal all HP and MP
-            user.setStat(StatName.HP, user.getOriginalStat(StatName.HP));
-            user.setStat(StatName.MP, user.getOriginalStat(StatName.MP));
+            user.SetStat(StatName.HP, user.GetOriginalStat(StatName.HP));
+            user.SetStat(StatName.MP, user.GetOriginalStat(StatName.MP));
             return true;
         }
     }

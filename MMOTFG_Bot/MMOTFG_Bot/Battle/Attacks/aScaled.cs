@@ -15,13 +15,13 @@ namespace MMOTFG_Bot
 
         public float fixedDamage;
 
-        public override float getDamage()
+        public override float GetDamage()
         {
             //ataque de daño fijo
             if (fixedDamage != 0) return fixedDamage;
 
             //ataque que escala con el otro stat
-            return user.getStat(statToScale) * power;
+            return user.GetStat(statToScale) * power;
         }
     }
 }

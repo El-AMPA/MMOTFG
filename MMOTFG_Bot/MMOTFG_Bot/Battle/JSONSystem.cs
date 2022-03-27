@@ -38,7 +38,7 @@ namespace MMOTFG_Bot
             {
                 enemies = JsonConvert.DeserializeObject<List<Enemy>>(enemyText, 
                     new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate}); //Deserializes the .json file into an array of enemies.
-                foreach (Enemy e in enemies) e.onCreate();
+                foreach (Enemy e in enemies) e.OnCreate();
             }
             catch (JsonException e)
             {
@@ -64,7 +64,7 @@ namespace MMOTFG_Bot
             {
                 player = JsonConvert.DeserializeObject<Player>(playerText,
                     new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate }); //Deserializes the .json file into a player
-                player.onCreate();
+                player.OnCreate();
                 player.AfterCreate();
             }
             catch (JsonException e)

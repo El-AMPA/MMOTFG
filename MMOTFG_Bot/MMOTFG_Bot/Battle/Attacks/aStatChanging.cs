@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MMOTFG_Bot
 {
@@ -21,12 +22,12 @@ namespace MMOTFG_Bot
 
         public bool affectsSelf;
 
-        public override async void OnAttack(long chatId) 
+        public override async Task OnAttack(long chatId) 
         {
             string stat = statToChange.ToString();
             Battler tgt = affectsSelf ? user : target;
             await TelegramCommunicator.SendText(chatId, $"{tgt.name}'s {stat} was multiplied by {multiple}!");
-            tgt.multiplyStat(statToChange, multiple, changeMax);
+            tgt.MultiplyStat(statToChange, multiple, changeMax);
         }
     }
 }

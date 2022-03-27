@@ -119,16 +119,16 @@ namespace MMOTFG_Bot
 
         private static async Task UseAttack(long chatId, Attack attack, Battler user, Battler target)
         {
-            user.addToStat(MP, -attack.mpCost);
-            attack.setUser(user);
-            attack.setTarget(target);
-            float damage = (float)Math.Round(attack.getDamage(), 2);
+            user.AddToStat(MP, -attack.mpCost);
+            attack.SetUser(user);
+            attack.SetTarget(target);
+            float damage = (float)Math.Round(attack.GetDamage(), 2);
 
             string message = $"{user.name} used {attack.name}!";
             if (damage != 0)
             {
                 message += $" {target.name} took {damage} damage.";
-                target.addToStat(HP, -damage);
+                target.AddToStat(HP, -damage);
             }
             await TelegramCommunicator.SendText(chatId, message);
             await attack.OnAttack(chatId);
@@ -156,8 +156,8 @@ namespace MMOTFG_Bot
             else
             {
                 await target.OnBehaviour(chatId, target.onHit);
-                if(damage != 0) await TelegramCommunicator.SendText(chatId, $"{target.name} HP: {getStatBar(target, HP)}");
-                if(user == player) enemyAttack(chatId);
+                if(damage != 0) await TelegramCommunicator.SendText(chatId, $"{target.name} HP: {GetStatBar(target, HP)}");
+                if(user == player) await EnemyAttack(chatId);
                 else
                 {
                     await user.OnBehaviour(chatId, user.onTurnEnd);
@@ -182,7 +182,7 @@ namespace MMOTFG_Bot
 
         public static async Task changePlayerStats(long chatId, StatName stat, float amount)
         {
-            player.addToStat(stat, amount);
+            player.AddToStat(stat, amount);
             await SavePlayerBattle(chatId);
         }
 

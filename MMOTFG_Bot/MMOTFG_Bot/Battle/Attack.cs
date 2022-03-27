@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Threading.Tasks;
 using static MMOTFG_Bot.StatName;
 
 namespace MMOTFG_Bot
@@ -44,6 +45,6 @@ namespace MMOTFG_Bot
             return user.GetStat(ATK) * power;
         }
 
-        public virtual void OnAttack(long chatId) { }
+        public virtual async Task OnAttack(long chatId) { }
     }
 }
