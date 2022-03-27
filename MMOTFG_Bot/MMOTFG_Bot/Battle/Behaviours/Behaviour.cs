@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace MMOTFG_Bot
 {
+    //If you want to create a new Behaviour class, add it below so JsonSubtypes recognizes it
+    //when deserializing the battlers.
     [JsonConverter(typeof(JsonSubtypes), "BehaviourType")]
     [JsonSubtypes.KnownSubType(typeof(bChangeStat), "bChangeStat")]
     [JsonSubtypes.KnownSubType(typeof(bPlayerDeath), "bPlayerDeath")]

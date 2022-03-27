@@ -9,8 +9,8 @@ using static MMOTFG_Bot.StatName;
 
 namespace MMOTFG_Bot
 {
-    //If you want to create a new Event class, add it below so JsonSubtypes recognizes it
-    //when deserializing the map.
+    //If you want to create a new Attack class, add it below so JsonSubtypes recognizes it
+    //when deserializing the battlers.
     [JsonConverter(typeof(JsonSubtypes), "AttackType")]
     [JsonSubtypes.KnownSubType(typeof(aScaled), "aScaled")]
     [JsonSubtypes.KnownSubType(typeof(aStatChanging), "aStatChanging")]
