@@ -458,7 +458,7 @@
     "OnArriveEvent":[
       {
         "EventType": "eStartBattle",
-        "Enemy": "Manuela"
+        "Enemy": "Tinky.exe"
       }
     ]
   }
