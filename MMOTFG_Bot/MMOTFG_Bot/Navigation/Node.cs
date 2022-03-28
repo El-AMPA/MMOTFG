@@ -164,17 +164,36 @@ namespace MMOTFG_Bot.Navigation
         /// </summary>
         public async Task OnInspect(long chatId)
         {
+            bool triggeredEvent = false;
             if (OnInspectEvent != null)
             {
+                await ProgressKeeper.LoadSerializable(chatId);
+
                 foreach (EventCollection eColl in OnInspectEvent)
                 {
-                    foreach (Event ev in eColl.events)
+                    bool condition = true;
+
+                    if (eColl.triggerCondition != null)
                     {
-                        await ev.Execute(chatId);
+                        string condName = eColl.triggerCondition.Name;
+                        if (condName == "Visited") condName = Name + "Visited";
+                        condition =
+                            ProgressKeeper.IsFlagActive(chatId, condName) == eColl.triggerCondition.Condition;
+                    }
+
+                    if (condition)
+                    {
+                        triggeredEvent = true;
+                        foreach (Event ev in eColl.events)
+                        {
+                            await ev.Execute(chatId);
+                        }
                     }
                 }
+
+                await ProgressKeeper.SaveSerializable(chatId);
             }
-            else await TelegramCommunicator.SendText(chatId, "There is nothing of interest in here.");
+            if(!triggeredEvent) await TelegramCommunicator.SendText(chatId, "There is nothing of interest in here.");
         }
 
         /// <summary>

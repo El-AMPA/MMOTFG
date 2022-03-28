@@ -14,19 +14,38 @@
         "Events": [
           {
             "EventType": "eSendText",
-            "Description": "Arrived at dungeon entrance"
+            "Description": "This dungeon is so dark. As you walk through the area, you stumble into a lit torch. This will be useful."
+          },
+          {
+            "EventType":"eGiveItem",
+            "ItemLots":[
+              {
+                "Item":"torch",
+                "Quantity": 1,
+                "ChanceToObtain": 1
+              }
+            ]
+          },
+          {
+            "EventType":"eSetCondition",
+            "Name":"TorchFound",
+            "SetAs":"True"
           }
-        ]
+        ],
+        "TriggerCondition":{
+          "Condition":"False",
+          "Name":"TorchFound"
+        }
       },
       {
         "Events": [
           {
             "EventType": "eSendText",
-            "Description": "Because variable pipopi is active, you have been granted this beautiful message"
+            "Description": "Thanks to the torch, you appreciate how dirty everything is. Yuck."
           }
         ],
         "TriggerCondition": {
-          "Name": "Pipopi",
+          "Name": "TorchLit",
           "Condition": "True"
         }
       }
