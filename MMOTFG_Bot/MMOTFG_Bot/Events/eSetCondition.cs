@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using MMOTFG_Bot.Navigation;
 
 namespace MMOTFG_Bot.Events
 {
@@ -24,7 +25,9 @@ namespace MMOTFG_Bot.Events
 
         public async override Task Execute(long chatId)
         {
-            await TelegramCommunicator.SendText(chatId, "Beep boop i'm changing your condición");
+            await ProgressKeeper.LoadSerializable(chatId);
+            ProgressKeeper.SetFlagAs(chatId, Name, SetAs);
+            await ProgressKeeper.SaveSerializable(chatId);
         }
     }
 }

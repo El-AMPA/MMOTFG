@@ -11,34 +11,38 @@
     },
     "OnInspectEvent": [
       {
-        "Events":[
+        "Events": [
           {
-            "EventType":"eSendText",
-            "Description":"Arrived at dungeon entrance"
+            "EventType": "eSendText",
+            "Description": "Arrived at dungeon entrance"
           }
         ]
       },
       {
-        "Events":[
+        "Events": [
           {
-            "EventType":"eSendText",
-            "Description":"Because variable pipopi is active, you have been granted this beautiful message"
+            "EventType": "eSendText",
+            "Description": "Because variable pipopi is active, you have been granted this beautiful message"
           }
         ],
-        "TriggerCondition":{
-          "Name":"Pipopi",
-          "Condition":"True"
+        "TriggerCondition": {
+          "Name": "Pipopi",
+          "Condition": "True"
         }
       }
     ],
-    "OnExitEvent":[
+    "OnExitEvent": [
       {
-        "EventType": "eGiveItem",
-        "ItemLots": [
+        "Events": [
           {
-            "Item": "health_potion",
-            "Quantity": 1,
-            "ChanceToObtain": 1
+            "EventType": "eGiveItem",
+            "ItemLots": [
+              {
+                "Item": "health_potion",
+                "Quantity": 1,
+                "ChanceToObtain": 1
+              }
+            ]
           }
         ]
       }
@@ -54,34 +58,14 @@
         "ConnectingNode": "Corridor1"
       }
     },
-    "OnArriveEvent": [
+    "OnArriveEvent": [],
+    "OnExitEvent": [
       {
-        "EventType": "eSendText",
-        "Description": "Notas un tufo a pienso horrible. Es inaguantable. En el suelo encuentras un objeto."
-      },
-      {
-        "EventType": "eGiveItem",
-        "ItemLots": [
+        "Events": [
           {
-            "Item": "health_potion",
-            "Quantity": 2,
-            "ChanceToObtain": 1
-          },
-          {
-            "Item": "mana_potion",
-            "Quantity": 1,
-            "ChanceToObtain": 0.5
-          }
-        ]
-      }
-    ],
-    "OnExitEvent":[
-      {
-        "Events":[
-          {
-            "EventType":"eSetCondition",
+            "EventType": "eSetCondition",
             "Name": "Pipopi",
-            "SetAs":"True"
+            "SetAs": "True"
           }
         ]
       }
@@ -96,39 +80,42 @@
     },
     "OnArriveEvent": [
       {
-        "EventType": "eSendText",
-        "Description": "Al entrar, notas una fuerte respiraci�n en tu espalda."
+        "Events": [
+          {
+            "EventType": "eSendText",
+            "Description": "Al entrar, notas una fuerte respiraci�n en tu espalda."
+          },
+          {
+            "EventType": "eSendImage",
+            "Description": "I will smite thee",
+            "ImageName": "Dog1.png"
+          },
+          {
+            "EventType": "eSendAudio",
+            "Description": "No se que poner me qued� sin ideas.",
+            "AudioName": "DoggoMusic.mp3"
+          },
+          {
+            "EventType": "eStartBattle",
+            "Enemy": "Manuela"
+          }
+        ],
+        "TriggerCondition":{
+          "Name":"Visited",
+          "Condition":"True"
+        }
       },
       {
-        "EventType": "eSendImage",
-        "Description": "I will smite thee",
-        "ImageName": "Dog1.png"
-      },
-      {
-        "EventType": "eSendAudio",
-        "Description": "No se que poner me qued� sin ideas.",
-        "AudioName": "DoggoMusic.mp3"
-      },
-      {
-        "EventType": "eStartBattle",
-        "Enemy": "Manuela"
-      }
-    ],
-    "OnExitEvent": [
-      {
-        "EventType": "eSendImageCollection",
-        "ImagesNames": [
-          "Dog1.png",
-          "Dog2.png"
-        ]
-      },
-      {
-        "EventType": "eSendText",
-        "Description": "Toma eventos."
-      },
-      {
-        "EventType": "eStartBattle",
-        "Enemy": "Peter"
+        "Events":[
+          {
+            "EventType":"eSendText",
+            "Description":"Soy un petardo y te voy a hacer entrar de nuevo"
+          }
+        ],
+        "TriggerCondition":{
+          "Condition":"False",
+          "Name":"Visited"
+        }
       }
     ]
   }

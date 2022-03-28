@@ -59,6 +59,7 @@ namespace MMOTFG_Bot
 			InventorySystem.Init();
 			Map.Init("assets/mapejemplo.json", "assets/directionSynonyms.json");
 			JSONSystem.Init("assets/enemies.json", "assets/player.json");
+			BattleSystem.Init();
 			DatabaseManager.Init();
 			foreach (ICommand c in commandList) { 
 				c.SetKeywords();
