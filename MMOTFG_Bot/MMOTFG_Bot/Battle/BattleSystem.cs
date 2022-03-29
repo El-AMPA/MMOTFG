@@ -196,7 +196,8 @@ namespace MMOTFG_Bot
             {
                 await target.OnBehaviour(chatId, target.onKill);
                 battleActive = false;
-                if(target == enemy)
+                enemy = target as Enemy;
+                if(enemy != null)
                 {
                     string msg = $"{target.name} died!";
                     if (enemy.droppedMoney > 0)
@@ -205,6 +206,10 @@ namespace MMOTFG_Bot
                     {
                         msg += $"\nYou obtained {enemy.droppedItem} x{enemy.droppedItemAmount}";
                         await InventorySystem.AddItem(chatId, enemy.droppedItem, enemy.droppedItemAmount);
+                    }
+                    if (enemy.experienceGiven != 0)
+                    {
+                        await player.GainExperience(chatId, enemy.experienceGiven);
                     }
                     await TelegramCommunicator.SendText(chatId, msg);
                 }
@@ -256,7 +261,7 @@ namespace MMOTFG_Bot
             for(int i = 0; i < Stats.statNum; i++)
             {
                 StatName sn = (StatName)i;
-                s += $"{Enum.GetName(typeof(StatName), i)}: {b.GetStat(sn)}";
+                s += $"{sn}: {b.GetStat(sn)}";
                 if (Stats.isBounded(sn))
                     s += $"/{b.GetMaxStat(sn)}";
                 s += "\n";

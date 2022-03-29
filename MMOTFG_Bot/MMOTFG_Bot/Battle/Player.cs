@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,6 +10,11 @@ namespace MMOTFG_Bot
     {
         public List<string> attackNames;
         public List<float> attackmpCosts;
+
+        public LevelUpRoadmap levelUpRoadmap;
+        public int experience;
+        [DefaultValue(1)]
+        public int level;
 
         public Player()
         {
@@ -24,6 +30,10 @@ namespace MMOTFG_Bot
                 attackNames.Add(a.name);
                 attackmpCosts.Add(a.mpCost);
             }
+            stats = (float[])levelUpRoadmap.firstStats.Clone();
+            maxStats = (float[])stats.Clone();
+            originalStats = (float[])stats.Clone();
+            levelUpRoadmap.CalculateLevels();
         }
 
         public Dictionary<string, object> GetSerializable()
@@ -87,6 +97,35 @@ namespace MMOTFG_Bot
 		{
             name = playerName;
 		}
+
+        public async Task GainExperience(long chatId, int exp)
+        {
+            if (level == levelUpRoadmap.maxLevel) return;
+            experience += exp;
+            await TelegramCommunicator.SendText(chatId, $"Gained {exp} experience points.");
+            //check if new level reached
+            int neededExp = levelUpRoadmap.neededExperience[level-1];
+            while (experience >= neededExp)
+            {
+                level++;
+                string statChanges = "";
+                for(int i = 0; i < Stats.statNum; i++)
+                {
+                    int change = (int)levelUpRoadmap.getStatDifference(i);
+                    AddToStat((StatName)i, change, changeMax: true, permanent: true);
+                    statChanges += $"{(StatName)i} {((change >= 0) ? "+" : "")}{change}\n";
+                }
+                await TelegramCommunicator.SendText(chatId, $"Reached level {level}!\n" + statChanges);
+                //if there is an event for that level
+                if(levelUpRoadmap.levelUpEvents != null)
+                {
+                    var event_ = levelUpRoadmap.levelUpEvents.Find(x => x.level == level);
+                    if (event_.ev != null) await event_.ev.Execute(chatId);
+                }
+                if (level == levelUpRoadmap.maxLevel) return;
+                neededExp = levelUpRoadmap.neededExperience[level - 1];
+            }
+        }
 
         public void OnBattleOver()
         {

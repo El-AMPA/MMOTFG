@@ -11,7 +11,8 @@ namespace MMOTFG_Bot
         public string droppedItem;
         [DefaultValue(1)]
         public int droppedItemAmount;
-
+        [DefaultValue(1)]
+        public int experienceGiven;
         public Enemy() { }
     
         //Gets a random attack the enemy has enough MP to use (basic attack should always cost 0 to avoid problems)
@@ -23,7 +24,6 @@ namespace MMOTFG_Bot
             int attack = RNG.Next(0, i+1);
             return attacks[attack];
         }
-
 
         public Dictionary<string, object> getSerializable()
         {

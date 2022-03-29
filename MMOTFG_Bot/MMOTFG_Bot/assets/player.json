@@ -1,6 +1,6 @@
 ﻿{
   "Name": "Player",
-  "Stats": [ 100, 10, 50, 10 ],
+  "Stats": [ 100, 10, 10, 50 ],
   "Attacks": [
     {
       "Name": "Tortazo",
@@ -27,5 +27,19 @@
   "OnKill": {
     "BehaviourType": "bPlayerDeath",
     "Message": "Has muerto..."
+  },
+  "LevelUpRoadmap": {
+    "MaxLevel": 10,
+    "FirstStats": [ 1, 1, 1, 100 ],
+    "FinalStats": [ 1000, 200, 150, 100 ],
+    "LevelUpEvents": [
+      {
+        "Level": 7,
+        "Ev": {
+          "EventType": "eSendText",
+          "Description": "77777777777"
+        }
+      }
+    ]
   }
 }

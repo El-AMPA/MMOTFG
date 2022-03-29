@@ -22,36 +22,34 @@
         "Description": "En fin, debería vestirme y bajar. Cogeré lo primero que vea y au"
       },
       {
-        "EventType":"eSendImage",
+        "EventType": "eSendImage",
         "Description": "¡Obtienes el Mmur starter pack!",
         "ImageName": "mmurstarterpack.png"
       },
       {
-        "EventType":"eGiveItem",
+        "EventType": "eGiveItem",
         "ItemLots": [
           {
-            "Item": "zapatillas_gastadas",
-            "Quantity": 1,
-            "ChanceToObtain": 1
+            "Item": "zapatillas_gastadas"
           },
           {
-            "Item": "vaqueros_normales",
-            "Quantity": 1,
-            "ChanceToObtain": 1
+            "Item": "vaqueros_normales"
           },
           {
-            "Item": "camiseta_de_evangelion",
-            "Quantity": 1,
-            "ChanceToObtain": 1
+            "Item": "camiseta_de_evangelion"
           },
           {
-            "Item": "joycon_con_drift",
-            "Quantity": 1,
-            "ChanceToObtain": 1
+            "Item": "joycon_con_drift"
           }
         ]
       }
-    ] 
+    ],
+    "OnExitEvent": [
+      {
+        "EventType": "eStartBattle",
+        "Enemy": "Manuela"
+      }
+    ]
   },
   {
     "Name": "Pasillo1",

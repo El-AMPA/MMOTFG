@@ -1,12 +1,13 @@
 ﻿[
   {
     "Name": "Manuela",
-    "Stats": [ 100, 10, 25, 15 ],
+    "Stats": [ 100, 10, 15, 25 ],
     "ImageName": "manuela.jpg",
     "ImageCaption": "Manuela ataca!",
     "DroppedMoney": 100,
     "DroppedItem": "health_potion",
     "DroppedItemAmount": 2,
+    "ExperienceGiven": 10,
     "Attacks": [
       {
         //default attack
@@ -51,7 +52,7 @@
   },
   {
     "Name": "Cleonft",
-    "Stats": [ 100, 5, 20, 15 ],
+    "Stats": [ 100, 5, 15, 20 ],
     "ImageName": "cleonft.png",
     "ImageCaption": "¡Cleonft viene a mintearte la carrera!",
     "DroppedMoney": 2223,
@@ -83,7 +84,7 @@
   },
   {
     "Name": "Fedejimbo",
-    "Stats": [ 100, 10, 25, 5 ],
+    "Stats": [ 100, 10, 5, 25 ],
     "ImageName": "fedejimbo.png",
     "ImageCaption": "¡Fedejimbo no te deja pasar de esta esquina!",
     "DroppedMoney": 666,
@@ -116,7 +117,7 @@
   },
   {
     "Name": "Sein",
-    "Stats": [ 100, 10, 25, 30 ],
+    "Stats": [ 100, 10, 30, 25 ],
     "ImageName": "sein.png",
     "ImageCaption": "¡Sein quiere jugar a pegarse!",
     "DroppedMoney": 6969,
@@ -177,7 +178,7 @@
   },
   {
     "Name": "Thiccboi",
-    "Stats": [ 100, 10, 25, 1 ],
+    "Stats": [ 100, 10, 1, 25 ],
     "ImageName": "thiccboi.png",
     "ImageCaption": "¡El thiccboi abre la boca!",
     "DroppedMoney": 345,
