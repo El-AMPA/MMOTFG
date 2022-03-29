@@ -11,59 +11,54 @@
     },
     "OnInspectEvent": [
       {
-        "Events": [
-          {
-            "EventType": "eSendText",
-            "Description": "This dungeon is so dark. As you walk through the area, you stumble into a lit torch. This will be useful."
-          },
-          {
-            "EventType":"eGiveItem",
-            "ItemLots":[
-              {
-                "Item":"torch",
-                "Quantity": 1,
-                "ChanceToObtain": 1
-              }
-            ]
-          },
-          {
-            "EventType":"eSetCondition",
-            "Name":"TorchFound",
-            "SetAs":"True"
-          }
-        ],
-        "TriggerCondition":{
-          "Condition":"False",
-          "Name":"TorchFound"
-        }
+        "EventType": "eSendText",
+        "Description": "This dungeon is so dark. As you walk through the area, you stumble into a lit torch. This will be really useful.",
+        "TriggerIfFalse": "TorchFound"
       },
       {
-        "Events": [
+        "EventType": "eGiveItem",
+        "ItemLots": [
           {
-            "EventType": "eSendText",
-            "Description": "Thanks to the torch, you appreciate how dirty everything is. Yuck."
+            "Item": "torch",
+            "Quantity": 1,
+            "ChanceToObtain": 1
           }
         ],
-        "TriggerCondition": {
-          "Name": "TorchLit",
-          "Condition": "True"
-        }
+        "TriggerIfFalse": "TorchFound"
+      },
+      {
+        "EventType": "eSetCondition",
+        "Name": "TorchFound",
+        "SetAs": "True",
+        "TriggerIfFalse": "TorchFound"
+      },
+      {
+        "EventType": "eSendText",
+        "Description": "I should equip the torch to see better further ahead.",
+        "TriggerIfFalse": "TorchLit"
       }
     ],
     "OnExitEvent": [
       {
-        "Events": [
+        "EventType":"eSendText",
+        "Description":"On your way out, you find a health potion. Nice!",
+        "TriggerIfFalse":"Visited"
+      },
+      {
+        "EventType": "eGiveItem",
+        "ItemLots": [
           {
-            "EventType": "eGiveItem",
-            "ItemLots": [
-              {
-                "Item": "health_potion",
-                "Quantity": 1,
-                "ChanceToObtain": 1
-              }
-            ]
+            "Item": "health_potion",
+            "Quantity": 1,
+            "ChanceToObtain": 1
           }
-        ]
+        ],
+        "TriggerIfFalse":"Visited"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"As you make your way out of the room, you find nothing of interest.",
+        "TriggerIfTrue":"Visited"
       }
     ]
   },
@@ -77,16 +72,41 @@
         "ConnectingNode": "Corridor1"
       }
     },
-    "OnArriveEvent": [],
+    "OnArriveEvent": [
+      {
+        "EventType":"eSendText",
+        "Description":"God damn. I can't se nothing around here. Maybe I should return and inspect the entrance.",
+        "TriggerIfFalse":"TorchLit"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"As you make your way into the room, you see huge claw marks in the area.",
+        "TriggerIfTrue":"TorchLit"
+      }
+    ],
     "OnExitEvent": [
       {
-        "Events": [
+        "EventType":"eSendText",
+        "Description":"You have a bad feeling about this...",
+        "TriggerIfFalse":"TorchLit"
+      }
+    ],
+    "OnInspectEvent":[
+      {
+        "EventType":"eSendText",
+        "Description":"As you move around your torch to inspect the room, you notice a small glint of light.\n You make your way to the source and you find... A pair of beast slaying boots!... For some reason...",
+        "TriggerIfTrue":"TorchLit"
+      },
+      {
+        "EventType":"eGiveItem",
+        "ItemLots":[
           {
-            "EventType": "eSetCondition",
-            "Name": "Pipopi",
-            "SetAs": "True"
+            "Item":"beast_slaying_boots",
+            "Quantity":1,
+            "ChanceToObtain":1
           }
-        ]
+        ],
+        "TriggerIfTrue":"TorchLit"
       }
     ]
   },
@@ -99,42 +119,12 @@
     },
     "OnArriveEvent": [
       {
-        "Events": [
-          {
-            "EventType": "eSendText",
-            "Description": "Al entrar, notas una fuerte respiraci�n en tu espalda."
-          },
-          {
-            "EventType": "eSendImage",
-            "Description": "I will smite thee",
-            "ImageName": "Dog1.png"
-          },
-          {
-            "EventType": "eSendAudio",
-            "Description": "No se que poner me qued� sin ideas.",
-            "AudioName": "DoggoMusic.mp3"
-          },
-          {
-            "EventType": "eStartBattle",
-            "Enemy": "Manuela"
-          }
-        ],
-        "TriggerCondition":{
-          "Name":"Visited",
-          "Condition":"True"
-        }
+        "EventType": "eSendText",
+        "Description": "Al entrar, notas una fuerte respiraci�n en tu espalda."
       },
       {
-        "Events":[
-          {
-            "EventType":"eSendText",
-            "Description":"Soy un petardo y te voy a hacer entrar de nuevo"
-          }
-        ],
-        "TriggerCondition":{
-          "Condition":"False",
-          "Name":"Visited"
-        }
+        "EventType": "eStartBattle",
+        "Enemy": "Manuela"
       }
     ]
   }

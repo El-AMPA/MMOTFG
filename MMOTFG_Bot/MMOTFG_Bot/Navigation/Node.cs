@@ -40,20 +40,10 @@ namespace MMOTFG_Bot.Navigation
             }
         }
 
-        internal struct EventCollection
+        public Event[] events
         {
-            public Event[] events
-            {
-                get;
-                set;
-            }
-
-            public TriggerCondition triggerCondition
-            {
-                get;
-                set;
-            }
-            
+            get;
+            set;
         }
 
         //TO-DO: Revisar si realmente merece la pena dejarlo como diccionario o pensar en otra estructura.
@@ -63,19 +53,19 @@ namespace MMOTFG_Bot.Navigation
             set;
         }
 
-        public List<EventCollection> OnArriveEvent
+        public List<Event> OnArriveEvent
         {
             get;
             set;
         }
 
-        public List<EventCollection> OnExitEvent
+        public List<Event> OnExitEvent
         {
             get;
             set;
         }
 
-        public List<EventCollection> OnInspectEvent
+        public List<Event> OnInspectEvent
         {
             get;
             set;
@@ -99,24 +89,29 @@ namespace MMOTFG_Bot.Navigation
 
             if (OnExitEvent != null)
             {
-                foreach (EventCollection eColl in OnExitEvent)
+                foreach (Event ev in OnExitEvent)
                 {
                     bool condition = true;
 
-                    if (eColl.triggerCondition != null)
+                    if (ev.TriggerIfFalse != null)
                     {
-                        string condName = eColl.triggerCondition.Name;
+                        string condName = ev.TriggerIfFalse;
                         if (condName == "Visited") condName = Name + "Visited";
                         condition =
-                            ProgressKeeper.IsFlagActive(chatId, condName) == eColl.triggerCondition.Condition;
+                            !ProgressKeeper.IsFlagActive(chatId, condName);
+                    }
+
+                    else if (ev.TriggerIfTrue != null)
+                    {
+                        string condName = ev.TriggerIfTrue;
+                        if (condName == "Visited") condName = Name + "Visited";
+                        condition =
+                            ProgressKeeper.IsFlagActive(chatId, condName);
                     }
 
                     if (condition)
                     {
-                        foreach (Event ev in eColl.events)
-                        {
-                            await ev.Execute(chatId);
-                        }
+                        await ev.Execute(chatId);
                     }
                 }
             }
@@ -134,24 +129,29 @@ namespace MMOTFG_Bot.Navigation
             {
                 await ProgressKeeper.LoadSerializable(chatId);
 
-                foreach (EventCollection eColl in OnArriveEvent)
+                foreach (Event ev in OnArriveEvent)
                 {
                     bool condition = true;
 
-                    if (eColl.triggerCondition != null)
+                    if (ev.TriggerIfFalse != null)
                     {
-                        string condName = eColl.triggerCondition.Name;
+                        string condName = ev.TriggerIfFalse;
                         if (condName == "Visited") condName = Name + "Visited";
                         condition =
-                            ProgressKeeper.IsFlagActive(chatId, condName) == eColl.triggerCondition.Condition;
+                            !ProgressKeeper.IsFlagActive(chatId, condName);
+                    }
+
+                    else if (ev.TriggerIfTrue != null)
+                    {
+                        string condName = ev.TriggerIfTrue;
+                        if (condName == "Visited") condName = Name + "Visited";
+                        condition =
+                            ProgressKeeper.IsFlagActive(chatId, condName);
                     }
 
                     if (condition)
                     {
-                        foreach (Event ev in eColl.events)
-                        {
-                            await ev.Execute(chatId);
-                        }
+                        await ev.Execute(chatId);
                     }
                 }
 
@@ -169,25 +169,30 @@ namespace MMOTFG_Bot.Navigation
             {
                 await ProgressKeeper.LoadSerializable(chatId);
 
-                foreach (EventCollection eColl in OnInspectEvent)
+                foreach (Event ev in OnInspectEvent)
                 {
                     bool condition = true;
 
-                    if (eColl.triggerCondition != null)
+                    if (ev.TriggerIfFalse != null)
                     {
-                        string condName = eColl.triggerCondition.Name;
+                        string condName = ev.TriggerIfFalse;
                         if (condName == "Visited") condName = Name + "Visited";
                         condition =
-                            ProgressKeeper.IsFlagActive(chatId, condName) == eColl.triggerCondition.Condition;
+                            !ProgressKeeper.IsFlagActive(chatId, condName);
+                    }
+
+                    else if (ev.TriggerIfTrue != null)
+                    {
+                        string condName = ev.TriggerIfTrue;
+                        if (condName == "Visited") condName = Name + "Visited";
+                        condition =
+                            ProgressKeeper.IsFlagActive(chatId, condName);
                     }
 
                     if (condition)
                     {
                         triggeredEvent = true;
-                        foreach (Event ev in eColl.events)
-                        {
-                            await ev.Execute(chatId);
-                        }
+                        await ev.Execute(chatId);
                     }
                 }
 

@@ -53,6 +53,9 @@ namespace MMOTFG_Bot
             Torch torch = new Torch();
             torch.Init();
 
+            BeastSlayingBoots boots = new BeastSlayingBoots();
+            boots.Init();
+
             obtainableItems.Add(hPotion.name, hPotion);
             obtainableItems.Add(mPotion.name, mPotion);
             obtainableItems.Add(tFury.name, tFury);
@@ -64,6 +67,7 @@ namespace MMOTFG_Bot
             obtainableItems.Add(collarJorge.name, collarJorge);
             obtainableItems.Add(rana.name, rana);
             obtainableItems.Add(torch.name, torch);
+            obtainableItems.Add(boots.name, boots);
         }
 
         /// <summary>

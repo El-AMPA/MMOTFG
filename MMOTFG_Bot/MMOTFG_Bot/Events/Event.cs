@@ -24,6 +24,18 @@ namespace MMOTFG_Bot.Events
     //Thus, if it were a pure abstract class, it would just send an exception.
     class Event
     {
+        public string TriggerIfTrue
+        {
+            get;
+            set;
+        }
+
+        public string TriggerIfFalse
+        {
+            get;
+            set;
+        }
+
         public virtual Task Execute(long chatId)
         {
             return Task.CompletedTask;
