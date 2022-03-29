@@ -77,6 +77,12 @@ namespace MMOTFG_Bot
 
         }
 
+        public async Task SkipTurn(long chatId)
+        {
+            turnOver = true;
+            await BattleSystem.nextAttack(chatId);
+        }
+
         public void SetName(string playerName)
 		{
             name = playerName;

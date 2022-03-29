@@ -25,6 +25,11 @@ namespace MMOTFG_Bot
         public Behaviour onTurnEnd;
         public Behaviour onKill;
 
+        public bool turnOver;
+
+        public string imageName;
+        public string imageCaption;
+
         public Battler()
         {
         }

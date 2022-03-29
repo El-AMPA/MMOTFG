@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using static MMOTFG_Bot.StatName;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace MMOTFG_Bot
 {
@@ -10,6 +11,10 @@ namespace MMOTFG_Bot
     {
         public static Player player;
         public static Enemy enemy;
+
+        public static List<Battler> battlers;
+        public static List<Battler> playerSide;
+        public static List<Battler> enemySide;
 
         public static bool battleActive = false;
 
@@ -27,7 +32,7 @@ namespace MMOTFG_Bot
             if (!battleActive) { 
                 update.Add(DbConstants.PLAYER_FIELD_ENEMY, null); 
             }
-            else update.Add(DbConstants.PLAYER_FIELD_ENEMY, enemy.getSerializable());
+            else update.Add(DbConstants.PLAYER_FIELD_ENEMY, (enemySide.First() as Enemy).getSerializable());
 
             await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
         }
@@ -69,23 +74,77 @@ namespace MMOTFG_Bot
             return battleActive; 
         }
 
-        public static async Task StartBattle(long chatId, Enemy e)
+        public static async Task StartBattle(long chatId, Battler eSide)
         {
-            enemy = e;
+            enemySide = new List<Battler>();
+            enemySide.Add(eSide);
             battleActive = true;
-            if(enemy.imageName != null)
-                await TelegramCommunicator.SendImage(chatId, e.imageName, e.imageCaption);
+            if(eSide.imageName != null)
+                await TelegramCommunicator.SendImage(chatId, eSide.imageName, eSide.imageCaption);
             SetPlayerOptions(chatId);
             await SavePlayerBattle(chatId);
         }
 
+        public static async Task StartBattle(long chatId, List<Enemy> eSide)
+        {
+            enemySide = new List<Battler>();
+            battleActive = true;
+            List<string> imageNames = new List<string>();
+            string caption = "";
+            foreach (Battler b in eSide)
+            {
+                enemySide.Add(b);
+                if (b.imageName != null)
+                    imageNames.Add(b.imageName);
+
+                if (b == eSide.First())
+                    caption += b.name;
+                else if (b == eSide.Last())
+                    caption += $" and {b.name} appear!";
+                else caption += $", {b.name}";
+            }
+            await TelegramCommunicator.SendImageCollection(chatId, imageNames.ToArray());
+            await TelegramCommunicator.SendText(chatId, caption);
+            SetPlayerOptions(chatId);
+            await SavePlayerBattle(chatId);
+        }
+
+        public static async Task nextAttack(long chatId)
+        {
+            //if every battler has finished their turn, start a new turn
+            if(battlers.First(x => x.turnOver == false) == null)
+            {
+                foreach (Battler ba in battlers) ba.turnOver = false;
+            } 
+            //sort battlers by speed
+            battlers.Sort((b1, b2) => b2.GetStat(SPE).CompareTo(b1.GetStat(SPE)));
+            //get first battler that hasn't moved that turn
+            Battler b = battlers.First(x => x.turnOver == false);
+
+            //if the battler is an enemy
+            Enemy e = b as Enemy;
+            if(e != null)
+            {
+                Attack a = e.nextAttack();
+                Battler target = e;
+                if (!a.affectsSelf)
+                {
+                    //which side is the battler in
+                    List<Battler> otherSide = (playerSide.Contains(b)) ? enemySide : playerSide;
+                    List<Battler> aliveOtherSide = otherSide.Where(x => x.GetStat(HP) > 0).ToList();
+                    target = aliveOtherSide[RNG.Next(0, aliveOtherSide.Count)];
+                }
+                await UseAttack(chatId, a, e, target);
+            }
+            //if the battler is a player
+            else
+            {
+
+            }
+        }
+
         public static async void SetPlayerOptions(long chatId)
         {
-            //List<string> attacksWithMP = new List<string>();
-            //for(int i = 0; i < player.attackNum; i++)
-            //{
-            //    attacksWithMP.Add(player.attackNames[i] + "\nMP: " + player.attackmpCosts[i]);
-            //}
             await TelegramCommunicator.SendButtons(chatId, player.attackNum, player.attackNames.ToArray());
         }
 
@@ -174,7 +233,7 @@ namespace MMOTFG_Bot
             string bar = "";
             for (int i = 0; i < 10; i++)
             {
-                if (i < green) bar += "\U0001F7E9"; //green
+                if (i <= green) bar += "\U0001F7E9"; //green
                 else bar += "\U0001F7E5"; //red
             }
             return bar;
@@ -198,8 +257,8 @@ namespace MMOTFG_Bot
             {
                 StatName sn = (StatName)i;
                 s += $"{Enum.GetName(typeof(StatName), i)}: {b.GetStat(sn)}";
-                if (sn == HP || sn == MP)
-                    s += $"/{b.GetOriginalStat(sn)}";
+                if (Stats.isBounded(sn))
+                    s += $"/{b.GetMaxStat(sn)}";
                 s += "\n";
             }
 

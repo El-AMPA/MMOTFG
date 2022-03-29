@@ -86,7 +86,7 @@
       },
       {
       "EventType":"eStartBattle",
-      "Enemy": "Fedejimbo"
+      "Enemies": [ "Manuela", "Fedejimbo" ]
       }
     ],
     "OnInspectEvent": [

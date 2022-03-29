@@ -24,8 +24,6 @@ namespace MMOTFG_Bot
         [DefaultValue(true)]
         public bool changeMax;
 
-        public bool affectsSelf;
-
         public override async Task OnAttack(long chatId) 
         {
             string stat = statToChange.ToString();

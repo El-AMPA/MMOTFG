@@ -1,6 +1,6 @@
 ﻿{
   "Name": "Player",
-  "Stats": [ 100, 10, 50 ],
+  "Stats": [ 100, 10, 50, 10 ],
   "Attacks": [
     {
       "Name": "Tortazo",

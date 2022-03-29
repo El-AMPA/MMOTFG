@@ -12,6 +12,8 @@ namespace MMOTFG_Bot
         HP,
         [EnumMember(Value = "ATK")]
         ATK,
+        [EnumMember(Value = "SPE")]
+        SPE,
         [EnumMember(Value = "MP")]
         MP
     };

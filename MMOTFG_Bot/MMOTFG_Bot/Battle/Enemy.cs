@@ -6,10 +6,7 @@ using System.Text;
 namespace MMOTFG_Bot
 {
     class Enemy : Battler
-    {
-        public string imageName = null;
-        public string imageCaption = null;
-
+    {        
         public float droppedMoney;
         public string droppedItem;
         [DefaultValue(1)]
