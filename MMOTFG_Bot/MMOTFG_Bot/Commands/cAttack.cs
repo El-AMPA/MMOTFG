@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,13 +24,17 @@ namespace MMOTFG_Bot.Commands
 
         internal override async Task Execute(string command, long chatId, string[] args = null)
         {
-            //habría que preguntar al mapa qué enemigo hay en esta sala
-            await BattleSystem.PlayerAttack(chatId, command);
+            //if target is not specified, send buttons with possible targets
+            if (args.Length == 0)
+            {
+                await BattleSystem.PlayerAttack(chatId, command);
+            }
+            else await BattleSystem.PlayerAttack(chatId, command, args[0]);
         }
 
         internal override bool IsFormattedCorrectly(string[] args)
         {
-            //Format: attackName
+            //Format: attackName target (optional)
             return true;
         }
     }

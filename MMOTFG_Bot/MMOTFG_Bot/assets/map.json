@@ -43,12 +43,6 @@
           }
         ]
       }
-    ],
-    "OnExitEvent": [
-      {
-        "EventType": "eStartBattle",
-        "Enemy": "Manuela"
-      }
     ]
   },
   {
@@ -58,8 +52,14 @@
       "south":{"ConnectingNode": "Pasillo2"}
     },
     "OnArriveEvent":[
-      {"EventType": "eSendText",
-      "Description": "Mi habitación está al final del pasillo. Justo enfrente está la de Pj. Parece que tiene montada una rave en su habitación??? En fin, la salida está hacia el sur."}
+      {
+        "EventType": "eSendText",
+        "Description": "Mi habitación está al final del pasillo. Justo enfrente está la de Pj. Parece que tiene montada una rave en su habitación??? En fin, la salida está hacia el sur."
+      },
+      {
+        "EventType": "eStartBattle",
+        "Enemies": [ "Manuela", "Fedejimbo" ]
+      }
     ],
     "OnInspectEvent":[
       {"EventType": "eSendText",

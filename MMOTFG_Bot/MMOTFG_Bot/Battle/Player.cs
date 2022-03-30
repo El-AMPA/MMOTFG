@@ -16,6 +16,8 @@ namespace MMOTFG_Bot
         [DefaultValue(1)]
         public int level;
 
+        public bool upNext;
+
         public Player()
         {
             
@@ -90,7 +92,7 @@ namespace MMOTFG_Bot
         public async Task SkipTurn(long chatId)
         {
             turnOver = true;
-            await BattleSystem.nextAttack(chatId);
+            await BattleSystem.NextAttack(chatId);
         }
 
         public void SetName(string playerName)

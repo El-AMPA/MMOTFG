@@ -23,7 +23,6 @@ namespace MMOTFG_Bot
         protected Battler user;
         protected Battler target;
 
-        [DefaultValue(true)]
         public bool affectsSelf;
 
         public Attack(string name_, float power_, float mpCost_)

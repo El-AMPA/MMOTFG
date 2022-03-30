@@ -11,6 +11,7 @@ namespace MMOTFG_Bot
     {
         public static Player player;
         public static Enemy enemy;
+        private static Attack nextPlayerAttack;
 
         public static List<Battler> battlers;
         public static List<Battler> playerSide;
@@ -81,19 +82,23 @@ namespace MMOTFG_Bot
             battleActive = true;
             if(eSide.imageName != null)
                 await TelegramCommunicator.SendImage(chatId, eSide.imageName, eSide.imageCaption);
-            SetPlayerOptions(chatId);
             await SavePlayerBattle(chatId);
         }
 
         public static async Task StartBattle(long chatId, List<Enemy> eSide)
         {
             enemySide = new List<Battler>();
+            playerSide = new List<Battler>() { player, JSONSystem.getEnemy("Tinky.exe")};
+            battlers = new List<Battler>();
+            battlers.AddRange(enemySide);
+            battlers.AddRange(playerSide);
             battleActive = true;
             List<string> imageNames = new List<string>();
             string caption = "";
             foreach (Battler b in eSide)
             {
                 enemySide.Add(b);
+                battlers.Add(b);
                 if (b.imageName != null)
                     imageNames.Add(b.imageName);
 
@@ -105,20 +110,24 @@ namespace MMOTFG_Bot
             }
             await TelegramCommunicator.SendImageCollection(chatId, imageNames.ToArray());
             await TelegramCommunicator.SendText(chatId, caption);
-            SetPlayerOptions(chatId);
-            await SavePlayerBattle(chatId);
+            //await SavePlayerBattle(chatId);
+            await NextAttack(chatId);
         }
 
-        public static async Task nextAttack(long chatId)
+        public static async Task NextAttack(long chatId)
         {
             //if every battler has finished their turn, start a new turn
-            if(battlers.First(x => x.turnOver == false) == null)
+            if(battlers.FirstOrDefault(x => x.turnOver == false) == null)
             {
-                foreach (Battler ba in battlers) ba.turnOver = false;
+                foreach (Battler ba in battlers)
+                {
+                    await ba.OnBehaviour(chatId, ba.onTurnEnd);
+                    ba.turnOver = false;
+                }
             } 
             //sort battlers by speed
             battlers.Sort((b1, b2) => b2.GetStat(SPE).CompareTo(b1.GetStat(SPE)));
-            //get first battler that hasn't moved that turn
+            //get first battler that hasn't moved that turn and is alive
             Battler b = battlers.First(x => x.turnOver == false);
 
             //if the battler is an enemy
@@ -139,21 +148,28 @@ namespace MMOTFG_Bot
             //if the battler is a player
             else
             {
-
+                Player p = b as Player;
+                p.upNext = true;
+                await SetPlayerOptions(chatId);
             }
         }
 
-        public static async void SetPlayerOptions(long chatId)
+        public static async Task SetPlayerOptions(long chatId)
         {
-            await TelegramCommunicator.SendButtons(chatId, player.attackNum, player.attackNames.ToArray());
+            await TelegramCommunicator.SendButtons(chatId, "Your turn", player.attackNum, player.attackNames.ToArray());
         }
 
-        public static async Task PlayerAttack(long chatId, string attackName)
+        public static async Task PlayerAttack(long chatId, string attackName, string targetName = null)
         {
-            await LoadPlayerBattle(chatId);
+            //await LoadPlayerBattle(chatId);
             if (!battleActive)
             {
                 await TelegramCommunicator.SendText(chatId, "No battle currently active");
+                return;
+            }
+            if (!player.upNext)
+            {
+                await TelegramCommunicator.SendText(chatId, "Not your turn");
                 return;
             }
             attackName = char.ToUpper(attackName[0]) + attackName.Substring(1);
@@ -165,20 +181,44 @@ namespace MMOTFG_Bot
                 await TelegramCommunicator.SendText(chatId, "Not enough MP for that attack");
                 return;
             }
-
-            await UseAttack(chatId, attack, player, enemy); 
-        }
-
-        public static async Task EnemyAttack(long chatId)
-        {
-            Attack attack = enemy.nextAttack();
-
-            await UseAttack(chatId, attack, enemy, player);
+            Battler target = player;
+            List<Battler> otherAliveBattlers = battlers.Where(x => x != player && x.GetStat(HP) > 0).ToList();
+            if (!attack.affectsSelf)
+            {
+                if (otherAliveBattlers.Count == 1)
+                {
+                    target = otherAliveBattlers.First();
+                }
+                else
+                {
+                    string message = "";
+                    if (targetName == null)
+                    {
+                        message = "Choose a target";
+                    }
+                    else target = battlers.FirstOrDefault(x => x.name.ToLower() == targetName);
+                    if (target == null)
+                    {
+                        message = "Invalid target";
+                    }
+                    if (targetName == null || target == null)
+                    {
+                        nextPlayerAttack = attack;
+                        List<string> targetNames = new List<string>();
+                        foreach (Battler b in otherAliveBattlers) targetNames.Add($"{attack.name}_{b.name}");
+                        await TelegramCommunicator.SendButtons(chatId, message, targetNames.Count, targetNames.ToArray());
+                        return;
+                    }
+                }            
+            }         
+            player.upNext = false;
+            await UseAttack(chatId, attack, player, target);
         }
 
         private static async Task UseAttack(long chatId, Attack attack, Battler user, Battler target)
         {
             user.AddToStat(MP, -attack.mpCost);
+            user.turnOver = true;
             attack.SetUser(user);
             attack.SetTarget(target);
             float damage = (float)Math.Round(attack.GetDamage(), 2);
@@ -189,13 +229,13 @@ namespace MMOTFG_Bot
                 message += $" {target.name} took {damage} damage.";
                 target.AddToStat(HP, -damage);
             }
-            await TelegramCommunicator.SendText(chatId, message);
             await attack.OnAttack(chatId);
 
             if (target.GetStat(HP) <= 0)
             {
+                battlers.Remove(target);
+                await TelegramCommunicator.SendText(chatId, message);
                 await target.OnBehaviour(chatId, target.onKill);
-                battleActive = false;
                 enemy = target as Enemy;
                 if(enemy != null)
                 {
@@ -213,23 +253,24 @@ namespace MMOTFG_Bot
                     }
                     await TelegramCommunicator.SendText(chatId, msg);
                 }
-                await TelegramCommunicator.RemoveReplyMarkup(chatId);
-                player.OnBattleOver();
-                enemy = null;
+                List<Battler> side = (enemySide.Contains(target)) ? enemySide : playerSide;
+                //if entire side has been defeated, end battle
+                if (side.FirstOrDefault(x => x.GetStat(HP) > 0) == null)
+                {
+                    battleActive = false;
+                    await TelegramCommunicator.RemoveReplyMarkup(chatId);
+                    player.OnBattleOver();
+                }
             }
             else
             {
                 await target.OnBehaviour(chatId, target.onHit);
-                if(damage != 0) await TelegramCommunicator.SendText(chatId, $"{target.name} HP: {GetStatBar(target, HP)}");
-                if(user == player) await EnemyAttack(chatId);
-                else
-                {
-                    await user.OnBehaviour(chatId, user.onTurnEnd);
-                    await target.OnBehaviour(chatId, target.onTurnEnd);
-                }
+                if(damage != 0) message += $"\n{target.name} HP: {GetStatBar(target, HP)}";
+                await TelegramCommunicator.SendText(chatId, message);
             }
 
-            await SavePlayerBattle(chatId);
+            if (battleActive) await NextAttack(chatId);
+            //await SavePlayerBattle(chatId);
         }
 
         private static string GetStatBar(Battler b, StatName s)

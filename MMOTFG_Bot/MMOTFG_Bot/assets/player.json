@@ -30,8 +30,9 @@
   },
   "LevelUpRoadmap": {
     "MaxLevel": 10,
-    "FirstStats": [ 1, 1, 1, 100 ],
+    "FirstStats": [ 1, 10, 10, 100 ],
     "FinalStats": [ 1000, 200, 150, 100 ],
+    "LevelUpExponent": 3,
     "LevelUpEvents": [
       {
         "Level": 7,
