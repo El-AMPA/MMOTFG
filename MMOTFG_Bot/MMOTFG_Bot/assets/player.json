@@ -3,8 +3,9 @@
   "Stats": [ 100, 10, 10, 50 ],
   "Attacks": [
     {
-      "Name": "Tortazo",
-      "Power": 1.5
+      "Name": "Overkill",
+      "Power": 100,
+      "MpCost": 10     
     },
     {
       "Name": "Patada",
@@ -17,11 +18,6 @@
       "MpCost": 5,
       "StatToChange": "ATK",
       "Multiple": 0.5
-    },
-    {
-      "Name": "Overkill",
-      "Power": 100,
-      "MpCost": 10
     }
   ],
   "OnKill": {
@@ -30,15 +26,28 @@
   },
   "LevelUpRoadmap": {
     "MaxLevel": 10,
-    "FirstStats": [ 1, 10, 10, 100 ],
+    "FirstStats": [ 100, 10, 10, 100 ],
     "FinalStats": [ 1000, 200, 150, 100 ],
-    "LevelUpExponent": 3,
+    "LevelUpExponent": 1,
     "LevelUpEvents": [
       {
-        "Level": 7,
+        "Level": 2,
         "Ev": {
-          "EventType": "eSendText",
-          "Description": "77777777777"
+          "EventType": "eLearnAttack",
+          "Attack": {
+            "Name": "Tortazo",
+            "Power": 1.5
+          }
+        }
+      },
+      {
+        "Level": 3,
+        "Ev": {
+          "EventType": "eLearnAttack",
+          "Attack": {
+            "Name": "Tortilla",
+            "Power": 15
+          }
         }
       }
     ]

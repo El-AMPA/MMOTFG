@@ -24,12 +24,18 @@ namespace MMOTFG_Bot.Commands
 
         internal override async Task Execute(string command, long chatId, string[] args = null)
         {
-            //if target is not specified, send buttons with possible targets
-            if (args.Length == 0)
+            if (BattleSystem.player.learningAttack != null)
             {
-                await BattleSystem.PlayerAttack(chatId, command);
+                await BattleSystem.player.ForgetAttack(chatId, command);
             }
-            else await BattleSystem.PlayerAttack(chatId, command, args[0]);
+            else
+            {
+                if (args.Length == 0)
+                {
+                    await BattleSystem.PlayerAttack(chatId, command);
+                }
+                else await BattleSystem.PlayerAttack(chatId, command, args[0]);
+            }
         }
 
         internal override bool IsFormattedCorrectly(string[] args)

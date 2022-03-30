@@ -17,6 +17,7 @@ namespace MMOTFG_Bot.Events
     [JsonSubtypes.KnownSubType(typeof(eSendText), "eSendText")]
     [JsonSubtypes.KnownSubType(typeof(eSendImageCollection), "eSendImageCollection")]
     [JsonSubtypes.KnownSubType(typeof(eStartBattle), "eStartBattle")]
+    [JsonSubtypes.KnownSubType(typeof(eLearnAttack), "eLearnAttack")]
 
     //Even though it's used as if it were an abstract class, it can't be abstract because in the process of deserializing into the child class,
     //it creates an instance of the parent class.

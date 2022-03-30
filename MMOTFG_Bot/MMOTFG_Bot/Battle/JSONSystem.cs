@@ -79,6 +79,7 @@ namespace MMOTFG_Bot
             Enemy e = enemies.Find(x => x.name == name);
             if (e != null)
             {
+                e.New();
                 return e;
             }
             else return enemies.First();

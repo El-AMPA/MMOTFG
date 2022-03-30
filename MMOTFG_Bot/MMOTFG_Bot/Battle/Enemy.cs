@@ -18,7 +18,7 @@ namespace MMOTFG_Bot
         //Gets a random attack the enemy has enough MP to use (basic attack should always cost 0 to avoid problems)
         public Attack nextAttack()
         {
-            int i = attackNum - 1;
+            int i = attacks.Count - 1;
             while (attacks[i].mpCost > stats[(int)StatName.MP])
                 i--;
             int attack = RNG.Next(0, i+1);

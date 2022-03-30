@@ -18,8 +18,6 @@ namespace MMOTFG_Bot
         protected float[] originalStats;
         public List<Attack> attacks;
 
-        public int attackNum;
-
         public string name;
 
         public Behaviour onHit;
@@ -39,7 +37,6 @@ namespace MMOTFG_Bot
         {
             //attacks are automatically sorted by mpCost
             attacks.Sort((a1, a2) => a1.mpCost.CompareTo(a2.mpCost));
-            attackNum = attacks.Count;
             maxStats = (float[])stats.Clone();
             originalStats = (float[])stats.Clone();
             onHit?.setParent(this);
@@ -86,6 +83,12 @@ namespace MMOTFG_Bot
         {
             float statn = changeMax ? maxStats[(int)stat] : stats[(int)stat];
             SetStat(stat, statn * mult, changeMax, permanent);
+        }
+
+        public void New()
+        {
+            stats = (float[])originalStats.Clone();
+            maxStats = (float[])originalStats.Clone();
         }
 
         public float GetStat(StatName stat)

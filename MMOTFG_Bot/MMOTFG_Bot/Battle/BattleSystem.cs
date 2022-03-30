@@ -11,7 +11,6 @@ namespace MMOTFG_Bot
     {
         public static Player player;
         public static Enemy enemy;
-        private static Attack nextPlayerAttack;
 
         public static List<Battler> battlers;
         public static List<Battler> playerSide;
@@ -77,40 +76,44 @@ namespace MMOTFG_Bot
 
         public static async Task StartBattle(long chatId, Battler eSide)
         {
-            enemySide = new List<Battler>();
-            enemySide.Add(eSide);
-            battleActive = true;
-            if(eSide.imageName != null)
-                await TelegramCommunicator.SendImage(chatId, eSide.imageName, eSide.imageCaption);
-            await SavePlayerBattle(chatId);
+            await StartBattle(chatId, new List<Battler> { eSide });
         }
 
-        public static async Task StartBattle(long chatId, List<Enemy> eSide)
+        public static async Task StartBattle(long chatId, List<Battler> eSide)
         {
-            enemySide = new List<Battler>();
-            playerSide = new List<Battler>() { player, JSONSystem.getEnemy("Tinky.exe")};
+            enemySide = eSide;
+            playerSide = new List<Battler>() { player };
             battlers = new List<Battler>();
             battlers.AddRange(enemySide);
             battlers.AddRange(playerSide);
             battleActive = true;
-            List<string> imageNames = new List<string>();
-            string caption = "";
-            foreach (Battler b in eSide)
+            if(eSide.Count == 1)
             {
-                enemySide.Add(b);
-                battlers.Add(b);
+                Battler b = eSide.First();
                 if (b.imageName != null)
-                    imageNames.Add(b.imageName);
-
-                if (b == eSide.First())
-                    caption += b.name;
-                else if (b == eSide.Last())
-                    caption += $" and {b.name} appear!";
-                else caption += $", {b.name}";
+                    await TelegramCommunicator.SendImage(chatId, b.imageName, b.imageCaption);
             }
-            await TelegramCommunicator.SendImageCollection(chatId, imageNames.ToArray());
-            await TelegramCommunicator.SendText(chatId, caption);
+            else
+            {
+                List<string> imageNames = new List<string>();
+                string caption = "";
+                foreach (Battler b in eSide)
+                {
+                    if (b.imageName != null)
+                        imageNames.Add(b.imageName);
+
+                    if (b == eSide.First())
+                        caption += b.name;
+                    else if (b == eSide.Last())
+                        caption += $" and {b.name} appear!";
+                    else caption += $", {b.name}";
+                }
+                await TelegramCommunicator.SendImageCollection(chatId, imageNames.ToArray());
+                await TelegramCommunicator.SendText(chatId, caption);
+            }
             //await SavePlayerBattle(chatId);
+            //all battlers start being able to move
+            foreach (Battler ba in battlers) ba.turnOver = false;
             await NextAttack(chatId);
         }
 
@@ -150,13 +153,13 @@ namespace MMOTFG_Bot
             {
                 Player p = b as Player;
                 p.upNext = true;
-                await SetPlayerOptions(chatId);
+                await SetPlayerOptions(chatId, "Your turn");
             }
         }
 
-        public static async Task SetPlayerOptions(long chatId)
+        public static async Task SetPlayerOptions(long chatId, string text)
         {
-            await TelegramCommunicator.SendButtons(chatId, "Your turn", player.attackNum, player.attackNames.ToArray());
+            await TelegramCommunicator.SendButtons(chatId, text, player.attackNames.ToArray());
         }
 
         public static async Task PlayerAttack(long chatId, string attackName, string targetName = null)
@@ -174,7 +177,11 @@ namespace MMOTFG_Bot
             }
             attackName = char.ToUpper(attackName[0]) + attackName.Substring(1);
             int atkNum = player.attackNames.IndexOf(attackName);
-            if (atkNum == -1) return;
+            if (atkNum == -1)
+            {
+                await TelegramCommunicator.SendText(chatId, "Invalid attack");
+                return;
+            }
             Attack attack = player.attacks[atkNum];
             if (attack.mpCost > player.GetStat(MP))
             {
@@ -201,12 +208,12 @@ namespace MMOTFG_Bot
                     {
                         message = "Invalid target";
                     }
-                    if (targetName == null || target == null)
+                    //if there was a target error, send buttons
+                    if (message != "")
                     {
-                        nextPlayerAttack = attack;
                         List<string> targetNames = new List<string>();
-                        foreach (Battler b in otherAliveBattlers) targetNames.Add($"{attack.name}_{b.name}");
-                        await TelegramCommunicator.SendButtons(chatId, message, targetNames.Count, targetNames.ToArray());
+                        foreach (Battler b in otherAliveBattlers) targetNames.Add($"{attack.name} {b.name}");
+                        await TelegramCommunicator.SendButtons(chatId, message, targetNames.ToArray());
                         return;
                     }
                 }            
@@ -258,7 +265,7 @@ namespace MMOTFG_Bot
                 if (side.FirstOrDefault(x => x.GetStat(HP) > 0) == null)
                 {
                     battleActive = false;
-                    await TelegramCommunicator.RemoveReplyMarkup(chatId);
+                    if(player.learningAttack == null) await TelegramCommunicator.RemoveReplyMarkup(chatId);
                     player.OnBattleOver();
                 }
             }

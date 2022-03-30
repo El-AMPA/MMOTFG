@@ -19,7 +19,7 @@ namespace MMOTFG_Bot.Events
                 await BattleSystem.StartBattle(chatId, JSONSystem.getEnemy(Enemy));
             else
             {
-                List<Enemy> enemies = new List<Enemy>();
+                List<Battler> enemies = new List<Battler>();
                 foreach (string s in Enemies) enemies.Add(JSONSystem.getEnemy(s));
                 await BattleSystem.StartBattle(chatId, enemies);
             }

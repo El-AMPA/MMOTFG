@@ -7,7 +7,7 @@
     "DroppedMoney": 100,
     "DroppedItem": "health_potion",
     "DroppedItemAmount": 2,
-    "ExperienceGiven": 10,
+    "ExperienceGiven": 1,
     "Attacks": [
       {
         //default attack

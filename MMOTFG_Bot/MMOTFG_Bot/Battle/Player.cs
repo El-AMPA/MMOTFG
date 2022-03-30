@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,7 +10,6 @@ namespace MMOTFG_Bot
     class Player : Battler
     {
         public List<string> attackNames;
-        public List<float> attackmpCosts;
 
         public LevelUpRoadmap levelUpRoadmap;
         public int experience;
@@ -17,6 +17,11 @@ namespace MMOTFG_Bot
         public int level;
 
         public bool upNext;
+        public bool dead;
+        [DefaultValue(4)]
+        public int maxAttacks;
+
+        public Attack learningAttack;
 
         public Player()
         {
@@ -25,17 +30,21 @@ namespace MMOTFG_Bot
 
         public void AfterCreate()
         {
-            attackNames = new List<string>();
-            attackmpCosts = new List<float>();
-            foreach (Attack a in attacks)
-            {
-                attackNames.Add(a.name);
-                attackmpCosts.Add(a.mpCost);
-            }
+            SetAttackNames();
+            Program.SetAttackKeywords(attackNames);
             stats = (float[])levelUpRoadmap.firstStats.Clone();
             maxStats = (float[])stats.Clone();
             originalStats = (float[])stats.Clone();
             levelUpRoadmap.CalculateLevels();
+        }
+
+        private void SetAttackNames()
+        {
+            attackNames = new List<string>();
+            foreach (Attack a in attacks)
+            {
+                attackNames.Add(a.name);
+            }
         }
 
         public Dictionary<string, object> GetSerializable()
@@ -129,14 +138,59 @@ namespace MMOTFG_Bot
             }
         }
 
+        public async Task LearnAttack(long chatId, Attack attack)
+        {
+            if(attacks.Count == maxAttacks)
+            {
+                learningAttack = attack;
+                List<string> options = new List<string>(attackNames);
+                options.Add("Skip");
+                await TelegramCommunicator.SendButtons(chatId, $"Do you want to learn {attack.name}? Choose an attack to replace or Skip to skip",
+                    options.ToArray(), 2, 3);
+                Program.SetAttackKeywords(options);
+            }
+            else
+            {
+                learningAttack = null;
+                attacks.Add(attack);
+                SetAttackNames();
+                Program.SetAttackKeywords(attackNames);
+                await TelegramCommunicator.SendText(chatId, $"Learnt {attack.name}!");
+                if (!BattleSystem.battleActive) await TelegramCommunicator.RemoveReplyMarkup(chatId);
+            }
+        }
+
+        public async Task ForgetAttack(long chatId, string attackName)
+        {
+            if (attackName == "skip")
+            {
+                learningAttack = null;
+                await TelegramCommunicator.SendText(chatId, "Skipped move learning");
+                if (!BattleSystem.battleActive) await TelegramCommunicator.RemoveReplyMarkup(chatId);
+                return;
+            }
+            Attack atk = attacks.FirstOrDefault(x => x.name.ToLower() == attackName);
+            if(atk == null){
+                await TelegramCommunicator.SendText(chatId, "Not a valid attack to forget");
+            }
+            else
+            {
+                attacks.Remove(atk);
+                await TelegramCommunicator.SendText(chatId, $"Forgot {atk.name}");
+                await LearnAttack(chatId, learningAttack);
+            }
+        }
+
         public void OnBattleOver()
         {
-            //reseteamos los stats (excepto HP/MP) a su estado original
+            //reseteamos los stats a su estado original
             for (int i = 0; i < Stats.statNum; i++)
             {
-                if (!Stats.isBounded((StatName)i))
+                //(HP/MP solo si el jugador murió)
+                if (!Stats.isBounded((StatName)i) || dead)
                     stats[i] = originalStats[i];
             }
+            dead = false;
         }
     }
 }
