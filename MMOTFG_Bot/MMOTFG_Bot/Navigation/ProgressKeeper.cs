@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MMOTFG_Bot.Navigation
@@ -41,16 +40,59 @@ namespace MMOTFG_Bot.Navigation
             await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
         }
 
-        public static bool IsFlagActive(long chatId, string flag)
-        {
-            //Checks if the flag is active in the DB
-            return PlayerRecords.ContainsKey(flag);
-        }
-
         public static void SetFlagAs(long chatId, string flag, bool active)
         {
             if (PlayerRecords.ContainsKey(flag)) PlayerRecords[flag] = active;
             else PlayerRecords.Add(flag, active);
+        }
+
+        public static bool IsFlagActive(long chatId, string flag)
+        {
+            string[] substrings = flag.Split(' ');
+
+            if (substrings.Length == 1)
+            {
+                if (flag[0] == '!') return !PlayerRecords.ContainsKey(flag.Substring(1));
+                else return PlayerRecords.ContainsKey(flag);
+            }
+
+            int operation = 0; //0 = no operation, 1 = AND, 2 = OR
+            bool result = true;
+
+            foreach (string s in substrings)
+            {
+                switch (s)
+                {
+                    case ("OR"):
+                    case ("or"):
+                        operation = 1;
+                        break;
+                    case ("AND"):
+                    case ("and"):
+                        operation = 2;
+                        break;
+                    default:
+                        bool current;
+                        if (s[0] == '!') current = !PlayerRecords.ContainsKey(s.Substring(1));
+                        else current = PlayerRecords.ContainsKey(s);
+
+                        switch (operation)
+                        {
+                            case (0):
+                                result = current;
+                                break;
+                            case (1):
+                                result = result || current;
+                                break;
+                            case (2):
+                                result = result && current;
+                                break;
+                        }
+                        break;
+                }
+            }
+
+            return result;
         }
     }
 }

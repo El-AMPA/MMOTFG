@@ -25,21 +25,6 @@ namespace MMOTFG_Bot.Navigation
             public Node Node;
         }
 
-        internal class TriggerCondition
-        {
-            public string Name
-            {
-                get;
-                set;
-            }
-
-            public bool Condition
-            {
-                get;
-                set;
-            }
-        }
-
         public Event[] events
         {
             get;
@@ -93,20 +78,9 @@ namespace MMOTFG_Bot.Navigation
                 {
                     bool condition = true;
 
-                    if (ev.TriggerIfFalse != null)
+                    if (ev.TriggerCondition != null)
                     {
-                        string condName = ev.TriggerIfFalse;
-                        if (condName == "Visited") condName = Name + "Visited";
-                        condition =
-                            !ProgressKeeper.IsFlagActive(chatId, condName);
-                    }
-
-                    else if (ev.TriggerIfTrue != null)
-                    {
-                        string condName = ev.TriggerIfTrue;
-                        if (condName == "Visited") condName = Name + "Visited";
-                        condition =
-                            ProgressKeeper.IsFlagActive(chatId, condName);
+                        condition = ProgressKeeper.IsFlagActive(chatId, ev.TriggerCondition);
                     }
 
                     if (condition)
@@ -133,20 +107,9 @@ namespace MMOTFG_Bot.Navigation
                 {
                     bool condition = true;
 
-                    if (ev.TriggerIfFalse != null)
+                    if (ev.TriggerCondition != null)
                     {
-                        string condName = ev.TriggerIfFalse;
-                        if (condName == "Visited") condName = Name + "Visited";
-                        condition =
-                            !ProgressKeeper.IsFlagActive(chatId, condName);
-                    }
-
-                    else if (ev.TriggerIfTrue != null)
-                    {
-                        string condName = ev.TriggerIfTrue;
-                        if (condName == "Visited") condName = Name + "Visited";
-                        condition =
-                            ProgressKeeper.IsFlagActive(chatId, condName);
+                        condition = ProgressKeeper.IsFlagActive(chatId, ev.TriggerCondition);
                     }
 
                     if (condition)
@@ -173,20 +136,9 @@ namespace MMOTFG_Bot.Navigation
                 {
                     bool condition = true;
 
-                    if (ev.TriggerIfFalse != null)
+                    if (ev.TriggerCondition != null)
                     {
-                        string condName = ev.TriggerIfFalse;
-                        if (condName == "Visited") condName = Name + "Visited";
-                        condition =
-                            !ProgressKeeper.IsFlagActive(chatId, condName);
-                    }
-
-                    else if (ev.TriggerIfTrue != null)
-                    {
-                        string condName = ev.TriggerIfTrue;
-                        if (condName == "Visited") condName = Name + "Visited";
-                        condition =
-                            ProgressKeeper.IsFlagActive(chatId, condName);
+                        condition = ProgressKeeper.IsFlagActive(chatId, ev.TriggerCondition);
                     }
 
                     if (condition)

@@ -13,7 +13,7 @@
       {
         "EventType": "eSendText",
         "Description": "This dungeon is so dark. As you walk through the area, you stumble into a lit torch. This will be really useful.",
-        "TriggerIfFalse": "TorchFound"
+        "TriggerCondition": "TorchFound"
       },
       {
         "EventType": "eGiveItem",
@@ -24,25 +24,30 @@
             "ChanceToObtain": 1
           }
         ],
-        "TriggerIfFalse": "TorchFound"
+        "TriggerCondition": "TorchFound"
       },
       {
         "EventType": "eSetCondition",
         "Name": "TorchFound",
         "SetAs": "True",
-        "TriggerIfFalse": "TorchFound"
+        "TriggerCondition": "TorchFound"
       },
       {
         "EventType": "eSendText",
         "Description": "I should equip the torch to see better further ahead.",
-        "TriggerIfFalse": "TorchLit"
+        "TriggerCondition": "TorchLit"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"How the fuck",
+        "TriggerCondition": "TorchLit AND !TorchFound" 
       }
     ],
     "OnExitEvent": [
       {
         "EventType":"eSendText",
         "Description":"On your way out, you find a health potion. Nice!",
-        "TriggerIfFalse":"Visited"
+        "TriggerCondition":"Corridor1Visited"
       },
       {
         "EventType": "eGiveItem",
@@ -53,12 +58,12 @@
             "ChanceToObtain": 1
           }
         ],
-        "TriggerIfFalse":"Visited"
+        "TriggerCondition":"Corridor1Visited"
       },
       {
         "EventType":"eSendText",
         "Description":"As you make your way out of the room, you find nothing of interest.",
-        "TriggerIfTrue":"Visited"
+        "TriggerCondition":"Corridor1Visited"
       }
     ]
   },
@@ -76,26 +81,26 @@
       {
         "EventType":"eSendText",
         "Description":"God damn. I can't se nothing around here. Maybe I should return and inspect the entrance.",
-        "TriggerIfFalse":"TorchLit"
+        "TriggerCondition":"TorchLit"
       },
       {
         "EventType":"eSendText",
         "Description":"As you make your way into the room, you see huge claw marks in the area.",
-        "TriggerIfTrue":"TorchLit"
+        "TriggerCondition":"TorchLit"
       }
     ],
     "OnExitEvent": [
       {
         "EventType":"eSendText",
         "Description":"You have a bad feeling about this...",
-        "TriggerIfFalse":"TorchLit"
+        "TriggerCondition":"TorchLit"
       }
     ],
     "OnInspectEvent":[
       {
         "EventType":"eSendText",
         "Description":"As you move around your torch to inspect the room, you notice a small glint of light.\n You make your way to the source and you find... A pair of beast slaying boots!... For some reason...",
-        "TriggerIfTrue":"TorchLit"
+        "TriggerCondition":"TorchLit"
       },
       {
         "EventType":"eGiveItem",
@@ -106,7 +111,7 @@
             "ChanceToObtain":1
           }
         ],
-        "TriggerIfTrue":"TorchLit"
+        "TriggerCondition":"TorchLit"
       }
     ]
   },
