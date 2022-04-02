@@ -137,6 +137,7 @@ namespace MMOTFG_Bot
             Enemy e = b as Enemy;
             if(e != null)
             {
+                await TelegramCommunicator.SendText(chatId, $"{e.name}'s turn");
                 Attack a = e.nextAttack();
                 Battler target = e;
                 if (!a.affectsSelf)
@@ -214,6 +215,7 @@ namespace MMOTFG_Bot
                         List<string> targetNames = new List<string>();
                         foreach (Battler b in otherAliveBattlers) targetNames.Add($"{attack.name} {b.name}");
                         await TelegramCommunicator.SendButtons(chatId, message, targetNames.ToArray());
+                        //Program.SetAttackKeywords(targetNames);
                         return;
                     }
                 }            
