@@ -29,8 +29,27 @@ namespace MMOTFG_Bot
         public string imageName;
         public string imageCaption;
 
+        public float droppedMoney;
+        public string droppedItem;
+        [DefaultValue(1)]
+        public int droppedItemAmount;
+        [DefaultValue(1)]
+        public int experienceGiven;
+
+        public bool isAlly;
+
         public Battler()
         {
+        }
+
+        //Gets a random attack the enemy has enough MP to use (basic attack should always cost 0 to avoid problems)
+        public Attack nextAttack()
+        {
+            int i = attacks.Count - 1;
+            while (attacks[i].mpCost > stats[(int)StatName.MP])
+                i--;
+            int attack = RNG.Next(0, i + 1);
+            return attacks[attack];
         }
 
         public void OnCreate()
@@ -119,6 +138,100 @@ namespace MMOTFG_Bot
                     b.flag = !b.activateOnce;
                 }           
             }
+        }
+
+        public Dictionary<string, object> getSerializable()
+        {
+            Dictionary<string, object> battlerInfo = new Dictionary<string, object>();
+
+            Dictionary<string, float> statsTemp = new Dictionary<string, float>();
+
+            int i = 0;
+            foreach (float sValue in stats)
+            {
+                statsTemp.Add(Enum.GetName(typeof(StatName), i), sValue);
+                i++;
+            }
+
+            battlerInfo.Add(DbConstants.BATTLE_INFO_FIELD_CUR_STATS, statsTemp);
+
+            statsTemp = new Dictionary<string, float>();
+
+            i = 0;
+            foreach (float sValue in originalStats)
+            {
+                statsTemp.Add(Enum.GetName(typeof(StatName), i), sValue);
+                i++;
+            }
+
+            battlerInfo.Add(DbConstants.BATTLE_INFO_FIELD_OG_STATS, statsTemp);
+
+            statsTemp = new Dictionary<string, float>();
+
+            i = 0;
+            foreach (float sValue in maxStats)
+            {
+                statsTemp.Add(Enum.GetName(typeof(StatName), i), sValue);
+                i++;
+            }
+
+            battlerInfo.Add(DbConstants.BATTLE_INFO_FIELD_MAX_STATS, statsTemp);
+
+
+            battlerInfo.Add(DbConstants.BATTLER_FIELD_NAME, name);
+
+            battlerInfo.Add(DbConstants.BATTLER_FIELD_MONEY_DROP, droppedMoney);
+
+            battlerInfo.Add(DbConstants.BATTLER_FIELD_ITEM_DROP, droppedItem);
+
+            battlerInfo.Add(DbConstants.BATTLER_FIELD_ITEM_DROP_AMOUNT, droppedItemAmount);
+
+            battlerInfo.Add(DbConstants.BATTLER_FIELD_IS_ALLY, isAlly);
+
+            return battlerInfo;
+        }
+
+        public void loadSerializable(Dictionary<string, object> eInfo)
+        {
+            Dictionary<string, object> statsDB = (Dictionary<string, object>)eInfo[DbConstants.BATTLE_INFO_FIELD_CUR_STATS];
+
+            foreach (KeyValuePair<string, object> keyValue in statsDB)
+            {
+                StatName index;
+                Enum.TryParse(keyValue.Key, true, out index);
+
+                stats[(int)index] = Convert.ToSingle(keyValue.Value);
+            }
+
+            statsDB = (Dictionary<string, object>)eInfo[DbConstants.BATTLE_INFO_FIELD_OG_STATS];
+
+            foreach (KeyValuePair<string, object> keyValue in statsDB)
+            {
+                StatName index;
+                Enum.TryParse(keyValue.Key, true, out index);
+
+                originalStats[(int)index] = Convert.ToSingle(keyValue.Value);
+            }
+
+            statsDB = (Dictionary<string, object>)eInfo[DbConstants.BATTLE_INFO_FIELD_MAX_STATS];
+
+            foreach (KeyValuePair<string, object> keyValue in statsDB)
+            {
+                StatName index;
+                Enum.TryParse(keyValue.Key, true, out index);
+
+                maxStats[(int)index] = Convert.ToSingle(keyValue.Value);
+            }
+
+
+            name = eInfo[DbConstants.BATTLER_FIELD_NAME].ToString();
+
+            droppedMoney = Convert.ToSingle(eInfo[DbConstants.BATTLER_FIELD_MONEY_DROP]);
+            droppedItem = eInfo[DbConstants.BATTLER_FIELD_ITEM_DROP].ToString();
+
+            droppedItemAmount = Convert.ToInt32(eInfo[DbConstants.BATTLER_FIELD_ITEM_DROP_AMOUNT]);
+
+            isAlly = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_IS_ALLY]);
         }
     }
 }

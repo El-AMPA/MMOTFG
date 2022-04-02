@@ -10,7 +10,7 @@ namespace MMOTFG_Bot
     static class BattleSystem
     {
         public static Player player;
-        public static Enemy enemy;
+        //public static Enemy enemy;
 
         public static List<Battler> battlers;
         public static List<Battler> playerSide;
@@ -29,10 +29,19 @@ namespace MMOTFG_Bot
 
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_ACTIVE, battleActive);
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_INFO, player.GetSerializable());
-            if (!battleActive) { 
-                update.Add(DbConstants.PLAYER_FIELD_ENEMY, null); 
+            if (!battleActive)
+            {
+                update.Add(DbConstants.PLAYER_FIELD_BATTLER_LIST, null);
             }
-            else update.Add(DbConstants.PLAYER_FIELD_ENEMY, (enemySide.First() as Enemy).getSerializable());
+            else
+            {
+                List<Dictionary<string, object>> battlerList = new List<Dictionary<string, object>>();
+                foreach (Battler b in battlers)
+                {
+                    battlerList.Add(b.getSerializable());
+                }
+                update.Add(DbConstants.PLAYER_FIELD_BATTLER_LIST, battlerList);
+            }
 
             await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
         }
@@ -47,10 +56,10 @@ namespace MMOTFG_Bot
             player.LoadSerializable((Dictionary<string, object>) dbPlayer[DbConstants.PLAYER_FIELD_BATTLE_INFO]);
             player.SetName((string)dbPlayer[DbConstants.PLAYER_FIELD_NAME]);
 
-            if (dbPlayer[DbConstants.PLAYER_FIELD_ENEMY] != null) {
-                string enemyName = ((Dictionary<string, object>)dbPlayer[DbConstants.PLAYER_FIELD_ENEMY])[DbConstants.ENEMY_FIELD_NAME].ToString();
-                enemy = JSONSystem.getEnemy(enemyName);
-                enemy.loadSerializable((Dictionary<string, object>)dbPlayer[DbConstants.PLAYER_FIELD_ENEMY]);
+            if (dbPlayer[DbConstants.PLAYER_FIELD_BATTLER_LIST] != null) {
+                string enemyName = ((Dictionary<string, object>)dbPlayer[DbConstants.PLAYER_FIELD_BATTLER_LIST])[DbConstants.BATTLER_FIELD_NAME].ToString();
+                //enemy = JSONSystem.getEnemy(enemyName);
+                //enemy.loadSerializable((Dictionary<string, object>)dbPlayer[DbConstants.PLAYER_FIELD_ENEMY]);
             }
         }
 
@@ -60,7 +69,7 @@ namespace MMOTFG_Bot
 
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_ACTIVE, false);
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_INFO, player.GetSerializable());
-            update.Add(DbConstants.PLAYER_FIELD_ENEMY, null);
+            update.Add(DbConstants.PLAYER_FIELD_BATTLER_LIST, null);
 
             await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
         }
@@ -134,12 +143,11 @@ namespace MMOTFG_Bot
             Battler b = battlers.First(x => x.turnOver == false);
 
             //if the battler is an enemy
-            Enemy e = b as Enemy;
-            if(e != null)
+            if((b as Player) == null)
             {
-                await TelegramCommunicator.SendText(chatId, $"{e.name}'s turn");
-                Attack a = e.nextAttack();
-                Battler target = e;
+                await TelegramCommunicator.SendText(chatId, $"{b.name}'s turn");
+                Attack a = b.nextAttack();
+                Battler target = b;
                 if (!a.affectsSelf)
                 {
                     //which side is the battler in
@@ -147,7 +155,7 @@ namespace MMOTFG_Bot
                     List<Battler> aliveOtherSide = otherSide.Where(x => x.GetStat(HP) > 0).ToList();
                     target = aliveOtherSide[RNG.Next(0, aliveOtherSide.Count)];
                 }
-                await UseAttack(chatId, a, e, target);
+                await UseAttack(chatId, a, b, target);
             }
             //if the battler is a player
             else
@@ -245,20 +253,19 @@ namespace MMOTFG_Bot
                 battlers.Remove(target);
                 await TelegramCommunicator.SendText(chatId, message);
                 await target.OnBehaviour(chatId, target.onKill);
-                enemy = target as Enemy;
-                if(enemy != null)
+                if(target != null)
                 {
                     string msg = $"{target.name} died!";
-                    if (enemy.droppedMoney > 0)
-                        msg += $"\nYou gained {enemy.droppedMoney}€";
-                    if (enemy.droppedItem != null)
+                    if (target.droppedMoney > 0)
+                        msg += $"\nYou gained {target.droppedMoney}€";
+                    if (target.droppedItem != null)
                     {
-                        msg += $"\nYou obtained {enemy.droppedItem} x{enemy.droppedItemAmount}";
-                        await InventorySystem.AddItem(chatId, enemy.droppedItem, enemy.droppedItemAmount);
+                        msg += $"\nYou obtained {target.droppedItem} x{target.droppedItemAmount}";
+                        await InventorySystem.AddItem(chatId, target.droppedItem, target.droppedItemAmount);
                     }
-                    if (enemy.experienceGiven != 0)
+                    if (target.experienceGiven != 0)
                     {
-                        await player.GainExperience(chatId, enemy.experienceGiven);
+                        await player.GainExperience(chatId, target.experienceGiven);
                     }
                     await TelegramCommunicator.SendText(chatId, msg);
                 }

@@ -25,11 +25,12 @@ namespace MMOTFG_Bot
 		readonly public static string PLAYER_FIELD_BATTLE_INFO = "player_battle_info";
 		readonly public static string BATTLE_INFO_FIELD_CUR_STATS = "cur_stats";
 		readonly public static string BATTLE_INFO_FIELD_OG_STATS = "og_stats";
-		readonly public static string PLAYER_FIELD_ENEMY = "enemy";
-		readonly public static string ENEMY_FIELD_NAME = "name";
-		readonly public static string ENEMY_FIELD_MONEY_DROP = "money_drop";
-		readonly public static string ENEMY_FIELD_ITEM_DROP = "item_drop";
-		readonly public static string ENEMY_FIELD_ITEM_DROP_AMOUNT = "item_drop_amount";
-
+		readonly public static string BATTLE_INFO_FIELD_MAX_STATS = "max_stats";
+		readonly public static string PLAYER_FIELD_BATTLER_LIST = "battler";
+		readonly public static string BATTLER_FIELD_NAME = "name";
+		readonly public static string BATTLER_FIELD_MONEY_DROP = "money_drop";
+		readonly public static string BATTLER_FIELD_ITEM_DROP = "item_drop";
+		readonly public static string BATTLER_FIELD_ITEM_DROP_AMOUNT = "item_drop_amount";
+		readonly public static string BATTLER_FIELD_IS_ALLY = "is_ally";
 	}
 }
