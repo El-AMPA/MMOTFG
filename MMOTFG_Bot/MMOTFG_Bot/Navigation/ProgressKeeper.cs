@@ -56,7 +56,7 @@ namespace MMOTFG_Bot.Navigation
                 else return PlayerRecords.ContainsKey(flag);
             }
 
-            int operation = 0; //0 = no operation, 1 = AND, 2 = OR
+            int operation = 0; //0 = override previous result. Useful at the beggining , 1 = AND, 2 = OR
             bool result = true;
 
             foreach (string s in substrings)

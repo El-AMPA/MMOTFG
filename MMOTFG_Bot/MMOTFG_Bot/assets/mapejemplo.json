@@ -13,7 +13,7 @@
       {
         "EventType": "eSendText",
         "Description": "This dungeon is so dark. As you walk through the area, you stumble into a lit torch. This will be really useful.",
-        "TriggerCondition": "TorchFound"
+        "TriggerCondition": "!TorchFound AND !TorchEquipped"
       },
       {
         "EventType": "eGiveItem",
@@ -24,30 +24,30 @@
             "ChanceToObtain": 1
           }
         ],
-        "TriggerCondition": "TorchFound"
+        "TriggerCondition": "!TorchFound"
+      },
+      {
+        "EventType": "eSendText",
+        "Description": "I should equip the torch to see better further ahead.",
+        "TriggerCondition": "!TorchLit AND TorchFound"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"You cheated not only on yourself",
+        "TriggerCondition": "TorchLit AND !TorchFound" 
       },
       {
         "EventType": "eSetCondition",
         "Name": "TorchFound",
         "SetAs": "True",
-        "TriggerCondition": "TorchFound"
-      },
-      {
-        "EventType": "eSendText",
-        "Description": "I should equip the torch to see better further ahead.",
-        "TriggerCondition": "TorchLit"
-      },
-      {
-        "EventType":"eSendText",
-        "Description":"How the fuck",
-        "TriggerCondition": "TorchLit AND !TorchFound" 
+        "TriggerCondition": "!TorchFound"
       }
     ],
     "OnExitEvent": [
       {
         "EventType":"eSendText",
         "Description":"On your way out, you find a health potion. Nice!",
-        "TriggerCondition":"Corridor1Visited"
+        "TriggerCondition":"!Corridor2Visited"
       },
       {
         "EventType": "eGiveItem",
@@ -58,11 +58,6 @@
             "ChanceToObtain": 1
           }
         ],
-        "TriggerCondition":"Corridor1Visited"
-      },
-      {
-        "EventType":"eSendText",
-        "Description":"As you make your way out of the room, you find nothing of interest.",
         "TriggerCondition":"Corridor1Visited"
       }
     ]
@@ -129,7 +124,8 @@
       },
       {
         "EventType": "eStartBattle",
-        "Enemy": "Manuela"
+        "Enemy": "Manuela",
+        "TriggerCondition": "!ManuelaKilled"
       }
     ]
   }

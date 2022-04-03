@@ -47,6 +47,10 @@
       "Change": 5,
       "ActivateOnce": false,
       "Message": "El poder de la amistad cura 5 HP a Manuela."
+    },
+    "OnKill":{
+      "BehaviourType": "bSetFlag",
+      "SetFlagAsTrue": "ManuelaKilled"
     }
   },
   {
