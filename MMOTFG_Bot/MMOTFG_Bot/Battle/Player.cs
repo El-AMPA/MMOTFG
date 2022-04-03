@@ -60,7 +60,7 @@ namespace MMOTFG_Bot
                 i++;
 			}
 
-            combatInfo.Add(DbConstants.BATTLE_INFO_FIELD_CUR_STATS, statsTemp);
+            combatInfo.Add(DbConstants.BATTLER_INFO_FIELD_CUR_STATS, statsTemp);
 
             statsTemp = new Dictionary<string, float>();
 
@@ -71,14 +71,14 @@ namespace MMOTFG_Bot
                 i++;
             }
 
-            combatInfo.Add(DbConstants.BATTLE_INFO_FIELD_OG_STATS, statsTemp);
+            combatInfo.Add(DbConstants.BATTLER_INFO_FIELD_OG_STATS, statsTemp);
 
             return combatInfo;
 		}
 
         public void LoadSerializable(Dictionary<string, object> cInfo)
         {
-            Dictionary<string, object> statsDB = (Dictionary<string, object>)cInfo[DbConstants.BATTLE_INFO_FIELD_CUR_STATS];
+            Dictionary<string, object> statsDB = (Dictionary<string, object>)cInfo[DbConstants.BATTLER_INFO_FIELD_CUR_STATS];
 
 			foreach (KeyValuePair<string,object> keyValue in statsDB)
 			{    
@@ -87,7 +87,7 @@ namespace MMOTFG_Bot
                 stats[(int)index] = Convert.ToSingle(keyValue.Value);
             }
 
-            statsDB = (Dictionary<string, object>)cInfo[DbConstants.BATTLE_INFO_FIELD_OG_STATS];
+            statsDB = (Dictionary<string, object>)cInfo[DbConstants.BATTLER_INFO_FIELD_OG_STATS];
 
             foreach (KeyValuePair<string, object> keyValue in statsDB)
             {
@@ -145,6 +145,7 @@ namespace MMOTFG_Bot
                 learningAttack = attack;
                 List<string> options = new List<string>(attackNames);
                 options.Add("Skip");
+                if (BattleSystem.battleActive) await BattleSystem.PauseBattle(chatId);
                 await TelegramCommunicator.SendButtons(chatId, $"Do you want to learn {attack.name}? Choose an attack to replace or Skip to skip",
                     options.ToArray(), 2, 3);
                 Program.SetAttackKeywords(options);
@@ -157,6 +158,7 @@ namespace MMOTFG_Bot
                 Program.SetAttackKeywords(attackNames);
                 await TelegramCommunicator.SendText(chatId, $"Learnt {attack.name}!");
                 if (!BattleSystem.battleActive) await TelegramCommunicator.RemoveReplyMarkup(chatId);
+                else if(BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
             }
         }
 
@@ -167,6 +169,7 @@ namespace MMOTFG_Bot
                 learningAttack = null;
                 await TelegramCommunicator.SendText(chatId, "Skipped move learning");
                 if (!BattleSystem.battleActive) await TelegramCommunicator.RemoveReplyMarkup(chatId);
+                else if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
                 return;
             }
             Attack atk = attacks.FirstOrDefault(x => x.name.ToLower() == attackName);

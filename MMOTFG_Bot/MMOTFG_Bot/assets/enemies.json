@@ -10,9 +10,6 @@
     "ExperienceGiven": 1,
     "Attacks": [
       {
-        //default attack
-      },
-      {
         "AttackType": "aStatChanging",
         "Name": "Swords Dance",
         "MpCost": 1,

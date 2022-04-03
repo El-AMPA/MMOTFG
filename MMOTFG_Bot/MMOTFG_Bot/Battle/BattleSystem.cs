@@ -17,6 +17,7 @@ namespace MMOTFG_Bot
         public static List<Battler> enemySide;
 
         public static bool battleActive = false;
+        public static bool battlePaused = false;
 
         public static void Init()
         {
@@ -37,7 +38,7 @@ namespace MMOTFG_Bot
             {
                 List<Dictionary<string, object>> battlerList = new List<Dictionary<string, object>>();
                 foreach (Battler b in battlers)
-                {
+                {                                    
                     battlerList.Add(b.getSerializable());
                 }
                 update.Add(DbConstants.PLAYER_FIELD_BATTLER_LIST, battlerList);
@@ -56,10 +57,36 @@ namespace MMOTFG_Bot
             player.LoadSerializable((Dictionary<string, object>) dbPlayer[DbConstants.PLAYER_FIELD_BATTLE_INFO]);
             player.SetName((string)dbPlayer[DbConstants.PLAYER_FIELD_NAME]);
 
-            if (dbPlayer[DbConstants.PLAYER_FIELD_BATTLER_LIST] != null) {
-                string enemyName = ((Dictionary<string, object>)dbPlayer[DbConstants.PLAYER_FIELD_BATTLER_LIST])[DbConstants.BATTLER_FIELD_NAME].ToString();
-                //enemy = JSONSystem.getEnemy(enemyName);
-                //enemy.loadSerializable((Dictionary<string, object>)dbPlayer[DbConstants.PLAYER_FIELD_ENEMY]);
+            if (!battleActive) return;
+
+            List<object> dbBattlers = (List<object>)dbPlayer[DbConstants.PLAYER_FIELD_BATTLER_LIST];
+
+            battlers = new List<Battler>();
+            enemySide = new List<Battler>();
+            playerSide = new List<Battler>();
+
+            foreach (Dictionary<string, object> o in dbBattlers)
+            {
+                Battler b = new Battler();
+                if ((bool)o[DbConstants.BATTLER_FIELD_IS_PLAYER])
+                {
+                    //don't create player again
+                    if ((string)o[DbConstants.BATTLER_FIELD_NAME] == player.name)
+                    {
+                        battlers.Add(player);
+                        playerSide.Add(player);
+                        continue;
+                    }
+                }
+                else
+                {
+                    string enemyName = (string)o[DbConstants.BATTLER_FIELD_NAME];
+                    b = JSONSystem.getEnemy(enemyName);
+                }
+                b.loadSerializable(o);
+                battlers.Add(b);
+                if (b.isAlly) playerSide.Add(b);
+                else enemySide.Add(b);
             }
         }
 
@@ -96,6 +123,7 @@ namespace MMOTFG_Bot
             battlers.AddRange(enemySide);
             battlers.AddRange(playerSide);
             battleActive = true;
+            battlePaused = false;
             if(eSide.Count == 1)
             {
                 Battler b = eSide.First();
@@ -120,21 +148,32 @@ namespace MMOTFG_Bot
                 await TelegramCommunicator.SendImageCollection(chatId, imageNames.ToArray());
                 await TelegramCommunicator.SendText(chatId, caption);
             }
-            //await SavePlayerBattle(chatId);
             //all battlers start being able to move
-            foreach (Battler ba in battlers) ba.turnOver = false;
+            foreach (Battler ba in battlers)
+            {
+                ba.turnOver = false;
+                ba.isAlly = playerSide.Contains(ba);
+                ba.isPlayer = (ba as Player != null);
+            }
+            await SavePlayerBattle(chatId);
             await NextAttack(chatId);
         }
 
         public static async Task NextAttack(long chatId)
         {
+            if (!battleActive || battlePaused) return;
+
+            await LoadPlayerBattle(chatId);
             //if every battler has finished their turn, start a new turn
-            if(battlers.FirstOrDefault(x => x.turnOver == false) == null)
+            if (battlers.FirstOrDefault(x => x.turnOver == false) == null)
             {
                 foreach (Battler ba in battlers)
                 {
-                    await ba.OnBehaviour(chatId, ba.onTurnEnd);
-                    ba.turnOver = false;
+                    if (ba.GetStat(HP) > 0)
+                    {
+                        await ba.OnBehaviour(chatId, ba.onTurnEnd);
+                        ba.turnOver = false;
+                    }   
                 }
             } 
             //sort battlers by speed
@@ -172,8 +211,7 @@ namespace MMOTFG_Bot
         }
 
         public static async Task PlayerAttack(long chatId, string attackName, string targetName = null)
-        {
-            //await LoadPlayerBattle(chatId);
+        {            
             if (!battleActive)
             {
                 await TelegramCommunicator.SendText(chatId, "No battle currently active");
@@ -250,10 +288,10 @@ namespace MMOTFG_Bot
 
             if (target.GetStat(HP) <= 0)
             {
-                battlers.Remove(target);
+                target.turnOver = true;
                 await TelegramCommunicator.SendText(chatId, message);
                 await target.OnBehaviour(chatId, target.onKill);
-                if(target != null)
+                if(!target.isAlly)
                 {
                     string msg = $"{target.name} died!";
                     if (target.droppedMoney > 0)
@@ -262,19 +300,19 @@ namespace MMOTFG_Bot
                     {
                         msg += $"\nYou obtained {target.droppedItem} x{target.droppedItemAmount}";
                         await InventorySystem.AddItem(chatId, target.droppedItem, target.droppedItemAmount);
-                    }
+                    }                    
+                    await TelegramCommunicator.SendText(chatId, msg);
                     if (target.experienceGiven != 0)
                     {
                         await player.GainExperience(chatId, target.experienceGiven);
                     }
-                    await TelegramCommunicator.SendText(chatId, msg);
                 }
-                List<Battler> side = (enemySide.Contains(target)) ? enemySide : playerSide;
+                List<Battler> side = (target.isAlly) ? playerSide : enemySide;
                 //if entire side has been defeated, end battle
                 if (side.FirstOrDefault(x => x.GetStat(HP) > 0) == null)
                 {
                     battleActive = false;
-                    if(player.learningAttack == null) await TelegramCommunicator.RemoveReplyMarkup(chatId);
+                    if(!battlePaused) await TelegramCommunicator.RemoveReplyMarkup(chatId);
                     player.OnBattleOver();
                 }
             }
@@ -285,8 +323,22 @@ namespace MMOTFG_Bot
                 await TelegramCommunicator.SendText(chatId, message);
             }
 
+            await SavePlayerBattle(chatId);
             if (battleActive) await NextAttack(chatId);
-            //await SavePlayerBattle(chatId);
+        }
+
+        //for instances where the battle needs to be paused (such as move learning)
+        public static async Task PauseBattle(long chatId)
+        {
+            await SavePlayerBattle(chatId);
+            battlePaused = true;
+        }
+
+        //call only if battle has been paused
+        public static async Task ResumeBattle(long chatId)
+        {
+            battlePaused = false;
+            if (battleActive) await NextAttack(chatId);
         }
 
         private static string GetStatBar(Battler b, StatName s)

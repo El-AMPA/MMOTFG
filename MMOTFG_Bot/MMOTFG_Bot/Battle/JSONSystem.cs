@@ -9,7 +9,7 @@ namespace MMOTFG_Bot
 {
     static class JSONSystem
     {
-        private static List<Enemy> enemies;
+        private static List<Battler> enemies;
         private static Player player;
 
         public static void Init(string enemyPath, string playerPath)
@@ -36,9 +36,9 @@ namespace MMOTFG_Bot
 
             try
             {
-                enemies = JsonConvert.DeserializeObject<List<Enemy>>(enemyText, 
+                enemies = JsonConvert.DeserializeObject<List<Battler>>(enemyText, 
                     new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate}); //Deserializes the .json file into an array of enemies.
-                foreach (Enemy e in enemies) e.OnCreate();
+                foreach (Battler e in enemies) e.OnCreate();
             }
             catch (JsonException e)
             {
@@ -74,9 +74,9 @@ namespace MMOTFG_Bot
             }
         }
 
-        public static Enemy getEnemy(string name)
+        public static Battler getEnemy(string name)
         {
-            Enemy e = enemies.Find(x => x.name == name);
+            Battler e = enemies.Find(x => x.name == name);
             if (e != null)
             {
                 e.New();

@@ -37,9 +37,13 @@ namespace MMOTFG_Bot
         public int experienceGiven;
 
         public bool isAlly;
+        public bool isPlayer;
 
         public Battler()
         {
+            stats = new float[Stats.statNum];
+            originalStats = new float[Stats.statNum];
+            maxStats = new float[Stats.statNum];
         }
 
         //Gets a random attack the enemy has enough MP to use (basic attack should always cost 0 to avoid problems)
@@ -153,7 +157,7 @@ namespace MMOTFG_Bot
                 i++;
             }
 
-            battlerInfo.Add(DbConstants.BATTLE_INFO_FIELD_CUR_STATS, statsTemp);
+            battlerInfo.Add(DbConstants.BATTLER_INFO_FIELD_CUR_STATS, statsTemp);
 
             statsTemp = new Dictionary<string, float>();
 
@@ -164,7 +168,7 @@ namespace MMOTFG_Bot
                 i++;
             }
 
-            battlerInfo.Add(DbConstants.BATTLE_INFO_FIELD_OG_STATS, statsTemp);
+            battlerInfo.Add(DbConstants.BATTLER_INFO_FIELD_OG_STATS, statsTemp);
 
             statsTemp = new Dictionary<string, float>();
 
@@ -175,7 +179,7 @@ namespace MMOTFG_Bot
                 i++;
             }
 
-            battlerInfo.Add(DbConstants.BATTLE_INFO_FIELD_MAX_STATS, statsTemp);
+            battlerInfo.Add(DbConstants.BATTLER_INFO_FIELD_MAX_STATS, statsTemp);
 
 
             battlerInfo.Add(DbConstants.BATTLER_FIELD_NAME, name);
@@ -188,12 +192,16 @@ namespace MMOTFG_Bot
 
             battlerInfo.Add(DbConstants.BATTLER_FIELD_IS_ALLY, isAlly);
 
+            battlerInfo.Add(DbConstants.BATTLER_FIELD_IS_PLAYER, isPlayer);
+
+            battlerInfo.Add(DbConstants.BATTLER_FIELD_TURN_OVER, turnOver);
+
             return battlerInfo;
         }
 
         public void loadSerializable(Dictionary<string, object> eInfo)
         {
-            Dictionary<string, object> statsDB = (Dictionary<string, object>)eInfo[DbConstants.BATTLE_INFO_FIELD_CUR_STATS];
+            Dictionary<string, object> statsDB = (Dictionary<string, object>)eInfo[DbConstants.BATTLER_INFO_FIELD_CUR_STATS];
 
             foreach (KeyValuePair<string, object> keyValue in statsDB)
             {
@@ -203,7 +211,7 @@ namespace MMOTFG_Bot
                 stats[(int)index] = Convert.ToSingle(keyValue.Value);
             }
 
-            statsDB = (Dictionary<string, object>)eInfo[DbConstants.BATTLE_INFO_FIELD_OG_STATS];
+            statsDB = (Dictionary<string, object>)eInfo[DbConstants.BATTLER_INFO_FIELD_OG_STATS];
 
             foreach (KeyValuePair<string, object> keyValue in statsDB)
             {
@@ -213,7 +221,7 @@ namespace MMOTFG_Bot
                 originalStats[(int)index] = Convert.ToSingle(keyValue.Value);
             }
 
-            statsDB = (Dictionary<string, object>)eInfo[DbConstants.BATTLE_INFO_FIELD_MAX_STATS];
+            statsDB = (Dictionary<string, object>)eInfo[DbConstants.BATTLER_INFO_FIELD_MAX_STATS];
 
             foreach (KeyValuePair<string, object> keyValue in statsDB)
             {
@@ -227,11 +235,13 @@ namespace MMOTFG_Bot
             name = eInfo[DbConstants.BATTLER_FIELD_NAME].ToString();
 
             droppedMoney = Convert.ToSingle(eInfo[DbConstants.BATTLER_FIELD_MONEY_DROP]);
-            droppedItem = eInfo[DbConstants.BATTLER_FIELD_ITEM_DROP].ToString();
+            droppedItem = eInfo[DbConstants.BATTLER_FIELD_ITEM_DROP] as string;
 
             droppedItemAmount = Convert.ToInt32(eInfo[DbConstants.BATTLER_FIELD_ITEM_DROP_AMOUNT]);
 
             isAlly = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_IS_ALLY]);
+
+            turnOver = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_TURN_OVER]);
         }
     }
 }
