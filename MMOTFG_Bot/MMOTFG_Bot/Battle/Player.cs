@@ -39,7 +39,7 @@ namespace MMOTFG_Bot
         private void SetAttackNames()
         {
             attackNames = new List<string>();
-            foreach (Attack a in attacks)
+            foreach (Attack a in attacks_)
             {
                 attackNames.Add(a.name);
             }
@@ -81,7 +81,7 @@ namespace MMOTFG_Bot
 
         public async Task LearnAttack(long chatId, Attack attack)
         {
-            if (attacks.Count == maxAttacks)
+            if (attacks_.Count == maxAttacks)
             {
                 learningAttack = attack;
                 List<string> options = new List<string>(attackNames);
@@ -94,7 +94,7 @@ namespace MMOTFG_Bot
             else
             {
                 learningAttack = null;
-                attacks.Add(attack);
+                attacks_.Add(attack);
                 SetAttackNames();
                 Program.SetAttackKeywords(attackNames);
                 await TelegramCommunicator.SendText(chatId, $"Learnt {attack.name}!");
@@ -113,14 +113,14 @@ namespace MMOTFG_Bot
                 else if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
                 return;
             }
-            Attack atk = attacks.FirstOrDefault(x => x.name.ToLower() == attackName);
+            Attack atk = attacks_.FirstOrDefault(x => x.name.ToLower() == attackName);
             if (atk == null)
             {
                 await TelegramCommunicator.SendText(chatId, "Not a valid attack to forget");
             }
             else
             {
-                attacks.Remove(atk);
+                attacks_.Remove(atk);
                 await TelegramCommunicator.SendText(chatId, $"Forgot {atk.name}");
                 await LearnAttack(chatId, learningAttack);
             }

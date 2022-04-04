@@ -1,25 +1,7 @@
 ﻿{
   "Name": "Player",
   "Stats": [ 100, 10, 10, 50 ],
-  "Attacks": [
-    {
-      "Name": "Overkill",
-      "Power": 100,
-      "MpCost": 10     
-    },
-    {
-      "Name": "Patada",
-      "Power": 3,
-      "MpCost": 1
-    },
-    {
-      "AttackType": "aStatChanging",
-      "Name": "Burla",
-      "MpCost": 5,
-      "StatToChange": "ATK",
-      "Multiple": 0.5
-    }
-  ],
+  "Attacks": [ "Overkill", "Patada", "Burla" ],
   "OnKill": {
     "BehaviourType": "bPlayerDeath",
     "Message": "Has muerto..."
@@ -34,20 +16,14 @@
         "Level": 2,
         "Ev": {
           "EventType": "eLearnAttack",
-          "Attack": {
-            "Name": "Tortazo",
-            "Power": 1.5
-          }
+          "Attack": "Tortazo"
         }
       },
       {
         "Level": 3,
         "Ev": {
           "EventType": "eLearnAttack",
-          "Attack": {
-            "Name": "Tortilla",
-            "Power": 15
-          }
+          "Attack": "Tortilla"
         }
       }
     ]

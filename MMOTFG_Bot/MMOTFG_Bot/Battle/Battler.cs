@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MMOTFG_Bot
@@ -16,7 +15,10 @@ namespace MMOTFG_Bot
         protected float[] maxStats;
         //permanent changes
         protected float[] originalStats;
-        public List<Attack> attacks;
+
+        public List<Attack> attacks_;
+        //set in json
+        public List<string> attacks;
 
         public string name;
 
@@ -53,22 +55,30 @@ namespace MMOTFG_Bot
         //Gets a random attack the enemy has enough MP to use (basic attack should always cost 0 to avoid problems)
         public Attack nextAttack()
         {
-            int i = attacks.Count - 1;
-            while (attacks[i].mpCost > stats[(int)StatName.MP])
+            int i = attacks_.Count - 1;
+            while (attacks_[i].mpCost > stats[(int)StatName.MP])
                 i--;
             int attack = RNG.Next(0, i + 1);
-            return attacks[attack];
+            return attacks_[attack];
         }
 
         public void OnCreate()
         {
+            SetAttacks();
             //attacks are automatically sorted by mpCost
-            attacks.Sort((a1, a2) => a1.mpCost.CompareTo(a2.mpCost));
+            attacks_.Sort((a1, a2) => a1.mpCost.CompareTo(a2.mpCost));
             maxStats = (float[])stats.Clone();
             originalStats = (float[])stats.Clone();
             onHit?.setParent(this);
             onKill?.setParent(this);
             onTurnEnd?.setParent(this);
+        }
+
+        public void SetAttacks()
+        {
+            attacks_ = new List<Attack>();
+            //get attacks by name
+            foreach (string s in attacks) attacks_.Add(JSONSystem.GetAttack(s));
         }
 
         public void SetStat(StatName stat, float newValue, bool changeMax = false, bool permanent = false)

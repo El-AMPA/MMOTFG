@@ -16,11 +16,11 @@ namespace MMOTFG_Bot.Events
         public async override Task Execute(long chatId)
         {
             if (Enemy != null)
-                await BattleSystem.StartBattle(chatId, JSONSystem.getEnemy(Enemy));
+                await BattleSystem.StartBattle(chatId, JSONSystem.GetEnemy(Enemy));
             else
             {
                 List<Battler> enemies = new List<Battler>();
-                foreach (string s in Enemies) enemies.Add(JSONSystem.getEnemy(s));
+                foreach (string s in Enemies) enemies.Add(JSONSystem.GetEnemy(s));
                 await BattleSystem.StartBattle(chatId, enemies);
             }
         }

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using static MMOTFG_Bot.StatName;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Threading.Tasks;
+using static MMOTFG_Bot.StatName;
 
 namespace MMOTFG_Bot
 {
@@ -81,7 +80,7 @@ namespace MMOTFG_Bot
                 else
                 {
                     string enemyName = (string)o[DbConstants.BATTLER_FIELD_NAME];
-                    b = JSONSystem.getEnemy(enemyName);
+                    b = JSONSystem.GetEnemy(enemyName);
                 }
                 b.LoadSerializable(o);
                 battlers.Add(b);
@@ -229,7 +228,7 @@ namespace MMOTFG_Bot
                 await TelegramCommunicator.SendText(chatId, "Invalid attack");
                 return;
             }
-            Attack attack = player.attacks[atkNum];
+            Attack attack = player.attacks_[atkNum];
             if (attack.mpCost > player.GetStat(MP))
             {
                 await TelegramCommunicator.SendText(chatId, "Not enough MP for that attack");

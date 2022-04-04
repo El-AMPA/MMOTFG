@@ -8,27 +8,7 @@
     "DroppedItem": "health_potion",
     "DroppedItemAmount": 2,
     "ExperienceGiven": 1,
-    "Attacks": [
-      {
-        "Name": "Slap",
-        "Power": 1
-      },
-      {
-        "AttackType": "aStatChanging",
-        "Name": "Swords Dance",
-        "MpCost": 1,
-        "StatToChange": "ATK",
-        "AffectsSelf": true,
-        "Multiple": 2
-      },
-      {
-        "AttackType": "aScaled",
-        "Name": "MpScale",
-        "Power": 1,
-        "MpCost": 3,
-        "StatToScale": "MP"
-      }
-    ],
+    "Attacks": [ "Slap", "Swords Dance", "MpScale" ],     
     "OnHit": {
       "BehaviourType": "bChangeStat",
       "StatToChange": "ATK",
@@ -53,22 +33,7 @@
     "DroppedMoney": 2223,
     "DroppedItem": "mana_potion",
     "DroppedItemAmount": 2,
-    "Attacks": [
-      {
-        "Name": "Chiste sobre javascript",
-        "Power": 2
-      },
-      {
-        "Name": "El PCE es maravilloso",
-        "Power": 5,
-        "MpCost": 5
-      },
-      {
-        "Name": "No Fucking Thanks",
-        "Power": 10,
-        "MpCost": 10
-      }
-    ],
+    "Attacks": [ "Chiste sobre javascript", "El PCE es maravilloso", "No Fucking Thanks" ],
     "OnHit": {
       "BehaviourType": "bChangeStat",
       "StatToChange": "ATK",
@@ -85,22 +50,7 @@
     "DroppedMoney": 666,
     "DroppedItem": "mana_potion",
     "DroppedItemAmount": 2,
-    "Attacks": [
-      {
-        "Name": "Chapa en PowerPoint",
-        "Power": 1
-      },
-      {
-        "Name": "Deconstructción",
-        "Power": 2,
-        "MpCost": 1
-      },
-      {
-        "Name": "Fantasma de la ópera",
-        "Power": 5,
-        "MpCost": 5
-      }
-    ],
+    "Attacks": [ "Chapa en PowerPoint", "Deconstructción", "Fantasma de la ópera" ],
     "OnHit": {
       "BehaviourType": "bChangeStat",
       "StatToChange": "MP",
@@ -118,17 +68,7 @@
     "DroppedMoney": 6969,
     "DroppedItem": "health_potion",
     "DroppedItemAmount": 2,
-    "Attacks": [
-      {
-        "Name": "Latigazo correa",
-        "Power": 1
-      },
-      {
-        "Name": "Plástico sospechoso",
-        "Power": 2,
-        "MpCost": 1
-      }
-    ],
+    "Attacks": [ "Latigazo correa", "Plástico sospechoso" ],
     "OnHit": {
       "BehaviourType": "bChangeStat",
       "StatToChange": "ATK",
@@ -146,22 +86,7 @@
     "DroppedMoney": 1920,
     "DroppedItem": "health_potion",
     "DroppedItemAmount": 2,
-    "Attacks": [
-      {
-        "Name": "Ondas del wifi",
-        "Power": 1
-      },
-      {
-        "Name": "La Chancla",
-        "Power": 3,
-        "MpCost": 3
-      },
-      {
-        "Name": "Modo capitalismo",
-        "Power": 5,
-        "MpCost": 5
-      }
-    ],
+    "Attacks": [ "Ondas del wifi", "La Chancla", "Modo capitalismo" ],
     "OnHit": {
       "BehaviourType": "bChangeStat",
       "StatToChange": "ATK",
@@ -179,22 +104,7 @@
     "DroppedMoney": 345,
     "DroppedItem": "health_potion",
     "DroppedItemAmount": 2,
-    "Attacks": [
-      {
-        "Name": "ñom",
-        "Power": 1
-      },
-      {
-        "Name": "Barras (de pan)",
-        "Power": 2,
-        "MpCost": 1
-      },
-      {
-        "Name": "Ahora puedes jugar a Blown to Blacksmithereens desde el navegador en http://www.tai1games.itch.io",
-        "Power": 3,
-        "MpCost": 3
-      }
-    ],
+    "Attacks": [ "ñom", "Barras (de pan)", "Ahora puedes jugar a Blown to Blacksmithereens desde el navegador en http://www.tai1games.itch.io" ],
     "OnHit": {
       "BehaviourType": "bChangeStat",
       "StatToChange": "HP",
@@ -211,12 +121,7 @@
     "ImageCaption": "T̵i̶n̵k̴y̸",
     "DroppedItem": "health_potion",
     "DroppedItemAmount": 2,
-    "Attacks": [
-      {
-        "Name": "t̶͖̮̙̦̯̮͓̲̎u̴̧̡̢͓̮͉͓̻͙̰̟̳͖̠̇͆̽̀͂̈̈̆ ̷̡̛̭̩̲̦͉̱͓̈́̄͑c̷͕̜͎͚̑́̂͑́ỏ̶̧̢̩̳̗̤̎̄͠d̸̮̮͍͚̜̝̋̃̔̽̃̐̎̏̕͘͜͝ͅì̴̥̈́̕̚g̸̡͇̖̞̯̯̑ơ̸̡̙̳̝̟̐̒̾̈́͒̔̕ ̷̧̡̧̫̤̮̳̦͈̩̫̪̬̐́͆̈̿͜ȩ̵̡̨̨̪͇͇̼͎̳͓̣̥̙̺̃s̵̟̘͈̖̘͔̣͛̔̓͒ ̸̬̑̈̾s̴̢̺͇͎̈́̂̇̓̄̎͋e̴̡̺̙͉̥̳͕̣̤̩͔͉̽̀͆̔̂͐̆̓̔̈́̚͜͝ͅň̶̞͑̍́͊̑̃̅̎̏͜͝c̶̨̥͈̙͛̄͛̓̾̕̕ͅi̶̳͈̼͈̰̲͖͗̅l̶̥̞̽͛̾̎̂͐̓̾̆̀̓̓̐̕͝l̸̫̤̥̹̫̅̀͗̐́̽̃̆̆̉̀́͊͘͝ȧ̵̮̱͇̱͉̯̱̲̝̣̦̲͋̑͛̈́̿̈́͊́̑̈́̒̏̚͜͜m̶̹̩̖̠̀͌̑̄͗̉ę̶̧̦̙̰̤̫̤̘͇̫̠̘͊̈́̓͊͐̊̄̚͝͝͝ͅn̵̨̙̭̣͉̤̱̮̙̤̣͎͑̂́́͒͑͗t̵̡͚̣̖͊̇̄̈́̓́͌̔̏͝e̷͙̜̳̠͍̠̦̓̈̄̾̍ͅ ̵͖̘̭̝͈̯̩̪̩͈̳͖͆͑̽̓͂͋̈͑̎͘̕͜͜ḻ̸̗͇͇͇͕̹̬̝͚̺̐̈̌̀̈̌͊̏͌̍̀̓͘͘å̵̧̛̗̞͉̮̽͌̎̆̎͗̇͌̾̂̾͝m̷͉͕̞̳͍͙̣͌̈̈̏̾͛̍͋̄͂͛̚e̸̡͈̹̩̯̭̝͗̅̀́͗̑̑͝n̵̛̯͖͈̩̩͚͖̥͍̬͖̹̮͑̐̿̉͌͆̐̐̓́͜͜͠t̵̛͖̥͍̎̋͌͊̀̿̕̕a̴̛̗̐͌͑̊͌͋͑̈́̆͂͋̈́̈́͘ḅ̴̧͕͙̗͙̩̖̦͓̓̆͘ļ̸̢͕̞̦͚̰͚̝̲̲̃ề̷̛̗̠̟͊͌͐̂̃̀͘͝",
-        "Power": 100
-      }
-    ],
+    "Attacks": [ "t̶͖̮̙̦̯̮͓̲̎u̴̧̡̢͓̮͉͓̻͙̰̟̳͖̠̇͆̽̀͂̈̈̆ ̷̡̛̭̩̲̦͉̱͓̈́̄͑c̷͕̜͎͚̑́̂͑́ỏ̶̧̢̩̳̗̤̎̄͠d̸̮̮͍͚̜̝̋̃̔̽̃̐̎̏̕͘͜͝ͅì̴̥̈́̕̚g̸̡͇̖̞̯̯̑ơ̸̡̙̳̝̟̐̒̾̈́͒̔̕ ̷̧̡̧̫̤̮̳̦͈̩̫̪̬̐́͆̈̿͜ȩ̵̡̨̨̪͇͇̼͎̳͓̣̥̙̺̃s̵̟̘͈̖̘͔̣͛̔̓͒ ̸̬̑̈̾s̴̢̺͇͎̈́̂̇̓̄̎͋e̴̡̺̙͉̥̳͕̣̤̩͔͉̽̀͆̔̂͐̆̓̔̈́̚͜͝ͅň̶̞͑̍́͊̑̃̅̎̏͜͝c̶̨̥͈̙͛̄͛̓̾̕̕ͅi̶̳͈̼͈̰̲͖͗̅l̶̥̞̽͛̾̎̂͐̓̾̆̀̓̓̐̕͝l̸̫̤̥̹̫̅̀͗̐́̽̃̆̆̉̀́͊͘͝ȧ̵̮̱͇̱͉̯̱̲̝̣̦̲͋̑͛̈́̿̈́͊́̑̈́̒̏̚͜͜m̶̹̩̖̠̀͌̑̄͗̉ę̶̧̦̙̰̤̫̤̘͇̫̠̘͊̈́̓͊͐̊̄̚͝͝͝ͅn̵̨̙̭̣͉̤̱̮̙̤̣͎͑̂́́͒͑͗t̵̡͚̣̖͊̇̄̈́̓́͌̔̏͝e̷͙̜̳̠͍̠̦̓̈̄̾̍ͅ ̵͖̘̭̝͈̯̩̪̩͈̳͖͆͑̽̓͂͋̈͑̎͘̕͜͜ḻ̸̗͇͇͇͕̹̬̝͚̺̐̈̌̀̈̌͊̏͌̍̀̓͘͘å̵̧̛̗̞͉̮̽͌̎̆̎͗̇͌̾̂̾͝m̷͉͕̞̳͍͙̣͌̈̈̏̾͛̍͋̄͂͛̚e̸̡͈̹̩̯̭̝͗̅̀́͗̑̑͝n̵̛̯͖͈̩̩͚͖̥͍̬͖̹̮͑̐̿̉͌͆̐̐̓́͜͜͠t̵̛͖̥͍̎̋͌͊̀̿̕̕a̴̛̗̐͌͑̊͌͋͑̈́̆͂͋̈́̈́͘ḅ̴̧͕͙̗͙̩̖̦͓̓̆͘ļ̸̢͕̞̦͚̰͚̝̲̲̃ề̷̛̗̠̟͊͌͐̂̃̀͘͝" ],
     "OnHit": {
       "Message": "n̵͔͚̟̈o̸̳̐̾͘ ̵̢̠̋͑p̶̰̦͂u̸̮͒e̷͈̰̜͗́d̵̦̻̦̔̾e̶̼̍̀̚s̵̢̮͉̑̈́̎ ̵͔̣̌̎͑p̵̛̞͇̎ḁ̷̛̉̂ş̸͓̺͠ȧ̸̦͙̥͝r̶̨͐t̸͔̻̋ë̵́͜ ̷̡̭̤̽e̶̙͒š̷̛̲̬t̴̡͖̕e̷̩̳̦͋̾ ̷̻͔̽j̷͎̇͊ę̷̗̋ḟ̶̫̦e̷͉͚̥͊̎̊ ̵̘͍͊̅͐n̶̻̓͝o̵̘̓̒̃ ̵̨͔̲̊͊̐h̵̬͆à̷̝͝y̷̢̆͐ ̸̺͆̉m̶̟͉͆͋͝á̵͕s̴̭̪̙̀̈́͛ ̷̳͚̒c̶̩̦̾͊o̵̟̭̍̊n̷̝̞̬̋̒ţ̴̜͊ȅ̴͚n̵̛͐̈́͜ĭ̷̞̈́͘d̵̯̯̳͝o̵̘͔̍̉̀ ̸͖̭̘̀̅͝a̷͕̽͒ ̶̞̼͕̎̓͝p̷͚̚ͅa̸͉̓͊͊r̵̭͕͐̿͝t̷͎̔̽i̴͕͌̈́r̵̻̻̅̒ ̷̬̲̳̃d̷͙̲͗ͅě̵̩̫̈ ̷̝̓͗͘a̴̰̫͑͜q̷̘͙͈̄̆ṵ̴̧̔́ͅi̵̧̤̠̋̌"
     }

@@ -10,11 +10,11 @@ namespace MMOTFG_Bot.Events
     /// </summary>
     class eLearnAttack : Event
     {
-        public Attack attack;
+        public string attack;
 
         public async override Task Execute(long chatId)
         {
-            await BattleSystem.player.LearnAttack(chatId, attack);
+            await BattleSystem.player.LearnAttack(chatId, JSONSystem.GetAttack(attack));
         }
     }
 }
