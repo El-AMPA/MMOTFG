@@ -190,7 +190,7 @@ namespace MMOTFG_Bot
                 if (!a.affectsSelf)
                 {
                     //which side is the battler in
-                    List<Battler> otherSide = (b.isAlly) ? playerSide : enemySide;
+                    List<Battler> otherSide = (b.isAlly) ? enemySide : playerSide;
                     List<Battler> aliveOtherSide = otherSide.Where(x => x.GetStat(HP) > 0).ToList();
                     target = aliveOtherSide[RNG.Next(0, aliveOtherSide.Count)];
                 }
@@ -313,7 +313,7 @@ namespace MMOTFG_Bot
                 {
                     battleActive = false;
                     if(!battlePaused) await TelegramCommunicator.RemoveReplyMarkup(chatId);
-                    player.OnBattleOver();
+                    await player.OnBattleOver(chatId);
                 }
             }
             else

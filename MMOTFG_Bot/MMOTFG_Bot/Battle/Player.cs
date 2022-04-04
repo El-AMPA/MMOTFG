@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MMOTFG_Bot.Navigation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -47,6 +48,7 @@ namespace MMOTFG_Bot
         public async Task SkipTurn(long chatId)
         {
             turnOver = true;
+            await BattleSystem.SavePlayerBattle(chatId);
             await BattleSystem.NextAttack(chatId);
         }
 
@@ -131,15 +133,17 @@ namespace MMOTFG_Bot
             }
         }
 
-        public void OnBattleOver()
+        public async Task OnBattleOver(long chatId)
         {
-            //reseteamos los stats a su estado original
+            //reset stats to their original value
             for (int i = 0; i < Stats.statNum; i++)
             {
-                //(HP/MP solo si el jugador murió)
+                //(HP/MP only if player died)
                 if (!Stats.isBounded((StatName)i) || dead)
                     stats[i] = originalStats[i];
             }
+            //return player to starting node
+            if (dead) await Map.SetPlayerPosition(chatId, 0);
             dead = false;
         }
     }

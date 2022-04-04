@@ -16,14 +16,15 @@ namespace MMOTFG_Bot.Events
 
         [DefaultValue(1)]
         public int Quantity
-        {
+        {           
             get;
             set;
         }
+
         //Range [0, 1]
         [DefaultValue(1)]
         public float ChanceToObtain
-        {
+        {           
             get;
             set;
         }

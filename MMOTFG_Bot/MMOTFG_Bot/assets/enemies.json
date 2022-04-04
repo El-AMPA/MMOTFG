@@ -10,18 +10,16 @@
     "ExperienceGiven": 1,
     "Attacks": [
       {
+        "Name": "Slap",
+        "Power": 1
+      },
+      {
         "AttackType": "aStatChanging",
         "Name": "Swords Dance",
         "MpCost": 1,
         "StatToChange": "ATK",
         "AffectsSelf": true,
         "Multiple": 2
-      },
-      {
-        "AttackType": "aScaled",
-        "Name": "FixedDamage",
-        "MpCost": 2,
-        "FixedDamage": 10
       },
       {
         "AttackType": "aScaled",
