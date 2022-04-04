@@ -23,6 +23,7 @@ namespace MMOTFG_Bot.Navigation
 
             Dictionary<string, object> dbFlagDict = (Dictionary<string, object>)(player[DbConstants.PLAYER_FIELD_FLAGS]);
 
+            //Dumps the information from the DB into a dictionary
             foreach(KeyValuePair<string, object> flagInDict in dbFlagDict)
             {
                 PlayerRecords.Add(flagInDict.Key, Convert.ToBoolean(flagInDict.Value));
@@ -31,23 +32,31 @@ namespace MMOTFG_Bot.Navigation
 
         public static async Task SaveSerializable(long chatId)
         {
-            //Loads the dictionary from the DB
+            //Dumps the information from the dictionary to a different dictionary that the DB understands
             Dictionary<string, object> update = new Dictionary<string, object>()
             {
                 {DbConstants.PLAYER_FIELD_FLAGS, PlayerRecords }
             };
 
+            //Uploads it into the DB
             await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
         }
 
+        /// <summary>
+        /// Sets a flag to a given value. If the flag doesn't exist in the DB, it creates a new entry.
+        /// </summary>
         public static void SetFlagAs(long chatId, string flag, bool active)
         {
             if (PlayerRecords.ContainsKey(flag)) PlayerRecords[flag] = active;
             else PlayerRecords.Add(flag, active);
         }
 
+        /// <summary>
+        /// Returns wether or not a given flag is active. If the flag doesn't exist, it returns false.
+        /// </summary>
         public static bool IsFlagActive(long chatId, string flag)
         {
+            //Supports complex operations (x OR y), so it needs to be split into parts
             string[] substrings = flag.Split(' ');
 
             if (substrings.Length == 1)
@@ -63,7 +72,8 @@ namespace MMOTFG_Bot.Navigation
                 }
             }
 
-            int operation = 0; //0 = override previous result. Useful at the beggining , 1 = AND, 2 = OR
+            int operation = 0; //0 = override previous result, 1 = AND, 2 = OR
+            //Final result
             bool result = true;
 
             foreach (string s in substrings)
@@ -79,7 +89,9 @@ namespace MMOTFG_Bot.Navigation
                         operation = 2;
                         break;
                     default:
+                        //If it's a flag...
                         bool current;
+                        //If it doesn't exist, return false, or true if '!' was added at the beggining of the flag
                         if (s[0] == '!')
                         {
                             if (!PlayerRecords.TryGetValue(s.Substring(1), out current)) current = true;
@@ -102,7 +114,6 @@ namespace MMOTFG_Bot.Navigation
                         break;
                 }
             }
-
             return result;
         }
     }
