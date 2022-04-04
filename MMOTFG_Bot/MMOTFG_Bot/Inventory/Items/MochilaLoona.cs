@@ -4,11 +4,11 @@ using System.Text;
 
 namespace MMOTFG_Bot.Items
 {
-    class LoonaCap : EquipableItem
+    class MochilaLoona : EquipableItem
     {
         public override void Init()
         {
-            gearSlot = EQUIPMENT_SLOT.HEAD;
+            gearSlot = EQUIPMENT_SLOT.BACK;
             statModifiers = new List<(int, StatName)>
             {
                 (20, StatName.MP),
@@ -16,9 +16,9 @@ namespace MMOTFG_Bot.Items
             };
         }
 
-        public LoonaCap()
+        public MochilaLoona()
         {
-            name = "loonaCap";
+            name = "mochila_loona";
         }
     }
 }

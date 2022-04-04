@@ -56,7 +56,7 @@ namespace MMOTFG_Bot
             BeastSlayingBoots boots = new BeastSlayingBoots();
             boots.Init();
 
-            LoonaCap cap = new LoonaCap();
+            MochilaLoona cap = new MochilaLoona();
             cap.Init();
 
             obtainableItems.Add(hPotion.name, hPotion);

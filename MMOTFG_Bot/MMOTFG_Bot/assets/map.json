@@ -192,19 +192,19 @@
       },
       {
         "EventType":"eSendText",
-        "Description":"Rebuscas entre las cosas de Álvar y encuentras una gorra de LOONA. Le haces el favor de robársela, que a saber lo que hace con esto",
+        "Description":"Rebuscas entre las cosas de Álvar y encuentras una mochila de LOONA. Le haces el favor de robársela, que a saber lo que hace con esto",
         "TriggerCondition":"!LoonaCapFound AND SeinDefeated"
       },
       {
         "EventType":"eSendImage",
-        "ImageName":"loona_Gorro.png",
+        "ImageName":"MochilaLoona.png",
         "TriggerCondition":"!LoonaCapFound AND SeinDefeated"
       },
       {
         "EventType":"eGiveItem",
         "ItemLots":[
           {
-            "Item":"loonaCap",
+            "Item":"mochila_loona",
             "Quantity": 1,
             "ChanceToObtain": 1
           }

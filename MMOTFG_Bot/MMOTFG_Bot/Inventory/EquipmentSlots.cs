@@ -16,6 +16,7 @@ namespace MMOTFG_Bot
         CHEST,
         LEGS,
         WAIST,
+        BACK,
         NECK
     }
 }
