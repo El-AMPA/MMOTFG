@@ -50,7 +50,8 @@
     },
     "OnKill":{
       "BehaviourType": "bSetFlag",
-      "SetFlagAsTrue": "ManuelaKilled"
+      "Name": "ManuelaKilled",
+      "SetAs":"True"
     }
   },
   {
@@ -86,7 +87,8 @@
     },
     "OnKill":{
       "BehaviourType":"bSetFlag",
-      "SetFlagAsTrue":"CleonftDefeated"
+      "Name":"CleonftDefeated",
+      "SetAs":"True"
     }
   },
   {
@@ -123,7 +125,8 @@
     },
     "OnKill":{
       "BehaviourType":"bSetFlag",
-      "SetFlagAsTrue":"FedejimboDefeated"
+      "Name":"FedejimboDefeated",
+      "SetAs":"True"
     }
   },
   {
@@ -155,7 +158,8 @@
     },
     "OnKill":{
       "BehaviourType":"bSetFlag",
-      "SetFlagAsTrue":"SeinDefeated"
+      "Name":"SeinDefeated",
+      "SetAs":"True"
     }
   },
   {
@@ -229,7 +233,8 @@
     },
     "OnKill":{
       "BehaviourType":"bSetFlag",
-      "SetFlagAsTrue":"ThiccboiDefeated"
+      "Name":"ThiccboiDefeated",
+      "SetAs":"True"
     }
   },
   {

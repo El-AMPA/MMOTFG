@@ -9,7 +9,7 @@ namespace MMOTFG_Bot.Events
     /// <summary>
     /// Sends a text message to the user.
     /// </summary>
-    class eSetCondition : Event
+    class eSetFlag : Event
     {
         public string Name
         {

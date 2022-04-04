@@ -59,7 +59,7 @@
         "TriggerCondition": "!MmurGearFound"
       },
       {
-        "EventType":"eSetCondition",
+        "EventType":"eSetFlag",
         "Name":"MmurGearFound",
         "SetAs":"True"
       }
@@ -212,7 +212,7 @@
         "TriggerCondition":"!LoonaCapFound AND SeinDefeated"
       },
       {
-        "EventType":"eSetCondition",
+        "EventType":"eSetFlag",
         "Name":"LoonaCapFound",
         "SetAs":"True",
         "TriggerCondition":"!LoonaCapFound AND SeinDefeated"
@@ -325,7 +325,7 @@
         "TriggerCondition":"TatiranaFound"
       },
       {
-        "EventType":"eSetCondition",
+        "EventType":"eSetFlag",
         "Name":"TatiranaFound",
         "SetAs":"True",
         "TriggerCondition":"!TatiranaFound"
