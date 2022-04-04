@@ -52,8 +52,15 @@ namespace MMOTFG_Bot.Navigation
 
             if (substrings.Length == 1)
             {
-                if (flag[0] == '!') return !PlayerRecords.ContainsKey(flag.Substring(1));
-                else return PlayerRecords.ContainsKey(flag);
+                if (flag[0] == '!') {
+                    if (!PlayerRecords.TryGetValue(flag.Substring(1), out bool val)) return true;
+                    else return !val;
+                }
+                else
+                {
+                    if (!PlayerRecords.TryGetValue(flag, out bool val)) return false;
+                    else return val;
+                }
             }
 
             int operation = 0; //0 = override previous result. Useful at the beggining , 1 = AND, 2 = OR
@@ -73,8 +80,12 @@ namespace MMOTFG_Bot.Navigation
                         break;
                     default:
                         bool current;
-                        if (s[0] == '!') current = !PlayerRecords.ContainsKey(s.Substring(1));
-                        else current = PlayerRecords.ContainsKey(s);
+                        if (s[0] == '!')
+                        {
+                            if (!PlayerRecords.TryGetValue(s.Substring(1), out current)) current = true;
+                            else current = !current;
+                        }
+                        else if (!PlayerRecords.TryGetValue(s, out current)) current = false;
 
                         switch (operation)
                         {

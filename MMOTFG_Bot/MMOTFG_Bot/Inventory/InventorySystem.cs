@@ -56,6 +56,9 @@ namespace MMOTFG_Bot
             BeastSlayingBoots boots = new BeastSlayingBoots();
             boots.Init();
 
+            LoonaCap cap = new LoonaCap();
+            cap.Init();
+
             obtainableItems.Add(hPotion.name, hPotion);
             obtainableItems.Add(mPotion.name, mPotion);
             obtainableItems.Add(tFury.name, tFury);
@@ -68,6 +71,7 @@ namespace MMOTFG_Bot
             obtainableItems.Add(rana.name, rana);
             obtainableItems.Add(torch.name, torch);
             obtainableItems.Add(boots.name, boots);
+            obtainableItems.Add(cap.name, cap);
         }
 
         /// <summary>

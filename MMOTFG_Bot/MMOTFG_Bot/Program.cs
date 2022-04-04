@@ -57,7 +57,7 @@ namespace MMOTFG_Bot
 			//Module initializers
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
-			Map.Init("assets/mapejemplo.json", "assets/directionSynonyms.json");
+			Map.Init("assets/map.json", "assets/directionSynonyms.json");
 			JSONSystem.Init("assets/enemies.json", "assets/player.json");
 			BattleSystem.Init();
 			DatabaseManager.Init();
