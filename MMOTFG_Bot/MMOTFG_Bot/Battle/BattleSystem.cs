@@ -38,8 +38,10 @@ namespace MMOTFG_Bot
             {
                 List<Dictionary<string, object>> battlerList = new List<Dictionary<string, object>>();
                 foreach (Battler b in battlers)
-                {                                    
-                    battlerList.Add(b.getSerializable());
+                {     
+                    //player has already been saved
+                    if(b.name != player.name)
+                        battlerList.Add(b.GetSerializable());
                 }
                 update.Add(DbConstants.PLAYER_FIELD_BATTLER_LIST, battlerList);
             }
@@ -61,20 +63,18 @@ namespace MMOTFG_Bot
 
             List<object> dbBattlers = (List<object>)dbPlayer[DbConstants.PLAYER_FIELD_BATTLER_LIST];
 
-            battlers = new List<Battler>();
+            battlers = new List<Battler>() { player };
             enemySide = new List<Battler>();
-            playerSide = new List<Battler>();
+            playerSide = new List<Battler>() { player };
 
             foreach (Dictionary<string, object> o in dbBattlers)
             {
                 Battler b = new Battler();
                 if ((bool)o[DbConstants.BATTLER_FIELD_IS_PLAYER])
                 {
-                    //don't create player again
+                    //player has already been loaded
                     if ((string)o[DbConstants.BATTLER_FIELD_NAME] == player.name)
                     {
-                        battlers.Add(player);
-                        playerSide.Add(player);
                         continue;
                     }
                 }
@@ -83,7 +83,7 @@ namespace MMOTFG_Bot
                     string enemyName = (string)o[DbConstants.BATTLER_FIELD_NAME];
                     b = JSONSystem.getEnemy(enemyName);
                 }
-                b.loadSerializable(o);
+                b.LoadSerializable(o);
                 battlers.Add(b);
                 if (b.isAlly) playerSide.Add(b);
                 else enemySide.Add(b);
@@ -190,7 +190,7 @@ namespace MMOTFG_Bot
                 if (!a.affectsSelf)
                 {
                     //which side is the battler in
-                    List<Battler> otherSide = (playerSide.Contains(b)) ? enemySide : playerSide;
+                    List<Battler> otherSide = (b.isAlly) ? playerSide : enemySide;
                     List<Battler> aliveOtherSide = otherSide.Where(x => x.GetStat(HP) > 0).ToList();
                     target = aliveOtherSide[RNG.Next(0, aliveOtherSide.Count)];
                 }

@@ -39,6 +39,10 @@ namespace MMOTFG_Bot
         public bool isAlly;
         public bool isPlayer;
 
+        public int experience;
+        [DefaultValue(1)]
+        public int level;
+
         public Battler()
         {
             stats = new float[Stats.statNum];
@@ -144,7 +148,7 @@ namespace MMOTFG_Bot
             }
         }
 
-        public Dictionary<string, object> getSerializable()
+        public Dictionary<string, object> GetSerializable()
         {
             Dictionary<string, object> battlerInfo = new Dictionary<string, object>();
 
@@ -181,7 +185,6 @@ namespace MMOTFG_Bot
 
             battlerInfo.Add(DbConstants.BATTLER_INFO_FIELD_MAX_STATS, statsTemp);
 
-
             battlerInfo.Add(DbConstants.BATTLER_FIELD_NAME, name);
 
             battlerInfo.Add(DbConstants.BATTLER_FIELD_MONEY_DROP, droppedMoney);
@@ -196,10 +199,14 @@ namespace MMOTFG_Bot
 
             battlerInfo.Add(DbConstants.BATTLER_FIELD_TURN_OVER, turnOver);
 
+            battlerInfo.Add(DbConstants.BATTLER_FIELD_EXPERIENCE, experience);
+
+            battlerInfo.Add(DbConstants.BATTLER_FIELD_LEVEL, level);
+
             return battlerInfo;
         }
 
-        public void loadSerializable(Dictionary<string, object> eInfo)
+        public void LoadSerializable(Dictionary<string, object> eInfo)
         {
             Dictionary<string, object> statsDB = (Dictionary<string, object>)eInfo[DbConstants.BATTLER_INFO_FIELD_CUR_STATS];
 
@@ -231,7 +238,6 @@ namespace MMOTFG_Bot
                 maxStats[(int)index] = Convert.ToSingle(keyValue.Value);
             }
 
-
             name = eInfo[DbConstants.BATTLER_FIELD_NAME].ToString();
 
             droppedMoney = Convert.ToSingle(eInfo[DbConstants.BATTLER_FIELD_MONEY_DROP]);
@@ -242,6 +248,10 @@ namespace MMOTFG_Bot
             isAlly = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_IS_ALLY]);
 
             turnOver = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_TURN_OVER]);
+
+            experience = Convert.ToInt32(eInfo[DbConstants.BATTLER_FIELD_EXPERIENCE]);
+
+            level = Convert.ToInt32(eInfo[DbConstants.BATTLER_FIELD_LEVEL]);
         }
     }
 }

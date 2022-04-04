@@ -12,9 +12,6 @@ namespace MMOTFG_Bot
         public List<string> attackNames;
 
         public LevelUpRoadmap levelUpRoadmap;
-        public int experience;
-        [DefaultValue(1)]
-        public int level;
 
         public bool upNext;
         public bool dead;
@@ -25,7 +22,7 @@ namespace MMOTFG_Bot
 
         public Player()
         {
-            
+
         }
 
         public void AfterCreate()
@@ -47,57 +44,6 @@ namespace MMOTFG_Bot
             }
         }
 
-        public Dictionary<string, object> GetSerializable()
-		{
-            Dictionary<string, object> combatInfo = new Dictionary<string,object>();
-
-            Dictionary<string, float> statsTemp = new Dictionary<string, float>();
-
-            int i = 0;
-			foreach (float sValue in stats)
-			{
-                statsTemp.Add(Enum.GetName(typeof(StatName),i), sValue);
-                i++;
-			}
-
-            combatInfo.Add(DbConstants.BATTLER_INFO_FIELD_CUR_STATS, statsTemp);
-
-            statsTemp = new Dictionary<string, float>();
-
-            i = 0;
-            foreach (float sValue in originalStats)
-            {
-                statsTemp.Add(Enum.GetName(typeof(StatName), i), sValue);
-                i++;
-            }
-
-            combatInfo.Add(DbConstants.BATTLER_INFO_FIELD_OG_STATS, statsTemp);
-
-            return combatInfo;
-		}
-
-        public void LoadSerializable(Dictionary<string, object> cInfo)
-        {
-            Dictionary<string, object> statsDB = (Dictionary<string, object>)cInfo[DbConstants.BATTLER_INFO_FIELD_CUR_STATS];
-
-			foreach (KeyValuePair<string,object> keyValue in statsDB)
-			{    
-                Enum.TryParse(keyValue.Key, true, out StatName index);
-
-                stats[(int)index] = Convert.ToSingle(keyValue.Value);
-            }
-
-            statsDB = (Dictionary<string, object>)cInfo[DbConstants.BATTLER_INFO_FIELD_OG_STATS];
-
-            foreach (KeyValuePair<string, object> keyValue in statsDB)
-            {
-                Enum.TryParse(keyValue.Key, true, out StatName index);
-
-                originalStats[(int)index] = Convert.ToSingle(keyValue.Value);
-            }
-
-        }
-
         public async Task SkipTurn(long chatId)
         {
             turnOver = true;
@@ -105,9 +51,9 @@ namespace MMOTFG_Bot
         }
 
         public void SetName(string playerName)
-		{
+        {
             name = playerName;
-		}
+        }
 
         public async Task GainExperience(long chatId, int exp)
         {
@@ -115,12 +61,12 @@ namespace MMOTFG_Bot
             experience += exp;
             await TelegramCommunicator.SendText(chatId, $"Gained {exp} experience points.");
             //check if new level reached
-            int neededExp = levelUpRoadmap.neededExperience[level-1];
+            int neededExp = levelUpRoadmap.neededExperience[level - 1];
             while (experience >= neededExp)
             {
                 level++;
                 string statChanges = "";
-                for(int i = 0; i < Stats.statNum; i++)
+                for (int i = 0; i < Stats.statNum; i++)
                 {
                     int change = (int)levelUpRoadmap.getStatDifference(i);
                     AddToStat((StatName)i, change, changeMax: true, permanent: true);
@@ -128,7 +74,7 @@ namespace MMOTFG_Bot
                 }
                 await TelegramCommunicator.SendText(chatId, $"Reached level {level}!\n" + statChanges);
                 //if there is an event for that level
-                if(levelUpRoadmap.levelUpEvents != null)
+                if (levelUpRoadmap.levelUpEvents != null)
                 {
                     var event_ = levelUpRoadmap.levelUpEvents.Find(x => x.level == level);
                     if (event_.ev != null) await event_.ev.Execute(chatId);
@@ -140,7 +86,7 @@ namespace MMOTFG_Bot
 
         public async Task LearnAttack(long chatId, Attack attack)
         {
-            if(attacks.Count == maxAttacks)
+            if (attacks.Count == maxAttacks)
             {
                 learningAttack = attack;
                 List<string> options = new List<string>(attackNames);
@@ -158,7 +104,7 @@ namespace MMOTFG_Bot
                 Program.SetAttackKeywords(attackNames);
                 await TelegramCommunicator.SendText(chatId, $"Learnt {attack.name}!");
                 if (!BattleSystem.battleActive) await TelegramCommunicator.RemoveReplyMarkup(chatId);
-                else if(BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
+                else if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
             }
         }
 
@@ -173,7 +119,8 @@ namespace MMOTFG_Bot
                 return;
             }
             Attack atk = attacks.FirstOrDefault(x => x.name.ToLower() == attackName);
-            if(atk == null){
+            if (atk == null)
+            {
                 await TelegramCommunicator.SendText(chatId, "Not a valid attack to forget");
             }
             else
