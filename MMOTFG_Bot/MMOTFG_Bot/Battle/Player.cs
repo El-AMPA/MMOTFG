@@ -44,14 +44,7 @@ namespace MMOTFG_Bot
                 attackNames.Add(a.name);
             }
         }
-
-        public async Task SkipTurn(long chatId)
-        {
-            turnOver = true;
-            await BattleSystem.SavePlayerBattle(chatId);
-            await BattleSystem.NextAttack(chatId);
-        }
-
+      
         public void SetName(string playerName)
         {
             name = playerName;

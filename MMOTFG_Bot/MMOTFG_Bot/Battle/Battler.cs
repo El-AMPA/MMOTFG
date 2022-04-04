@@ -148,6 +148,13 @@ namespace MMOTFG_Bot
             }
         }
 
+        public async Task SkipTurn(long chatId)
+        {
+            turnOver = true;
+            await BattleSystem.SavePlayerBattle(chatId);
+            await BattleSystem.NextAttack(chatId);
+        }
+
         public Dictionary<string, object> GetSerializable()
         {
             Dictionary<string, object> battlerInfo = new Dictionary<string, object>();
