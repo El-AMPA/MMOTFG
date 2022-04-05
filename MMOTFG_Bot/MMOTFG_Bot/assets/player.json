@@ -22,6 +22,7 @@
   ],
   "OnKill": {
     "BehaviourType": "bPlayerDeath",
+    "ActivateOnce": false,
     "Message": "Has muerto..."
   },
   "LevelUpRoadmap": {
