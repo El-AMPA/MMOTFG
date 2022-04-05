@@ -28,6 +28,7 @@ namespace MMOTFG_Bot
             Dictionary<string, object> update = new Dictionary<string, object>();
 
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_ACTIVE, battleActive);
+            update.Add(DbConstants.PLAYER_FIELD_BATTLE_PAUSED, battlePaused);
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_INFO, player.GetSerializable());
             if (!battleActive)
             {
@@ -59,6 +60,8 @@ namespace MMOTFG_Bot
             player.SetName((string)dbPlayer[DbConstants.PLAYER_FIELD_NAME]);
 
             if (!battleActive) return;
+
+            battlePaused = (bool)dbPlayer[DbConstants.PLAYER_FIELD_BATTLE_PAUSED];
 
             List<object> dbBattlers = (List<object>)dbPlayer[DbConstants.PLAYER_FIELD_BATTLER_LIST];
 
@@ -193,6 +196,7 @@ namespace MMOTFG_Bot
                     List<Battler> aliveOtherSide = otherSide.Where(x => x.GetStat(HP) > 0).ToList();
                     target = aliveOtherSide[RNG.Next(0, aliveOtherSide.Count)];
                 }
+                await SavePlayerBattle(chatId);
                 await UseAttack(chatId, a, b, target);
             }
             //if the battler is a player
@@ -200,6 +204,7 @@ namespace MMOTFG_Bot
             {
                 Player p = b as Player;
                 p.upNext = true;
+                await SavePlayerBattle(chatId);
                 await SetPlayerOptions(chatId, "Your turn");
             }
         }
@@ -210,7 +215,7 @@ namespace MMOTFG_Bot
         }
 
         public static async Task PlayerAttack(long chatId, string attackName, string targetName = null)
-        {            
+        {
             if (!battleActive)
             {
                 await TelegramCommunicator.SendText(chatId, "No battle currently active");
@@ -221,14 +226,12 @@ namespace MMOTFG_Bot
                 await TelegramCommunicator.SendText(chatId, "Not your turn");
                 return;
             }
-            attackName = char.ToUpper(attackName[0]) + attackName.Substring(1);
-            int atkNum = player.attacks.IndexOf(attackName);
-            if (atkNum == -1)
+            Attack attack = player.GetAttack(attackName);
+            if (attack == null)
             {
                 await TelegramCommunicator.SendText(chatId, "Invalid attack");
                 return;
             }
-            Attack attack = player.attacks_[atkNum];
             if (attack.mpCost > player.GetStat(MP))
             {
                 await TelegramCommunicator.SendText(chatId, "Not enough MP for that attack");
@@ -337,6 +340,7 @@ namespace MMOTFG_Bot
         public static async Task ResumeBattle(long chatId)
         {
             battlePaused = false;
+            await SavePlayerBattle(chatId);
             if (battleActive) await NextAttack(chatId);
         }
 

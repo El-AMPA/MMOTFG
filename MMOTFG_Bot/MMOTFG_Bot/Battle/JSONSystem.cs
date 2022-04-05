@@ -67,7 +67,6 @@ namespace MMOTFG_Bot
                 player = JsonConvert.DeserializeObject<Player>(playerText,
                     new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate }); //Deserializes the .json file into a player
                 player.OnCreate();
-                player.AfterCreate();
             }
             catch (JsonException e)
             {
@@ -125,6 +124,14 @@ namespace MMOTFG_Bot
                 return a;
             }
             else return attacks.First();
+        }
+
+        public static List<string> GetAllAttackNames()
+        {
+            List<string> an = new List<string>();
+            foreach (Attack a in attacks) an.Add(a.name);
+            an.Add("skip");
+            return an;
         }
     }
 }

@@ -14,16 +14,13 @@ namespace MMOTFG_Bot.Commands
         }
         public override void SetKeywords()
         {
-            //las keywords son los ataques que tenga el jugador
-        }
-
-        public void SetKeywords(string[] kw)
-        {
-            key_words = kw;
+            //keywords are every possible attack
+            key_words = JSONSystem.GetAllAttackNames().ConvertAll(x => x.ToLower()).ToArray();
         }
 
         internal override async Task Execute(string command, long chatId, string[] args = null)
         {
+            await BattleSystem.LoadPlayerBattle(chatId);
             if (BattleSystem.player.learningAttack != null)
             {
                 await BattleSystem.player.ForgetAttack(chatId, command);

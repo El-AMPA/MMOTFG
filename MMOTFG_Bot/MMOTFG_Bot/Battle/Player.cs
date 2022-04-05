@@ -17,26 +17,43 @@ namespace MMOTFG_Bot
         [DefaultValue(4)]
         public int maxAttacks;
 
-        public Attack learningAttack;
+        public string learningAttack;
+
+        public int experience;
+        [DefaultValue(1)]
+        public int level;
 
         public Player()
         {
 
         }
 
-        public void AfterCreate()
+        public override void OnCreate()
         {
-            SetAttackNames();
-            Program.SetAttackKeywords(attacks);
+            base.OnCreate();
             stats = (float[])levelUpRoadmap.firstStats.Clone();
             maxStats = (float[])stats.Clone();
             originalStats = (float[])stats.Clone();
             levelUpRoadmap.CalculateLevels();
         }
-    
+
+        private void SetAttackNames()
+        {
+            attacks = new List<string>();
+            foreach (Attack a in attacks_)
+            {
+                attacks.Add(a.name);
+            }
+        }
+
         public void SetName(string playerName)
         {
             name = playerName;
+        }
+
+        public Attack GetAttack(string name)
+        {
+            return attacks_.FirstOrDefault(x => x.name.ToLower() == name);
         }
 
         public async Task GainExperience(long chatId, int exp)
@@ -68,25 +85,23 @@ namespace MMOTFG_Bot
             }
         }
 
-        public async Task LearnAttack(long chatId, Attack attack)
+        public async Task LearnAttack(long chatId, string attackName)
         {
             if (attacks_.Count == maxAttacks)
             {
-                learningAttack = attack;
+                learningAttack = attackName;
                 List<string> options = new List<string>(attacks);
                 options.Add("Skip");
                 if (BattleSystem.battleActive) await BattleSystem.PauseBattle(chatId);
-                await TelegramCommunicator.SendButtons(chatId, $"Do you want to learn {attack.name}? Choose an attack to replace or Skip to skip",
+                await TelegramCommunicator.SendButtons(chatId, $"Do you want to learn {attackName}? Choose an attack to replace or Skip to skip",
                     options, 2, 3);
-                Program.SetAttackKeywords(options);
             }
             else
             {
                 learningAttack = null;
-                attacks_.Add(attack);
+                attacks_.Add(JSONSystem.GetAttack(attackName));
                 SetAttackNames();
-                Program.SetAttackKeywords(attacks);
-                await TelegramCommunicator.SendText(chatId, $"Learnt {attack.name}!");
+                await TelegramCommunicator.SendText(chatId, $"Learnt {attackName}!");
                 if (!BattleSystem.battleActive) await TelegramCommunicator.RemoveReplyMarkup(chatId);
                 else if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
             }
@@ -133,6 +148,46 @@ namespace MMOTFG_Bot
             //return player to starting node
             if (dead) await Map.SetPlayerPosition(chatId, 0);
             dead = false;
+        }
+
+        public override Dictionary<string, object> GetSerializable()
+        {
+            Dictionary<string, object> playerInfo = base.GetSerializable();
+
+            playerInfo.Add(DbConstants.PLAYER_FIELD_EXPERIENCE, experience);
+
+            playerInfo.Add(DbConstants.PLAYER_FIELD_LEVEL, level);
+
+            SetAttackNames();
+
+            playerInfo.Add(DbConstants.PLAYER_FIELD_ATTACKS, attacks);
+
+            playerInfo.Add(DbConstants.PLAYER_FIELD_UP_NEXT, upNext);
+
+            playerInfo.Add(DbConstants.PLAYER_FIELD_LEARNING_ATTACK, learningAttack);
+
+            return playerInfo;
+        }
+
+        public override void LoadSerializable(Dictionary<string, object> eInfo)
+        {
+            base.LoadSerializable(eInfo);
+
+            experience = Convert.ToInt32(eInfo[DbConstants.PLAYER_FIELD_EXPERIENCE]);
+
+            level = Convert.ToInt32(eInfo[DbConstants.PLAYER_FIELD_LEVEL]);
+
+            List<object> attacksTemp = (List<object>)eInfo[DbConstants.PLAYER_FIELD_ATTACKS];
+
+            attacks = new List<string>();
+
+            foreach (object o in attacksTemp) attacks.Add(Convert.ToString(o));
+
+            SetAttacks();
+
+            upNext = Convert.ToBoolean(eInfo[DbConstants.PLAYER_FIELD_LEVEL]);
+
+            learningAttack = eInfo[DbConstants.PLAYER_FIELD_LEARNING_ATTACK] as string;
         }
     }
 }

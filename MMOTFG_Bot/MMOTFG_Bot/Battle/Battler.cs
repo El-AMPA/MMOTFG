@@ -16,7 +16,7 @@ namespace MMOTFG_Bot
         //permanent changes
         protected float[] originalStats;
 
-        public List<Attack> attacks_;
+        protected List<Attack> attacks_;
         //set in json
         public List<string> attacks;
 
@@ -39,11 +39,7 @@ namespace MMOTFG_Bot
         public int experienceGiven;
 
         public bool isAlly;
-        public bool isPlayer;
-
-        public int experience;
-        [DefaultValue(1)]
-        public int level;
+        public bool isPlayer;       
 
         public Battler()
         {
@@ -62,7 +58,7 @@ namespace MMOTFG_Bot
             return attacks_[attack];
         }
 
-        public void OnCreate()
+        public virtual void OnCreate()
         {
             SetAttacks();           
             maxStats = (float[])stats.Clone();
@@ -72,15 +68,6 @@ namespace MMOTFG_Bot
             onTurnEnd?.setParent(this);
         }
 
-        protected void SetAttackNames()
-        {
-            attacks = new List<string>();
-            foreach (Attack a in attacks_)
-            {
-                attacks.Add(a.name);
-            }
-        }
-
         public void SetAttacks()
         {
             attacks_ = new List<Attack>();
@@ -88,8 +75,6 @@ namespace MMOTFG_Bot
             foreach (string s in attacks) attacks_.Add(JSONSystem.GetAttack(s));
             //attacks are automatically sorted by mpCost
             attacks_.Sort((a1, a2) => a1.mpCost.CompareTo(a2.mpCost));
-            //TO-DO: Así no se hace
-            if(isPlayer) Program.SetAttackKeywords(attacks);
         }
 
         public void SetStat(StatName stat, float newValue, bool changeMax = false, bool permanent = false)
@@ -176,7 +161,7 @@ namespace MMOTFG_Bot
             await BattleSystem.NextAttack(chatId);
         }
 
-        public Dictionary<string, object> GetSerializable()
+        public virtual Dictionary<string, object> GetSerializable()
         {
             Dictionary<string, object> battlerInfo = new Dictionary<string, object>();
 
@@ -226,19 +211,11 @@ namespace MMOTFG_Bot
             battlerInfo.Add(DbConstants.BATTLER_FIELD_IS_PLAYER, isPlayer);
 
             battlerInfo.Add(DbConstants.BATTLER_FIELD_TURN_OVER, turnOver);
-
-            battlerInfo.Add(DbConstants.BATTLER_FIELD_EXPERIENCE, experience);
-
-            battlerInfo.Add(DbConstants.BATTLER_FIELD_LEVEL, level);
-
-            SetAttackNames();
-
-            battlerInfo.Add(DbConstants.BATTLER_FIELD_ATTACKS, attacks);
-
+                    
             return battlerInfo;
         }
 
-        public void LoadSerializable(Dictionary<string, object> eInfo)
+        public virtual void LoadSerializable(Dictionary<string, object> eInfo)
         {
             Dictionary<string, object> statsDB = (Dictionary<string, object>)eInfo[DbConstants.BATTLER_INFO_FIELD_CUR_STATS];
 
@@ -279,19 +256,7 @@ namespace MMOTFG_Bot
 
             isAlly = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_IS_ALLY]);
 
-            turnOver = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_TURN_OVER]);
-
-            experience = Convert.ToInt32(eInfo[DbConstants.BATTLER_FIELD_EXPERIENCE]);
-
-            level = Convert.ToInt32(eInfo[DbConstants.BATTLER_FIELD_LEVEL]);
-
-            List<object> attacksTemp = (List<object>)eInfo[DbConstants.BATTLER_FIELD_ATTACKS];
-
-            attacks = new List<string>();
-
-            foreach (object o in attacksTemp) attacks.Add(Convert.ToString(o));
-
-            SetAttacks();
+            turnOver = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_TURN_OVER]);            
         }
     }
 }
