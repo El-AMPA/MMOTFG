@@ -12,11 +12,42 @@
     "OnInspectEvent": [
       {
         "EventType": "eSendText",
-        "Description": "Est�s en una mazmorra muy dank y dark. Al norte puedes seguir avanzando por el pasillo. Tambi�n puedes usar una trampilla, �me pregunto a donde llevar� ...?"
+        "Description": "This dungeon is so dark. As you walk through the area, you stumble into a lit torch. This will be really useful.",
+        "TriggerCondition": "!TorchFound AND !TorchEquipped"
+      },
+      {
+        "EventType": "eGiveItem",
+        "ItemLots": [
+          {
+            "Item": "torch",
+            "Quantity": 1,
+            "ChanceToObtain": 1
+          }
+        ],
+        "TriggerCondition": "!TorchFound"
       },
       {
         "EventType": "eSendText",
-        "Description": "Bajo la gruesa capa de polvo vislumbras un destello. Tras rebuscar con la mano encuentras una poci�n de man�. Como los devs no han implementado variables de progreso puedes farmear pociones spammeando el comando. Let's gooooooooo!'"
+        "Description": "I should equip the torch to see better further ahead.",
+        "TriggerCondition": "!TorchLit AND TorchFound"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"You cheated not only on yourself",
+        "TriggerCondition": "TorchLit AND !TorchFound" 
+      },
+      {
+        "EventType": "eSetCondition",
+        "Name": "TorchFound",
+        "SetAs": "True",
+        "TriggerCondition": "!TorchFound"
+      }
+    ],
+    "OnExitEvent": [
+      {
+        "EventType":"eSendText",
+        "Description":"On your way out, you find a health potion. Nice!",
+        "TriggerCondition":"!Corridor2Visited"
       },
       {
         "EventType": "eGiveItem",
@@ -26,7 +57,8 @@
             "Quantity": 1,
             "ChanceToObtain": 1
           }
-        ]
+        ],
+        "TriggerCondition":"Corridor1Visited"
       }
     ]
   },
@@ -42,23 +74,39 @@
     },
     "OnArriveEvent": [
       {
-        "EventType": "eSendText",
-        "Description": "Notas un tufo a pienso horrible. Es inaguantable. En el suelo encuentras un objeto."
+        "EventType":"eSendText",
+        "Description":"God damn. I can't se nothing around here. Maybe I should return and inspect the entrance.",
+        "TriggerCondition":"TorchLit"
       },
       {
-        "EventType": "eGiveItem",
-        "ItemLots": [
+        "EventType":"eSendText",
+        "Description":"As you make your way into the room, you see huge claw marks in the area.",
+        "TriggerCondition":"TorchLit"
+      }
+    ],
+    "OnExitEvent": [
+      {
+        "EventType":"eSendText",
+        "Description":"You have a bad feeling about this...",
+        "TriggerCondition":"TorchLit"
+      }
+    ],
+    "OnInspectEvent":[
+      {
+        "EventType":"eSendText",
+        "Description":"As you move around your torch to inspect the room, you notice a small glint of light.\n You make your way to the source and you find... A pair of beast slaying boots!... For some reason...",
+        "TriggerCondition":"TorchLit"
+      },
+      {
+        "EventType":"eGiveItem",
+        "ItemLots":[
           {
-            "Item": "health_potion",
-            "Quantity": 2,
-            "ChanceToObtain": 1
-          },
-          {
-            "Item": "mana_potion",
-            "Quantity": 1,
-            "ChanceToObtain": 0.5
+            "Item":"beast_slaying_boots",
+            "Quantity":1,
+            "ChanceToObtain":1
           }
-        ]
+        ],
+        "TriggerCondition":"TorchLit"
       }
     ]
   },
@@ -75,35 +123,9 @@
         "Description": "Al entrar, notas una fuerte respiraci�n en tu espalda."
       },
       {
-        "EventType": "eSendImage",
-        "Description": "I will smite thee",
-        "ImageName": "Dog1.png"
-      },
-      {
-        "EventType": "eSendAudio",
-        "Description": "No se que poner me qued� sin ideas.",
-        "AudioName": "DoggoMusic.mp3"
-      },
-      {
         "EventType": "eStartBattle",
-        "Enemy": "Manuela"
-      }
-    ],
-    "OnExitEvent": [
-      {
-        "EventType": "eSendImageCollection",
-        "ImagesNames": [
-          "Dog1.png",
-          "Dog2.png"
-        ]
-      },
-      {
-        "EventType": "eSendText",
-        "Description": "Toma eventos."
-      },
-      {
-        "EventType": "eStartBattle",
-        "Enemy": "Peter"
+        "Enemy": "Manuela",
+        "TriggerCondition": "!ManuelaKilled"
       }
     ]
   }

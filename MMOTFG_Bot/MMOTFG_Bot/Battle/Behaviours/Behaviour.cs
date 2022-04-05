@@ -13,6 +13,7 @@ namespace MMOTFG_Bot
     [JsonConverter(typeof(JsonSubtypes), "BehaviourType")]
     [JsonSubtypes.KnownSubType(typeof(bChangeStat), "bChangeStat")]
     [JsonSubtypes.KnownSubType(typeof(bPlayerDeath), "bPlayerDeath")]
+    [JsonSubtypes.KnownSubType(typeof(bSetFlag), "bSetFlag")]
     class Behaviour
     {
         protected Battler user;
