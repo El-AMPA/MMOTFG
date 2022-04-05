@@ -47,6 +47,11 @@
       "Change": 5,
       "ActivateOnce": false,
       "Message": "El poder de la amistad cura 5 HP a Manuela."
+    },
+    "OnKill":{
+      "BehaviourType": "bSetFlag",
+      "Name": "ManuelaKilled",
+      "SetAs":"True"
     }
   },
   {
@@ -79,6 +84,11 @@
       "Change": -1,
       "Chance": 0.5,
       "Message": "Cleon y el mono se debaten sobre si deberían matarte o no. Su ataque baja un poco."
+    },
+    "OnKill":{
+      "BehaviourType":"bSetFlag",
+      "Name":"CleonftDefeated",
+      "SetAs":"True"
     }
   },
   {
@@ -112,6 +122,11 @@
       "StatToDepend": "HP",
       "Threshold": 0.5,
       "Message": "¡Fedejimbo conjura un patrón de diseño arcano de su libro y se recuperan todos sus MP!"
+    },
+    "OnKill":{
+      "BehaviourType":"bSetFlag",
+      "Name":"FedejimboDefeated",
+      "SetAs":"True"
     }
   },
   {
@@ -140,6 +155,11 @@
       "StatToDepend": "HP",
       "Threshold": 0.5,
       "Message": "Sein se está cansando de jugar contigo y notas que pronto va a dejar de hacerte caso."
+    },
+    "OnKill":{
+      "BehaviourType":"bSetFlag",
+      "Name":"SeinDefeated",
+      "SetAs":"True"
     }
   },
   {
@@ -173,6 +193,10 @@
       "StatToDepend": "HP",
       "Threshold": 0.25,
       "Message": "¡Ya solo queda uno! Habrá ganado la partida del PCE, pero no la batalla contigo."
+    },
+    "OnKill":{
+      "BehaviourType":"bSetFlag",
+      "SetFlagAsTrue":"StratospeersDefeated"
     }
   },
   {
@@ -206,6 +230,11 @@
       "StatToDepend": "HP",
       "Threshold": 0.5,
       "Message": "El thiccboi intenta comerse una silla pero no sale bien..."
+    },
+    "OnKill":{
+      "BehaviourType":"bSetFlag",
+      "Name":"ThiccboiDefeated",
+      "SetAs":"True"
     }
   },
   {

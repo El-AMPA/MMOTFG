@@ -60,7 +60,7 @@ namespace MMOTFG_Bot.Navigation
             //y directions but they don't know what node instance they point to. They just know their name. 
             //That's why after deserialzing, we need to complete the connections one by one.
             Node aux;
-            Console.WriteLine("Building map...");
+            Console.WriteLine("---------------------------------\nBuilding map...");
             foreach (Node n in nodes)
             {
                 foreach (KeyValuePair<string, Node.NodeConnection> connection in n.NodeConnections)
@@ -70,6 +70,7 @@ namespace MMOTFG_Bot.Navigation
                     Console.WriteLine("Node " + n.Name + " leads to node " + aux.Name + " via " + connection.Key);
                 }
             }
+            Console.WriteLine("Finished building map\n---------------------------------");
             startingNode = nodes[0];
         }
 

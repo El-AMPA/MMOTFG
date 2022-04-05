@@ -50,6 +50,15 @@ namespace MMOTFG_Bot
             Tatirana rana = new Tatirana();
             rana.Init();
 
+            Torch torch = new Torch();
+            torch.Init();
+
+            BeastSlayingBoots boots = new BeastSlayingBoots();
+            boots.Init();
+
+            MochilaLoona cap = new MochilaLoona();
+            cap.Init();
+
             obtainableItems.Add(hPotion.name, hPotion);
             obtainableItems.Add(mPotion.name, mPotion);
             obtainableItems.Add(tFury.name, tFury);
@@ -60,6 +69,9 @@ namespace MMOTFG_Bot
             obtainableItems.Add(zapas.name, zapas);
             obtainableItems.Add(collarJorge.name, collarJorge);
             obtainableItems.Add(rana.name, rana);
+            obtainableItems.Add(torch.name, torch);
+            obtainableItems.Add(boots.name, boots);
+            obtainableItems.Add(cap.name, cap);
         }
 
         /// <summary>

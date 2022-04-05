@@ -25,6 +25,12 @@ namespace MMOTFG_Bot.Navigation
             public Node Node;
         }
 
+        public Event[] events
+        {
+            get;
+            set;
+        }
+
         //TO-DO: Revisar si realmente merece la pena dejarlo como diccionario o pensar en otra estructura.
         public Dictionary<string, NodeConnection> NodeConnections
         {
@@ -62,7 +68,30 @@ namespace MMOTFG_Bot.Navigation
         /// </summary>
         public async Task OnExit(long chatId)
         {
-            if (OnExitEvent != null) foreach (Event e in OnExitEvent) await e.Execute(chatId);
+            //Load flag marker
+            //foreach (Event e in OnExitEvent) e.Execute(chatId);
+            await ProgressKeeper.LoadSerializable(chatId);
+
+            if (OnExitEvent != null)
+            {
+                foreach (Event ev in OnExitEvent)
+                {
+                    bool condition = true;
+
+                    if (ev.TriggerCondition != null)
+                    {
+                        condition = ProgressKeeper.IsFlagActive(chatId, ev.TriggerCondition);
+                    }
+
+                    if (condition)
+                    {
+                        await ev.Execute(chatId);
+                    }
+                }
+            }
+
+            ProgressKeeper.SetFlagAs(chatId, Name + "Visited", true);
+            await ProgressKeeper.SaveSerializable(chatId);
         }
 
         /// <summary>
@@ -70,7 +99,27 @@ namespace MMOTFG_Bot.Navigation
         /// </summary>
         public async Task OnArrive(long chatId)
         {
-            if (OnArriveEvent != null) foreach (Event e in OnArriveEvent) await e.Execute(chatId);
+            if (OnArriveEvent != null)
+            {
+                await ProgressKeeper.LoadSerializable(chatId);
+
+                foreach (Event ev in OnArriveEvent)
+                {
+                    bool condition = true;
+
+                    if (ev.TriggerCondition != null)
+                    {
+                        condition = ProgressKeeper.IsFlagActive(chatId, ev.TriggerCondition);
+                    }
+
+                    if (condition)
+                    {
+                        await ev.Execute(chatId);
+                    }
+                }
+
+                await ProgressKeeper.SaveSerializable(chatId);
+            }
         }
 
         /// <summary>
@@ -78,8 +127,30 @@ namespace MMOTFG_Bot.Navigation
         /// </summary>
         public async Task OnInspect(long chatId)
         {
-            if (OnInspectEvent != null) foreach (Event e in OnInspectEvent) await e.Execute(chatId);
-            else await TelegramCommunicator.SendText(chatId, "There is nothing of interest in here.");
+            bool triggeredEvent = false;
+            if (OnInspectEvent != null)
+            {
+                await ProgressKeeper.LoadSerializable(chatId);
+
+                foreach (Event ev in OnInspectEvent)
+                {
+                    bool condition = true;
+
+                    if (ev.TriggerCondition != null)
+                    {
+                        condition = ProgressKeeper.IsFlagActive(chatId, ev.TriggerCondition);
+                    }
+
+                    if (condition)
+                    {
+                        triggeredEvent = true;
+                        await ev.Execute(chatId);
+                    }
+                }
+
+                await ProgressKeeper.SaveSerializable(chatId);
+            }
+            if(!triggeredEvent) await TelegramCommunicator.SendText(chatId, "There is nothing of interest in here.");
         }
 
         /// <summary>

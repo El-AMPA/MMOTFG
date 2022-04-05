@@ -16,6 +16,7 @@ namespace MMOTFG_Bot.Events
     [JsonSubtypes.KnownSubType(typeof(eSendImage), "eSendImage")]
     [JsonSubtypes.KnownSubType(typeof(eSendText), "eSendText")]
     [JsonSubtypes.KnownSubType(typeof(eSendImageCollection), "eSendImageCollection")]
+    [JsonSubtypes.KnownSubType(typeof(eSetFlag), "eSetFlag")]
     [JsonSubtypes.KnownSubType(typeof(eStartBattle), "eStartBattle")]
 
     //Even though it's used as if it were an abstract class, it can't be abstract because in the process of deserializing into the child class,
@@ -23,6 +24,12 @@ namespace MMOTFG_Bot.Events
     //Thus, if it were a pure abstract class, it would just send an exception.
     class Event
     {
+        public string TriggerCondition
+        {
+            get;
+            set;
+        }
+
         public virtual Task Execute(long chatId)
         {
             return Task.CompletedTask;
