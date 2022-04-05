@@ -50,6 +50,15 @@ namespace MMOTFG_Bot
             Tatirana rana = new Tatirana();
             rana.Init();
 
+            Torch torch = new Torch();
+            torch.Init();
+
+            BeastSlayingBoots boots = new BeastSlayingBoots();
+            boots.Init();
+
+            MochilaLoona cap = new MochilaLoona();
+            cap.Init();
+
             obtainableItems.Add(hPotion.name, hPotion);
             obtainableItems.Add(mPotion.name, mPotion);
             obtainableItems.Add(tFury.name, tFury);
@@ -60,6 +69,9 @@ namespace MMOTFG_Bot
             obtainableItems.Add(zapas.name, zapas);
             obtainableItems.Add(collarJorge.name, collarJorge);
             obtainableItems.Add(rana.name, rana);
+            obtainableItems.Add(torch.name, torch);
+            obtainableItems.Add(boots.name, boots);
+            obtainableItems.Add(cap.name, cap);
         }
 
         /// <summary>
@@ -281,9 +293,32 @@ namespace MMOTFG_Bot
                 //If the current stack has been deplenished, it's removed from the list
                 if (inventoryRecord.Quantity == 0) InventoryRecords.Remove(inventoryRecord);
 
+                if (command != null)
+                {
+                    for (int k = 0; k < quantityToConsumeToStack; k++)
+                    {
+                        item.ProcessCommand(command, chatId, args);
+                    }
+                }
+                inventoryRecord.AddToQuantity(-quantityToConsumeToStack);
+
+                //If the current stack has been deplenished, it's removed from the list
+                if (inventoryRecord.Quantity == 0) InventoryRecords.Remove(inventoryRecord);
+
                 // Decrease the quantityToConsume by the amount we added to the stack.
                 // If we added the total quantityToConsume to the stack, then this value will be 0, and we'll exit the 'while' loop.
                 quantityToConsumeAux -= quantityToConsumeToStack;
+            }
+                if (quantityToConsumeAux > 0)
+                {
+                    //Couldn't consume every item.
+                }
+                if (quantityToConsume == 1) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was consumed.");
+                else await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was consumed " + (quantityToConsume - quantityToConsumeAux) + " times");
+                //enemie's turn
+                if (playerInBattle) await BattleSystem.player.SkipTurn(chatId);
+
+                await SavePlayerInventory(chatId);
             }
             if (quantityToConsumeAux > 0)
             {
@@ -571,7 +606,7 @@ namespace MMOTFG_Bot
                 Quantity += amountToAdd;
             }
 
-            public Dictionary<String, object> GetSerializable()
+            public Dictionary<string, object> GetSerializable()
             {
                 return new Dictionary<string, object>
                 {

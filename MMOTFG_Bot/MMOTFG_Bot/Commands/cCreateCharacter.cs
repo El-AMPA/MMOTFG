@@ -67,6 +67,7 @@ Use: create [character name]";
 			await InventorySystem.CreatePlayerInventory(chatId);
 			await Map.CreatePlayerPosition(chatId);
 			await BattleSystem.CreatePlayerBattle(chatId);
+			await ProgressKeeper.CreateProgressKeeper(chatId);
 		}
 
 		internal override bool IsFormattedCorrectly(string[] args)

@@ -18,19 +18,19 @@ namespace MMOTFG_Bot.Items
             protected set;
         }
 
-        public void OnEquip(long chatId, string[] args = null)
+        public virtual void OnEquip(long chatId, string[] args = null)
         {
             foreach (var stat in statModifiers)
             {
-                BattleSystem.player.ChangeOriginalStat(stat.Item2, stat.Item1);
+                BattleSystem.player.AddToStat(stat.Item2, stat.Item1, changeMax: true, permanent: true);
             }
         }
 
-        public void OnUnequip(long chatId, string[] args = null)
+        public virtual void OnUnequip(long chatId, string[] args = null)
         {
             foreach (var stat in statModifiers)
             {
-                BattleSystem.player.ChangeOriginalStat(stat.Item2, -stat.Item1);
+                BattleSystem.player.AddToStat(stat.Item2, -stat.Item1, changeMax: true, permanent: true);
             }
         }
     }

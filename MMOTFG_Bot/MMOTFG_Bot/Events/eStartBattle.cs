@@ -1,5 +1,4 @@
-﻿using MMOTFG_Bot.Battle.Enemies;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,11 +10,19 @@ namespace MMOTFG_Bot.Events
     /// </summary>
     class eStartBattle : Event
     {
-        public string Enemy = "";
+        public string Enemy;
+        public List<string> Enemies;
 
         public async override Task Execute(long chatId)
         {
-            await BattleSystem.StartBattle(chatId, EnemySystem.getEnemy(Enemy));
+            if (Enemy != null)
+                await BattleSystem.StartBattle(chatId, JSONSystem.getEnemy(Enemy));
+            else
+            {
+                List<Battler> enemies = new List<Battler>();
+                foreach (string s in Enemies) enemies.Add(JSONSystem.getEnemy(s));
+                await BattleSystem.StartBattle(chatId, enemies);
+            }
         }
     }
 }
