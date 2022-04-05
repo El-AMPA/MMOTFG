@@ -1,15 +1,17 @@
 ﻿[
   {
     "Name": "Manuela",
-    "Stats": [ 100, 10, 25 ],
+    "Stats": [ 100, 10, 15, 25 ],
     "ImageName": "manuela.jpg",
     "ImageCaption": "Manuela ataca!",
     "DroppedMoney": 100,
     "DroppedItem": "health_potion",
     "DroppedItemAmount": 2,
+    "ExperienceGiven": 1,
     "Attacks": [
       {
-        //default attack
+        "Name": "Slap",
+        "Power": 1
       },
       {
         "AttackType": "aStatChanging",
@@ -18,12 +20,6 @@
         "StatToChange": "ATK",
         "AffectsSelf": true,
         "Multiple": 2
-      },
-      {
-        "AttackType": "aScaled",
-        "Name": "FixedDamage",
-        "MpCost": 2,
-        "FixedDamage": 10
       },
       {
         "AttackType": "aScaled",
@@ -56,7 +52,7 @@
   },
   {
     "Name": "Cleonft",
-    "Stats": [ 100, 5, 20 ],
+    "Stats": [ 100, 5, 15, 20 ],
     "ImageName": "cleonft.png",
     "ImageCaption": "¡Cleonft viene a mintearte la carrera!",
     "DroppedMoney": 2223,
@@ -93,7 +89,7 @@
   },
   {
     "Name": "Fedejimbo",
-    "Stats": [ 100, 10, 25 ],
+    "Stats": [ 100, 10, 5, 25 ],
     "ImageName": "fedejimbo.png",
     "ImageCaption": "¡Fedejimbo no te deja pasar de esta esquina!",
     "DroppedMoney": 666,
@@ -131,7 +127,7 @@
   },
   {
     "Name": "Sein",
-    "Stats": [ 100, 10, 25 ],
+    "Stats": [ 100, 10, 30, 25 ],
     "ImageName": "sein.png",
     "ImageCaption": "¡Sein quiere jugar a pegarse!",
     "DroppedMoney": 6969,
@@ -164,7 +160,7 @@
   },
   {
     "Name": "Stratospeers",
-    "Stats": [ 40, 10, 10 ],
+    "Stats": [ 40, 10, 10, 10 ],
     "ImageName": "stratospeers.png",
     "ImageCaption": "¡Los astronautas del PCE pasan de convivir contigo!",
     "DroppedMoney": 1920,
@@ -201,7 +197,7 @@
   },
   {
     "Name": "Thiccboi",
-    "Stats": [ 100, 10, 25 ],
+    "Stats": [ 100, 10, 1, 25 ],
     "ImageName": "thiccboi.png",
     "ImageCaption": "¡El thiccboi abre la boca!",
     "DroppedMoney": 345,
@@ -239,7 +235,7 @@
   },
   {
     "Name": "Tinky.exe",
-    "Stats": [ 100, 100, 100 ],
+    "Stats": [ 100, 100, 100, 100 ],
     "ImageName": "tinkyexe.png",
     "ImageCaption": "T̵i̶n̵k̴y̸",
     "DroppedItem": "health_potion",

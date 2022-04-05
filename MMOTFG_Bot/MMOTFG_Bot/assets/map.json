@@ -22,7 +22,7 @@
         "Description": "Mi habitación sigue hecha un desastre. Aún tengo que lavar la taza de Evangelion en la que ayer me bebí 3 cafés seguidos para copear con lo del tfg, pero bueno, al menos la estantería de las frikadas sigue intacta (pog). Desde que llegué a la FDI (Facultad del Internado) de la academia Kadiz, cada vez soy más desordenado... Pero bueno, mejor salgo ya por la puerta"
       },
       {
-        "EventType": "eSendtext",
+        "EventType": "eSendText",
         "Description": "En fin, debería vestirme y bajar. Cogeré lo primero que vea y au",
         "TriggerCondition": "!MmurGearFound"
       },
@@ -111,7 +111,7 @@
       },
       {
         "EventType": "eStartBattle",
-        "Enemy": "Fedejimbo",
+        "Enemies": [ "Manuela", "Fedejimbo" ],
         "TriggerCondition": "!FedejimboDefeated"
       },
       {

@@ -311,7 +311,7 @@ namespace MMOTFG_Bot
                 if (quantityToConsume == 1) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was consumed.");
                 else await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was consumed " + (quantityToConsume - quantityToConsumeAux) + " times");
                 //enemie's turn
-                if (playerInBattle) await BattleSystem.EnemyAttack(chatId);
+                if (playerInBattle) await BattleSystem.player.SkipTurn(chatId);
 
                 await SavePlayerInventory(chatId);
             }

@@ -23,6 +23,8 @@ namespace MMOTFG_Bot
         protected Battler user;
         protected Battler target;
 
+        public bool affectsSelf;
+
         public Attack(string name_, float power_, float mpCost_)
         {
             name = name_;

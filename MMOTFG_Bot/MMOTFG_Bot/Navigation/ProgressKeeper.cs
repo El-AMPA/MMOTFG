@@ -10,6 +10,7 @@ namespace MMOTFG_Bot.Navigation
 
         public static async Task CreateProgressKeeper(long chatId)
         {
+            PlayerRecords.Clear();
             await SaveSerializable(chatId);
         }
 

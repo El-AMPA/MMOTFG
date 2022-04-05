@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace MMOTFG_Bot.Navigation
 {
@@ -47,6 +48,20 @@ namespace MMOTFG_Bot.Navigation
             }
         }
 
+        //sets position to a certain node
+        public static async Task SetPlayerPosition(long chatId, int nodeNumber)
+        {
+            Node n = nodes.ElementAtOrDefault(nodeNumber);
+            if (n == null)
+            {
+                Console.WriteLine("ERROR: SetPlayerPosition called on invalid node");
+                return;
+            }
+            currentNode = n;
+            await currentNode.OnArrive(chatId);
+            await SavePlayerPosition(chatId);
+        }
+
         /// <summary>
         /// Builds the map reading it from the file specified by mapPath.
         /// </summary>
@@ -72,7 +87,7 @@ namespace MMOTFG_Bot.Navigation
             }
             Console.WriteLine("Finished building map\n---------------------------------");
             startingNode = nodes[0];
-        }
+        }       
 
         /// <summary>
         /// Shows the available directions from CurrentNode.
@@ -132,7 +147,8 @@ namespace MMOTFG_Bot.Navigation
 
             try
             {
-                nodes = JsonConvert.DeserializeObject<List<Node>>(mapText); //Deserializes the .json file into an array of nodes.
+                nodes = JsonConvert.DeserializeObject<List<Node>>(mapText,
+                    new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate }); //Deserializes the .json file into an array of nodes.
             }
             catch (JsonException e)
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,14 +13,18 @@ namespace MMOTFG_Bot.Events
             get;
             set;
         }
+
+        [DefaultValue(1)]
         public int Quantity
-        {
+        {           
             get;
             set;
         }
+
         //Range [0, 1]
+        [DefaultValue(1)]
         public float ChanceToObtain
-        {
+        {           
             get;
             set;
         }

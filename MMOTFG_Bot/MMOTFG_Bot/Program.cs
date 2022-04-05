@@ -20,6 +20,7 @@ namespace MMOTFG_Bot
 		private static bool processedNewEvents = false;
 		private static long launchTime;
 		static cHelp helpCommand = new cHelp();
+		static cAttack attackCommand = new cAttack();
 
 		public static List<ICommand> commandList = new List<ICommand> { new cDeleteCharacter(), new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
             new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
@@ -68,10 +69,9 @@ namespace MMOTFG_Bot
 			helpCommand.setCommandList(new List<ICommand>(commandList));
 
 			//set attack keywords
-			cAttack cAttack = new cAttack();
-			cAttack.SetKeywords(JSONSystem.GetPlayer().attackNames.ConvertAll(s => s.ToLower()).ToArray());
-			cAttack.SetDescription();
-			commandList.Add(cAttack);
+			attackCommand.SetKeywords(JSONSystem.GetPlayer().attackNames.ConvertAll(s => s.ToLower()).ToArray());
+			attackCommand.SetDescription();
+			commandList.Add(attackCommand);
 
 			Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);
 
@@ -85,6 +85,11 @@ namespace MMOTFG_Bot
 			Thread.Sleep(Timeout.Infinite);
 
 			cts.Cancel();
+		}
+
+		public static void SetAttackKeywords(List<string> keywords)
+        {
+			attackCommand.SetKeywords(keywords.ConvertAll(s => s.ToLower()).ToArray());
 		}
 
 		static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
