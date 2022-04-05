@@ -10,8 +10,6 @@ namespace MMOTFG_Bot
 {
     class Player : Battler
     {
-        public List<string> attackNames;
-
         public LevelUpRoadmap levelUpRoadmap;
 
         public bool upNext;
@@ -29,22 +27,13 @@ namespace MMOTFG_Bot
         public void AfterCreate()
         {
             SetAttackNames();
-            Program.SetAttackKeywords(attackNames);
+            Program.SetAttackKeywords(attacks);
             stats = (float[])levelUpRoadmap.firstStats.Clone();
             maxStats = (float[])stats.Clone();
             originalStats = (float[])stats.Clone();
             levelUpRoadmap.CalculateLevels();
         }
-
-        private void SetAttackNames()
-        {
-            attackNames = new List<string>();
-            foreach (Attack a in attacks_)
-            {
-                attackNames.Add(a.name);
-            }
-        }
-      
+    
         public void SetName(string playerName)
         {
             name = playerName;
@@ -84,11 +73,11 @@ namespace MMOTFG_Bot
             if (attacks_.Count == maxAttacks)
             {
                 learningAttack = attack;
-                List<string> options = new List<string>(attackNames);
+                List<string> options = new List<string>(attacks);
                 options.Add("Skip");
                 if (BattleSystem.battleActive) await BattleSystem.PauseBattle(chatId);
                 await TelegramCommunicator.SendButtons(chatId, $"Do you want to learn {attack.name}? Choose an attack to replace or Skip to skip",
-                    options.ToArray(), 2, 3);
+                    options, 2, 3);
                 Program.SetAttackKeywords(options);
             }
             else
@@ -96,11 +85,13 @@ namespace MMOTFG_Bot
                 learningAttack = null;
                 attacks_.Add(attack);
                 SetAttackNames();
-                Program.SetAttackKeywords(attackNames);
+                Program.SetAttackKeywords(attacks);
                 await TelegramCommunicator.SendText(chatId, $"Learnt {attack.name}!");
                 if (!BattleSystem.battleActive) await TelegramCommunicator.RemoveReplyMarkup(chatId);
                 else if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
             }
+            //save move changes
+            await BattleSystem.SavePlayerBattle(chatId);
         }
 
         public async Task ForgetAttack(long chatId, string attackName)
@@ -134,6 +125,10 @@ namespace MMOTFG_Bot
                 //(HP/MP only if player died)
                 if (!Stats.isBounded((StatName)i) || dead)
                     stats[i] = originalStats[i];
+                if (dead)
+                {
+                    maxStats[i] = originalStats[i];
+                }
             }
             //return player to starting node
             if (dead) await Map.SetPlayerPosition(chatId, 0);

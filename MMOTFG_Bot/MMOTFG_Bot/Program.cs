@@ -69,7 +69,7 @@ namespace MMOTFG_Bot
 			helpCommand.setCommandList(new List<ICommand>(commandList));
 
 			//set attack keywords
-			attackCommand.SetKeywords(JSONSystem.GetPlayer().attackNames.ConvertAll(s => s.ToLower()).ToArray());
+			attackCommand.SetKeywords(JSONSystem.GetPlayer().attacks.ConvertAll(s => s.ToLower()).ToArray());
 			attackCommand.SetDescription();
 			commandList.Add(attackCommand);
 

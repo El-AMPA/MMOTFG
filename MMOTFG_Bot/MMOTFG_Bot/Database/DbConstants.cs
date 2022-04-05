@@ -15,7 +15,6 @@ namespace MMOTFG_Bot
 		readonly public static string COLLEC_PLAYERS = "Players";
 		readonly public static string COLLEC_OBJECTS = "Objects";
 
-
 		readonly public static string PLAYER_FIELD_NAME = "name";
 		readonly public static string PLAYER_FIELD_TELEGRAM_ID = "telegramId";
 		readonly public static string PLAYER_FIELD_INVENTORY = "inventory";
@@ -36,5 +35,6 @@ namespace MMOTFG_Bot
 		readonly public static string BATTLER_FIELD_TURN_OVER = "turn_over";
 		readonly public static string BATTLER_FIELD_LEVEL = "lvl";
 		readonly public static string BATTLER_FIELD_EXPERIENCE = "exp";
+		readonly public static string BATTLER_FIELD_ATTACKS = "attacks";
 	}
 }

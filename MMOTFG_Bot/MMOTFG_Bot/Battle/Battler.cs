@@ -64,9 +64,7 @@ namespace MMOTFG_Bot
 
         public void OnCreate()
         {
-            SetAttacks();
-            //attacks are automatically sorted by mpCost
-            attacks_.Sort((a1, a2) => a1.mpCost.CompareTo(a2.mpCost));
+            SetAttacks();           
             maxStats = (float[])stats.Clone();
             originalStats = (float[])stats.Clone();
             onHit?.setParent(this);
@@ -74,11 +72,24 @@ namespace MMOTFG_Bot
             onTurnEnd?.setParent(this);
         }
 
+        protected void SetAttackNames()
+        {
+            attacks = new List<string>();
+            foreach (Attack a in attacks_)
+            {
+                attacks.Add(a.name);
+            }
+        }
+
         public void SetAttacks()
         {
             attacks_ = new List<Attack>();
             //get attacks by name
             foreach (string s in attacks) attacks_.Add(JSONSystem.GetAttack(s));
+            //attacks are automatically sorted by mpCost
+            attacks_.Sort((a1, a2) => a1.mpCost.CompareTo(a2.mpCost));
+            //TO-DO: Así no se hace
+            if(isPlayer) Program.SetAttackKeywords(attacks);
         }
 
         public void SetStat(StatName stat, float newValue, bool changeMax = false, bool permanent = false)
@@ -220,6 +231,10 @@ namespace MMOTFG_Bot
 
             battlerInfo.Add(DbConstants.BATTLER_FIELD_LEVEL, level);
 
+            SetAttackNames();
+
+            battlerInfo.Add(DbConstants.BATTLER_FIELD_ATTACKS, attacks);
+
             return battlerInfo;
         }
 
@@ -269,6 +284,14 @@ namespace MMOTFG_Bot
             experience = Convert.ToInt32(eInfo[DbConstants.BATTLER_FIELD_EXPERIENCE]);
 
             level = Convert.ToInt32(eInfo[DbConstants.BATTLER_FIELD_LEVEL]);
+
+            List<object> attacksTemp = (List<object>)eInfo[DbConstants.BATTLER_FIELD_ATTACKS];
+
+            attacks = new List<string>();
+
+            foreach (object o in attacksTemp) attacks.Add(Convert.ToString(o));
+
+            SetAttacks();
         }
     }
 }

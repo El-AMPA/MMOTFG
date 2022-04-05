@@ -206,7 +206,7 @@ namespace MMOTFG_Bot
 
         public static async Task SetPlayerOptions(long chatId, string text)
         {
-            await TelegramCommunicator.SendButtons(chatId, text, player.attackNames.ToArray());
+            await TelegramCommunicator.SendButtons(chatId, text, player.attacks);
         }
 
         public static async Task PlayerAttack(long chatId, string attackName, string targetName = null)
@@ -222,7 +222,7 @@ namespace MMOTFG_Bot
                 return;
             }
             attackName = char.ToUpper(attackName[0]) + attackName.Substring(1);
-            int atkNum = player.attackNames.IndexOf(attackName);
+            int atkNum = player.attacks.IndexOf(attackName);
             if (atkNum == -1)
             {
                 await TelegramCommunicator.SendText(chatId, "Invalid attack");
@@ -259,7 +259,7 @@ namespace MMOTFG_Bot
                     {
                         List<string> targetNames = new List<string>();
                         foreach (Battler b in otherAliveBattlers) targetNames.Add($"{attack.name} {b.name}");
-                        await TelegramCommunicator.SendButtons(chatId, message, targetNames.ToArray());
+                        await TelegramCommunicator.SendButtons(chatId, message, targetNames);
                         //Program.SetAttackKeywords(targetNames);
                         return;
                     }
