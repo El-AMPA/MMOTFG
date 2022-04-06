@@ -140,7 +140,7 @@ namespace MMOTFG_Bot
 
 			QuerySnapshot querySnap = await colRef.WhereEqualTo(field, value).GetSnapshotAsync();
 
-			if (colRef == null) Console.WriteLine("A document with {0} : {1} doesnt exist in collection {2}.", field, value.ToString(), collection);			
+			if (colRef == null) Console.WriteLine("A document with {0} : {1} doesnt exist in collection {2}.", field, value.ToString(), collection);
 
 			Dictionary<string, object>[] ret = new Dictionary<string, object>[querySnap.Count];
 
@@ -175,18 +175,20 @@ namespace MMOTFG_Bot
 
 			QuerySnapshot querySnap = await colRef.WhereEqualTo(field, value).GetSnapshotAsync();
 
-			if (querySnap.Documents.Count <= 0) { 
+			if (querySnap.Documents.Count <= 0)
+			{
 				Console.WriteLine("A document with {0} : {1} doesnt exist in collection {2}.", field, value.ToString(), collection);
 				return null;
 			}
 
-			if(querySnap.Documents.Count > 1) {
-				Console.WriteLine("There are multiple ({0}) documents with key value pair {1} : {2}.", querySnap.Documents.Count , field, value.ToString(), collection);
+			if (querySnap.Documents.Count > 1)
+			{
+				Console.WriteLine("There are multiple ({0}) documents with key value pair {1} : {2}.", querySnap.Documents.Count, field, value.ToString(), collection);
 				return null;
 			}
 
 			Dictionary<string, object> ret = querySnap.Documents[0].ToDictionary();
-			
+
 			return ret;
 		}
 
@@ -217,6 +219,112 @@ namespace MMOTFG_Bot
 			await docRef.DeleteAsync();
 
 			return true;
+		}
+
+		/// <summary>
+		/// Retrieves a single field from the given document
+		/// </summary>
+		/// <param name="fieldName">name of the field, should be in <see cref="DbConstants"/></param>
+		/// <param name="documentId">ID of the document with the given field</param>
+		/// <param name="collection">Name of the collection to search, should be in <see cref="DbConstants"/></param>
+		/// <returns>True if the deletios was successful, false otherwise</returns>
+		public static async Task<object> GetFieldFromDocument(string fieldName, string documentId, string collection)
+		{
+			CollectionReference colRef = db.Collection(collection);
+
+			if (colRef == null)
+			{
+				Console.WriteLine("Collection {0} doesnt exist, remember its case sentitive.", collection);
+				return null;
+			}
+
+			DocumentReference docRef = colRef.Document(documentId);
+
+			if (docRef == null)
+			{
+				Console.WriteLine("Document {0} doesnt exist in collection {1}, remember its case sentitive.", documentId, collection);
+				return null;
+			}
+
+			DocumentSnapshot docSnap = await docRef.GetSnapshotAsync();
+
+			Dictionary<string, object> playerDict = docSnap.ToDictionary();
+
+			object ret = new object();
+
+			if (!playerDict.TryGetValue(fieldName, out ret))
+			{
+				ret = null;
+			}
+
+			return ret;
+		}
+
+		/// <summary>
+		/// Updates a single field from the given document
+		/// </summary>
+		/// <param name="fieldName">name of the field, should be in <see cref="DbConstants"/></param>
+		/// <param name="newValue">value that the given field will take</param>
+		/// <param name="documentId">ID of the document with the given field</param>
+		/// <param name="collection">Name of the collection to search, should be in <see cref="DbConstants"/></param>
+		/// <returns>True if the deletios was successful, false otherwise</returns>
+		public static async Task ModifyFieldOfDocument(string fieldName, object newValue, string documentId, string collection)
+		{
+			CollectionReference colRef = db.Collection(collection);
+
+			if (colRef == null)
+			{
+				Console.WriteLine("Collection {0} doesnt exist, remember its case sentitive.", collection);
+				return;
+			}
+
+			DocumentReference docRef = colRef.Document(documentId);
+
+			if (docRef == null)
+			{
+				Console.WriteLine("Document {0} doesnt exist in collection {1}, remember its case sentitive.", documentId, collection);
+				return;
+			}
+
+			DocumentSnapshot docSnap = await docRef.GetSnapshotAsync();
+
+			Dictionary<string, object> playerDict = docSnap.ToDictionary();
+
+			if (!playerDict.TryGetValue(fieldName, out _))
+			{
+				Console.WriteLine("Document {0} doesnt have field {1}, you cant modify it", documentId, fieldName);
+				return;
+			}
+
+			Dictionary<string, object> update = new Dictionary<string, object> { { fieldName, newValue } };
+
+			await docRef.UpdateAsync(update);
+		}
+
+
+		/// <summary>
+		/// Returns whether or not a document is in a collection
+		/// </summary>
+		/// <param name="documentId">Name of the document to search for)</param>
+		/// <param name="collection">Name of the collection to search, should be in <see cref="DbConstants"/></param>
+		/// <returns>True if the document is found, false otherwise</returns>
+		public static async Task<bool> IsDocumentInCollection(string documentId, string collection)
+		{
+			CollectionReference colRef = db.Collection(collection);
+
+			if (colRef == null)
+			{
+				Console.WriteLine("Collection {0} doesnt exist, remember its case sentitive.", collection);
+				return false;
+			}
+
+
+			DocumentReference docRef = colRef.Document(documentId);
+
+			DocumentSnapshot docSnap = await docRef.GetSnapshotAsync();
+
+			return docSnap.Exists;
+
 		}
 	}
 }

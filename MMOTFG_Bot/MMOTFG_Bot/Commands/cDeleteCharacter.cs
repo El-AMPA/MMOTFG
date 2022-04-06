@@ -29,7 +29,7 @@ Use: delete [character name]";
 
 			Dictionary<string, object> tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId.ToString(), DbConstants.COLLEC_DEBUG);
 
-			if (arg0 == tempDict[DbConstants.PLAYER_FIELD_NAME].ToString())
+			if (tempDict != null && arg0 == tempDict[DbConstants.PLAYER_FIELD_NAME].ToString())
 			{
 				await DatabaseManager.DeleteDocumentById(chatId.ToString(), DbConstants.COLLEC_DEBUG);
 				await TelegramCommunicator.SendText(chatId, "Bye 😭");
