@@ -63,9 +63,10 @@ Use: create [character name]";
 			Console.WriteLine("Telegram user {0} just created characater with name {1}", chatId, charName);
 
 			await InventorySystem.CreatePlayerInventory(chatId);
-			await Map.CreatePlayerPosition(chatId);
 			await BattleSystem.CreatePlayerBattle(chatId);
 			await ProgressKeeper.CreateProgressKeeper(chatId);
+			await Map.CreatePlayerPosition(chatId);
+
 		}
 
 		internal override bool IsFormattedCorrectly(string[] args)

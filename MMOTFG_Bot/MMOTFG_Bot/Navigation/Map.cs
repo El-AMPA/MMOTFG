@@ -263,6 +263,8 @@ namespace MMOTFG_Bot.Navigation
 
             update.Add(DbConstants.PLAYER_FIELD_ACTUAL_NODE, startingNode.Name);
 
+            await Map.startingNode.OnArrive(chatId);
+
             await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
         }
     }
