@@ -1,14 +1,18 @@
 [
   {
     "Name": "HabitacionMmur",
-    "NodeConnections":{
-      "puerta":{"ConnectingNode": "Pasillo1"},
-      "trapdoor":{"ConnectingNode": "Tunel10"}
+    "NodeConnections": {
+      "puerta": {
+        "ConnectingNode": "Pasillo1"
+      },
+      "trapdoor": {
+        "ConnectingNode": "Tunel10"
+      }
     },
     "OnArriveEvent": [
       {
-      "EventType":"eSendText",
-      "Description": "En mi habitación no hay mucho que ver. Debería bajar a ver qué hacen los demás (o también podría quedarme jugando al Elden Ring lmao)."
+        "EventType": "eSendText",
+        "Description": "En mi habitación no hay mucho que ver. Debería bajar a ver qué hacen los demás (o también podría quedarme jugando al Elden Ring lmao)."
       }
     ],
     "OnInspectEvent": [
@@ -18,16 +22,18 @@
         "Description": "Mi habitación sigue hecha un desastre. Aún tengo que lavar la taza de Evangelion en la que ayer me bebí 3 cafés seguidos para copear con lo del tfg, pero bueno, al menos la estantería de las frikadas sigue intacta (pog). Desde que llegué a la FDI (Facultad del Internado) de la academia Kadiz, cada vez soy más desordenado... Pero bueno, mejor salgo ya por la puerta"
       },
       {
-        "EventType": "eSendtext",
-        "Description": "En fin, debería vestirme y bajar. Cogeré lo primero que vea y au"
+        "EventType": "eSendText",
+        "Description": "En fin, debería vestirme y bajar. Cogeré lo primero que vea y au",
+        "TriggerCondition": "!MmurGearFound"
       },
       {
-        "EventType":"eSendImage",
+        "EventType": "eSendImage",
         "Description": "¡Obtienes el Mmur starter pack!",
-        "ImageName": "mmurstarterpack.png"
+        "ImageName": "mmurstarterpack.png",
+        "TriggerCondition": "!MmurGearFound"
       },
       {
-        "EventType":"eGiveItem",
+        "EventType": "eGiveItem",
         "ItemLots": [
           {
             "Item": "zapatillas_gastadas",
@@ -49,44 +55,69 @@
             "Quantity": 1,
             "ChanceToObtain": 1
           }
-        ]
+        ],
+        "TriggerCondition": "!MmurGearFound"
+      },
+      {
+        "EventType":"eSetFlag",
+        "Name":"MmurGearFound",
+        "SetAs":"True"
       }
-    ] 
+    ]
   },
   {
     "Name": "Pasillo1",
-    "NodeConnections":{
-      "puerta":{"ConnectingNode": "HabitacionMmur"},
-      "south":{"ConnectingNode": "Pasillo2"}
-    },
-    "OnArriveEvent":[
-      {"EventType": "eSendText",
-      "Description": "Mi habitación está al final del pasillo. Justo enfrente está la de Pj. Parece que tiene montada una rave en su habitación??? En fin, la salida está hacia el sur."}
-    ],
-    "OnInspectEvent":[
-      {"EventType": "eSendText",
-        "Description":"Me acerco a cotillear a la puerta de Pj. Está sonando música de Ace Attorney a tope. Un clásico cuando quiere llorar de forma disimulada. Mejor no entro que la última vez me tuve que tragar un drama de 4 horas y media sobre el grupo aquel de fans de Loles León."
+    "NodeConnections": {
+      "puerta": {
+        "ConnectingNode": "HabitacionMmur"
       },
-      {"EventType": "eSendAudio",
-      "Description": "Este pavo necesita un psicólogo (y unos cascos) pero ya",
-      "AudioName": "pasillopj.mp3"
+      "south": {
+        "ConnectingNode": "Pasillo2"
+      }
+    },
+    "OnArriveEvent": [
+      {
+        "EventType": "eSendText",
+        "Description": "Mi habitación está al final del pasillo. Justo enfrente está la de Pj. Parece que tiene montada una rave en su habitación??? En fin, la salida está hacia el sur."
+      }
+    ],
+    "OnInspectEvent": [
+      {
+        "EventType": "eSendText",
+        "Description": "Me acerco a cotillear a la puerta de Pj. Está sonando música de Ace Attorney a tope. Un clásico cuando quiere llorar de forma disimulada. Mejor no entro que la última vez me tuve que tragar un drama de 4 horas y media sobre el grupo aquel de fans de Loles León."
+      },
+      {
+        "EventType": "eSendAudio",
+        "Description": "Este pavo necesita un psicólogo (y unos cascos) pero ya",
+        "AudioName": "pasillopj.mp3"
       }
     ]
   },
   {
     "Name": "Pasillo2",
-    "NodeConnections":{
-      "north":{"ConnectingNode":"Pasillo1"},
-      "south":{"ConnectingNode":"Pasillo3"}
+    "NodeConnections": {
+      "north": {
+        "ConnectingNode": "Pasillo1"
+      },
+      "south": {
+        "ConnectingNode": "Pasillo3"
+      }
     },
     "OnArriveEvent": [
       {
         "EventType": "eSendText",
-        "Description": "En cuanto piso el pasillo sé que algo anda mal. Cuando hay tan poca gente por aquí es porque ÉL anda de guardia. Y si no hemos terminado de hacer el proyecto de construct... Pues eso, que de aquí no paso lol-"
+        "Description": "En cuanto piso el pasillo sé que algo anda mal. Cuando hay tan poca gente por aquí es porque ÉL anda de guardia. Y si no hemos terminado de hacer el proyecto de construct... Pues eso, que de aquí no paso lol-",
+        "TriggerCondition": "!FedejimboDefeated"
       },
       {
-      "EventType":"eStartBattle",
-      "Enemy": "Fedejimbo"
+        "EventType": "eStartBattle",
+        "Enemies": [ "Manuela", "Fedejimbo" ],
+        "TriggerCondition": "!FedejimboDefeated"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"Puedo pasar tranquilo por el pasillo ya que Fedejimbo ya no está... Bueno, para ser exactos está desparramado en el suelo, pero ya no me va a dar más problemas... Espero.",
+        "TriggerCondition":"FedejimboDefeated"
       }
     ],
     "OnInspectEvent": [
@@ -98,27 +129,36 @@
   },
   {
     "Name": "Pasillo3",
-    "NodeConnections":{
-      "north":{"ConnectingNode": "Pasillo2"},
-      "south":{"ConnectingNode": "Patio"},
-      "puerta":{"ConnectingNode": "HabAlvarJorge"}
+    "NodeConnections": {
+      "north": {
+        "ConnectingNode": "Pasillo2"
+      },
+      "south": {
+        "ConnectingNode": "Patio"
+      },
+      "puerta": {
+        "ConnectingNode": "HabAlvarJorge"
+      }
     },
-    "OnArriveEvent":[
+    "OnArriveEvent": [
       {
         "EventType": "eSendText",
         "Description": "Justo al sur está ya la salida al patio. La habitación de Albar y Jorge está justo aquí también, ¿habrá alguien?"
       }
     ],
-    "OnInspectEvent":[
-      {"EventType":"eSendText",
-      "Description": "No hay nadie, pero la puerta de la habitación está abierta. Menudos bobos, siempre se les olvida cerrarla. Podría entrar a echar un vistacito..."
+    "OnInspectEvent": [
+      {
+        "EventType": "eSendText",
+        "Description": "No hay nadie, pero la puerta de la habitación está abierta. Menudos bobos, siempre se les olvida cerrarla. Podría entrar a echar un vistacito..."
       }
     ]
   },
   {
     "Name": "HabAlvarJorge",
     "NodeConnections": {
-      "puerta":{"ConnectingNode":"Pasillo3"}
+      "puerta": {
+        "ConnectingNode": "Pasillo3"
+      }
     },
     "OnArriveEvent": [
       {
@@ -131,33 +171,76 @@
       {
         "EventType": "eSendImage",
         "ImageName": "collarDeJorge.jpg",
-        "Description": "Intento coger el collar de Jorge para hacerme el guay con los demás, pero Sein se pone por medio. No me va a dejar irme hasta que no se canse de jugar..."
+        "Description": "Intento coger el collar de Jorge para hacerme el guay con los demás, pero Sein se pone por medio. No me va a dejar irme hasta que no se canse de jugar...",
+        "TriggerCondition": "!SeinDefeated"
       },
       {
         "EventType": "eGiveItem",
-        "ItemLots":[
+        "ItemLots": [
           {
             "Item": "collar_de_jorge",
             "Quantity": 1,
             "ChanceToObtain": 1
           }
-        ]
+        ],
+        "TriggerCondition": "!SeinDefeated"
       },
       {
         "EventType": "eStartBattle",
-        "Enemy": "Sein"
+        "Enemy": "Sein",
+        "TriggerCondition": "!SeinDefeated"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"Rebuscas entre las cosas de Álvar y encuentras una mochila de LOONA. Le haces el favor de robársela, que a saber lo que hace con esto",
+        "TriggerCondition":"!LoonaCapFound AND SeinDefeated"
+      },
+      {
+        "EventType":"eSendImage",
+        "ImageName":"MochilaLoona.png",
+        "TriggerCondition":"!LoonaCapFound AND SeinDefeated"
+      },
+      {
+        "EventType":"eGiveItem",
+        "ItemLots":[
+          {
+            "Item":"mochila_loona",
+            "Quantity": 1,
+            "ChanceToObtain": 1
+          }
+        ],
+        "TriggerCondition":"!LoonaCapFound AND SeinDefeated"
+      },
+      {
+        "EventType":"eSetFlag",
+        "Name":"LoonaCapFound",
+        "SetAs":"True",
+        "TriggerCondition":"!LoonaCapFound AND SeinDefeated"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"Decides no rebuscar más en esta habitación, que menudas sorpresas te ha dado...",
+        "TriggerCondition":"LoonaCapFound AND SeinDefeated"
       }
     ]
   },
   {
     "Name": "Patio",
-    "NodeConnections":{
-      "north":{"ConnectingNode": "Pasillo3"},
-      "east": {"ConnectingNode": "Parque"},
-      "south": {"ConnectingNode": "Pasillo4"},
-      "west": {"ConnectingNode": "Comedor"}
+    "NodeConnections": {
+      "north": {
+        "ConnectingNode": "Pasillo3"
+      },
+      "east": {
+        "ConnectingNode": "Parque"
+      },
+      "south": {
+        "ConnectingNode": "Pasillo4"
+      },
+      "west": {
+        "ConnectingNode": "Comedor"
+      }
     },
-    "OnArriveEvent":[
+    "OnArriveEvent": [
       {
         "EventType": "eSendImage",
         "ImageName": "patio.png",
@@ -166,33 +249,39 @@
       {
         "EventType": "eSendImage",
         "ImageName": "llamadapj.png",
-        "Description": "De repente me suena el móvil."
+        "Description": "De repente me suena el móvil.",
+        "TriggerCondition":"!PatioVisited"
       },
       {
         "EventType": "eSendText",
-        "Description": "Mmur, no hay tiempo para explicaciones. Ven a la fábrica ya, e intenta que no te vean. X.A.N.D.R.A ha vuelto a atacar. Es grave. Los personajes de nuestros proyectos, ahora son... reales. No queda mucho tiempo. Corre."
+        "Description": "Mmur, no hay tiempo para explicaciones. Ven a la fábrica ya, e intenta que no te vean. X.A.N.D.R.A ha vuelto a atacar. Es grave. Los personajes de nuestros proyectos, ahora son... reales. No queda mucho tiempo. Corre.",
+        "TriggerCondition":"!PatioVisited"
       }
     ],
-    "OnInspectEvent":[
+    "OnInspectEvent": [
       {
-        "EventType":"eSendText",
+        "EventType": "eSendText",
         "Description": "El patio está en el centro de la escuela. Al norte están los dormitorios de los chicos, y al sur los de las chicas. Al oeste está el comedor, y al este el parque. Por ahí se va a la fábrica."
       }
     ]
   },
   {
     "Name": "Pasillo4",
-    "NodeConnections":{
-      "north": {"ConnectingNode": "Patio"},
-      "puerta": {"ConnectingNode": "HabTatiana"}
+    "NodeConnections": {
+      "north": {
+        "ConnectingNode": "Patio"
+      },
+      "puerta": {
+        "ConnectingNode": "HabTatiana"
+      }
     },
-    "OnArriveEvent":[
+    "OnArriveEvent": [
       {
         "EventType": "eSendText",
         "Description": "Este es el pasillo de las chicas. No debería estar aquí, pero tampoco es que vaya a ser el primer guarro que se cuela."
       }
     ],
-    "OnInspectEvent":[
+    "OnInspectEvent": [
       {
         "EventType": "eSendText",
         "Description": "Esa puerta es la habitación de Tatiana. ¿Se habrá ido corriendo también a la fábrica? Podría entrar a ver si está bien."
@@ -201,48 +290,72 @@
   },
   {
     "Name": "HabTatiana",
-    "NodeConnections":{
-      "puerta": {"ConnectingNode": "Pasillo4"}
+    "NodeConnections": {
+      "puerta": {
+        "ConnectingNode": "Pasillo4"
+      }
     },
-    "OnArriveEvent":[
-      {"EventType": "eSendImage",
+    "OnArriveEvent": [
+      {
+        "EventType": "eSendImage",
         "ImageName": "habtatiana.png",
         "Description": "La habitación de Tatiana está más vacía que la sección de calificaciones del campus virtual. Podría aprovechar para buscar pistas o algo."
       }
     ],
-    "OnInspectEvent":[
+    "OnInspectEvent": [
       {
-        "EventType":"eSendText",
-        "Description": "poggers, tiene aquí la ranita de peluche. Espero que no le importe que la tome prestada como apoyo moral."
+        "EventType": "eSendText",
+        "Description": "poggers, tiene aquí la ranita de peluche. Espero que no le importe que la tome prestada como apoyo moral.",
+        "TriggerCondition":"!TatiranaFound"
       },
       {
         "EventType": "eGiveItem",
-        "ItemLots":[
+        "ItemLots": [
           {
             "Item": "tatirana",
             "Quantity": 1,
             "ChanceToObtain": 1
           }
-        ]
+        ],
+        "TriggerCondition":"!TatiranaFound"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"Ya le devolveré la ranita cuando acabe con todo este tinglao.",
+        "TriggerCondition":"TatiranaFound"
+      },
+      {
+        "EventType":"eSetFlag",
+        "Name":"TatiranaFound",
+        "SetAs":"True",
+        "TriggerCondition":"!TatiranaFound"
       }
     ]
   },
   {
     "Name": "Comedor",
-    "NodeConnections":{
-      "east": {"ConnectingNode": "Patio"}
+    "NodeConnections": {
+      "east": {
+        "ConnectingNode": "Patio"
+      }
     },
-    "OnArriveEvent":[
+    "OnArriveEvent": [
       {
         "EventType": "eSendImage",
         "ImageName": "comedor.png",
         "Description": "Para sorpresa de nadie, la cafetería también está desierta. Pero espera, ¿qué es eso ahí al fondo? parece que se está comiendo el bufet entero..."
       }
     ],
-    "OnInspectEvent":[
+    "OnInspectEvent": [
       {
         "EventType": "eSendText",
-        "Description": "Me arrepiento en cuanto me acerco a investigar. Una criatura gigantesca se abalanza sobre mí sin que pueda evitarlo de ninguna forma."
+        "Description": "Me arrepiento en cuanto me acerco a investigar. Una criatura gigantesca se abalanza sobre mí sin que pueda evitarlo de ninguna forma.",
+        "TriggerCondition":"!ThiccboiDefeated"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"¡Otro thiccboi ha aparecido!",
+        "TriggerCondition":"ThiccboiDefeated"
       },
       {
         "EventType": "eStartBattle",
@@ -252,11 +365,15 @@
   },
   {
     "Name": "Parque",
-    "NodeConnections":{
-      "west": {"ConnectingNode": "Patio"},
-      "alcantarilla": {"ConnectingNode": "Tunel1"}
+    "NodeConnections": {
+      "west": {
+        "ConnectingNode": "Patio"
+      },
+      "alcantarilla": {
+        "ConnectingNode": "Tunel1"
+      }
     },
-    "OnArriveEvent":[
+    "OnArriveEvent": [
       {
         "EventType": "eSendImage",
         "ImageName": "parque.jpg",
@@ -266,11 +383,15 @@
   },
   {
     "Name": "Tunel1",
-    "NodeConnections":{
-      "alcantarilla":{"ConnectingNode": "Parque"},
-      "east":{"ConnectingNode": "Tunel2"}
+    "NodeConnections": {
+      "alcantarilla": {
+        "ConnectingNode": "Parque"
+      },
+      "east": {
+        "ConnectingNode": "Tunel2"
+      }
     },
-    "OnArriveEvent":[
+    "OnArriveEvent": [
       {
         "EventType": "eSendImage",
         "ImageName": "tunel.png",
@@ -280,12 +401,18 @@
   },
   {
     "Name": "Tunel2",
-    "NodeConnections":{
-      "east":{"ConnectingNode": "Tunel3"},
-      "west":{"ConnectingNode": "Tunel1"},
-      "south":{"ConnectingNode": "Tunel4"}
+    "NodeConnections": {
+      "east": {
+        "ConnectingNode": "Tunel3"
+      },
+      "west": {
+        "ConnectingNode": "Tunel1"
+      },
+      "south": {
+        "ConnectingNode": "Tunel4"
+      }
     },
-    "OnInspectEvent":[
+    "OnInspectEvent": [
       {
         "EventType": "eSendText",
         "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
@@ -294,17 +421,19 @@
   },
   {
     "Name": "Tunel3",
-    "NodeConnections":{
-      "west":{"ConnectingNode": "Tunel2"}
+    "NodeConnections": {
+      "west": {
+        "ConnectingNode": "Tunel2"
+      }
     },
-    "OnInspectEvent":[
+    "OnInspectEvent": [
       {
         "EventType": "eSendText",
         "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido"
       },
       {
         "EventType": "eGiveItem",
-        "ItemLots":[
+        "ItemLots": [
           {
             "Item": "health_potion",
             "Quantity": 5,
@@ -316,17 +445,26 @@
   },
   {
     "Name": "Tunel4",
-    "NodeConnections":{
-      "north":{"ConnectingNode": "Tunel2"},
-      "south":{"ConnectingNode": "Tunel5"}
+    "NodeConnections": {
+      "north": {
+        "ConnectingNode": "Tunel2"
+      },
+      "south": {
+        "ConnectingNode": "Tunel5"
+      }
     },
-    "OnInspectEvent":[
+    "OnInspectEvent": [
       {
         "EventType": "eSendText",
         "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
       }
     ],
-    "OnArriveEvent":[
+    "OnArriveEvent": [
+      {
+        "EventType":"eSendText",
+        "Description":"¡Otro stratospeer se abalanza contra ti!",
+        "TriggerCondition":"StratospeersDefeated"
+      },
       {
         "EventType": "eStartBattle",
         "Enemy": "Stratospeers"
@@ -335,13 +473,21 @@
   },
   {
     "Name": "Tunel5",
-    "NodeConnections":{
-      "west":{"ConnectingNode": "Tunel6"},
-      "east":{"ConnectingNode": "Tunel8"},
-      "north":{"ConnectingNode": "Tunel4"},
-      "south":{"ConnectingNode": "Tunel7"}
+    "NodeConnections": {
+      "west": {
+        "ConnectingNode": "Tunel6"
+      },
+      "east": {
+        "ConnectingNode": "Tunel8"
+      },
+      "north": {
+        "ConnectingNode": "Tunel4"
+      },
+      "south": {
+        "ConnectingNode": "Tunel7"
+      }
     },
-    "OnInspectEvent":[
+    "OnInspectEvent": [
       {
         "EventType": "eSendText",
         "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
@@ -350,17 +496,19 @@
   },
   {
     "Name": "Tunel6",
-    "NodeConnections":{
-      "east":{"ConnectingNode": "Tunel5"}
+    "NodeConnections": {
+      "east": {
+        "ConnectingNode": "Tunel5"
+      }
     },
-    "OnInspectEvent":[
+    "OnInspectEvent": [
       {
         "EventType": "eSendText",
         "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
       },
       {
         "EventType": "eGiveItem",
-        "ItemLots":[
+        "ItemLots": [
           {
             "Item": "health_potion",
             "Quantity": 5,
@@ -372,17 +520,19 @@
   },
   {
     "Name": "Tunel7",
-    "NodeConnections":{
-      "north":{"ConnectingNode": "Tunel5"}
+    "NodeConnections": {
+      "north": {
+        "ConnectingNode": "Tunel5"
+      }
     },
-    "OnInspectEvent":[
+    "OnInspectEvent": [
       {
         "EventType": "eSendText",
         "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
       },
       {
         "EventType": "eGiveItem",
-        "ItemLots":[
+        "ItemLots": [
           {
             "Item": "health_potion",
             "Quantity": 5,
@@ -394,12 +544,18 @@
   },
   {
     "Name": "Tunel8",
-    "NodeConnections":{
-      "west":{"ConnectingNode": "Tunel5"},
-      "east":{"ConnectingNode": "Tunel10"},
-      "north":{"ConnectingNode": "Tunel9"}
+    "NodeConnections": {
+      "west": {
+        "ConnectingNode": "Tunel5"
+      },
+      "east": {
+        "ConnectingNode": "Tunel10"
+      },
+      "north": {
+        "ConnectingNode": "Tunel9"
+      }
     },
-    "OnInspectEvent":[
+    "OnInspectEvent": [
       {
         "EventType": "eSendText",
         "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
@@ -408,35 +564,47 @@
   },
   {
     "Name": "Tunel9",
-    "NodeConnections":{
-      "south":{"ConnectingNode": "Tunel8"}
+    "NodeConnections": {
+      "south": {
+        "ConnectingNode": "Tunel8"
+      }
     },
-    "OnInspectEvent":[
+    "OnInspectEvent": [
       {
         "EventType": "eSendText",
         "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
       }
     ],
-    "OnArriveEvent":[
+    "OnArriveEvent": [
       {
         "EventType": "eStartBattle",
-        "Enemy": "Cleonft"
+        "Enemy": "Cleonft",
+        "TriggerCondition":"!CleonftDefeated"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"Pobre Cleon, se metió en el mundo de los NFTs para comprarse una silla tan chula como la de Guille y así acabó...",
+        "TriggerCondition":"CleonftDefeated"
       }
     ]
   },
   {
     "Name": "Tunel10",
-    "NodeConnections":{
-      "west":{"ConnectingNode": "Tunel8"},
-      "alcantarilla":{"ConnectingNode": "PuenteFabrica"}
+    "NodeConnections": {
+      "west": {
+        "ConnectingNode": "Tunel8"
+      },
+      "alcantarilla": {
+        "ConnectingNode": "PuenteFabrica"
+      }
     },
-    "OnInspectEvent":[
+    "OnInspectEvent": [
       {
         "EventType": "eSendText",
         "Description": "¡Ya estoy aquí! Solo tengo que salir por la alcantarilla y salvar el mundo antes de que sea destruido por un Tinky gigante o algo, llegados a este punto me espero cualquier cosa."
       }
     ],
-    "OnArriveEvent":[
+    "OnArriveEvent": [
       {
         "EventType": "eSendImage",
         "ImageName": "tunel.png",
@@ -446,16 +614,18 @@
   },
   {
     "Name": "PuenteFabrica",
-    "NodeConnections":{
-      "alcantarilla":{"ConnectingNode": "Tunel10"}
+    "NodeConnections": {
+      "alcantarilla": {
+        "ConnectingNode": "Tunel10"
+      }
     },
-    "OnInspectEvent":[
+    "OnInspectEvent": [
       {
         "EventType": "eSendText",
         "Description": "Aquí acaba MMOTFG 1.0. gracias por jugar I guess"
       }
     ],
-    "OnArriveEvent":[
+    "OnArriveEvent": [
       {
         "EventType": "eStartBattle",
         "Enemy": "Tinky.exe"

@@ -18,7 +18,7 @@ namespace MMOTFG_Bot.Items
             protected set;
         }
 
-        public void OnEquip(long chatId, string[] args = null)
+        public virtual void OnEquip(long chatId, string[] args = null)
         {
             foreach (var stat in statModifiers)
             {
@@ -26,7 +26,7 @@ namespace MMOTFG_Bot.Items
             }
         }
 
-        public void OnUnequip(long chatId, string[] args = null)
+        public virtual void OnUnequip(long chatId, string[] args = null)
         {
             foreach (var stat in statModifiers)
             {

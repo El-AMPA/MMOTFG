@@ -11,9 +11,8 @@ namespace MMOTFG_Bot
     class bPlayerDeath : Behaviour
     {
         public override async Task<bool> Execute(long chatId) {
-            //Heal all HP and MP
-            user.SetStat(StatName.HP, user.GetOriginalStat(StatName.HP));
-            user.SetStat(StatName.MP, user.GetOriginalStat(StatName.MP));
+            //Set player as dead
+            (user as Player).dead = true;
             return true;
         }
     }
