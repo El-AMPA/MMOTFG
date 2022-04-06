@@ -22,7 +22,7 @@ Use: delete [character name]";
 			};
 		}
 
-		internal override async Task Execute(string command, long chatId, string[] args = null)
+		internal override async Task Execute(string command, string chatId, string[] args = null)
 		{			
 
 			string arg0 = args[0];

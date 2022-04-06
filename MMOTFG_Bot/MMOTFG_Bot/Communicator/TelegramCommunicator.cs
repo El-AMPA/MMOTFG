@@ -27,7 +27,7 @@ namespace MMOTFG_Bot
 		/// <summary>
 		/// Send a single image to a user. ImageCaption supports HTML formatting.
 		/// </summary>
-		public static async Task SendImage(long chatId, string imageName, string imageCaption = "")
+		public static async Task SendImage(string chatId, string imageName, string imageCaption = "")
 		{
 			using (var stream = System.IO.File.OpenRead(assetsPath + imageName))
 			{
@@ -44,7 +44,7 @@ namespace MMOTFG_Bot
 		/// normal images do. You have to open the individual images of the collection to see the text. Not worth
 		/// the effort.
 		/// </summary>
-		static public async Task SendImageCollection(long chatId, string[] imagesNames)
+		static public async Task SendImageCollection(string chatId, string[] imagesNames)
 		{
 			List<FileStream> streams = new List<FileStream>();
 			List<InputMediaPhoto> media = new List<InputMediaPhoto>();
@@ -63,7 +63,7 @@ namespace MMOTFG_Bot
 		/// <summary>
 		/// Send an audio to a user. ImageCaption supports HTML formatting.
 		/// </summary>
-		static public async Task SendAudio(long chatId, string audioName, string audioCaption)
+		static public async Task SendAudio(string chatId, string audioName, string audioCaption)
 		{
 			using (var stream = System.IO.File.OpenRead(assetsPath + audioName))
 			{
@@ -74,12 +74,12 @@ namespace MMOTFG_Bot
 			}
 		}
 
-		static public async Task SendText(long chatId, string text, ParseMode parseMode = ParseMode.Html)
+		static public async Task SendText(string chatId, string text, ParseMode parseMode = ParseMode.Html)
         {
 			await botClient.SendTextMessageAsync(chatId, text, parseMode);
         }
 
-		static public async Task SendButtons(long chatId, string text, string[] buttonNames, int rows = 2, int columns = 2)
+		static public async Task SendButtons(string chatId, string text, string[] buttonNames, int rows = 2, int columns = 2)
         {
 			List<string> bNames = new List<string>(buttonNames);
 			for (int i = bNames.Count; i < rows * columns; i++) bNames.Add("");
@@ -96,7 +96,7 @@ namespace MMOTFG_Bot
 			await botClient.SendTextMessageAsync(chatId, text, replyMarkup: rkm);
 		}
 
-		static public async Task RemoveReplyMarkup(long chatId)
+		static public async Task RemoveReplyMarkup(string chatId)
         {
 			await botClient.SendTextMessageAsync(chatId, "Battle ends!", replyMarkup: new ReplyKeyboardRemove());
         }

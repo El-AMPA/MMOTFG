@@ -35,6 +35,6 @@ namespace MMOTFG_Bot
         }
 
         //returns true on success, false otherwise
-        public virtual async Task<bool> Execute(long chatId) { return true; }
+        public virtual async Task<bool> Execute(string chatId) { return true; }
     }
 }

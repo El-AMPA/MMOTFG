@@ -17,7 +17,7 @@ namespace MMOTFG_Bot
             {"eat", "Comando que se usa para ingerir alimentos. No comas bebidas!!!1!"}
         };
 
-        public static async Task ShowInfo(long chatId, string key)
+        public static async Task ShowInfo(string chatId, string key)
         {
             if (information.ContainsKey(key))
             {

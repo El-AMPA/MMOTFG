@@ -50,7 +50,7 @@ namespace MMOTFG_Bot
             name = playerName;
         }
 
-        public async Task GainExperience(long chatId, int exp)
+        public async Task GainExperience(string chatId, int exp)
         {
             if (level == levelUpRoadmap.maxLevel) return;
             experience += exp;
@@ -79,7 +79,7 @@ namespace MMOTFG_Bot
             }
         }
 
-        public async Task LearnAttack(long chatId, Attack attack)
+        public async Task LearnAttack(string chatId, Attack attack)
         {
             if (attacks.Count == maxAttacks)
             {
@@ -103,7 +103,7 @@ namespace MMOTFG_Bot
             }
         }
 
-        public async Task ForgetAttack(long chatId, string attackName)
+        public async Task ForgetAttack(string chatId, string attackName)
         {
             if (attackName == "skip")
             {
@@ -126,7 +126,7 @@ namespace MMOTFG_Bot
             }
         }
 
-        public async Task OnBattleOver(long chatId)
+        public async Task OnBattleOver(string chatId)
         {
             //reset stats to their original value
             for (int i = 0; i < Stats.statNum; i++)

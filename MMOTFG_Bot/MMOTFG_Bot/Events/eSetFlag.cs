@@ -23,7 +23,7 @@ namespace MMOTFG_Bot.Events
             set;
         }
 
-        public async override Task Execute(long chatId)
+        public async override Task Execute(string chatId)
         {
             await ProgressKeeper.LoadSerializable(chatId);
             ProgressKeeper.SetFlagAs(chatId, Name, SetAs);
