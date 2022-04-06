@@ -17,7 +17,7 @@ namespace MMOTFG_Bot.Items
             };
         }
 
-        public override async void OnEquip(long chatId, string[] args = null)
+        public override async void OnEquip(string chatId, string[] args = null)
         {
             base.OnEquip(chatId, args);
 
@@ -26,7 +26,7 @@ namespace MMOTFG_Bot.Items
             await ProgressKeeper.SaveSerializable(chatId);
         }
 
-        public override async void OnUnequip(long chatId, string[] args = null)
+        public override async void OnUnequip(string chatId, string[] args = null)
         {
             base.OnUnequip(chatId, args);
 

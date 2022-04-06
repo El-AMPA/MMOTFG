@@ -28,7 +28,7 @@ namespace MMOTFG_Bot
             return false;
         }
 
-        public async Task<bool> TryExecute(string command, long chatId, string[] args = null)
+        public async Task<bool> TryExecute(string command, string chatId, string[] args = null)
 		{
             if (!IsFormattedCorrectly(args)) return false;
             await Execute(command, chatId, args);
@@ -38,7 +38,7 @@ namespace MMOTFG_Bot
         /// <summary>
         /// Applies the effect of this command
         /// </summary>
-        internal abstract Task Execute(string command, long chatId, string[] args = null);
+        internal abstract Task Execute(string command, string chatId, string[] args = null);
 
 
         /// <summary>

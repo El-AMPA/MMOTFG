@@ -134,7 +134,7 @@ namespace MMOTFG_Bot
         }
 
         //For events such as OnHit, OnKill or OnTurnEnd
-        public async Task OnBehaviour(long chatId, Behaviour b) {
+        public async Task OnBehaviour(string chatId, Behaviour b) {
             if (b != null)
             {
                 //If behaviour has already happened or isn't activated by chance, skip
@@ -148,7 +148,7 @@ namespace MMOTFG_Bot
             }
         }
 
-        public async Task SkipTurn(long chatId)
+        public async Task SkipTurn(string chatId)
         {
             turnOver = true;
             await BattleSystem.SavePlayerBattle(chatId);

@@ -142,7 +142,7 @@ namespace MMOTFG_Bot
 
 		static async Task BotOnMessageReceived(ITelegramBotClient botClient, Message message)
 		{
-			var chatId = message.Chat.Id;
+			var chatId = message.Chat.Id.ToString();
 			var senderName = message.From.FirstName;
 			var senderID = message.From.Id;
 

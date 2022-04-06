@@ -66,7 +66,7 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Triggers the OnExit events when leaving the node
         /// </summary>
-        public async Task OnExit(long chatId)
+        public async Task OnExit(string chatId)
         {
             //Load flag marker
             //foreach (Event e in OnExitEvent) e.Execute(chatId);
@@ -97,7 +97,7 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Triggers the OnArrive events when entering the node (TO-DO : estos dos métodos son iguales, no repetir código)
         /// </summary>
-        public async Task OnArrive(long chatId)
+        public async Task OnArrive(string chatId)
         {
             if (OnArriveEvent != null)
             {
@@ -125,7 +125,7 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Triggers the OnInspect events when inspecting the node
         /// </summary>
-        public async Task OnInspect(long chatId)
+        public async Task OnInspect(string chatId)
         {
             bool triggeredEvent = false;
             if (OnInspectEvent != null)

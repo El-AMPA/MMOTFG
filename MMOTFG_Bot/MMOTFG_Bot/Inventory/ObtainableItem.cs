@@ -6,7 +6,7 @@ namespace MMOTFG_Bot
 {
     abstract class ObtainableItem
     {
-        protected List<KeyValuePair<string, Action<long, string[]>>> key_words = new List<KeyValuePair<string, Action<long, string[]>>>();
+        protected List<KeyValuePair<string, Action<string, string[]>>> key_words = new List<KeyValuePair<string, Action<string, string[]>>>();
 
         public abstract void Init();
 
@@ -16,7 +16,7 @@ namespace MMOTFG_Bot
 
         public bool UnderstandsCommand(string command)
         {
-            foreach (KeyValuePair<string, Action<long, string[]>> a in key_words)
+            foreach (KeyValuePair<string, Action<string, string[]>> a in key_words)
             {
                 if (a.Key == command)
                 {
@@ -26,9 +26,9 @@ namespace MMOTFG_Bot
             return false;
         }
 
-        public bool ProcessCommand(string command, long chatId, string[] args = null)
+        public bool ProcessCommand(string command, string chatId, string[] args = null)
         {
-            foreach (KeyValuePair<string, Action<long, string[]>> a in key_words)
+            foreach (KeyValuePair<string, Action<string, string[]>> a in key_words)
             {
                 if (a.Key == command)
                 {

@@ -8,13 +8,13 @@ namespace MMOTFG_Bot.Navigation
     {
         public static Dictionary<string, bool> PlayerRecords = new Dictionary<string, bool>();
 
-        public static async Task CreateProgressKeeper(long chatId)
+        public static async Task CreateProgressKeeper(string chatId)
         {
             PlayerRecords.Clear();
             await SaveSerializable(chatId);
         }
 
-        public static async Task LoadSerializable(long chatId)
+        public static async Task LoadSerializable(string chatId)
         {
             PlayerRecords.Clear();
 
@@ -31,7 +31,7 @@ namespace MMOTFG_Bot.Navigation
             }
         }
 
-        public static async Task SaveSerializable(long chatId)
+        public static async Task SaveSerializable(string chatId)
         {
             //Dumps the information from the dictionary to a different dictionary that the DB understands
             Dictionary<string, object> update = new Dictionary<string, object>()
@@ -46,7 +46,7 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Sets a flag to a given value. If the flag doesn't exist in the DB, it creates a new entry.
         /// </summary>
-        public static void SetFlagAs(long chatId, string flag, bool active)
+        public static void SetFlagAs(string chatId, string flag, bool active)
         {
             if (PlayerRecords.ContainsKey(flag)) PlayerRecords[flag] = active;
             else PlayerRecords.Add(flag, active);
@@ -55,7 +55,7 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Returns wether or not a given flag is active. If the flag doesn't exist, it returns false.
         /// </summary>
-        public static bool IsFlagActive(long chatId, string flag)
+        public static bool IsFlagActive(string chatId, string flag)
         {
             //Supports complex operations (x OR y), so it needs to be split into parts
             string[] substrings = flag.Split(' ');

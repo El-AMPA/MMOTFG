@@ -40,7 +40,7 @@ namespace MMOTFG_Bot.Events
             set;
         }
 
-        public override async Task Execute(long chatId)
+        public override async Task Execute(string chatId)
         {
             foreach(ItemLot i in ItemLots)
             {

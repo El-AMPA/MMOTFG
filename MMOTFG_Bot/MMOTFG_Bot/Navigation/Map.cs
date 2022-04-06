@@ -22,7 +22,7 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Moves the player in the specified direction
         /// </summary>
-        public static async Task Navigate(long chatId, string dir)
+        public static async Task Navigate(string chatId, string dir)
         {
             await LoadPlayerPosition(chatId);
 
@@ -49,7 +49,7 @@ namespace MMOTFG_Bot.Navigation
         }
 
         //sets position to a certain node
-        public static async Task SetPlayerPosition(long chatId, int nodeNumber)
+        public static async Task SetPlayerPosition(string chatId, int nodeNumber)
         {
             Node n = nodes.ElementAtOrDefault(nodeNumber);
             if (n == null)
@@ -92,7 +92,7 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Shows the available directions from CurrentNode.
         /// </summary>
-        public async static Task GetDirections(long chatId)
+        public async static Task GetDirections(string chatId)
         {
             await LoadPlayerPosition(chatId);
 
@@ -108,7 +108,7 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Sends the 'OnInspectText' field of the current node of the player 
         /// </summary>
-        public static async Task OnInspect(long chatId)
+        public static async Task OnInspect(string chatId)
         {
             await LoadPlayerPosition(chatId);
             await currentNode.OnInspect(chatId);
@@ -232,7 +232,7 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Saves the actual node of the given player to the database
         /// </summary>
-        public static async Task SavePlayerPosition(long chatId)
+        public static async Task SavePlayerPosition(string chatId)
 		{
             Dictionary<string, object> update = new Dictionary<string, object>();
 
@@ -244,7 +244,7 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Loads the actual node of the given player from the database
         /// </summary>
-        public static async Task LoadPlayerPosition(long chatId)
+        public static async Task LoadPlayerPosition(string chatId)
         {
             Dictionary<string, object> player = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID,
                 chatId.ToString(), DbConstants.COLLEC_DEBUG);
@@ -257,7 +257,7 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Creates the node field in the player document in the database
         /// </summary>
-        public static async Task CreatePlayerPosition(long chatId)
+        public static async Task CreatePlayerPosition(string chatId)
 		{
             Dictionary<string, object> update = new Dictionary<string, object>();
 

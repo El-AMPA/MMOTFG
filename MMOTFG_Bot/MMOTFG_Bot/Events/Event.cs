@@ -31,7 +31,7 @@ namespace MMOTFG_Bot.Events
             set;
         }
 
-        public virtual Task Execute(long chatId)
+        public virtual Task Execute(string chatId)
         {
             return Task.CompletedTask;
         }

@@ -22,7 +22,7 @@ namespace MMOTFG_Bot.Commands
             key_words = kw;
         }
 
-        internal override async Task Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, string chatId, string[] args = null)
         {
             if (BattleSystem.player.learningAttack != null)
             {

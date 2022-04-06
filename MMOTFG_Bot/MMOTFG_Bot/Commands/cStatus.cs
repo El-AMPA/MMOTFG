@@ -20,7 +20,7 @@ use: stats";
             };
         }
 
-        internal override async Task Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, string chatId, string[] args = null)
         {
             await BattleSystem.ShowStatus(chatId, BattleSystem.player);
             await InventorySystem.ShowGear(chatId);

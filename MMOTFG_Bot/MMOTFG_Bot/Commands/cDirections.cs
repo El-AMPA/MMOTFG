@@ -24,7 +24,7 @@ namespace MMOTFG_Bot.Commands
             };
         }
 
-        internal override async Task Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, string chatId, string[] args = null)
         {
             await Map.GetDirections(chatId);
         }

@@ -13,13 +13,13 @@ namespace MMOTFG_Bot.Items
             maxStackQuantity = 5;
         }
 
-        private async void DrinkPotion(long chatId, string[] args)
+        private async void DrinkPotion(string chatId, string[] args)
         {
             await BattleSystem.changePlayerStats(chatId, HP, 500);
             await TelegramCommunicator.SendText(chatId, "Gained 500HP.");
         }
 
-        private async void EatPotion(long chatId, string[] args)
+        private async void EatPotion(string chatId, string[] args)
         {
             await BattleSystem.changePlayerStats(chatId, HP, -2);
             await TelegramCommunicator.SendText(chatId, "Why would you eat a potion you freak.\n Your health has been reduced by 2 points.");
@@ -27,8 +27,8 @@ namespace MMOTFG_Bot.Items
 
         public override void Init()
         {
-            key_words.Add(new KeyValuePair<string, Action<long, string[]>>("drink", DrinkPotion));
-            key_words.Add(new KeyValuePair<string, Action<long, string[]>>("eat", EatPotion));
+            key_words.Add(new KeyValuePair<string, Action<string, string[]>>("drink", DrinkPotion));
+            key_words.Add(new KeyValuePair<string, Action<string, string[]>>("eat", EatPotion));
         }
     }
 }
