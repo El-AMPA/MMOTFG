@@ -62,11 +62,10 @@ namespace MMOTFG_Bot
 
         public static async Task<bool> IsPlayerInBattle(long chatId)
         {
-            // buscamos en la base de datos para ver el jugador que queremos buscar
-            //beep boop beep beep....
-            await LoadPlayerBattle(chatId);
-            
-            return battleActive; 
+            //await LoadPlayerBattle(chatId);
+            //return battleActive;
+
+            return (bool)await DatabaseManager.GetFieldFromDocument(DbConstants.PLAYER_FIELD_BATTLE_ACTIVE, chatId.ToString(), DbConstants.COLLEC_DEBUG);
         }
 
         public static async Task StartBattle(long chatId, Enemy e)
