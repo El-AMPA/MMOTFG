@@ -232,13 +232,13 @@ namespace MMOTFG_Bot
 			//If the update is from a new /start
 			if (update.MyChatMember.NewChatMember.Status == ChatMemberStatus.Member) { 
 
-			string response = @"Welcome to MMOTFG, please create a character with /create to start playing.
+				string response = @"Welcome to MMOTFG, please create a character with /create to start playing.
 Remember that you can get help with /help .";
 
-				long chatId = update.MyChatMember.From.Id;
+				string chatId = update.MyChatMember.From.Id.ToString();
 
-			await TelegramCommunicator.SendText(chatId, response);
-		}
+				await TelegramCommunicator.SendText(chatId, response);
+			}
 		}
 	}
 }
