@@ -36,7 +36,7 @@ use: stats";
                     await BattleSystem.ShowStatus(chatId, BattleSystem.player, friendId);
                     await InventorySystem.ShowGear(chatId, friendId);
                 }
-                else await BattleSystem.ShowStatus(chatId, BattleSystem.enemy);
+                //else await BattleSystem.ShowStatus(chatId, BattleSystem.enemy);
             }            
         }
 

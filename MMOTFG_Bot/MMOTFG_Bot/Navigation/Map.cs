@@ -22,7 +22,7 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Moves the player in the specified direction
         /// </summary>
-        public static async Task Navigate(long chatId, string dir)
+        public static async Task Navigate(long chatId, string dir, string partyCode = null)
         {
             await LoadPlayerPosition(chatId);
 
@@ -115,7 +115,7 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Sends the 'OnInspectText' field of the current node of the player 
         /// </summary>
-        public static async Task OnInspect(long chatId)
+        public static async Task OnInspect(long chatId, string partyCode = null)
         {
             await LoadPlayerPosition(chatId);
 			await currentNode.OnInspect(chatId);
@@ -241,55 +241,6 @@ namespace MMOTFG_Bot.Navigation
                 }
             }
         }
-
-        /// <summary>
-        /// Saves the actual node of the given player to the database
-        /// </summary>
-        public static async Task SavePlayerPosition(long chatId)
-		{
-			string synonymsText = "";
-
-			//Auxiliary array containing a collection of synonyms for each direction
-			// north: {n, nrth, nor}
-			// south: {s, sth, sou}
-			// ...
-			DirectionSynonym[] synonymsAux = { }; //Needs to be initialized
-
-			try
-			{
-				//Dumps the file into a string
-				synonymsText = File.ReadAllText(synonymsPath, Encoding.GetEncoding(65001)); // Encoding: UTF-8
-			}
-			catch (FileNotFoundException)
-			{
-				Console.WriteLine("ERROR: directionsSynonyms.json couldn't be found in assets folder.");
-				Environment.Exit(-1);
-			}
-
-			try
-			{
-				//Deserializes the .json file into a Dictionary that will be used for obtaining the synonyms for each direction
-				synonymsAux = JsonConvert.DeserializeObject<DirectionSynonym[]>(synonymsText); 
-			}
-			catch (JsonException e)
-			{
-				Console.WriteLine("ERROR: directionSynonyms.json isn't formatted correctly. \nError message:" + e.Message);
-				Environment.Exit(-1);
-			}
-
-			//Converts the structure of synonymsAux into a more comfortable structure for finding synonyms. A dictionary<string, string>, so the new structure works like so:
-			// n -> north
-			// nor -> north
-			// s -> south
-			// ...
-			foreach(var synonymList in synonymsAux)
-			{
-				foreach(string synonym in synonymList.Synonyms)
-				{
-					directionSynonyms.Add(synonym, synonymList.Direction);
-				}
-			}
-		}
 
 		/// <summary>
 		/// Saves the actual node of the given player to the database

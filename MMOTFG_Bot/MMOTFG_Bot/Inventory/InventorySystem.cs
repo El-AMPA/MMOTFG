@@ -118,8 +118,9 @@ namespace MMOTFG_Bot
                 ObtainableItem item = null;
                 Enum.TryParse(typeof(EQUIPMENT_SLOT), equiItem.Key.ToString(), true, out object index);
 
-                if (equiItem.Value != null) { 
-                    StringToItem(equiItem.Value.ToString(), out item);               
+                if (equiItem.Value != null)
+                {
+                    StringToItem(equiItem.Value.ToString(), out item);
                 }
 
                 equipment[Convert.ToInt32(index)] = (EquipableItem)item;
@@ -168,10 +169,10 @@ namespace MMOTFG_Bot
         /// Creates and saves to the database an empty inventory for the given player
         /// </summary>
         public static async Task CreatePlayerInventory(long chatId)
-		{
+        {
             Reset();
             await SavePlayerInventory(chatId);
-		}
+        }
 
         //TO-DO: Repensar si es mejor dejarlo como está o que al sistema de inventario le llegue la clase Objeto ya directamente. Es bastante inflexible solo poder recibir un string y
         //traducirlo aquí
@@ -183,12 +184,6 @@ namespace MMOTFG_Bot
         public static bool StringToEquipmentSlot(string s, out EQUIPMENT_SLOT slot)
         {
             return Enum.TryParse(s, true, out slot);
-        }
-
-        public static async Task<bool> PlayerHasItem(long chatId, ObtainableItem item)
-        {
-            await LoadPlayerInventory(chatId);
-            return (InventoryRecords.Exists(x => (x.InventoryItem.iD == item.iD)));
         }
 
         public static async Task AddItem(long chatId, ObtainableItem item, int quantityToAdd)
@@ -293,39 +288,16 @@ namespace MMOTFG_Bot
                 //If the current stack has been deplenished, it's removed from the list
                 if (inventoryRecord.Quantity == 0) InventoryRecords.Remove(inventoryRecord);
 
-                if (command != null)
-                {
-                    for (int k = 0; k < quantityToConsumeToStack; k++)
-                    {
-                        item.ProcessCommand(command, chatId, args);
-                    }
-                }
-                inventoryRecord.AddToQuantity(-quantityToConsumeToStack);
-
-                //If the current stack has been deplenished, it's removed from the list
-                if (inventoryRecord.Quantity == 0) InventoryRecords.Remove(inventoryRecord);
-
                 // Decrease the quantityToConsume by the amount we added to the stack.
                 // If we added the total quantityToConsume to the stack, then this value will be 0, and we'll exit the 'while' loop.
                 quantityToConsumeAux -= quantityToConsumeToStack;
-            }
-                if (quantityToConsumeAux > 0)
-                {
-                    //Couldn't consume every item.
-                }
-                if (quantityToConsume == 1) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was consumed.");
-                else await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was consumed " + (quantityToConsume - quantityToConsumeAux) + " times");
-                //enemie's turn
-                if (playerInBattle) await BattleSystem.player.SkipTurn(chatId);
-
-                await SavePlayerInventory(chatId);
             }
             if (quantityToConsumeAux > 0)
             {
                 //Couldn't consume every item.
             }
             //enemie's turn
-            if (playerInBattle) await BattleSystem.EnemyAttack(chatId);
+            if (playerInBattle) await BattleSystem.player.SkipTurn(chatId);
 
             await SavePlayerInventory(chatId);
             return quantityToConsume - quantityToConsumeAux;
@@ -362,6 +334,12 @@ namespace MMOTFG_Bot
             }
             await SavePlayerInventory(chatId);
             return quantityToThrowAway - quantityToThrowAwayAux;
+        }
+
+        public static async Task<bool> PlayerHasItem(long chatId, ObtainableItem item)
+        {
+            await LoadPlayerInventory(chatId);
+            return (InventoryRecords.Exists(x => (x.InventoryItem.iD == item.iD)));
         }
 
         public static async Task<int> GetNumberOfItemsInInventory(long chatId, ObtainableItem item)
@@ -472,7 +450,7 @@ namespace MMOTFG_Bot
             EquipableItem currentItem = await GetItemFromEquipmentSlot(chatId, item.gearSlot);
 
             //If there are NO items being equipped in that slot...
-            if(currentItem == null) await TelegramCommunicator.SendText(chatId, "You are not wearing anything on your " + item.gearSlot + " slot");
+            if (currentItem == null) await TelegramCommunicator.SendText(chatId, "You are not wearing anything on your " + item.gearSlot + " slot");
 
             //If the currently equipped item is the same item you want to unequip... (This is what we expect the user to do)
             else if (currentItem.iD == item.iD) await UnequipGear(chatId, item.gearSlot);
@@ -535,7 +513,7 @@ namespace MMOTFG_Bot
 
                         //Remove the item from the inventory
                         //TO-DO: Kinda jank. Currently needed because consumeItem needs to load the currentBattle. If this wasn't added, ConsumeItem would override the stat changes from the item that was just equipped.
-                        await BattleSystem.SavePlayerBattle(chatId); 
+                        await BattleSystem.SavePlayerBattle(chatId);
                         await ConsumeItem(chatId, item, 1);
                     }
                     await SavePlayerInventory(chatId);
@@ -547,7 +525,7 @@ namespace MMOTFG_Bot
         /// Swaps the current equipped piece of gear for a new one. Shows the change of stats.
         /// </summary>
         private static async Task SwapGear(long chatId, EquipableItem newItem)
-        {            
+        {
             EquipableItem oldItem = equipment[(int)newItem.gearSlot];
             string msg = "You've swapped " + oldItem.name + " for " + newItem.name;
             List<(int, StatName)> auxChanges = new List<(int, StatName)>();

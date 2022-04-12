@@ -299,7 +299,8 @@ namespace MMOTFG_Bot
                     if (target.droppedItem != null)
                     {
                         msg += $"\nYou obtained {target.droppedItem} x{target.droppedItemAmount}";
-                        await InventorySystem.AddItem(chatId, target.droppedItem, target.droppedItemAmount);
+                        if(InventorySystem.StringToItem(target.droppedItem, out ObtainableItem droppedItem))
+                           await InventorySystem.AddItem(chatId, droppedItem, target.droppedItemAmount);
                     }                    
                     await TelegramCommunicator.SendText(chatId, msg);
                     if (target.experienceGiven != 0)

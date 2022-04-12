@@ -20,7 +20,7 @@ namespace MMOTFG_Bot.Navigation
 
             //Loads the dictionary from the DB
             Dictionary<string, object> player = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID,
-            chatId.ToString(), DbConstants.COLLEC_DEBUG);
+            chatId.ToString(), DbConstants.COLLEC_PLAYERS);
 
             Dictionary<string, object> dbFlagDict = (Dictionary<string, object>)(player[DbConstants.PLAYER_FIELD_FLAGS]);
 
@@ -40,7 +40,7 @@ namespace MMOTFG_Bot.Navigation
             };
 
             //Uploads it into the DB
-            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
         }
 
         /// <summary>

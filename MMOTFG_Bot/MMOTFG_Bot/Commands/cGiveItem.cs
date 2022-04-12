@@ -53,7 +53,7 @@ Use: give [item name] [player name] [quantity]";
 			{
 				if (await InventorySystem.PlayerHasItem(chatId, item))
 				{
-					if (args.Length == 1) itemsGiven = await InventorySystem.ThrowAwayItem(chatId, item, 1);
+					if (args.Length == 2) itemsGiven = await InventorySystem.ThrowAwayItem(chatId, item, 1);
 					else
 					{
 						if (args[1] == "all") itemsGiven = await InventorySystem.ThrowAwayItem(chatId, item, -1);
