@@ -19,7 +19,7 @@ Use: createParty [party code]. Party codes must be unique.";
 			};
 		}
 
-		internal override async Task Execute(string command, long chatId, string[] args = null)
+		internal override async Task Execute(string command, string chatId, string[] args = null)
 		{
 			string partyCode = args[0];
 			await PartySystem.CreateParty(partyCode, chatId);

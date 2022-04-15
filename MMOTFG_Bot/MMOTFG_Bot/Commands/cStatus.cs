@@ -30,7 +30,7 @@ use: stats";
             else
             {
                 //Chequeamos si es alguien de la party
-                long? friendId = await PartySystem.GetFriendId(chatId, args[0]);
+                string friendId = await PartySystem.GetFriendId(chatId, args[0]);
                 if(friendId != null)
                 {
                     await BattleSystem.ShowStatus(chatId, BattleSystem.player, friendId);

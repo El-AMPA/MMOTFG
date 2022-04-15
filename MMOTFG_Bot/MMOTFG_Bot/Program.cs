@@ -167,7 +167,7 @@ namespace MMOTFG_Bot
 
 				bool recognizedCommand = false;
 
-				if (!await canUseCommand(chatId.ToString(), command))
+				if (!await canUseCommand(chatId, command))
 				{
 					await TelegramCommunicator.SendText(chatId, "You need a character to play, use /create to create a new character");
 					return;
@@ -219,7 +219,7 @@ namespace MMOTFG_Bot
 		static async Task<bool> canUseCommand(string chatId, string command)
 		{
 
-			bool characterExists = await DatabaseManager.IsDocumentInCollection(chatId, DbConstants.COLLEC_DEBUG);
+			bool characterExists = await DatabaseManager.IsDocumentInCollection(chatId, DbConstants.COLLEC_PLAYERS);
 
 			bool isIntroductoryCommand = createCommand.ContainsKeyWord(command) ||
 											helpCommand.ContainsKeyWord(command);

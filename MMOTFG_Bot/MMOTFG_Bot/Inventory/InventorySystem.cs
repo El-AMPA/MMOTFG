@@ -94,7 +94,7 @@ namespace MMOTFG_Bot
             Reset();
 
             Dictionary<string, object> player = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID,
-                chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+                chatId, DbConstants.COLLEC_PLAYERS);
 
 
             //Inventario "normal" (no equipables)
@@ -116,7 +116,7 @@ namespace MMOTFG_Bot
             foreach (KeyValuePair<string, object> equiItem in dbEquipment)
             {
                 ObtainableItem item = null;
-                Enum.TryParse(typeof(EQUIPMENT_SLOT), equiItem.Key.ToString(), true, out object index);
+                Enum.TryParse(typeof(EQUIPMENT_SLOT), equiItem.Key, true, out object index);
 
                 if (equiItem.Value != null)
                 {
@@ -162,7 +162,7 @@ namespace MMOTFG_Bot
             update.Add(DbConstants.PLAYER_FIELD_EQUIPABLE_ITEMS, equipItemsToSave);
 
             //actualizamos
-            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+            await DatabaseManager.ModifyDocumentFromCollection(update, chatId, DbConstants.COLLEC_PLAYERS);
         }
 
         /// <summary>
@@ -336,7 +336,7 @@ namespace MMOTFG_Bot
             return quantityToThrowAway - quantityToThrowAwayAux;
         }
 
-        public static async Task<bool> PlayerHasItem(long chatId, ObtainableItem item)
+        public static async Task<bool> PlayerHasItem(string chatId, ObtainableItem item)
         {
             await LoadPlayerInventory(chatId);
             return (InventoryRecords.Exists(x => (x.InventoryItem.iD == item.iD)));
@@ -370,11 +370,11 @@ namespace MMOTFG_Bot
         /// <summary>
         /// Shows the player's equipped items from all gear slots
         /// </summary>
-        public static async Task ShowGear(string chatId, long? gearId = null)
+        public static async Task ShowGear(string chatId, string gearId = null)
         {
             if (gearId == null) gearId = chatId;
-            await LoadPlayerInventory((long)gearId);
-            string message = await PartySystem.GetPlayerName((long)gearId) + " equipment:\n";
+            await LoadPlayerInventory(gearId);
+            string message = await PartySystem.GetPlayerName(gearId) + " equipment:\n";
             for (int k = 0; k < equipment.Length; k++)
             {
                 message += "\n" + (EQUIPMENT_SLOT)k + ": ";

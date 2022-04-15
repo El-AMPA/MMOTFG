@@ -7,7 +7,7 @@ namespace MMOTFG_Bot
 {
     static class PartySystem
     {
-        public static async Task CreateParty(string code, long chatId)
+        public static async Task CreateParty(string code, string chatId)
         {
 			bool partyExists = await PartyExists(code);
 			if (partyExists)
@@ -39,7 +39,7 @@ namespace MMOTFG_Bot
 			Console.WriteLine("Telegram user {0} just created party with name {1}", chatId, code);
 		}
 		
-		public static async Task JoinParty(string code, long chatId)
+		public static async Task JoinParty(string code, string chatId)
         {
 			bool isInParty = await IsInParty(chatId);
 			if (isInParty)
@@ -68,7 +68,7 @@ namespace MMOTFG_Bot
 			return (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
 		}
 
-		static async Task AddPartyMember(string code, long chatId)
+		static async Task AddPartyMember(string code, string chatId)
         {
 			var party = await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES);
 			List<object> members = (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
@@ -80,7 +80,7 @@ namespace MMOTFG_Bot
 			await DatabaseManager.ModifyDocumentFromCollection(newMembersData, code, DbConstants.COLLEC_PARTIES);
 		}
 
-		static async Task RemovePartyMember(string code, long chatId)
+		static async Task RemovePartyMember(string code, string chatId)
         {
 			var party = await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES);
 			List<object> members = (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
@@ -92,7 +92,7 @@ namespace MMOTFG_Bot
 			await DatabaseManager.ModifyDocumentFromCollection(newMembersData, code, DbConstants.COLLEC_PARTIES);
 		}
 
-		public static async Task ExitParty(long chatId)
+		public static async Task ExitParty(string chatId)
         {
 			bool isInParty = await IsInParty(chatId);
 			if (!isInParty)
@@ -128,12 +128,12 @@ namespace MMOTFG_Bot
 			List<object> members = (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
 			members.Add(party[DbConstants.PARTY_FIELD_LEADER]);
 
-			foreach (long id in members) await SetPlayerOutOfParty(id);
+			foreach (string id in members) await SetPlayerOutOfParty(id);
 
 			await DatabaseManager.DeleteDocumentById(code, DbConstants.COLLEC_PARTIES);
 		}
 
-		public static async Task ShowParty(long chatId)
+		public static async Task ShowParty(string chatId)
         {
 			if(!await IsInParty(chatId))
             {
@@ -143,8 +143,8 @@ namespace MMOTFG_Bot
 
 			var party = await DatabaseManager.GetDocument(await GetPartyCode(chatId), DbConstants.COLLEC_PARTIES);
 			string partyInfo = "PARTY " + (string)party[DbConstants.PARTY_FIELD_CODE] + '\n';
-			partyInfo += "LEADER: " + await GetPlayerName((long)party[DbConstants.PARTY_FIELD_LEADER]) + '\n' + "MEMBERS: \n";
-			foreach(long id in (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS])
+			partyInfo += "LEADER: " + await GetPlayerName((string)party[DbConstants.PARTY_FIELD_LEADER]) + '\n' + "MEMBERS: \n";
+			foreach(string id in (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS])
 				partyInfo += await GetPlayerName(id) + '\n';
 
 			await TelegramCommunicator.SendText(chatId, partyInfo);
@@ -155,9 +155,9 @@ namespace MMOTFG_Bot
 		/// </summary>
 		/// <param name="chatId"></param>
 		/// <returns></returns>
-		public static async Task<string> GetPartyCode(long chatId)
+		public static async Task<string> GetPartyCode(string chatId)
         {
-			var player = await DatabaseManager.GetDocument(chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+			var player = await DatabaseManager.GetDocument(chatId, DbConstants.COLLEC_PLAYERS);
 			return (string)player[DbConstants.PLAYER_PARTY_CODE];
         }
 
@@ -166,13 +166,13 @@ namespace MMOTFG_Bot
 		/// </summary>
 		/// <param name="chatId"></param>
 		/// <returns></returns>
-		public static async Task<bool> IsLeader(long chatId)
+		public static async Task<bool> IsLeader(string chatId)
         {
 			bool isInParty = await IsInParty(chatId);
 			string code = await GetPartyCode(chatId);
 
 			var party = await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES);
-			return chatId == (long)party[DbConstants.PARTY_FIELD_LEADER];
+			return chatId == (string)party[DbConstants.PARTY_FIELD_LEADER];
         }
 
 		/// <summary>
@@ -180,25 +180,25 @@ namespace MMOTFG_Bot
 		/// </summary>
 		/// <param name="chatId"></param>
 		/// <returns></returns>
-		public static async Task<string> GetPlayerName(long chatId)
+		public static async Task<string> GetPlayerName(string chatId)
         {
-			var player = await DatabaseManager.GetDocument(chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+			var player = await DatabaseManager.GetDocument(chatId, DbConstants.COLLEC_PLAYERS);
 			return (string)player[DbConstants.PLAYER_FIELD_NAME];
         }
 
-		public static async Task<long?> GetFriendId(long chatId, string name)
+		public static async Task<string> GetFriendId(string chatId, string name)
         {
-			var player = await DatabaseManager.GetDocument(chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+			var player = await DatabaseManager.GetDocument(chatId, DbConstants.COLLEC_PLAYERS);
 			if (!await IsInParty(chatId)) return null;
 
 			string partyCode = (string)player[DbConstants.PLAYER_PARTY_CODE];
 			var party = await DatabaseManager.GetDocument(partyCode, DbConstants.COLLEC_PARTIES);
 			if(await PartyExists(partyCode)){
-				long aux = (long)party[DbConstants.PARTY_FIELD_LEADER];
+				string aux = (string)party[DbConstants.PARTY_FIELD_LEADER];
 				if (name == await GetPlayerName(aux)) return aux;
 
 				List<object> members = (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
-				foreach(long id in members)
+				foreach(string id in members)
 					if (await GetPlayerName(id) == name) return id;	
             }
 			return null;
@@ -220,9 +220,9 @@ namespace MMOTFG_Bot
 		/// </summary>
 		/// <param name="chatId"></param>
 		/// <returns></returns>
-		public static async Task<bool> IsInParty(long chatId)
+		public static async Task<bool> IsInParty(string chatId)
         {
-			var player = await DatabaseManager.GetDocument(chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+			var player = await DatabaseManager.GetDocument(chatId, DbConstants.COLLEC_PLAYERS);
 			return (bool)player[DbConstants.PLAYER_ISINPARTY_FLAG];
 		}
 
@@ -232,22 +232,22 @@ namespace MMOTFG_Bot
 		/// <param name="chatId">Id of the player</param>
 		/// <param name="code">Code of the party</param>
 		/// <returns></returns>
-		static async Task SetPlayerInParty(long chatId, string code)
+		static async Task SetPlayerInParty(string chatId, string code)
         {
 			Dictionary<string, object> partyInfo = new Dictionary<string, object> { 
 				{ DbConstants.PLAYER_ISINPARTY_FLAG, true },
 				{ DbConstants.PLAYER_PARTY_CODE, code }
 			};
-			await DatabaseManager.ModifyDocumentFromCollection(partyInfo, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+			await DatabaseManager.ModifyDocumentFromCollection(partyInfo, chatId, DbConstants.COLLEC_PLAYERS);
         }
 
-		static async Task SetPlayerOutOfParty(long chatId)
+		static async Task SetPlayerOutOfParty(string chatId)
         {
 			Dictionary<string, object> partyInfo = new Dictionary<string, object> {
 				{ DbConstants.PLAYER_ISINPARTY_FLAG, false },
 				{ DbConstants.PLAYER_PARTY_CODE, null }
 			};
-			await DatabaseManager.ModifyDocumentFromCollection(partyInfo, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+			await DatabaseManager.ModifyDocumentFromCollection(partyInfo, chatId, DbConstants.COLLEC_PLAYERS);
 		}
 
 		/// <summary>
@@ -257,14 +257,14 @@ namespace MMOTFG_Bot
 		/// <param name="code">Code of the party</param>
 		/// <param name="chatId">Id of the sender</param>
 		/// <returns></returns>
-		public static async Task BroadcastMessage(string message, string code, long chatId = 0)
+		public static async Task BroadcastMessage(string message, string code, string chatId = null)
         {
 			var party = await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES);
 
 			List<object> members = (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
 			members.Add(party[DbConstants.PARTY_FIELD_LEADER]);
 
-			foreach(long id in members)
+			foreach(string id in members)
             {
 				if (id != chatId) await TelegramCommunicator.SendText(id, message);
             }

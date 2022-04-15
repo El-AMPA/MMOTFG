@@ -36,7 +36,7 @@ Use: create [character name]";
 				return;
 			}
 
-			tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+			tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId, DbConstants.COLLEC_PLAYERS);
 
 			if (tempDict != null)
 			{
@@ -47,12 +47,12 @@ Use: create [character name]";
 			Dictionary<string, object> dict = new Dictionary<string, object>
 			{
 				{ DbConstants.PLAYER_FIELD_NAME , charName},
-				{ DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId.ToString()},
+				{ DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId},
 				{ DbConstants.PLAYER_ISINPARTY_FLAG, false },
 				{ DbConstants.PLAYER_PARTY_CODE, null }
 			};
 
-			bool created = await DatabaseManager.AddDocumentToCollection(dict, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+			bool created = await DatabaseManager.AddDocumentToCollection(dict, chatId, DbConstants.COLLEC_PLAYERS);
 
 			if (!created)
 			{

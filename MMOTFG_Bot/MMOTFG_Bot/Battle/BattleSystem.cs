@@ -46,13 +46,13 @@ namespace MMOTFG_Bot
                 update.Add(DbConstants.PLAYER_FIELD_BATTLER_LIST, battlerList);
             }
 
-            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+            await DatabaseManager.ModifyDocumentFromCollection(update, chatId, DbConstants.COLLEC_PLAYERS);
         }
 
         public static async Task LoadPlayerBattle(string chatId)
         {
             Dictionary<string, object> dbPlayer = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID,
-                chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+                chatId, DbConstants.COLLEC_PLAYERS);
 
             battleActive = (bool)dbPlayer[DbConstants.PLAYER_FIELD_BATTLE_ACTIVE];
 
@@ -98,7 +98,7 @@ namespace MMOTFG_Bot
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_INFO, player.GetSerializable());
             update.Add(DbConstants.PLAYER_FIELD_BATTLER_LIST, null);
 
-            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+            await DatabaseManager.ModifyDocumentFromCollection(update, chatId, DbConstants.COLLEC_PLAYERS);
         }
 
         public static async Task<bool> IsPlayerInBattle(string chatId)
@@ -106,7 +106,7 @@ namespace MMOTFG_Bot
             //await LoadPlayerBattle(chatId);
             //return battleActive;
 
-            return (bool)await DatabaseManager.GetFieldFromDocument(DbConstants.PLAYER_FIELD_BATTLE_ACTIVE, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+            return (bool)await DatabaseManager.GetFieldFromDocument(DbConstants.PLAYER_FIELD_BATTLE_ACTIVE, chatId, DbConstants.COLLEC_PLAYERS);
         }
 
         public static async Task StartBattle(string chatId, Battler eSide)
@@ -363,7 +363,7 @@ namespace MMOTFG_Bot
         {
             if (statusId == null) statusId = chatId;
 
-            await LoadPlayerBattle((long)statusId);
+            await LoadPlayerBattle(statusId);
             if (!battleActive && b != player){
                 await TelegramCommunicator.SendText(chatId, "No battle currently active");
                 return;

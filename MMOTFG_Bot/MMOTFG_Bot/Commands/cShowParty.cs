@@ -19,7 +19,7 @@ Use: showParty. You must be in a party.";
 			};
 		}
 
-		internal override async Task Execute(string command, long chatId, string[] args = null)
+		internal override async Task Execute(string command, string chatId, string[] args = null)
 		{
 			await PartySystem.ShowParty(chatId);
 		}

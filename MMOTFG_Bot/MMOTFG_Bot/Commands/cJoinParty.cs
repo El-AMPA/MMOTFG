@@ -19,7 +19,7 @@ Use: joinParty [party code]. A party with that code must exist.";
 			};
 		}
 
-		internal override async Task Execute(string command, long chatId, string[] args = null)
+		internal override async Task Execute(string command, string chatId, string[] args = null)
 		{
 			string partyCode = args[0];
 			await PartySystem.JoinParty(partyCode, chatId);

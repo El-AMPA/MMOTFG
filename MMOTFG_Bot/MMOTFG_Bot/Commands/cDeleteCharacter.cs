@@ -27,13 +27,13 @@ Use: delete [character name]";
 
 			string arg0 = args[0];
 
-			Dictionary<string, object> tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+			Dictionary<string, object> tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId, DbConstants.COLLEC_PLAYERS);
 
 			if (tempDict != null && arg0 == tempDict[DbConstants.PLAYER_FIELD_NAME].ToString())
 			{
 				bool inParty = await PartySystem.IsInParty(chatId);
 				if (inParty) await PartySystem.ExitParty(chatId);
-				await DatabaseManager.DeleteDocumentById(chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+				await DatabaseManager.DeleteDocumentById(chatId, DbConstants.COLLEC_PLAYERS);
 				await TelegramCommunicator.SendText(chatId, "Bye 😭");
 			}else
 			{

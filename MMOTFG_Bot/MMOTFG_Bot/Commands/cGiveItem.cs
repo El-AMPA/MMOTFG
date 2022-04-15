@@ -23,7 +23,7 @@ Use: give [item name] [player name] [quantity]";
 			};
 		}
 
-		internal override async Task Execute(string command, long chatId, string[] args = null)
+		internal override async Task Execute(string command, string chatId, string[] args = null)
 		{
 			//if(args.Length == 1) await InventorySystem.ConsumeItem(chatId, args[0], 1, command, args);
 			//else
@@ -39,7 +39,7 @@ Use: give [item name] [player name] [quantity]";
 				return;
 			}
 
-			long? friendId = await PartySystem.GetFriendId(chatId, args[1]);
+			string friendId = await PartySystem.GetFriendId(chatId, args[1]);
 			if(friendId == null)
 			{
 				await TelegramCommunicator.SendText(chatId, "That player is not in your party!");
@@ -69,8 +69,8 @@ Use: give [item name] [player name] [quantity]";
 			//Your friend receives the item
 			if(itemsGiven > 0)
             {
-				await TelegramCommunicator.SendText((long)friendId, await PartySystem.GetPlayerName(chatId) + " has sent you something!");
-				await InventorySystem.AddItem((long)friendId, item, itemsGiven);
+				await TelegramCommunicator.SendText(friendId, await PartySystem.GetPlayerName(chatId) + " has sent you something!");
+				await InventorySystem.AddItem(friendId, item, itemsGiven);
 			}
 		}
 

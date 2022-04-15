@@ -19,7 +19,7 @@ Use: exitParty. If you are the leader, the party will be deleted and all the mem
 			};
 		}
 
-		internal override async Task Execute(string command, long chatId, string[] args = null)
+		internal override async Task Execute(string command, string chatId, string[] args = null)
 		{
 			await PartySystem.ExitParty(chatId);
 		}

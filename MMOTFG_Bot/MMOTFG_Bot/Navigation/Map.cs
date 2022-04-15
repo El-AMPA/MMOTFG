@@ -43,10 +43,10 @@ namespace MMOTFG_Bot.Navigation
 					}
 					players.Add(chatId);
 
-					foreach (long id in players) await currentNode.OnExit(id);
+					foreach (string id in players) await currentNode.OnExit(id);
 					currentNode = nextNode;
-					foreach (long id in players) await currentNode.OnArrive(id);
-					foreach (long id in players) await SavePlayerPosition(id);
+					foreach (string id in players) await currentNode.OnArrive(id);
+					foreach (string id in players) await SavePlayerPosition(id);
                 }
                 else
                 {
@@ -123,7 +123,7 @@ namespace MMOTFG_Bot.Navigation
 			{
 				await PartySystem.BroadcastMessage("The leader has inspected the current room", partyCode, chatId);
 				List<object> members = await PartySystem.GetPartyMembers(partyCode);
-				foreach (long id in members) await currentNode.OnInspect(id);
+				foreach (string id in members) await currentNode.OnInspect(id);
 			}
         }
 
@@ -251,7 +251,7 @@ namespace MMOTFG_Bot.Navigation
 
 			update.Add(DbConstants.PLAYER_FIELD_ACTUAL_NODE, currentNode.Name);
 
-			await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
+			await DatabaseManager.ModifyDocumentFromCollection(update, chatId, DbConstants.COLLEC_PLAYERS);
 		}
 
         /// <summary>
@@ -260,9 +260,9 @@ namespace MMOTFG_Bot.Navigation
         public static async Task LoadPlayerPosition(string chatId)
         {
             Dictionary<string, object> player = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID,
-                chatId.ToString(), DbConstants.COLLEC_DEBUG);
+                chatId, DbConstants.COLLEC_PLAYERS);
 
-			string currNodeName = player[DbConstants.PLAYER_FIELD_ACTUAL_NODE].ToString();
+			string currNodeName = (string)player[DbConstants.PLAYER_FIELD_ACTUAL_NODE];
 
 			currentNode = nodes.Find(x => (x.Name == currNodeName));
 		}
@@ -278,7 +278,7 @@ namespace MMOTFG_Bot.Navigation
 
             await Map.startingNode.OnArrive(chatId);
 
-            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+            await DatabaseManager.ModifyDocumentFromCollection(update, chatId, DbConstants.COLLEC_PLAYERS);
         }
     }
 }
