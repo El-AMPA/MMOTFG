@@ -21,10 +21,11 @@ namespace MMOTFG_Bot
 		private static long launchTime;
 		static cHelp helpCommand = new cHelp();
 		static cAttack attackCommand = new cAttack();
+		static cCreateCharacter createCommand = new cCreateCharacter();
 
-		public static List<ICommand> commandList = new List<ICommand> { new cDeleteCharacter(), new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
-            new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
-			new cNavigate(), new cDirections(), new cInspectRoom(), helpCommand, 
+		public static List<ICommand> commandList = new List<ICommand> { new cDeleteCharacter(), new cDebug(), createCommand, new cUseItem(), new cAddItem(), new cThrowItem(),
+			new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
+			new cNavigate(), new cDirections(), new cInspectRoom(), helpCommand,
 			new cCreateParty(), new cJoinParty(), new cExitParty(), new cShowParty(), new cGiveItem()};
 
 		static async Task Main(string[] args)
@@ -63,7 +64,8 @@ namespace MMOTFG_Bot
 			JSONSystem.Init("assets/enemies.json", "assets/player.json");
 			BattleSystem.Init();
 			DatabaseManager.Init();
-			foreach (ICommand c in commandList) { 
+			foreach (ICommand c in commandList)
+			{
 				c.SetKeywords();
 				c.SetDescription();
 			}
@@ -89,7 +91,7 @@ namespace MMOTFG_Bot
 		}
 
 		public static void SetAttackKeywords(List<string> keywords)
-        {
+		{
 			attackCommand.SetKeywords(keywords.ConvertAll(s => s.ToLower()).ToArray());
 		}
 
@@ -103,6 +105,7 @@ namespace MMOTFG_Bot
 				// UpdateType.ShippingQuery:
 				// UpdateType.PreCheckoutQuery:
 				// UpdateType.Poll:
+				UpdateType.MyChatMember => onChatMemeberUpdateReceived(update),
 				UpdateType.Message => BotOnMessageReceived(botClient, update.Message),
 				UpdateType.EditedMessage => BotOnMessageReceived(botClient, update.EditedMessage),
 				//UpdateType.CallbackQuery => BotOnCallbackQueryReceived(botClient, update.CallbackQuery),
@@ -143,15 +146,15 @@ namespace MMOTFG_Bot
 
 		static async Task BotOnMessageReceived(ITelegramBotClient botClient, Message message)
 		{
-			var chatId = message.Chat.Id;
+			var chatId = message.Chat.Id.ToString();
 			var senderName = message.From.FirstName;
 			var senderID = message.From.Id;
 
-            if (!processedNewEvents) //Don't process messages with a date prior to the program's launch date
-            {
+			if (!processedNewEvents) //Don't process messages with a date prior to the program's launch date
+			{
 				if (message.Date.Ticks < launchTime) return;
 				else processedNewEvents = true;
-            }
+			}
 
 			Console.WriteLine("Received message: " + message.Text + " from " + senderName);
 
@@ -163,14 +166,20 @@ namespace MMOTFG_Bot
 				subStrings.CopyTo(1, args, 0, args.Length);
 
 				bool recognizedCommand = false;
+
+				if (!await canUseCommand(chatId.ToString(), command))
+				{
+					await TelegramCommunicator.SendText(chatId, "You need a character to play, use /create to create a new character");
+					return;
+				}
 				foreach (ICommand c in commandList)
 				{
 					if (c.ContainsKeyWord(command))
 					{
 						recognizedCommand = true;
 						if (await c.TryExecute(command, chatId, args)) break;
-							
-						else await TelegramCommunicator.SendText(chatId, "Incorrect use of that command.\nUse /help_" + command + " for further information.");	
+
+						else await TelegramCommunicator.SendText(chatId, "Incorrect use of that command.\nUse /help_" + command + " for further information.");
 					}
 				}
 				if (!recognizedCommand) await TelegramCommunicator.SendText(chatId, "Unrecognized command.\n Try /help if you don't know what to use");
@@ -181,20 +190,20 @@ namespace MMOTFG_Bot
 		/// Processes the message recieved from the user by filtering out certain chars and splitting it into words
 		/// </summary>
 		private static List<string> ProcessMessage(string message)
-        {
+		{
 			List<string> processedMsg = message.ToLower().Split(' ').ToList();
 
 			//If we want to process a hyperlink type command (/equip_sulfuras_hand_of_ragnaros), we only need to split it by the first '_'
-            if (processedMsg[0].Contains('_') && processedMsg[0][0] != '_')
-            {
+			if (processedMsg[0].Contains('_') && processedMsg[0][0] != '_')
+			{
 				List<string> aux = processedMsg[0].Split('_', 2).ToList();
 				processedMsg.RemoveAt(0);
 				processedMsg.Insert(0, aux[1]);
 				processedMsg.Insert(0, aux[0]);
-            }
+			}
 			if (processedMsg[0][0] == '/') processedMsg[0] = processedMsg[0].Substring(1);
 			return processedMsg;
-        }
+		}
 
 		static Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
 		{
@@ -207,5 +216,30 @@ namespace MMOTFG_Bot
 			return Task.CompletedTask;
 		}
 
+		static async Task<bool> canUseCommand(string chatId, string command)
+		{
+
+			bool characterExists = await DatabaseManager.IsDocumentInCollection(chatId, DbConstants.COLLEC_DEBUG);
+
+			bool isIntroductoryCommand = createCommand.ContainsKeyWord(command) ||
+											helpCommand.ContainsKeyWord(command);
+
+			return characterExists || isIntroductoryCommand;
+
+		}
+
+		static async Task onChatMemeberUpdateReceived(Update update)
+		{
+			//If the update is from a new /start
+			if (update.MyChatMember.NewChatMember.Status == ChatMemberStatus.Member) { 
+
+				string response = @"Welcome to MMOTFG, please create a character with /create to start playing.
+Remember that you can get help with /help .";
+
+				string chatId = update.MyChatMember.From.Id.ToString();
+
+				await TelegramCommunicator.SendText(chatId, response);
+			}
+		}
 	}
 }

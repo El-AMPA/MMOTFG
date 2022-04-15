@@ -22,14 +22,14 @@ Use: delete [character name]";
 			};
 		}
 
-		internal override async Task Execute(string command, long chatId, string[] args = null)
+		internal override async Task Execute(string command, string chatId, string[] args = null)
 		{			
 
 			string arg0 = args[0];
 
 			Dictionary<string, object> tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
 
-			if (arg0 == tempDict[DbConstants.PLAYER_FIELD_NAME].ToString())
+			if (tempDict != null && arg0 == tempDict[DbConstants.PLAYER_FIELD_NAME].ToString())
 			{
 				bool inParty = await PartySystem.IsInParty(chatId);
 				if (inParty) await PartySystem.ExitParty(chatId);

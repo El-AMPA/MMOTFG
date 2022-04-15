@@ -20,7 +20,7 @@ Use: add [item name]";
             };
         }
 
-        internal override async Task Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, string chatId, string[] args = null)
         {
             if (InventorySystem.StringToItem(args[0], out ObtainableItem item))
             {

@@ -23,7 +23,7 @@ Use: throw [item name]";
             };
         }
 
-        internal override async Task Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, string chatId, string[] args = null)
         {
             int itemsThrown;
 

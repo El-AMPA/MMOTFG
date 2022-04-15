@@ -15,7 +15,7 @@ namespace MMOTFG_Bot
 
         public bool SetAs { get; set; }
 
-        public override async Task<bool> Execute(long chatId)
+        public override async Task<bool> Execute(string chatId)
         {
             await ProgressKeeper.LoadSerializable(chatId);
             if (Name != null) ProgressKeeper.SetFlagAs(chatId, Name, SetAs);

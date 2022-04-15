@@ -24,7 +24,7 @@ namespace MMOTFG_Bot
             player = JSONSystem.GetPlayer();
         }
 
-        public static async Task SavePlayerBattle(long chatId)
+        public static async Task SavePlayerBattle(string chatId)
         {
             Dictionary<string, object> update = new Dictionary<string, object>();
 
@@ -49,7 +49,7 @@ namespace MMOTFG_Bot
             await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
         }
 
-        public static async Task LoadPlayerBattle(long chatId)
+        public static async Task LoadPlayerBattle(string chatId)
         {
             Dictionary<string, object> dbPlayer = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID,
                 chatId.ToString(), DbConstants.COLLEC_PLAYERS);
@@ -90,7 +90,7 @@ namespace MMOTFG_Bot
             }
         }
 
-        public static async Task CreatePlayerBattle(long chatId)
+        public static async Task CreatePlayerBattle(string chatId)
         {
             Dictionary<string, object> update = new Dictionary<string, object>();
 
@@ -101,21 +101,20 @@ namespace MMOTFG_Bot
             await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_PLAYERS);
         }
 
-        public static async Task<bool> IsPlayerInBattle(long chatId)
+        public static async Task<bool> IsPlayerInBattle(string chatId)
         {
-            // buscamos en la base de datos para ver el jugador que queremos buscar
-            //beep boop beep beep....
-            await LoadPlayerBattle(chatId);
-            
-            return battleActive; 
+            //await LoadPlayerBattle(chatId);
+            //return battleActive;
+
+            return (bool)await DatabaseManager.GetFieldFromDocument(DbConstants.PLAYER_FIELD_BATTLE_ACTIVE, chatId.ToString(), DbConstants.COLLEC_DEBUG);
         }
 
-        public static async Task StartBattle(long chatId, Battler eSide)
+        public static async Task StartBattle(string chatId, Battler eSide)
         {
             await StartBattle(chatId, new List<Battler> { eSide });
         }
 
-        public static async Task StartBattle(long chatId, List<Battler> eSide)
+        public static async Task StartBattle(string chatId, List<Battler> eSide)
         {
             enemySide = eSide;
             playerSide = new List<Battler>() { player };
@@ -159,7 +158,7 @@ namespace MMOTFG_Bot
             await NextAttack(chatId);
         }
 
-        public static async Task NextAttack(long chatId)
+        public static async Task NextAttack(string chatId)
         {
             if (!battleActive || battlePaused) return;
 
@@ -205,12 +204,12 @@ namespace MMOTFG_Bot
             }
         }
 
-        public static async Task SetPlayerOptions(long chatId, string text)
+        public static async Task SetPlayerOptions(string chatId, string text)
         {
             await TelegramCommunicator.SendButtons(chatId, text, player.attackNames.ToArray());
         }
 
-        public static async Task PlayerAttack(long chatId, string attackName, string targetName = null)
+        public static async Task PlayerAttack(string chatId, string attackName, string targetName = null)
         {            
             if (!battleActive)
             {
@@ -270,7 +269,7 @@ namespace MMOTFG_Bot
             await UseAttack(chatId, attack, player, target);
         }
 
-        private static async Task UseAttack(long chatId, Attack attack, Battler user, Battler target)
+        private static async Task UseAttack(string chatId, Attack attack, Battler user, Battler target)
         {
             user.AddToStat(MP, -attack.mpCost);
             user.turnOver = true;
@@ -329,14 +328,14 @@ namespace MMOTFG_Bot
         }
 
         //for instances where the battle needs to be paused (such as move learning)
-        public static async Task PauseBattle(long chatId)
+        public static async Task PauseBattle(string chatId)
         {
             await SavePlayerBattle(chatId);
             battlePaused = true;
         }
 
         //call only if battle has been paused
-        public static async Task ResumeBattle(long chatId)
+        public static async Task ResumeBattle(string chatId)
         {
             battlePaused = false;
             if (battleActive) await NextAttack(chatId);
@@ -354,13 +353,13 @@ namespace MMOTFG_Bot
             return bar;
         }
 
-        public static async Task changePlayerStats(long chatId, StatName stat, float amount)
+        public static async Task changePlayerStats(string chatId, StatName stat, float amount)
         {
             player.AddToStat(stat, amount);
             await SavePlayerBattle(chatId);
         }
 
-        public static async Task ShowStatus(long chatId, Battler b, long? statusId = null)
+        public static async Task ShowStatus(string chatId, Battler b, string statusId = null)
         {
             if (statusId == null) statusId = chatId;
 
