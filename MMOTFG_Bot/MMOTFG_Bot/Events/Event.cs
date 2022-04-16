@@ -16,6 +16,7 @@ namespace MMOTFG_Bot.Events
     [JsonSubtypes.KnownSubType(typeof(eSendImage), "eSendImage")]
     [JsonSubtypes.KnownSubType(typeof(eSendText), "eSendText")]
     [JsonSubtypes.KnownSubType(typeof(eSendImageCollection), "eSendImageCollection")]
+    [JsonSubtypes.KnownSubType(typeof(eSetFlag), "eSetFlag")]
     [JsonSubtypes.KnownSubType(typeof(eStartBattle), "eStartBattle")]
     [JsonSubtypes.KnownSubType(typeof(eLearnAttack), "eLearnAttack")]
 
@@ -24,7 +25,13 @@ namespace MMOTFG_Bot.Events
     //Thus, if it were a pure abstract class, it would just send an exception.
     class Event
     {
-        public virtual Task Execute(long chatId)
+        public string TriggerCondition
+        {
+            get;
+            set;
+        }
+
+        public virtual Task Execute(string chatId)
         {
             return Task.CompletedTask;
         }

@@ -4,6 +4,7 @@
   "Attacks": [ "Overkill", "Patada", "Burla" ],
   "OnKill": {
     "BehaviourType": "bPlayerDeath",
+    "ActivateOnce": false,
     "Message": "Has muerto..."
   },
   "LevelUpRoadmap": {

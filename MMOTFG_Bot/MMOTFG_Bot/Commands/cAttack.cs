@@ -18,7 +18,7 @@ namespace MMOTFG_Bot.Commands
             key_words = JSONSystem.GetAllAttackNames().ConvertAll(x => x.ToLower()).ToArray();
         }
 
-        internal override async Task Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, string chatId, string[] args = null)
         {
             await BattleSystem.LoadPlayerBattle(chatId);
             if (BattleSystem.player.learningAttack != null)

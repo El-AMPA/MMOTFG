@@ -20,7 +20,7 @@ Use: unequip [item name] / unequip [gear slot]";
             };
         }
 
-        internal override async Task Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, string chatId, string[] args = null)
         {
             //Check if the args provided is an equipment slot
             if (InventorySystem.StringToEquipmentSlot(args[0], out EQUIPMENT_SLOT slot))

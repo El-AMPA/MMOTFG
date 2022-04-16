@@ -27,6 +27,8 @@ namespace MMOTFG_Bot
         LEGS,
         [EnumMember(Value = "WAIST")]
         WAIST,
+        [EnumMember(Value = "BACK")]
+        BACK,
         [EnumMember(Value = "NECK")]
         NECK
     }

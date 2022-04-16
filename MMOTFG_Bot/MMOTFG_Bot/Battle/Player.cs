@@ -45,6 +45,11 @@ namespace MMOTFG_Bot
                 attacks.Add(a.name);
             }
         }
+      
+        public void SetName(string playerName)
+        {
+            name = playerName;
+        }
 
         public void SetName(string playerName)
         {

@@ -12,7 +12,7 @@ namespace MMOTFG_Bot
         private const int MAX_SLOTS_INVENTORY = 10;
         private static List<InventoryRecord> InventoryRecords = new List<InventoryRecord>();
         private static EquipableItem[] equipment;
-        private static long currentChatid = -1;
+        private static string currentChatid = "";
 
         public static void Init()
         {
@@ -27,13 +27,13 @@ namespace MMOTFG_Bot
         {
             InventoryRecords = new List<InventoryRecord>();
             equipment = new EquipableItem[Enum.GetNames(typeof(EQUIPMENT_SLOT)).Length];
-            currentChatid = -1;
+            currentChatid = "";
         }
 
         /// <summary>
         /// Loads to memory the inventory of the player with the given chatId
         /// </summary>
-        public static async Task LoadPlayerInventory(long chatId)
+        public static async Task LoadPlayerInventory(string chatId)
         {
             if (currentChatid == chatId) return;
 
@@ -77,7 +77,7 @@ namespace MMOTFG_Bot
         /// <summary>
         /// Saves to the database the data (currently on memory) of the player with the given chatId
         /// </summary>
-        public static async Task SavePlayerInventory(long chatId)
+        public static async Task SavePlayerInventory(string chatId)
         {
             Dictionary<string, object> update = new Dictionary<string, object>();
 
@@ -113,7 +113,7 @@ namespace MMOTFG_Bot
         /// <summary>
         /// Creates and saves to the database an empty inventory for the given player
         /// </summary>
-        public static async Task CreatePlayerInventory(long chatId)
+        public static async Task CreatePlayerInventory(string chatId)
 		{
             Reset();
             await SavePlayerInventory(chatId);
@@ -132,7 +132,7 @@ namespace MMOTFG_Bot
             return Enum.TryParse(s, true, out slot);
         }
 
-        public static async Task AddItem(long chatId, string itemString, int quantityToAdd)
+        public static async Task AddItem(string chatId, string itemString, int quantityToAdd)
         {
             await LoadPlayerInventory(chatId);
 
@@ -185,14 +185,14 @@ namespace MMOTFG_Bot
             await SavePlayerInventory(chatId);
         }
 
-        public static async Task<EquipableItem> GetItemFromEquipmentSlot(long chatId, EQUIPMENT_SLOT slot)
+        public static async Task<EquipableItem> GetItemFromEquipmentSlot(string chatId, EQUIPMENT_SLOT slot)
         {
             await LoadPlayerInventory(chatId);
 
             return equipment[(int)slot];
         }
 
-        public static async Task ConsumeItem(long chatId, string itemString, int quantityToConsume, string command = null, string[] args = null)
+        public static async Task ConsumeItem(string chatId, string itemString, int quantityToConsume, string command = null, string[] args = null)
         {
             await LoadPlayerInventory(chatId);
             if (StringToItem(itemString, out ObtainableItem item))
@@ -265,7 +265,7 @@ namespace MMOTFG_Bot
             else await TelegramCommunicator.SendText(chatId, "Item " + itemString + " doesn't exist");
         }
 
-        public static async Task ThrowAwayItem(long chatId, string itemString, int quantityToThrowAway)
+        public static async Task ThrowAwayItem(string chatId, string itemString, int quantityToThrowAway)
         {
             await LoadPlayerInventory(chatId);
 
@@ -316,7 +316,7 @@ namespace MMOTFG_Bot
 
         }
 
-        public static async Task<int> GetNumberOfItemsInInventory(long chatId, ObtainableItem item)
+        public static async Task<int> GetNumberOfItemsInInventory(string chatId, ObtainableItem item)
         {
             await LoadPlayerInventory(chatId);
             int numItems = 0;
@@ -329,7 +329,7 @@ namespace MMOTFG_Bot
             return numItems;
         }
 
-        public static async Task ShowInventory(long chatId)
+        public static async Task ShowInventory(string chatId)
         {
             await LoadPlayerInventory(chatId);
             string message = "User inventory:\n";
@@ -344,7 +344,7 @@ namespace MMOTFG_Bot
         /// <summary>
         /// Shows the player's equipped items from all gear slots
         /// </summary>
-        public static async Task ShowGear(long chatId)
+        public static async Task ShowGear(string chatId)
         {
             await LoadPlayerInventory(chatId);
             string message = "User equipment:\n";
@@ -361,7 +361,7 @@ namespace MMOTFG_Bot
         /// <summary>
         /// Shows the player's equipped items from the specified gear slot
         /// </summary>
-        public static async Task ShowGear(long chatId, EQUIPMENT_SLOT slot)
+        public static async Task ShowGear(string chatId, EQUIPMENT_SLOT slot)
         {
             await LoadPlayerInventory(chatId);
             string message = "User equipment on " + slot + " slot: ";
@@ -374,7 +374,7 @@ namespace MMOTFG_Bot
         /// <summary>
         /// Unequips the item worn on the specified gear slot
         /// </summary>
-        public static async Task UnequipGear(long chatId, EQUIPMENT_SLOT slot)
+        public static async Task UnequipGear(string chatId, EQUIPMENT_SLOT slot)
         {
             await LoadPlayerInventory(chatId);
             if (await BattleSystem.IsPlayerInBattle(chatId))
@@ -417,7 +417,7 @@ namespace MMOTFG_Bot
         /// <summary>
         /// Unequips the item worn on the gear slot of the specified Equippable Item
         /// </summary>
-        public static async Task UnequipGear(long chatId, EquipableItem item)
+        public static async Task UnequipGear(string chatId, EquipableItem item)
         {
             //Get the currently equipped item
             EquipableItem currentItem = await GetItemFromEquipmentSlot(chatId, item.gearSlot);
@@ -435,7 +435,7 @@ namespace MMOTFG_Bot
         /// <summary>
         /// Equips a piece of gear in its gear slot
         /// </summary>
-        public static async Task EquipGear(long chatId, EquipableItem item)
+        public static async Task EquipGear(string chatId, EquipableItem item)
         {
             //Load the player's inventory
             await LoadPlayerInventory(chatId);
@@ -497,7 +497,7 @@ namespace MMOTFG_Bot
         /// <summary>
         /// Swaps the current equipped piece of gear for a new one. Shows the change of stats.
         /// </summary>
-        private static async Task SwapGear(long chatId, EquipableItem newItem)
+        private static async Task SwapGear(string chatId, EquipableItem newItem)
         {            
             EquipableItem oldItem = equipment[(int)newItem.gearSlot];
             string msg = "You've swapped " + oldItem.name + " for " + newItem.name;

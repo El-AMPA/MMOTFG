@@ -19,7 +19,7 @@ Uso: info [cosa para la que quieres mas info]";
             };
         }
 
-        internal override async Task Execute(string command, long chatId, string[] args = null)
+        internal override async Task Execute(string command, string chatId, string[] args = null)
         {
             await InformationSystem.ShowInfo(chatId, args[0]);
         }

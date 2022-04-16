@@ -14,7 +14,6 @@ namespace MMOTFG_Bot
     class ObtainableItem
     {
         public List<KeyValuePair<string, Behaviour>> key_words = new List<KeyValuePair<string, Behaviour>>();
-        //protected List<KeyValuePair<string, Action<long, string[]>>> key_words = new List<KeyValuePair<string, Action<long, string[]>>>();
 
         public virtual void Init() { }
 

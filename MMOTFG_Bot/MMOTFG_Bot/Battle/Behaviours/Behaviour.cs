@@ -13,6 +13,7 @@ namespace MMOTFG_Bot
     [JsonConverter(typeof(JsonSubtypes), "BehaviourType")]
     [JsonSubtypes.KnownSubType(typeof(bChangeStat), "bChangeStat")]
     [JsonSubtypes.KnownSubType(typeof(bPlayerDeath), "bPlayerDeath")]
+    [JsonSubtypes.KnownSubType(typeof(bSetFlag), "bSetFlag")]
     class Behaviour
     {
         [DefaultValue(true)]
@@ -32,6 +33,6 @@ namespace MMOTFG_Bot
         //}
 
         //returns true on success, false otherwise
-        public virtual async Task<bool> Execute(long chatId, Battler user) { return true; }
+        public virtual async Task<bool> Execute(string chatId, Battler user) { return true; }
     }
 }
