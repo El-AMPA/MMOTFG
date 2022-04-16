@@ -125,7 +125,6 @@ namespace MMOTFG_Bot
         {
             item = JSONSystem.GetItem(s);
             return item != null;
-            //return obtainableItems.TryGetValue(s, out item);
         }
 
         public static bool StringToEquipmentSlot(string s, out EQUIPMENT_SLOT slot)
@@ -240,7 +239,7 @@ namespace MMOTFG_Bot
                     {
                         for (int k = 0; k < quantityToConsumeToStack; k++)
                         {
-                            item.ProcessCommand(command, chatId, args);
+                            await item.ProcessCommand(command, chatId, args);
                         }
                     }
                     inventoryRecord.AddToQuantity(-quantityToConsumeToStack);

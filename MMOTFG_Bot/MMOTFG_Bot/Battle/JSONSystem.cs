@@ -136,7 +136,7 @@ namespace MMOTFG_Bot
                 e.New();
                 return e;
             }
-            else return enemies.First();
+            else return e;
         }
 
         public static Player GetPlayer()
@@ -146,22 +146,12 @@ namespace MMOTFG_Bot
 
         public static Attack GetAttack(string name)
         {
-            Attack a = attacks.FirstOrDefault(x => x.name == name);
-            if (a != null)
-            {
-                return a;
-            }
-            else return attacks.First();
+            return attacks.FirstOrDefault(x => x.name == name);
         }
 
         public static ObtainableItem GetItem(string name)
         {
-            ObtainableItem i = items.FirstOrDefault(x => x.name == name);
-            if (i != null)
-            {
-                return i;
-            }
-            else return items.First();
+            return items.FirstOrDefault(x => x.name == name);
         }
 
         public static List<string> GetAllAttackNames()
