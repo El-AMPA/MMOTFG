@@ -1,28 +1,31 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace MMOTFG_Bot.Items
 {
-    abstract class EquipableItem : ObtainableItem
+    class EquipableItem : ObtainableItem
     {
+        [JsonConverter(typeof(StringEnumConverter))]
         public EQUIPMENT_SLOT gearSlot
         {
             get;
             set;
         }
 
-        public List<(int, StatName)> statModifiers
+        public Dictionary<StatName, int> statModifiers
         {
             get;
-            protected set;
+            set;
         }
 
         public void OnEquip(long chatId, string[] args = null)
         {
             foreach (var stat in statModifiers)
             {
-                BattleSystem.player.AddToStat(stat.Item2, stat.Item1, changeMax: true, permanent: true);
+                BattleSystem.player.AddToStat(stat.Key, stat.Value, changeMax: true, permanent: true);
             }
         }
 
@@ -30,7 +33,7 @@ namespace MMOTFG_Bot.Items
         {
             foreach (var stat in statModifiers)
             {
-                BattleSystem.player.AddToStat(stat.Item2, -stat.Item1, changeMax: true, permanent: true);
+                BattleSystem.player.AddToStat(stat.Key, -stat.Value, changeMax: true, permanent: true);
             }
         }
     }

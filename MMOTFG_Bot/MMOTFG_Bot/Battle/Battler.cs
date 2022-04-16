@@ -63,9 +63,6 @@ namespace MMOTFG_Bot
             SetAttacks();           
             maxStats = (float[])stats.Clone();
             originalStats = (float[])stats.Clone();
-            onHit?.setParent(this);
-            onKill?.setParent(this);
-            onTurnEnd?.setParent(this);
         }
 
         public void SetAttacks()
@@ -145,7 +142,7 @@ namespace MMOTFG_Bot
             {
                 //If behaviour has already happened or isn't activated by chance, skip
                 if (!b.flag || RNG.Next(0, 100) > b.chance * 100) return;
-                if (await b.Execute(chatId))
+                if (await b.Execute(chatId, this))
                 {
                     if (b.message != null) await TelegramCommunicator.SendText(chatId, b.message);
                     //Events that happen once are deactivated

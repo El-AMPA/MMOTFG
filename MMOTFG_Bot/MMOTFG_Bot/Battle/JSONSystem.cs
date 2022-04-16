@@ -12,10 +12,12 @@ namespace MMOTFG_Bot
         private static List<Battler> enemies;
         private static Player player;
         private static List<Attack> attacks;
+        private static List<ObtainableItem> items;
 
-        public static void Init(string enemyPath, string playerPath, string attackPath)
+        public static void Init(string enemyPath, string playerPath, string attackPath, string itemPath)
         {
             ReadAttacksFromJSON(attackPath);
+            ReadItemsFromJSON(itemPath);
             ReadEnemiesFromJSON(enemyPath);
             ReadPlayerFromJSON(playerPath);
         }
@@ -77,10 +79,10 @@ namespace MMOTFG_Bot
 
         private static void ReadAttacksFromJSON(string path)
         {
-            string playerText = ""; //Text of the entire .json file
+            string attackText = ""; //Text of the entire .json file
             try
             {
-                playerText = File.ReadAllText(path, Encoding.GetEncoding("iso-8859-1")); //This encoding supports spanish characters "ñ, á ..."
+                attackText = File.ReadAllText(path, Encoding.GetEncoding("iso-8859-1")); //This encoding supports spanish characters "ñ, á ..."
             }
             catch (FileNotFoundException)
             {
@@ -90,12 +92,38 @@ namespace MMOTFG_Bot
 
             try
             {
-                attacks = JsonConvert.DeserializeObject<List<Attack>>(playerText,
+                attacks = JsonConvert.DeserializeObject<List<Attack>>(attackText,
                     new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate }); //Deserializes the .json file into a list of attacks
             }
             catch (JsonException e)
             {
                 Console.WriteLine("ERROR: attacks.json isn't formatted correctly. \nError message:" + e.Message);
+                Environment.Exit(-1);
+            }
+        }
+
+        private static void ReadItemsFromJSON(string path)
+        {
+            string itemText = ""; //Text of the entire .json file
+            try
+            {
+                itemText = File.ReadAllText(path, Encoding.GetEncoding("iso-8859-1")); //This encoding supports spanish characters "ñ, á ..."
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("ERROR: items.json couldn't be found in assets folder.");
+                Environment.Exit(-1);
+            }
+
+            try
+            {
+                items = JsonConvert.DeserializeObject<List<ObtainableItem>>(itemText,
+                    new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate }); //Deserializes the .json file into a list of items
+                foreach (ObtainableItem i in items) i.OnCreate();
+            }
+            catch (JsonException e)
+            {
+                Console.WriteLine("ERROR: items.json isn't formatted correctly. \nError message:" + e.Message);
                 Environment.Exit(-1);
             }
         }
@@ -124,6 +152,16 @@ namespace MMOTFG_Bot
                 return a;
             }
             else return attacks.First();
+        }
+
+        public static ObtainableItem GetItem(string name)
+        {
+            ObtainableItem i = items.FirstOrDefault(x => x.name == name);
+            if (i != null)
+            {
+                return i;
+            }
+            else return items.First();
         }
 
         public static List<string> GetAllAttackNames()
