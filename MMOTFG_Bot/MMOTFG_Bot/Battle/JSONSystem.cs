@@ -10,16 +10,17 @@ namespace MMOTFG_Bot
     static class JSONSystem
     {
         private static List<Battler> enemies;
-        private static Player player;
         private static List<Attack> attacks;
         private static List<ObtainableItem> items;
 
-        public static void Init(string enemyPath, string playerPath, string attackPath, string itemPath)
+        private static string playerPath;
+
+        public static void Init(string enemyPath, string playerP, string attackPath, string itemPath)
         {
             ReadAttacksFromJSON(attackPath);
             ReadItemsFromJSON(itemPath);
             ReadEnemiesFromJSON(enemyPath);
-            ReadPlayerFromJSON(playerPath);
+            playerPath = playerP;
         }
 
         /// <summary>
@@ -47,32 +48,6 @@ namespace MMOTFG_Bot
             catch (JsonException e)
             {
                 Console.WriteLine("ERROR: enemies.json isn't formatted correctly. \nError message:" + e.Message);
-                Environment.Exit(-1);
-            }
-        }
-
-        private static void ReadPlayerFromJSON(string path)
-        {
-            string playerText = ""; //Text of the entire .json file
-            try
-            {
-                playerText = File.ReadAllText(path, Encoding.GetEncoding("iso-8859-1")); //This encoding supports spanish characters "ñ, á ..."
-            }
-            catch (FileNotFoundException)
-            {
-                Console.WriteLine("ERROR: player.json couldn't be found in assets folder.");
-                Environment.Exit(-1);
-            }
-
-            try
-            {
-                player = JsonConvert.DeserializeObject<Player>(playerText,
-                    new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate }); //Deserializes the .json file into a player
-                player.OnCreate();
-            }
-            catch (JsonException e)
-            {
-                Console.WriteLine("ERROR: player.json isn't formatted correctly. \nError message:" + e.Message);
                 Environment.Exit(-1);
             }
         }
@@ -141,6 +116,29 @@ namespace MMOTFG_Bot
 
         public static Player GetPlayer()
         {
+            Player player = null;
+            string playerText = ""; //Text of the entire .json file
+            try
+            {
+                playerText = File.ReadAllText(playerPath, Encoding.GetEncoding("iso-8859-1")); //This encoding supports spanish characters "ñ, á ..."
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("ERROR: player.json couldn't be found in assets folder.");
+                Environment.Exit(-1);
+            }
+
+            try
+            {
+                player = JsonConvert.DeserializeObject<Player>(playerText,
+                    new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate }); //Deserializes the .json file into a player
+                player.OnCreate();
+            }
+            catch (JsonException e)
+            {
+                Console.WriteLine("ERROR: player.json isn't formatted correctly. \nError message:" + e.Message);
+                Environment.Exit(-1);
+            }
             return player;
         }
 

@@ -24,7 +24,6 @@ namespace MMOTFG_Bot
 		readonly public static string PLAYER_ISINPARTY_FLAG = "is_in_party";
 		readonly public static string PLAYER_PARTY_CODE = "player_party_code";
 		readonly public static string PLAYER_FIELD_BATTLER_LIST = "battler";
-		readonly public static string PLAYER_FIELD_BATTLER_LIST = "battler";
 		readonly public static string PLAYER_FIELD_UP_NEXT = "up_next";
 		readonly public static string PLAYER_FIELD_LEVEL = "lvl";
 		readonly public static string PLAYER_FIELD_EXPERIENCE = "exp";

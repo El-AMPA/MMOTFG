@@ -21,7 +21,6 @@ namespace MMOTFG_Bot
 
         public static void Init()
         {
-            player = JSONSystem.GetPlayer();
         }
 
         public static async Task SavePlayerBattle(string chatId)
@@ -97,6 +96,8 @@ namespace MMOTFG_Bot
         {
             Dictionary<string, object> update = new Dictionary<string, object>();
 
+            //Creamos un jugador nuevo con la info del json
+            player = JSONSystem.GetPlayer();
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_ACTIVE, false);
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_INFO, player.GetSerializable());
             update.Add(DbConstants.PLAYER_FIELD_BATTLER_LIST, null);

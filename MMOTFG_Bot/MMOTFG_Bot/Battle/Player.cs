@@ -25,7 +25,6 @@ namespace MMOTFG_Bot
 
         public Player()
         {
-
         }
 
         public override void OnCreate()
