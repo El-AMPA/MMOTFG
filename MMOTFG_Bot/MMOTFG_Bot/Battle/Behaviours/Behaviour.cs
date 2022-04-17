@@ -16,8 +16,6 @@ namespace MMOTFG_Bot
     [JsonSubtypes.KnownSubType(typeof(bSetFlag), "bSetFlag")]
     class Behaviour
     {
-        protected Battler user;
-
         [DefaultValue(true)]
         public bool activateOnce;
 
@@ -29,12 +27,7 @@ namespace MMOTFG_Bot
 
         public string message;
 
-        public void setParent(Battler b)
-        {
-            user = b;
-        }
-
         //returns true on success, false otherwise
-        public virtual async Task<bool> Execute(string chatId) { return true; }
+        public virtual async Task<bool> Execute(string chatId, Battler user) { return true; }
     }
 }

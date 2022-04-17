@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MMOTFG_Bot
@@ -16,7 +15,10 @@ namespace MMOTFG_Bot
         protected float[] maxStats;
         //permanent changes
         protected float[] originalStats;
-        public List<Attack> attacks;
+
+        protected List<Attack> attacks_;
+        //set in json
+        public List<string> attacks;
 
         public string name;
 
@@ -37,11 +39,7 @@ namespace MMOTFG_Bot
         public int experienceGiven;
 
         public bool isAlly;
-        public bool isPlayer;
-
-        public int experience;
-        [DefaultValue(1)]
-        public int level;
+        public bool isPlayer;       
 
         public Battler()
         {
@@ -53,22 +51,27 @@ namespace MMOTFG_Bot
         //Gets a random attack the enemy has enough MP to use (basic attack should always cost 0 to avoid problems)
         public Attack nextAttack()
         {
-            int i = attacks.Count - 1;
-            while (attacks[i].mpCost > stats[(int)StatName.MP])
+            int i = attacks_.Count - 1;
+            while (attacks_[i].mpCost > stats[(int)StatName.MP])
                 i--;
             int attack = RNG.Next(0, i + 1);
-            return attacks[attack];
+            return attacks_[attack];
         }
 
-        public void OnCreate()
+        public virtual void OnCreate()
         {
-            //attacks are automatically sorted by mpCost
-            attacks.Sort((a1, a2) => a1.mpCost.CompareTo(a2.mpCost));
+            SetAttacks();           
             maxStats = (float[])stats.Clone();
             originalStats = (float[])stats.Clone();
-            onHit?.setParent(this);
-            onKill?.setParent(this);
-            onTurnEnd?.setParent(this);
+        }
+
+        public void SetAttacks()
+        {
+            attacks_ = new List<Attack>();
+            //get attacks by name
+            foreach (string s in attacks) attacks_.Add(JSONSystem.GetAttack(s));
+            //attacks are automatically sorted by mpCost
+            attacks_.Sort((a1, a2) => a1.mpCost.CompareTo(a2.mpCost));
         }
 
         public void SetStat(StatName stat, float newValue, bool changeMax = false, bool permanent = false)
@@ -139,7 +142,7 @@ namespace MMOTFG_Bot
             {
                 //If behaviour has already happened or isn't activated by chance, skip
                 if (!b.flag || RNG.Next(0, 100) > b.chance * 100) return;
-                if (await b.Execute(chatId))
+                if (await b.Execute(chatId, this))
                 {
                     if (b.message != null) await TelegramCommunicator.SendText(chatId, b.message);
                     //Events that happen once are deactivated
@@ -155,7 +158,7 @@ namespace MMOTFG_Bot
             await BattleSystem.NextAttack(chatId);
         }
 
-        public Dictionary<string, object> GetSerializable()
+        public virtual Dictionary<string, object> GetSerializable()
         {
             Dictionary<string, object> battlerInfo = new Dictionary<string, object>();
 
@@ -205,15 +208,11 @@ namespace MMOTFG_Bot
             battlerInfo.Add(DbConstants.BATTLER_FIELD_IS_PLAYER, isPlayer);
 
             battlerInfo.Add(DbConstants.BATTLER_FIELD_TURN_OVER, turnOver);
-
-            battlerInfo.Add(DbConstants.BATTLER_FIELD_EXPERIENCE, experience);
-
-            battlerInfo.Add(DbConstants.BATTLER_FIELD_LEVEL, level);
-
+                    
             return battlerInfo;
         }
 
-        public void LoadSerializable(Dictionary<string, object> eInfo)
+        public virtual void LoadSerializable(Dictionary<string, object> eInfo)
         {
             Dictionary<string, object> statsDB = (Dictionary<string, object>)eInfo[DbConstants.BATTLER_INFO_FIELD_CUR_STATS];
 
@@ -254,11 +253,7 @@ namespace MMOTFG_Bot
 
             isAlly = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_IS_ALLY]);
 
-            turnOver = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_TURN_OVER]);
-
-            experience = Convert.ToInt32(eInfo[DbConstants.BATTLER_FIELD_EXPERIENCE]);
-
-            level = Convert.ToInt32(eInfo[DbConstants.BATTLER_FIELD_LEVEL]);
+            turnOver = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_TURN_OVER]);            
         }
     }
 }

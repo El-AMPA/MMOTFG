@@ -11,7 +11,6 @@ namespace MMOTFG_Bot
     {
         private const int MAX_SLOTS_INVENTORY = 10;
         private static List<InventoryRecord> InventoryRecords = new List<InventoryRecord>();
-        private static Dictionary<string, ObtainableItem> obtainableItems = new Dictionary<string, ObtainableItem>();
         private static EquipableItem[] equipment;
         private static string currentChatid = "";
 
@@ -19,59 +18,6 @@ namespace MMOTFG_Bot
         {
             //TO-DO: ESTO ES FEO DE COJONES ME ESTOY MURIENDO DE VERLO
             equipment = new EquipableItem[Enum.GetNames(typeof(EQUIPMENT_SLOT)).Length];
-
-            HealthPotion hPotion = new HealthPotion();
-            hPotion.Init();
-
-            ManaPotion mPotion = new ManaPotion();
-            mPotion.Init();
-
-            ThunderfuryBleesedBladeOfTheWindseeker tFury = new ThunderfuryBleesedBladeOfTheWindseeker();
-            tFury.Init();
-
-            SulfurasHandOfRagnaros hRag = new SulfurasHandOfRagnaros();
-            hRag.Init();
-
-            CamisetaDeEvangelion camisetaEvangelion = new CamisetaDeEvangelion();
-            camisetaEvangelion.Init();
-
-            JoyConConDrift joyCon = new JoyConConDrift();
-            joyCon.Init();
-
-            VaquerosNormales vaqueros = new VaquerosNormales();
-            vaqueros.Init();
-
-            ZapatillasGastadas zapas = new ZapatillasGastadas();
-            zapas.Init();
-
-            CollarDeJorge collarJorge = new CollarDeJorge();
-            collarJorge.Init();
-
-            Tatirana rana = new Tatirana();
-            rana.Init();
-
-            Torch torch = new Torch();
-            torch.Init();
-
-            BeastSlayingBoots boots = new BeastSlayingBoots();
-            boots.Init();
-
-            MochilaLoona cap = new MochilaLoona();
-            cap.Init();
-
-            obtainableItems.Add(hPotion.name, hPotion);
-            obtainableItems.Add(mPotion.name, mPotion);
-            obtainableItems.Add(tFury.name, tFury);
-            obtainableItems.Add(hRag.name, hRag);
-            obtainableItems.Add(camisetaEvangelion.name, camisetaEvangelion);
-            obtainableItems.Add(joyCon.name, joyCon);
-            obtainableItems.Add(vaqueros.name, vaqueros);
-            obtainableItems.Add(zapas.name, zapas);
-            obtainableItems.Add(collarJorge.name, collarJorge);
-            obtainableItems.Add(rana.name, rana);
-            obtainableItems.Add(torch.name, torch);
-            obtainableItems.Add(boots.name, boots);
-            obtainableItems.Add(cap.name, cap);
         }
 
         /// <summary>
@@ -177,7 +123,8 @@ namespace MMOTFG_Bot
         //traducirlo aquí
         public static bool StringToItem(string s, out ObtainableItem item)
         {
-            return obtainableItems.TryGetValue(s, out item);
+            item = JSONSystem.GetItem(s);
+            return item != null;
         }
 
         public static bool StringToEquipmentSlot(string s, out EQUIPMENT_SLOT slot)
@@ -292,7 +239,7 @@ namespace MMOTFG_Bot
                     {
                         for (int k = 0; k < quantityToConsumeToStack; k++)
                         {
-                            item.ProcessCommand(command, chatId, args);
+                            await item.ProcessCommand(command, chatId, args);
                         }
                     }
                     inventoryRecord.AddToQuantity(-quantityToConsumeToStack);
@@ -446,9 +393,9 @@ namespace MMOTFG_Bot
                     {
                         foreach (var stat in item.statModifiers)
                         {
-                            msg += "\n" + stat.Item2 + " ";
-                            if (stat.Item1 >= 0) msg += "-" + stat.Item1;
-                            else msg += "+" + Math.Abs(stat.Item1);
+                            msg += "\n" + stat.Key + " ";
+                            if (stat.Value >= 0) msg += "-" + stat.Value;
+                            else msg += "+" + Math.Abs(stat.Value);
                         }
                     }
                     await TelegramCommunicator.SendText(chatId, msg);
@@ -528,9 +475,9 @@ namespace MMOTFG_Bot
                         {
                             foreach (var stat in item.statModifiers)
                             {
-                                msg += "\n" + stat.Item2 + " ";
-                                if (stat.Item1 >= 0) msg += "+" + stat.Item1;
-                                else msg += stat.Item1;
+                                msg += "\n" + stat.Key + " ";
+                                if (stat.Value >= 0) msg += "+" + stat.Value;
+                                else msg += stat.Value;
                             }
                         }
                         await TelegramCommunicator.SendText(chatId, msg);
@@ -554,34 +501,20 @@ namespace MMOTFG_Bot
         {            
             EquipableItem oldItem = equipment[(int)newItem.gearSlot];
             string msg = "You've swapped " + oldItem.name + " for " + newItem.name;
-            List<(int, StatName)> auxChanges = new List<(int, StatName)>();
+            Dictionary<StatName, int> auxChanges = oldItem.statModifiers.ToDictionary(x => x.Key, x => -x.Value);
 
-            for (int k = 0; k < oldItem.statModifiers.Count; k++)
+            foreach (StatName sn in newItem.statModifiers.Keys)
             {
-                auxChanges.Add((-oldItem.statModifiers[k].Item1, oldItem.statModifiers[k].Item2));
-            }
-
-            foreach (var statsNewItem in newItem.statModifiers)
-            {
-                bool found = false;
-                for (int k = 0; k < oldItem.statModifiers.Count && !found; k++)
-                {
-                    //If both items change the same stat
-                    if (statsNewItem.Item2 == oldItem.statModifiers[k].Item2)
-                    {
-                        auxChanges[k] = (statsNewItem.Item1 - oldItem.statModifiers[k].Item1, oldItem.statModifiers[k].Item2);
-                        found = true;
-                    }
-                }
-                //NewItem modifies stats that OldItem doesn't modify
-                if (!found) auxChanges.Add(statsNewItem);
+                if (oldItem.statModifiers.ContainsKey(sn))
+                    auxChanges[sn] += newItem.statModifiers[sn];
+                else auxChanges.Add(sn, newItem.statModifiers[sn]);
             }
 
             foreach (var stat in auxChanges)
             {
-                msg += "\n" + stat.Item2 + " ";
-                if (stat.Item1 >= 0) msg += "+" + stat.Item1;
-                else msg += stat.Item1;
+                msg += "\n" + stat.Key + " ";
+                if (stat.Value >= 0) msg += "+" + stat.Value;
+                else msg += stat.Value;
             }
             await TelegramCommunicator.SendText(chatId, msg);
 
