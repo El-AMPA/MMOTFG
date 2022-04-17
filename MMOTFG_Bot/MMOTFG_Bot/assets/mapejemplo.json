@@ -37,7 +37,7 @@
         "TriggerCondition": "TorchLit AND !TorchFound" 
       },
       {
-        "EventType": "eSetCondition",
+        "EventType": "eSetFlag",
         "Name": "TorchFound",
         "SetAs": "True",
         "TriggerCondition": "!TorchFound"
@@ -75,8 +75,8 @@
     "OnArriveEvent": [
       {
         "EventType":"eSendText",
-        "Description":"God damn. I can't se nothing around here. Maybe I should return and inspect the entrance.",
-        "TriggerCondition":"TorchLit"
+        "Description":"God damn. I can't see nothing around here. Maybe I should return and inspect the entrance.",
+        "TriggerCondition":"!TorchLit"
       },
       {
         "EventType":"eSendText",

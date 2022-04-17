@@ -10,7 +10,7 @@ namespace MMOTFG_Bot.Events
     /// </summary>
     class eLearnAttack : Event
     {
-        public Attack attack;
+        public string attack;
 
         public async override Task Execute(string chatId)
         {

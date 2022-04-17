@@ -11,9 +11,13 @@ namespace MMOTFG_Bot
     {
         private static List<Battler> enemies;
         private static Player player;
+        private static List<Attack> attacks;
+        private static List<ObtainableItem> items;
 
-        public static void Init(string enemyPath, string playerPath)
+        public static void Init(string enemyPath, string playerPath, string attackPath, string itemPath)
         {
+            ReadAttacksFromJSON(attackPath);
+            ReadItemsFromJSON(itemPath);
             ReadEnemiesFromJSON(enemyPath);
             ReadPlayerFromJSON(playerPath);
         }
@@ -65,7 +69,6 @@ namespace MMOTFG_Bot
                 player = JsonConvert.DeserializeObject<Player>(playerText,
                     new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate }); //Deserializes the .json file into a player
                 player.OnCreate();
-                player.AfterCreate();
             }
             catch (JsonException e)
             {
@@ -74,20 +77,89 @@ namespace MMOTFG_Bot
             }
         }
 
-        public static Battler getEnemy(string name)
+        private static void ReadAttacksFromJSON(string path)
         {
-            Battler e = enemies.Find(x => x.name == name);
+            string attackText = ""; //Text of the entire .json file
+            try
+            {
+                attackText = File.ReadAllText(path, Encoding.GetEncoding("iso-8859-1")); //This encoding supports spanish characters "ñ, á ..."
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("ERROR: attacks.json couldn't be found in assets folder.");
+                Environment.Exit(-1);
+            }
+
+            try
+            {
+                attacks = JsonConvert.DeserializeObject<List<Attack>>(attackText,
+                    new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate }); //Deserializes the .json file into a list of attacks
+            }
+            catch (JsonException e)
+            {
+                Console.WriteLine("ERROR: attacks.json isn't formatted correctly. \nError message:" + e.Message);
+                Environment.Exit(-1);
+            }
+        }
+
+        private static void ReadItemsFromJSON(string path)
+        {
+            string itemText = ""; //Text of the entire .json file
+            try
+            {
+                itemText = File.ReadAllText(path, Encoding.GetEncoding("iso-8859-1")); //This encoding supports spanish characters "ñ, á ..."
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("ERROR: items.json couldn't be found in assets folder.");
+                Environment.Exit(-1);
+            }
+
+            try
+            {
+                items = JsonConvert.DeserializeObject<List<ObtainableItem>>(itemText,
+                    new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate }); //Deserializes the .json file into a list of items
+                foreach (ObtainableItem i in items) i.OnCreate();
+            }
+            catch (JsonException e)
+            {
+                Console.WriteLine("ERROR: items.json isn't formatted correctly. \nError message:" + e.Message);
+                Environment.Exit(-1);
+            }
+        }
+
+        public static Battler GetEnemy(string name)
+        {
+            Battler e = enemies.FirstOrDefault(x => x.name == name);
             if (e != null)
             {
                 e.New();
                 return e;
             }
-            else return enemies.First();
+            else return e;
         }
 
         public static Player GetPlayer()
         {
             return player;
+        }
+
+        public static Attack GetAttack(string name)
+        {
+            return attacks.FirstOrDefault(x => x.name == name);
+        }
+
+        public static ObtainableItem GetItem(string name)
+        {
+            return items.FirstOrDefault(x => x.name == name);
+        }
+
+        public static List<string> GetAllAttackNames()
+        {
+            List<string> an = new List<string>();
+            foreach (Attack a in attacks) an.Add(a.name);
+            an.Add("skip");
+            return an;
         }
     }
 }

@@ -20,12 +20,11 @@ namespace MMOTFG_Bot
 		private static bool processedNewEvents = false;
 		private static long launchTime;
 		static cHelp helpCommand = new cHelp();
-		static cAttack attackCommand = new cAttack();
 		static cCreateCharacter createCommand = new cCreateCharacter();
 
-		public static List<ICommand> commandList = new List<ICommand> { new cDeleteCharacter(), new cDebug(), createCommand, new cUseItem(), new cAddItem(), new cThrowItem(),
-			new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
-			new cNavigate(), new cDirections(), new cInspectRoom(), helpCommand,
+		public static List<ICommand> commandList = new List<ICommand> { new cDeleteCharacter(), new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
+            new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
+			new cNavigate(), new cDirections(), new cInspectRoom(), new cAttack(), helpCommand,
 			new cCreateParty(), new cJoinParty(), new cExitParty(), new cShowParty(), new cGiveItem()};
 
 		static async Task Main(string[] args)
@@ -61,7 +60,7 @@ namespace MMOTFG_Bot
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
 			Map.Init("assets/map.json", "assets/directionSynonyms.json");
-			JSONSystem.Init("assets/enemies.json", "assets/player.json");
+			JSONSystem.Init("assets/enemies.json", "assets/player.json", "assets/attacks.json", "assets/items.json");
 			BattleSystem.Init();
 			DatabaseManager.Init();
 			foreach (ICommand c in commandList)
@@ -69,12 +68,8 @@ namespace MMOTFG_Bot
 				c.SetKeywords();
 				c.SetDescription();
 			}
+			createCommand.SetKeywords();
 			helpCommand.setCommandList(new List<ICommand>(commandList));
-
-			//set attack keywords
-			attackCommand.SetKeywords(JSONSystem.GetPlayer().attackNames.ConvertAll(s => s.ToLower()).ToArray());
-			attackCommand.SetDescription();
-			commandList.Add(attackCommand);
 
 			Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);
 
@@ -88,11 +83,6 @@ namespace MMOTFG_Bot
 			Thread.Sleep(Timeout.Infinite);
 
 			cts.Cancel();
-		}
-
-		public static void SetAttackKeywords(List<string> keywords)
-		{
-			attackCommand.SetKeywords(keywords.ConvertAll(s => s.ToLower()).ToArray());
 		}
 
 		static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using static MMOTFG_Bot.StatName;
+using System.Linq;
 using System.Threading.Tasks;
+using static MMOTFG_Bot.StatName;
 using System.Linq;
 
 namespace MMOTFG_Bot
@@ -29,6 +29,7 @@ namespace MMOTFG_Bot
             Dictionary<string, object> update = new Dictionary<string, object>();
 
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_ACTIVE, battleActive);
+            update.Add(DbConstants.PLAYER_FIELD_BATTLE_PAUSED, battlePaused);
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_INFO, player.GetSerializable());
             if (!battleActive)
             {
@@ -61,6 +62,8 @@ namespace MMOTFG_Bot
 
             if (!battleActive) return;
 
+            battlePaused = (bool)dbPlayer[DbConstants.PLAYER_FIELD_BATTLE_PAUSED];
+
             List<object> dbBattlers = (List<object>)dbPlayer[DbConstants.PLAYER_FIELD_BATTLER_LIST];
 
             battlers = new List<Battler>() { player };
@@ -81,7 +84,7 @@ namespace MMOTFG_Bot
                 else
                 {
                     string enemyName = (string)o[DbConstants.BATTLER_FIELD_NAME];
-                    b = JSONSystem.getEnemy(enemyName);
+                    b = JSONSystem.GetEnemy(enemyName);
                 }
                 b.LoadSerializable(o);
                 battlers.Add(b);
@@ -193,6 +196,7 @@ namespace MMOTFG_Bot
                     List<Battler> aliveOtherSide = otherSide.Where(x => x.GetStat(HP) > 0).ToList();
                     target = aliveOtherSide[RNG.Next(0, aliveOtherSide.Count)];
                 }
+                await SavePlayerBattle(chatId);
                 await UseAttack(chatId, a, b, target);
             }
             //if the battler is a player
@@ -200,17 +204,18 @@ namespace MMOTFG_Bot
             {
                 Player p = b as Player;
                 p.upNext = true;
+                await SavePlayerBattle(chatId);
                 await SetPlayerOptions(chatId, "Your turn");
             }
         }
 
         public static async Task SetPlayerOptions(string chatId, string text)
         {
-            await TelegramCommunicator.SendButtons(chatId, text, player.attackNames.ToArray());
+            await TelegramCommunicator.SendButtons(chatId, text, player.attacks);
         }
 
         public static async Task PlayerAttack(string chatId, string attackName, string targetName = null)
-        {            
+        {
             if (!battleActive)
             {
                 await TelegramCommunicator.SendText(chatId, "No battle currently active");
@@ -221,14 +226,12 @@ namespace MMOTFG_Bot
                 await TelegramCommunicator.SendText(chatId, "Not your turn");
                 return;
             }
-            attackName = char.ToUpper(attackName[0]) + attackName.Substring(1);
-            int atkNum = player.attackNames.IndexOf(attackName);
-            if (atkNum == -1)
+            Attack attack = player.GetAttack(attackName);
+            if (attack == null)
             {
                 await TelegramCommunicator.SendText(chatId, "Invalid attack");
                 return;
             }
-            Attack attack = player.attacks[atkNum];
             if (attack.mpCost > player.GetStat(MP))
             {
                 await TelegramCommunicator.SendText(chatId, "Not enough MP for that attack");
@@ -259,7 +262,7 @@ namespace MMOTFG_Bot
                     {
                         List<string> targetNames = new List<string>();
                         foreach (Battler b in otherAliveBattlers) targetNames.Add($"{attack.name} {b.name}");
-                        await TelegramCommunicator.SendButtons(chatId, message, targetNames.ToArray());
+                        await TelegramCommunicator.SendButtons(chatId, message, targetNames);
                         //Program.SetAttackKeywords(targetNames);
                         return;
                     }
@@ -338,6 +341,7 @@ namespace MMOTFG_Bot
         public static async Task ResumeBattle(string chatId)
         {
             battlePaused = false;
+            await SavePlayerBattle(chatId);
             if (battleActive) await NextAttack(chatId);
         }
 

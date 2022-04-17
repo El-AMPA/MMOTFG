@@ -24,7 +24,14 @@ namespace MMOTFG_Bot
 		readonly public static string PLAYER_ISINPARTY_FLAG = "is_in_party";
 		readonly public static string PLAYER_PARTY_CODE = "player_party_code";
 		readonly public static string PLAYER_FIELD_BATTLER_LIST = "battler";
-		readonly public static string PLAYER_FIELD_FLAGS = "flags";		
+		readonly public static string PLAYER_FIELD_BATTLER_LIST = "battler";
+		readonly public static string PLAYER_FIELD_UP_NEXT = "up_next";
+		readonly public static string PLAYER_FIELD_LEVEL = "lvl";
+		readonly public static string PLAYER_FIELD_EXPERIENCE = "exp";
+		readonly public static string PLAYER_FIELD_ATTACKS = "attacks";
+		readonly public static string PLAYER_FIELD_LEARNING_ATTACK = "learning_attack";
+		readonly public static string PLAYER_FIELD_BATTLE_PAUSED = "battle_paused";
+		readonly public static string PLAYER_FIELD_FLAGS = "flags";
 
 		readonly public static string PARTY_FIELD_CODE = "party_code";
 		readonly public static string PARTY_FIELD_LEADER = "party_leaderId";
@@ -39,8 +46,6 @@ namespace MMOTFG_Bot
 		readonly public static string BATTLER_FIELD_ITEM_DROP_AMOUNT = "item_drop_amount";
 		readonly public static string BATTLER_FIELD_IS_ALLY = "is_ally";
 		readonly public static string BATTLER_FIELD_IS_PLAYER = "is_player";
-		readonly public static string BATTLER_FIELD_TURN_OVER = "turn_over";
-		readonly public static string BATTLER_FIELD_LEVEL = "lvl";
-		readonly public static string BATTLER_FIELD_EXPERIENCE = "exp";
+		readonly public static string BATTLER_FIELD_TURN_OVER = "turn_over";		
 	}
 }
