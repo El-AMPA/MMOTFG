@@ -51,17 +51,12 @@ namespace MMOTFG_Bot
             name = playerName;
         }
 
-        public void SetName(string playerName)
-        {
-            name = playerName;
-        }
-
         public Attack GetAttack(string name)
         {
             return attacks_.FirstOrDefault(x => x.name.ToLower() == name);
         }
 
-        public async Task GainExperience(long chatId, int exp)
+        public async Task GainExperience(string chatId, int exp)
         {
             if (level == levelUpRoadmap.maxLevel) return;
             experience += exp;
@@ -90,7 +85,7 @@ namespace MMOTFG_Bot
             }
         }
 
-        public async Task LearnAttack(long chatId, string attackName)
+        public async Task LearnAttack(string chatId, string attackName)
         {
             if (attacks_.Count == maxAttacks)
             {
@@ -114,7 +109,7 @@ namespace MMOTFG_Bot
             await BattleSystem.SavePlayerBattle(chatId);
         }
 
-        public async Task ForgetAttack(long chatId, string attackName)
+        public async Task ForgetAttack(string chatId, string attackName)
         {
             if (attackName == "skip")
             {
@@ -137,7 +132,7 @@ namespace MMOTFG_Bot
             }
         }
 
-        public async Task OnBattleOver(long chatId)
+        public async Task OnBattleOver(string chatId)
         {
             //reset stats to their original value
             for (int i = 0; i < Stats.statNum; i++)

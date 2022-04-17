@@ -117,12 +117,7 @@ namespace MMOTFG_Bot
             await StartBattle(chatId, new List<Battler> { eSide });
         }
 
-        public static async Task StartBattle(long chatId, Battler eSide)
-        {
-            await StartBattle(chatId, new List<Battler> { eSide });
-        }
-
-        public static async Task StartBattle(long chatId, List<Battler> eSide)
+        public static async Task StartBattle(string chatId, List<Battler> eSide)
         {
             enemySide = eSide;
             playerSide = new List<Battler>() { player };
@@ -166,7 +161,7 @@ namespace MMOTFG_Bot
             await NextAttack(chatId);
         }
 
-        public static async Task NextAttack(long chatId)
+        public static async Task NextAttack(string chatId)
         {
             if (!battleActive || battlePaused) return;
 
@@ -214,12 +209,12 @@ namespace MMOTFG_Bot
             }
         }
 
-        public static async Task SetPlayerOptions(long chatId, string text)
+        public static async Task SetPlayerOptions(string chatId, string text)
         {
             await TelegramCommunicator.SendButtons(chatId, text, player.attacks);
         }
 
-        public static async Task PlayerAttack(long chatId, string attackName, string targetName = null)
+        public static async Task PlayerAttack(string chatId, string attackName, string targetName = null)
         {
             if (!battleActive)
             {
@@ -335,14 +330,14 @@ namespace MMOTFG_Bot
         }
 
         //for instances where the battle needs to be paused (such as move learning)
-        public static async Task PauseBattle(long chatId)
+        public static async Task PauseBattle(string chatId)
         {
             await SavePlayerBattle(chatId);
             battlePaused = true;
         }
 
         //call only if battle has been paused
-        public static async Task ResumeBattle(long chatId)
+        public static async Task ResumeBattle(string chatId)
         {
             battlePaused = false;
             await SavePlayerBattle(chatId);

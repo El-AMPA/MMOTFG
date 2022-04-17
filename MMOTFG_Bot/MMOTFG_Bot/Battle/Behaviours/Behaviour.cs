@@ -27,11 +27,6 @@ namespace MMOTFG_Bot
 
         public string message;
 
-        //public void setParent(Battler b)
-        //{
-        //    user = b;
-        //}
-
         //returns true on success, false otherwise
         public virtual async Task<bool> Execute(string chatId, Battler user) { return true; }
     }

@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using MMOTFG_Bot.Events;
+using MMOTFG_Bot.Navigation;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
@@ -21,20 +23,29 @@ namespace MMOTFG_Bot.Items
             set;
         }
 
-        public virtual void OnEquip(string chatId, string[] args = null)
+        public List<Event> onEquipEvents;
+        public List<Event> onUnequipEvents;
+
+        public virtual async void OnEquip(string chatId, string[] args = null)
         {
             foreach (var stat in statModifiers)
             {
                 BattleSystem.player.AddToStat(stat.Key, stat.Value, changeMax: true, permanent: true);
             }
+
+            if(onEquipEvents != null)
+                foreach (Event e in onEquipEvents) await e.Execute(chatId);
         }
 
-        public virtual void OnUnequip(string chatId, string[] args = null)
+        public virtual async void OnUnequip(string chatId, string[] args = null)
         {
             foreach (var stat in statModifiers)
             {
                 BattleSystem.player.AddToStat(stat.Key, -stat.Value, changeMax: true, permanent: true);
             }
+
+            if (onUnequipEvents != null)
+                foreach (Event e in onUnequipEvents) await e.Execute(chatId);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace MMOTFG_Bot
             return false;
         }
 
-        public async Task<bool> ProcessCommand(string command, long chatId, string[] args = null)
+        public async Task<bool> ProcessCommand(string command, string chatId, string[] args = null)
         {
             foreach (KeyValuePair<string, Behaviour> a in key_words)
             {

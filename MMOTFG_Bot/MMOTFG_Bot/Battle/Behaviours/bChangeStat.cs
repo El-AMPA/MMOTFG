@@ -26,7 +26,7 @@ namespace MMOTFG_Bot
 
         public bool changeMax;
 
-        public override async Task<bool> Execute(long chatId, Battler user) {
+        public override async Task<bool> Execute(string chatId, Battler user) {
             if (threshold == 0 || (user.GetStat(statToDepend) / user.GetMaxStat(statToDepend)) <= threshold)
             {
                 if (multiple == 0) user.AddToStat(statToChange, change, changeMax);

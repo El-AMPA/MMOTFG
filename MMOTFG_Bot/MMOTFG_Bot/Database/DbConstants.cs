@@ -29,6 +29,7 @@ namespace MMOTFG_Bot
 		readonly public static string PLAYER_FIELD_ATTACKS = "attacks";
 		readonly public static string PLAYER_FIELD_LEARNING_ATTACK = "learning_attack";
 		readonly public static string PLAYER_FIELD_BATTLE_PAUSED = "battle_paused";
+		readonly public static string PLAYER_FIELD_FLAGS = "flags";
 
 		readonly public static string BATTLER_INFO_FIELD_CUR_STATS = "cur_stats";
 		readonly public static string BATTLER_INFO_FIELD_OG_STATS = "og_stats";

@@ -116,5 +116,46 @@
     "StatModifiers": {
       "MP": 10
     }
+  },
+  {
+    "ItemType": "EquipableItem",
+    "Name": "beast_slaying_boots",
+    "GearSlot": "FEET",
+    "StatModifiers": {
+      "ATK": 30,
+      "HP": 100
+    }
+  },
+  {
+    "ItemType": "EquipableItem",
+    "Name": "mochila_loona",
+    "GearSlot": "BACK",
+    "StatModifiers": {
+      "MP": 20,
+      "HP": 15
+    }
+  },
+  {
+    "ItemType": "EquipableItem",
+    "Name": "torch",
+    "GearSlot": "CHEST",
+    "StatModifiers": {
+      "ATK": -2,
+      "MP": 10
+    },
+    "OnEquipEvents": [
+      {
+        "EventType": "eSetFlag",
+        "Name": "TorchLit",
+        "SetAs": true
+      }
+    ],
+    "OnUnequipEvents": [
+      {
+        "EventType": "eSetFlag",
+        "Name": "TorchLit",
+        "SetAs": false
+      }
+    ]
   }
 ]
