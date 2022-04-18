@@ -114,7 +114,7 @@ namespace MMOTFG_Bot
             else return e;
         }
 
-        public static Player GetPlayer()
+        public static Player GetDefaultPlayer()
         {
             Player player = null;
             string playerText = ""; //Text of the entire .json file

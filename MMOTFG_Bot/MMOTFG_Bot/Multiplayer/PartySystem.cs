@@ -169,6 +169,7 @@ namespace MMOTFG_Bot
 		public static async Task<bool> IsLeader(string chatId)
         {
 			bool isInParty = await IsInParty(chatId);
+			if (!isInParty) return false;
 			string code = await GetPartyCode(chatId);
 
 			var party = await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES);

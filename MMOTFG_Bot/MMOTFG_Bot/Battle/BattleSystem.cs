@@ -3,15 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using static MMOTFG_Bot.StatName;
-using System.Linq;
 
 namespace MMOTFG_Bot
 {
     static class BattleSystem
     {
-        public static Player player;
-        //public static Enemy enemy;
-
         public static List<Battler> battlers;
         public static List<Battler> playerSide;
         public static List<Battler> enemySide;
@@ -23,7 +19,7 @@ namespace MMOTFG_Bot
         {
         }
 
-        public static async Task SavePlayerBattle(string chatId)
+        public static async Task SavePlayerBattle(string chatId, Player player)
         {
             Dictionary<string, object> update = new Dictionary<string, object>();
 
@@ -92,12 +88,12 @@ namespace MMOTFG_Bot
             }
         }
 
-        public static async Task CreatePlayerBattle(string chatId)
+        public static async Task CreatePlayerBattleData(string chatId)
         {
             Dictionary<string, object> update = new Dictionary<string, object>();
 
             //Creamos un jugador nuevo con la info del json
-            player = JSONSystem.GetPlayer();
+            player = JSONSystem.GetDefaultPlayer();
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_ACTIVE, false);
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_INFO, player.GetSerializable());
             update.Add(DbConstants.PLAYER_FIELD_BATTLER_LIST, null);
@@ -107,18 +103,15 @@ namespace MMOTFG_Bot
 
         public static async Task<bool> IsPlayerInBattle(string chatId)
         {
-            //await LoadPlayerBattle(chatId);
-            //return battleActive;
-
             return (bool)await DatabaseManager.GetFieldFromDocument(DbConstants.PLAYER_FIELD_BATTLE_ACTIVE, chatId, DbConstants.COLLEC_PLAYERS);
         }
 
         public static async Task StartBattle(string chatId, Battler eSide)
         {
-            await StartBattle(chatId, new List<Battler> { eSide });
+            await StartBattle(new List<string>() { chatId }, new List<Battler> { eSide });
         }
 
-        public static async Task StartBattle(string chatId, List<Battler> eSide)
+        public static async Task StartBattle(List<string> chatId, List<Battler> eSide)
         {
             enemySide = eSide;
             playerSide = new List<Battler>() { player };
@@ -334,16 +327,15 @@ namespace MMOTFG_Bot
         //for instances where the battle needs to be paused (such as move learning)
         public static async Task PauseBattle(string chatId)
         {
-            await SavePlayerBattle(chatId);
-            battlePaused = true;
+            await DatabaseManager.ModifyFieldOfDocument(DbConstants.PLAYER_FIELD_BATTLE_PAUSED, true, chatId, DbConstants.COLLEC_PLAYERS);
         }
 
         //call only if battle has been paused
         public static async Task ResumeBattle(string chatId)
         {
-            battlePaused = false;
-            await SavePlayerBattle(chatId);
-            if (battleActive) await NextAttack(chatId);
+            await DatabaseManager.ModifyFieldOfDocument(DbConstants.PLAYER_FIELD_BATTLE_PAUSED, false, chatId, DbConstants.COLLEC_PLAYERS);
+            var playerInfo = await DatabaseManager.GetDocument(chatId, DbConstants.COLLEC_PLAYERS);
+            if ((bool)playerInfo[DbConstants.PLAYER_FIELD_BATTLE_ACTIVE]) await NextAttack(chatId);
         }
 
         private static string GetStatBar(Battler b, StatName s)
@@ -358,10 +350,11 @@ namespace MMOTFG_Bot
             return bar;
         }
 
-        public static async Task changePlayerStats(string chatId, StatName stat, float amount)
+        public static async Task ChangePlayerStats(string chatId, StatName stat, float amount)
         {
+            Player player = await GetPlayer(chatId);
             player.AddToStat(stat, amount);
-            await SavePlayerBattle(chatId);
+            await SavePlayerBattle(chatId, player);
         }
 
         public static async Task ShowStatus(string chatId, Battler b, string statusId = null)
@@ -384,6 +377,14 @@ namespace MMOTFG_Bot
             }
 
             await TelegramCommunicator.SendText(chatId, s);
+        }
+
+        private static async Task<Player> GetPlayer(string chatId)
+        {
+            Player player = new Player();
+            var info = await DatabaseManager.GetFieldFromDocument(DbConstants.PLAYER_FIELD_BATTLE_INFO, chatId, DbConstants.COLLEC_PLAYERS);
+            player.LoadSerializable((Dictionary<string, object>)info);
+            return player;
         }
     }
 }
