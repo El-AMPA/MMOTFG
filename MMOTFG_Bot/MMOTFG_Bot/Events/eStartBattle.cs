@@ -26,12 +26,13 @@ namespace MMOTFG_Bot.Events
 
             List<string> chatIds = new List<string>();
 
+            chatIds.Add(chatId);
             if (isLeader)
             {
                 string partyCode = await PartySystem.GetPartyCode(chatId);
                 foreach (string id in await PartySystem.GetPartyMembers(partyCode))
                     chatIds.Add(id);
-            } else chatIds.Add(chatId);
+            }
 
             await BattleSystem.StartBattle(chatIds, enemies);
         }

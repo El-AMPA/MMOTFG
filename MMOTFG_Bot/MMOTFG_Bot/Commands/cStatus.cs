@@ -24,7 +24,7 @@ use: stats";
         {
             if (args.Length == 0)
             {
-                await BattleSystem.ShowStatus(chatId, BattleSystem.player);
+                await BattleSystem.ShowStatus(chatId);
                 await InventorySystem.ShowGear(chatId);
             }
             else
@@ -33,7 +33,7 @@ use: stats";
                 string friendId = await PartySystem.GetFriendId(chatId, args[0]);
                 if(friendId != null)
                 {
-                    await BattleSystem.ShowStatus(chatId, BattleSystem.player, friendId);
+                    await BattleSystem.ShowStatus(chatId, friendId);
                     await InventorySystem.ShowGear(chatId, friendId);
                 }
                 //else await BattleSystem.ShowStatus(chatId, BattleSystem.enemy);
