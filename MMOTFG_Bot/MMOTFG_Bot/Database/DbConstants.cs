@@ -36,6 +36,7 @@ namespace MMOTFG_Bot
 		readonly public static string PARTY_FIELD_LEADER = "party_leaderId";
 		readonly public static string PARTY_FIELD_MEMBERS = "party_members";
 		readonly public static string PARTY_FIELD_BATTLE_INFO = "party_battle_info";
+        readonly public static string PARTY_FIELD_WIPEOUT = "wipeout";
 
 		readonly public static string BATTLER_INFO_FIELD_CUR_STATS = "cur_stats";
 		readonly public static string BATTLER_INFO_FIELD_OG_STATS = "og_stats";

@@ -39,7 +39,7 @@ namespace MMOTFG_Bot.Navigation
                     List<object> players = new List<object>();
 					if (partyCode != null) { 
 						players = await PartySystem.GetPartyMembers(partyCode);
-						await PartySystem.BroadcastMessage("The leader has moved towards: " + dir, partyCode, chatId);
+                        await TelegramCommunicator.SendText(chatId, "The leader has moved towards: " + dir, true, chatId);
 					}
 					players.Add(chatId);
 
@@ -121,7 +121,7 @@ namespace MMOTFG_Bot.Navigation
 			await currentNode.OnInspect(chatId);
 			if (partyCode != null)
 			{
-				await PartySystem.BroadcastMessage("The leader has inspected the current room", partyCode, chatId);
+                await TelegramCommunicator.SendText(chatId, "The leader has inspected the current room", true, chatId);
 				List<object> members = await PartySystem.GetPartyMembers(partyCode);
 				foreach (string id in members) await currentNode.OnInspect(id);
 			}

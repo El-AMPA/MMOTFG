@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace MMOTFG_Bot
 {
@@ -60,8 +61,7 @@ namespace MMOTFG_Bot
 			await AddPartyMember(code, chatId);
 			await SetPlayerInParty(chatId, code);
 			await TelegramCommunicator.SendText(chatId, "You have joined the party with code " + code);
-			string name = await GetPlayerName(chatId);
-			await BroadcastMessage(name + " has joined the party!", code, chatId);
+			await TelegramCommunicator.SendText(chatId, await GetPlayerName(chatId) + " has joined the party!", true, chatId);
 		}
 
 		public static async Task<List<object>> GetPartyMembers(string code, bool includesLeader = false)
@@ -111,14 +111,14 @@ namespace MMOTFG_Bot
 
             if (!isLeader)
             {
+				await TelegramCommunicator.SendText(chatId, playerName + " has left the party.", true, chatId);
 				await RemovePartyMember(code, chatId);
-				await BroadcastMessage(playerName + " has left the party.", code);
 				await SetPlayerOutOfParty(chatId);
 				await TelegramCommunicator.SendText(chatId, "You have left the party.");
             }
             else
             {
-				await BroadcastMessage("The leader exited the party. The party has been deleted", code, chatId);
+				await TelegramCommunicator.SendText(chatId, "The leader exited the party. The party has been deleted", true);
 				await DeleteParty(code);
 				await TelegramCommunicator.SendText(chatId, "Your party has been deleted");
 				
@@ -153,6 +153,11 @@ namespace MMOTFG_Bot
 
 			await TelegramCommunicator.SendText(chatId, partyInfo);
 		}
+
+		//public static async Task<string> GetLeaderId(string code)
+  //      {
+		//	return (string)(await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES))[DbConstants.PARTY_FIELD_LEADER];
+  //      }
 
 		/// <summary>
 		/// Returns the code of the player's party.
@@ -261,24 +266,17 @@ namespace MMOTFG_Bot
 			await DatabaseManager.ModifyDocumentFromCollection(partyInfo, chatId, DbConstants.COLLEC_PLAYERS);
 		}
 
-		/// <summary>
-		/// Sends a message to everyone in the party. If a chatId is specified, the method will not send the message to said user.
-		/// </summary>
-		/// <param name="message">Message to be broadcasted</param>
-		/// <param name="code">Code of the party</param>
-		/// <param name="chatId">Id of the sender</param>
-		/// <returns></returns>
-		public static async Task BroadcastMessage(string message, string code, string chatId = null)
+		public static async Task<bool> IsPartyWipedOut(string code)
         {
-			var party = await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES);
+			return (bool)(await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES))[DbConstants.PARTY_FIELD_WIPEOUT];
+        }
 
-			List<object> members = (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
-			members.Add(party[DbConstants.PARTY_FIELD_LEADER]);
-
-			List<Task> tasks = new List<Task>();
-			foreach(string id in members)
-				if (id != chatId) tasks.Add(TelegramCommunicator.SendText(id, message));
-			await Task.WhenAll(tasks);
-		}
-	}
+		public static async Task WipeOutParty(string code, bool wipeout)
+        {
+            Dictionary<string, object> partyInfo = new Dictionary<string, object> {
+                { DbConstants.PARTY_FIELD_WIPEOUT, wipeout }
+            };
+            await DatabaseManager.ModifyDocumentFromCollection(partyInfo, code, DbConstants.COLLEC_PARTIES);
+        }
+    }
 }

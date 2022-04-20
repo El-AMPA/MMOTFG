@@ -100,8 +100,8 @@ namespace MMOTFG_Bot
                 learningAttack = null;
                 attacks_.Add(JSONSystem.GetAttack(attackName));
                 SetAttackNames();
-                if (!BattleSystem.battleActive) await TelegramCommunicator.RemoveReplyMarkup(chatId, $"Learnt {attackName}!");
-                else if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
+                await TelegramCommunicator.RemoveReplyMarkup(chatId, $"Learnt {attackName}!");
+                if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
             }
             //save move changes
             await BattleSystem.SavePlayerBattle(chatId);
@@ -112,8 +112,8 @@ namespace MMOTFG_Bot
             if (attackName == "skip")
             {
                 learningAttack = null;
-                if (!BattleSystem.battleActive) await TelegramCommunicator.RemoveReplyMarkup(chatId, "Skipped move learning");
-                else if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
+                await TelegramCommunicator.RemoveReplyMarkup(chatId, "Skipped move learning");
+                if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
                 return;
             }
             Attack atk = attacks_.FirstOrDefault(x => x.name.ToLower() == attackName);
@@ -134,16 +134,34 @@ namespace MMOTFG_Bot
             //reset stats to their original value
             for (int i = 0; i < Stats.statNum; i++)
             {
-                //(HP/MP only if player died)
-                if (!Stats.isBounded((StatName)i) || dead)
+                //(HP/MP not restored)
+                if (!Stats.isBounded((StatName)i))
                     stats[i] = originalStats[i];
-                if (dead)
+                maxStats[i] = originalStats[i];
+            }
+            if (dead)
+            {
+                bool inParty = await PartySystem.IsInParty(chatId);
+                string code = null;
+                if (inParty) code = await PartySystem.GetPartyCode(chatId);
+                //full wipeout
+                if (!inParty || await PartySystem.IsPartyWipedOut(code))
                 {
-                    maxStats[i] = originalStats[i];
+                    stats = (float[])originalStats.Clone();
+                    //return player to starting node
+                    await Map.SetPlayerPosition(chatId, 0);
+                    //restore party
+                    if (inParty) await PartySystem.WipeOutParty(code, false);
+                }
+                //in party but not full wipeout
+                else
+                {
+                    stats = (float[])originalStats.Clone();
+                    //1 HP and 1 MP
+                    stats[(int)StatName.HP] = 1;
+                    stats[(int)StatName.MP] = 1;
                 }
             }
-            //return player to starting node
-            if (dead) await Map.SetPlayerPosition(chatId, 0);
             dead = false;
         }
 
@@ -185,6 +203,11 @@ namespace MMOTFG_Bot
             upNext = Convert.ToBoolean(eInfo[DbConstants.PLAYER_FIELD_UP_NEXT]);
 
             learningAttack = eInfo[DbConstants.PLAYER_FIELD_LEARNING_ATTACK] as string;
+        }
+
+        public void LoadSerializableBase(Dictionary<string, object> eInfo)
+        {
+            base.LoadSerializable(eInfo);
         }
     }
 }

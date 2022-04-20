@@ -27,13 +27,20 @@ namespace MMOTFG_Bot
 		/// <summary>
 		/// Send a single image to a user. ImageCaption supports HTML formatting.
 		/// </summary>
-		public static async Task SendImage(string chatId, string imageName, string imageCaption = "")
+		public static async Task SendImage(string chatId, string imageName, bool broadcast = false, string imageCaption = "")
 		{
 			using (var stream = System.IO.File.OpenRead(assetsPath + imageName))
 			{
 				InputOnlineFile inputOnlineFile = new InputOnlineFile(stream);
 				//ImageCaption supports emojis! 👏👏
-				await botClient.SendPhotoAsync(chatId, inputOnlineFile, imageCaption, ParseMode.Html);
+				if (broadcast && await PartySystem.IsInParty(chatId))
+				{
+					List<Task> tasks = new List<Task>();
+					List<object> chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
+					foreach (string id in chatIds) tasks.Add(botClient.SendPhotoAsync(id, inputOnlineFile, imageCaption, ParseMode.Html));
+					await Task.WhenAll(tasks);
+				}
+				else await botClient.SendPhotoAsync(chatId, inputOnlineFile, imageCaption, ParseMode.Html);
 				stream.Close();
 			}
 		}
@@ -44,7 +51,7 @@ namespace MMOTFG_Bot
 		/// normal images do. You have to open the individual images of the collection to see the text. Not worth
 		/// the effort.
 		/// </summary>
-		static public async Task SendImageCollection(string chatId, string[] imagesNames)
+		static public async Task SendImageCollection(string chatId, string[] imagesNames, bool broadcast = false)
 		{
 			List<FileStream> streams = new List<FileStream>();
 			List<InputMediaPhoto> media = new List<InputMediaPhoto>();
@@ -55,7 +62,14 @@ namespace MMOTFG_Bot
 				media.Add(new InputMediaPhoto(new InputMedia(stream, imageName)));
 			}
 
-			await botClient.SendMediaGroupAsync(chatId, media);
+			if (broadcast && await PartySystem.IsInParty(chatId))
+			{
+				List<Task> tasks = new List<Task>();
+				List<object> chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
+				foreach (string id in chatIds) tasks.Add(botClient.SendMediaGroupAsync(id, media));
+				await Task.WhenAll(tasks);
+			}
+			else await botClient.SendMediaGroupAsync(chatId, media);
 
 			foreach (var stream in streams) stream.Close();
 		}
@@ -63,20 +77,34 @@ namespace MMOTFG_Bot
 		/// <summary>
 		/// Send an audio to a user. ImageCaption supports HTML formatting.
 		/// </summary>
-		static public async Task SendAudio(string chatId, string audioName, string audioCaption)
+		static public async Task SendAudio(string chatId, string audioName, string audioCaption, bool broadcast = false)
 		{
 			using (var stream = System.IO.File.OpenRead(assetsPath + audioName))
 			{
 				InputOnlineFile inputOnlineFile = new InputOnlineFile(stream);
 
-				await botClient.SendAudioAsync(chatId, inputOnlineFile, audioCaption, ParseMode.Html);
+				if (broadcast && await PartySystem.IsInParty(chatId))
+				{
+					List<Task> tasks = new List<Task>();
+					List<object> chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
+					foreach (string id in chatIds) tasks.Add(botClient.SendAudioAsync(id, inputOnlineFile, audioCaption, ParseMode.Html));
+					await Task.WhenAll(tasks);
+				}
+				else await botClient.SendAudioAsync(chatId, inputOnlineFile, audioCaption, ParseMode.Html);
 				stream.Close();
 			}
 		}
 
-		static public async Task SendText(string chatId, string text, ParseMode parseMode = ParseMode.Html)
+		static public async Task SendText(string chatId, string text, bool broadcast = false, string excludedId = null, ParseMode parseMode = ParseMode.Html)
         {
-			await botClient.SendTextMessageAsync(chatId, text, parseMode);
+			if(broadcast && await PartySystem.IsInParty(chatId))
+            {
+				List<Task> tasks = new List<Task>();
+				List<object> chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
+				foreach (string id in chatIds) if (excludedId != id) tasks.Add(botClient.SendTextMessageAsync(id, text));
+				await Task.WhenAll(tasks);
+            }
+			else await botClient.SendTextMessageAsync(chatId, text, parseMode);
         }
 
 		static public async Task SendButtons(string chatId, string text, List<string> buttonNames, int rows = 2, int columns = 2)
