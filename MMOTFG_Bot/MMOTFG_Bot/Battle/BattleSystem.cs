@@ -173,7 +173,7 @@ namespace MMOTFG_Bot
                     else caption += $", {b.name}";
                 }
 
-                await TelegramCommunicator.SendImageCollection(chatIds.First(), imageNames.ToArray());
+                await TelegramCommunicator.SendImageCollection(chatIds.First(), imageNames.ToArray(), true);
                 await TelegramCommunicator.SendText(chatIds.First(), caption, true);
             }
             //all battlers start being able to move
@@ -325,8 +325,6 @@ namespace MMOTFG_Bot
                 if (!target.isAlly)
                 {
                     string msg = $"{target.name} died!";
-                    if (target.droppedMoney > 0)
-                        msg += $"\nYou gained {target.droppedMoney}€";
                     if (target.droppedItem != null)
                     {
                         msg += $"\nYou obtained {target.droppedItem} x{target.droppedItemAmount}";
@@ -336,20 +334,22 @@ namespace MMOTFG_Bot
                     await TelegramCommunicator.SendText(chatId, msg, true);
                     if (target.experienceGiven != 0)
                     {
-                        if(partyCode != null)
+                        if (partyCode != null)
                             foreach (string id in await PartySystem.GetPartyMembers(partyCode, true))
                             {
                                 player = await GetPlayer(id);
                                 await player.GainExperience(id, target.experienceGiven);
-                            }                               
+                            }
                         else await player.GainExperience(chatId, target.experienceGiven);
                     }
                 }
+                else await TelegramCommunicator.SendText(chatId, $"{target.name} died!", true);
                 List<Battler> side = (target.isAlly) ? playerSide : enemySide;
                 //if entire side has been defeated, end battle
                 if (side.FirstOrDefault(x => x.GetStat(HP) > 0) == null)
                 {
                     battleActive = false;
+                    await PartySystem.WipeOutParty(partyCode, true);
                     if (partyCode != null)
                         foreach (string id in await PartySystem.GetPartyMembers(partyCode, true))
                         {

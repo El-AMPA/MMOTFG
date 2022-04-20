@@ -31,7 +31,6 @@ namespace MMOTFG_Bot
         public string imageName;
         public string imageCaption;
 
-        public float droppedMoney;
         public string droppedItem;
         [DefaultValue(1)]
         public int droppedItemAmount;
@@ -197,8 +196,6 @@ namespace MMOTFG_Bot
 
             battlerInfo.Add(DbConstants.BATTLER_FIELD_NAME, name);
 
-            battlerInfo.Add(DbConstants.BATTLER_FIELD_MONEY_DROP, droppedMoney);
-
             battlerInfo.Add(DbConstants.BATTLER_FIELD_ITEM_DROP, droppedItem);
 
             battlerInfo.Add(DbConstants.BATTLER_FIELD_ITEM_DROP_AMOUNT, droppedItemAmount);
@@ -246,7 +243,6 @@ namespace MMOTFG_Bot
 
             name = eInfo[DbConstants.BATTLER_FIELD_NAME].ToString();
 
-            droppedMoney = Convert.ToSingle(eInfo[DbConstants.BATTLER_FIELD_MONEY_DROP]);
             droppedItem = eInfo[DbConstants.BATTLER_FIELD_ITEM_DROP] as string;
 
             droppedItemAmount = Convert.ToInt32(eInfo[DbConstants.BATTLER_FIELD_ITEM_DROP_AMOUNT]);
