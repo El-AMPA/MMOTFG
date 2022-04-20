@@ -12,7 +12,6 @@ namespace MMOTFG_Bot
     {
         public override async Task<bool> Execute(string chatId, Battler user) {
             //Set player as dead
-            (user as Player).dead = true;
             return true;
         }
     }

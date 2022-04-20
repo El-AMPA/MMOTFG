@@ -63,11 +63,11 @@ namespace MMOTFG_Bot
 			}
 
 			if (broadcast && await PartySystem.IsInParty(chatId))
-			{
+			{ 
 				List<Task> tasks = new List<Task>();
 				List<object> chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
 				foreach (string id in chatIds) tasks.Add(botClient.SendMediaGroupAsync(id, media));
-				await Task.WhenAll(tasks);
+				//await Task.WhenAll(tasks);
 			}
 			else await botClient.SendMediaGroupAsync(chatId, media);
 

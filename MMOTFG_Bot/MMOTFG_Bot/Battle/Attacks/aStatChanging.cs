@@ -29,7 +29,7 @@ namespace MMOTFG_Bot
             string stat = statToChange.ToString();
             Battler tgt = affectsSelf ? user : target;
             string message = (multiple == 0) ? $"{tgt.name}'s {stat} was changed by {change}!" : $"{tgt.name}'s {stat} was multiplied by {multiple}!";
-            await TelegramCommunicator.SendText(chatId, message);
+            await TelegramCommunicator.SendText(chatId, message, true);
             if (multiple == 0) tgt.AddToStat(statToChange, change, changeMax);
             else tgt.MultiplyStat(statToChange, multiple, changeMax);
         }

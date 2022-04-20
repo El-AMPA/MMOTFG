@@ -348,28 +348,38 @@ namespace MMOTFG_Bot
                 //if entire side has been defeated, end battle
                 if (side.FirstOrDefault(x => x.GetStat(HP) > 0) == null)
                 {
+                    await SavePlayerBattle(chatId);
                     battleActive = false;
-                    await PartySystem.WipeOutParty(partyCode, true);
                     if (partyCode != null)
+                    {
+                        await PartySystem.WipeOutParty(partyCode, true);
+                        await TelegramCommunicator.SendText(chatId, "The whole party died! boo hoo", true);
                         foreach (string id in await PartySystem.GetPartyMembers(partyCode, true))
                         {
                             if (!battlePaused) await TelegramCommunicator.RemoveReplyMarkup(id, "Battle ends!");
                             player = await GetPlayer(id);
                             await player.OnBattleOver(id);
+                            await SavePlayerBattle(id);
                         }
+                        //restore party
+                        await PartySystem.WipeOutParty(partyCode, false);
+                    }                        
                     else
                     {
                         if (!battlePaused) await TelegramCommunicator.RemoveReplyMarkup(chatId, "Battle ends!");
                         await player.OnBattleOver(chatId);
+                        await SavePlayerBattle(chatId);
                     }
                 }
             }
             else
             {
                 await target.OnBehaviour(chatId, target.onHit);
-                if (damage != 0) message += $"\n{target.name} HP: {GetStatBar(target, HP)}";
+                if (damage != 0) message += $"\n{target.name} HP: \n{GetStatBar(target, HP)}";
                 await TelegramCommunicator.SendText(chatId, message, true);
             }
+
+            if(user == player) await TelegramCommunicator.RemoveReplyMarkup(chatId, "Turn over");
 
             await SavePlayerBattle(chatId);
             if (battleActive) await NextAttack(chatId);

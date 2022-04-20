@@ -13,7 +13,6 @@ namespace MMOTFG_Bot
         public LevelUpRoadmap levelUpRoadmap;
 
         public bool upNext;
-        public bool dead;
         [DefaultValue(4)]
         public int maxAttacks;
 
@@ -139,7 +138,7 @@ namespace MMOTFG_Bot
                     stats[i] = originalStats[i];
                 maxStats[i] = originalStats[i];
             }
-            if (dead)
+            if (stats[(int)StatName.HP] <= 0)
             {
                 bool inParty = await PartySystem.IsInParty(chatId);
                 string code = null;
@@ -150,8 +149,6 @@ namespace MMOTFG_Bot
                     stats = (float[])originalStats.Clone();
                     //return player to starting node
                     await Map.SetPlayerPosition(chatId, 0);
-                    //restore party
-                    if (inParty) await PartySystem.WipeOutParty(code, false);
                 }
                 //in party but not full wipeout
                 else
@@ -162,7 +159,6 @@ namespace MMOTFG_Bot
                     stats[(int)StatName.MP] = 1;
                 }
             }
-            dead = false;
         }
 
         public override Dictionary<string, object> GetSerializable()
