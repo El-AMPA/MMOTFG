@@ -49,7 +49,7 @@ namespace MMOTFG_Bot
         }
 
         //Gets a random attack the enemy has enough MP to use (basic attack should always cost 0 to avoid problems)
-        public Attack nextAttack()
+        public Attack NextAttack()
         {
             int i = attacks_.Count - 1;
             while (attacks_[i].mpCost > stats[(int)StatName.MP])
@@ -252,6 +252,7 @@ namespace MMOTFG_Bot
             droppedItemAmount = Convert.ToInt32(eInfo[DbConstants.BATTLER_FIELD_ITEM_DROP_AMOUNT]);
 
             isAlly = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_IS_ALLY]);
+            isPlayer = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_IS_PLAYER]);
 
             turnOver = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_TURN_OVER]);            
         }

@@ -29,15 +29,11 @@ use: stats";
             }
             else
             {
-                //Chequeamos si es alguien de la party
+                //If it's someone from your party the game shows their gear too
                 string friendId = await PartySystem.GetFriendId(chatId, args[0]);
-                if(friendId != null)
-                {
-                    await BattleSystem.ShowStatus(chatId, friendId);
-                    await InventorySystem.ShowGear(chatId, friendId);
-                }
-                //else await BattleSystem.ShowStatus(chatId, BattleSystem.enemy);
-            }            
+                await BattleSystem.ShowStatus(chatId, args[0]);
+                if (friendId != null) await InventorySystem.ShowGear(chatId, friendId);
+            }
         }
 
         internal override bool IsFormattedCorrectly(string[] args)

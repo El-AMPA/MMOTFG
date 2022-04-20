@@ -33,6 +33,8 @@ namespace MMOTFG_Bot
 				return;
 			}
 
+			await BattleSystem.CreatePartyBattleData(code);
+
 			await SetPlayerInParty(chatId, code);
 
 			await TelegramCommunicator.SendText(chatId, String.Format("The party with code {0} has been created!", code));
@@ -62,10 +64,12 @@ namespace MMOTFG_Bot
 			await BroadcastMessage(name + " has joined the party!", code, chatId);
 		}
 
-		public static async Task<List<object>> GetPartyMembers(string code)
+		public static async Task<List<object>> GetPartyMembers(string code, bool includesLeader = false)
         {
 			var party = await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES);
-			return (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
+			var partyIds = (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
+			if (includesLeader) partyIds.Add((string)party[DbConstants.PARTY_FIELD_LEADER]);
+			return partyIds;
 		}
 
 		static async Task AddPartyMember(string code, string chatId)
@@ -227,6 +231,12 @@ namespace MMOTFG_Bot
 			return (bool)player[DbConstants.PLAYER_ISINPARTY_FLAG];
 		}
 
+		public static async Task<bool> IsInParty(string playerName, string partyCode)
+        {
+			var player = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_NAME, playerName, DbConstants.COLLEC_PLAYERS);
+			return player != null && (bool)player[DbConstants.PLAYER_ISINPARTY_FLAG] && ((string)player[DbConstants.PLAYER_PARTY_CODE] == partyCode);
+		}
+
 		/// <summary>
 		/// Registers that the gicen player is in a party in the database.
 		/// </summary>
@@ -265,10 +275,10 @@ namespace MMOTFG_Bot
 			List<object> members = (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
 			members.Add(party[DbConstants.PARTY_FIELD_LEADER]);
 
+			List<Task> tasks = new List<Task>();
 			foreach(string id in members)
-            {
-				if (id != chatId) await TelegramCommunicator.SendText(id, message);
-            }
+				if (id != chatId) tasks.Add(TelegramCommunicator.SendText(id, message));
+			await Task.WhenAll(tasks);
 		}
 	}
 }

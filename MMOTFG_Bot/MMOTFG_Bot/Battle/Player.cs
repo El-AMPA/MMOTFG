@@ -100,8 +100,7 @@ namespace MMOTFG_Bot
                 learningAttack = null;
                 attacks_.Add(JSONSystem.GetAttack(attackName));
                 SetAttackNames();
-                await TelegramCommunicator.SendText(chatId, $"Learnt {attackName}!");
-                if (!BattleSystem.battleActive) await TelegramCommunicator.RemoveReplyMarkup(chatId);
+                if (!BattleSystem.battleActive) await TelegramCommunicator.RemoveReplyMarkup(chatId, $"Learnt {attackName}!");
                 else if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
             }
             //save move changes
@@ -113,8 +112,7 @@ namespace MMOTFG_Bot
             if (attackName == "skip")
             {
                 learningAttack = null;
-                await TelegramCommunicator.SendText(chatId, "Skipped move learning");
-                if (!BattleSystem.battleActive) await TelegramCommunicator.RemoveReplyMarkup(chatId);
+                if (!BattleSystem.battleActive) await TelegramCommunicator.RemoveReplyMarkup(chatId, "Skipped move learning");
                 else if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
                 return;
             }
@@ -184,7 +182,7 @@ namespace MMOTFG_Bot
 
             SetAttacks();
 
-            upNext = Convert.ToBoolean(eInfo[DbConstants.PLAYER_FIELD_LEVEL]);
+            upNext = Convert.ToBoolean(eInfo[DbConstants.PLAYER_FIELD_UP_NEXT]);
 
             learningAttack = eInfo[DbConstants.PLAYER_FIELD_LEARNING_ATTACK] as string;
         }

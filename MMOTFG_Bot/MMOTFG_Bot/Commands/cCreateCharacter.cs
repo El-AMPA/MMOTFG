@@ -29,8 +29,9 @@ Use: create [character name]";
 			string charName = args[0];
 
 			Dictionary<string,object>tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_NAME, charName, DbConstants.COLLEC_PLAYERS);
+			var enemy = JSONSystem.GetEnemy(charName);
 
-			if(tempDict != null)
+			if(tempDict != null || enemy != null)
 			{
 				await TelegramCommunicator.SendText(chatId, "That name is already in use");
 				return;

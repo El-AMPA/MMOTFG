@@ -95,9 +95,9 @@ namespace MMOTFG_Bot
 			await botClient.SendTextMessageAsync(chatId, text, replyMarkup: rkm);
 		}
 
-		static public async Task RemoveReplyMarkup(string chatId)
+		static public async Task RemoveReplyMarkup(string chatId, string message)
         {
-			await botClient.SendTextMessageAsync(chatId, "Battle ends!", replyMarkup: new ReplyKeyboardRemove());
+			await botClient.SendTextMessageAsync(chatId, message, replyMarkup: new ReplyKeyboardRemove());
         }
 	}
 }
