@@ -173,7 +173,7 @@ namespace MMOTFG_Bot
 
             playerInfo.Add(DbConstants.PLAYER_FIELD_ATTACKS, attacks);
 
-            playerInfo.Add(DbConstants.PLAYER_FIELD_UP_NEXT, upNext);
+            playerInfo.Add(DbConstants.BATTLE_UP_NEXT, upNext);
 
             playerInfo.Add(DbConstants.PLAYER_FIELD_LEARNING_ATTACK, learningAttack);
 
@@ -196,7 +196,7 @@ namespace MMOTFG_Bot
 
             SetAttacks();
 
-            upNext = Convert.ToBoolean(eInfo[DbConstants.PLAYER_FIELD_UP_NEXT]);
+            upNext = Convert.ToBoolean(eInfo[DbConstants.BATTLE_UP_NEXT]);
 
             learningAttack = eInfo[DbConstants.PLAYER_FIELD_LEARNING_ATTACK] as string;
         }

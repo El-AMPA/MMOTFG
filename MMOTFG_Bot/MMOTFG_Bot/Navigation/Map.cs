@@ -36,7 +36,7 @@ namespace MMOTFG_Bot.Navigation
                 //If currentNode doesn't have a connection in that direction, it doesn't move the player.
                 if (currentNode.GetConnectingNode(dir, out nextNode))
                 {
-                    List<object> players = new List<object>();
+                    List<string> players = new List<string>();
 					if (partyCode != null) { 
 						players = await PartySystem.GetPartyMembers(partyCode);
                         await TelegramCommunicator.SendText(chatId, "The leader has moved towards: " + dir, true, chatId);
@@ -122,7 +122,7 @@ namespace MMOTFG_Bot.Navigation
 			if (partyCode != null)
 			{
                 await TelegramCommunicator.SendText(chatId, "The leader has inspected the current room", true, chatId);
-				List<object> members = await PartySystem.GetPartyMembers(partyCode);
+				List<string> members = await PartySystem.GetPartyMembers(partyCode);
 				foreach (string id in members) await currentNode.OnInspect(id);
 			}
         }

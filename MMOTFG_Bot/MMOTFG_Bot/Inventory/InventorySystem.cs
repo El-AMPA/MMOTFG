@@ -244,7 +244,7 @@ namespace MMOTFG_Bot
                 //Couldn't consume every item.
             }
             //enemie's turn
-            if (playerInBattle) await BattleSystem.player.SkipTurn(chatId);
+            if (playerInBattle) await (await BattleSystem.GetPlayer(chatId)).SkipTurn(chatId);
 
             await SavePlayerInventory(chatId);
             return quantityToConsume - quantityToConsumeAux;

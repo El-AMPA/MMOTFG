@@ -35,10 +35,7 @@ namespace MMOTFG_Bot
         [DefaultValue(1)]
         public int droppedItemAmount;
         [DefaultValue(1)]
-        public int experienceGiven;
-
-        public bool isAlly;
-        public bool isPlayer;       
+        public int experienceGiven;     
 
         public Battler()
         {
@@ -200,10 +197,6 @@ namespace MMOTFG_Bot
 
             battlerInfo.Add(DbConstants.BATTLER_FIELD_ITEM_DROP_AMOUNT, droppedItemAmount);
 
-            battlerInfo.Add(DbConstants.BATTLER_FIELD_IS_ALLY, isAlly);
-
-            battlerInfo.Add(DbConstants.BATTLER_FIELD_IS_PLAYER, isPlayer);
-
             battlerInfo.Add(DbConstants.BATTLER_FIELD_TURN_OVER, turnOver);
                     
             return battlerInfo;
@@ -246,9 +239,6 @@ namespace MMOTFG_Bot
             droppedItem = eInfo[DbConstants.BATTLER_FIELD_ITEM_DROP] as string;
 
             droppedItemAmount = Convert.ToInt32(eInfo[DbConstants.BATTLER_FIELD_ITEM_DROP_AMOUNT]);
-
-            isAlly = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_IS_ALLY]);
-            isPlayer = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_IS_PLAYER]);
 
             turnOver = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_TURN_OVER]);            
         }

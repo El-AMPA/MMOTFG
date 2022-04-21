@@ -21,9 +21,10 @@ namespace MMOTFG_Bot.Commands
         internal override async Task Execute(string command, string chatId, string[] args = null)
         {
             await BattleSystem.LoadPlayerBattle(chatId);
-            if (BattleSystem.player.learningAttack != null)
+            Player p = await BattleSystem.GetPlayer(chatId);
+            if (p.learningAttack != null)
             {
-                await BattleSystem.player.ForgetAttack(chatId, command);
+                await p.ForgetAttack(chatId, command);
             }
             else
             {

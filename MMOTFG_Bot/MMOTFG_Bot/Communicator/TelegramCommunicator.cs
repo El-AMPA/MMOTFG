@@ -36,7 +36,7 @@ namespace MMOTFG_Bot
 				if (broadcast && await PartySystem.IsInParty(chatId))
 				{
 					List<Task> tasks = new List<Task>();
-					List<object> chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
+					List<string> chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
 					foreach (string id in chatIds) tasks.Add(botClient.SendPhotoAsync(id, inputOnlineFile, imageCaption, ParseMode.Html));
 					await Task.WhenAll(tasks);
 				}
@@ -65,7 +65,7 @@ namespace MMOTFG_Bot
 			if (broadcast && await PartySystem.IsInParty(chatId))
 			{ 
 				List<Task> tasks = new List<Task>();
-				List<object> chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
+				List<string> chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
 				foreach (string id in chatIds) tasks.Add(botClient.SendMediaGroupAsync(id, media));
 				//await Task.WhenAll(tasks);
 			}
@@ -86,7 +86,7 @@ namespace MMOTFG_Bot
 				if (broadcast && await PartySystem.IsInParty(chatId))
 				{
 					List<Task> tasks = new List<Task>();
-					List<object> chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
+					List<string> chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
 					foreach (string id in chatIds) tasks.Add(botClient.SendAudioAsync(id, inputOnlineFile, audioCaption, ParseMode.Html));
 					await Task.WhenAll(tasks);
 				}
@@ -100,7 +100,7 @@ namespace MMOTFG_Bot
 			if(broadcast && await PartySystem.IsInParty(chatId))
             {
 				List<Task> tasks = new List<Task>();
-				List<object> chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
+				List<string> chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
 				foreach (string id in chatIds) if (excludedId != id) tasks.Add(botClient.SendTextMessageAsync(id, text));
 				await Task.WhenAll(tasks);
             }

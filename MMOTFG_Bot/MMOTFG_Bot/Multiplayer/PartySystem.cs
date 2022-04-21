@@ -58,18 +58,24 @@ namespace MMOTFG_Bot
 				return;
 			}
 
+			if (await IsPartyBattling(code))
+			{
+				await TelegramCommunicator.SendText(chatId, "You can't enter the party in the middle of a battle!");
+				return;
+			}
+
 			await AddPartyMember(code, chatId);
 			await SetPlayerInParty(chatId, code);
 			await TelegramCommunicator.SendText(chatId, "You have joined the party with code " + code);
 			await TelegramCommunicator.SendText(chatId, await GetPlayerName(chatId) + " has joined the party!", true, chatId);
 		}
 
-		public static async Task<List<object>> GetPartyMembers(string code, bool includesLeader = false)
+		public static async Task<List<string>> GetPartyMembers(string code, bool includesLeader = false)
         {
 			var party = await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES);
 			var partyIds = (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
 			if (includesLeader) partyIds.Add((string)party[DbConstants.PARTY_FIELD_LEADER]);
-			return partyIds;
+			return partyIds.Select(s=>(string)s).ToList();
 		}
 
 		static async Task AddPartyMember(string code, string chatId)
@@ -96,6 +102,12 @@ namespace MMOTFG_Bot
 			await DatabaseManager.ModifyDocumentFromCollection(newMembersData, code, DbConstants.COLLEC_PARTIES);
 		}
 
+		static async Task<bool> IsPartyBattling(string c)
+        {
+			if (!await PartyExists(c)) return false;
+			return (bool)(await DatabaseManager.GetDocument(c, DbConstants.COLLEC_PARTIES))[DbConstants.BATTLE_ACTIVE];
+        }
+
 		public static async Task ExitParty(string chatId)
         {
 			bool isInParty = await IsInParty(chatId);
@@ -106,10 +118,20 @@ namespace MMOTFG_Bot
 			}
 
 			string code = await GetPartyCode(chatId);
+
+			if (await IsPartyBattling(code))
+            {
+				await TelegramCommunicator.SendText(chatId, "You can't exit the party in the middle of a battle!");
+				return;
+            }
+
 			string playerName = await GetPlayerName(chatId);
 			bool isLeader = await IsLeader(chatId);
 
-            if (!isLeader)
+			var battlerInfo = (Dictionary<string, object>)(await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES))[DbConstants.PARTY_FIELD_MEMBER_INFO];
+			await DatabaseManager.ModifyFieldOfDocument(DbConstants.PLAYER_FIELD_BATTLE_INFO, (Dictionary<string, object>)battlerInfo[chatId], chatId, DbConstants.COLLEC_PLAYERS);
+
+			if (!isLeader)
             {
 				await TelegramCommunicator.SendText(chatId, playerName + " has left the party.", true, chatId);
 				await RemovePartyMember(code, chatId);
@@ -121,7 +143,6 @@ namespace MMOTFG_Bot
 				await TelegramCommunicator.SendText(chatId, "The leader exited the party. The party has been deleted", true);
 				await DeleteParty(code);
 				await TelegramCommunicator.SendText(chatId, "Your party has been deleted");
-				
             }
 		}
 
@@ -166,6 +187,7 @@ namespace MMOTFG_Bot
 		/// <returns></returns>
 		public static async Task<string> GetPartyCode(string chatId)
         {
+			if (!(await IsInParty(chatId))) return null;
 			var player = await DatabaseManager.GetDocument(chatId, DbConstants.COLLEC_PLAYERS);
 			return (string)player[DbConstants.PLAYER_PARTY_CODE];
         }
