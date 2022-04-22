@@ -14,7 +14,6 @@ namespace MMOTFG_Bot
 
         public static List<Battler> battlers;
 
-        private static Int64 dbOperation;
         public static bool battleActive = false;
         public static bool battlePaused = false;
 
@@ -30,8 +29,7 @@ namespace MMOTFG_Bot
                 return players.First();
             else
             {
-                string name = (string)(await DatabaseManager.GetDocument(chatId, DbConstants.COLLEC_PLAYERS))[DbConstants.PLAYER_FIELD_NAME];
-                return players.FirstOrDefault(p => p.name == name);
+                return players.FirstOrDefault(p => p.id == chatId);
             }
         }
 
@@ -45,9 +43,7 @@ namespace MMOTFG_Bot
         }
 
         public static async Task SavePlayerBattle(string chatId)
-        {
-            dbOperation++;          
-
+        {     
             if (partyCode == null)
             {
                 //Save player info in the player field of the database
@@ -56,17 +52,16 @@ namespace MMOTFG_Bot
             else
             {               
                 //Save players of the party 
-                List<Dictionary<string, object>> playersDict = new List<Dictionary<string, object>>();
+                Dictionary<string, object> playersDict = new Dictionary<string, object>();
                 foreach(Player p in players)
                 {
-                    playersDict.Add(p.GetSerializable());
+                    playersDict.Add(p.id, p.GetSerializable());
                 }
                 await DatabaseManager.ModifyFieldOfDocument(DbConstants.PARTY_FIELD_MEMBER_INFO, playersDict, partyCode, DbConstants.COLLEC_PARTIES);
             }
 
             //Data of the battle (enemies, battle state, etc)
             Dictionary<string, object> update = new Dictionary<string, object>();
-            update.Add(DbConstants.BATTLE_DB_OPERATION_ID, dbOperation);
             update.Add(DbConstants.BATTLE_ACTIVE, battleActive);
             update.Add(DbConstants.BATTLE_PAUSED, battlePaused);
             if (!battleActive)
@@ -84,17 +79,13 @@ namespace MMOTFG_Bot
             }
 
             //If the player is in a party the data is stored in the party database field (or in the player field if this is not the case)
-            if(partyCode == null)
+            if(partyCode != null)
                 await DatabaseManager.ModifyDocumentFromCollection(update, partyCode, DbConstants.COLLEC_PARTIES);
             else await DatabaseManager.ModifyDocumentFromCollection(update, chatId, DbConstants.COLLEC_PLAYERS);
         }
 
         public static async Task LoadPlayerBattle(string chatId)
         {
-            //already up to date
-            //if (dbOperation == (Int64)await DatabaseManager.GetFieldFromDocument(DbConstants.BATTLE_DB_OPERATION_ID, chatId, DbConstants.COLLEC_PLAYERS))
-                //return;
-
             Dictionary<string, object> dbInfo = new Dictionary<string, object>();
 
             partyCode = await PartySystem.GetPartyCode(chatId);
@@ -105,22 +96,23 @@ namespace MMOTFG_Bot
                 chatId, DbConstants.COLLEC_PLAYERS);
                 Player p = JSONSystem.GetDefaultPlayer();
                 p.LoadSerializable((Dictionary<string, object>)dbInfo[DbConstants.PLAYER_FIELD_BATTLE_INFO]);
+                p.SetId(chatId);
                 players.Add(p);
             }
             else
             {
                 dbInfo = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PARTY_FIELD_CODE, partyCode, DbConstants.COLLEC_PARTIES);
-                List<object> dbPlayers = (List<object>)dbInfo[DbConstants.PARTY_FIELD_MEMBER_INFO];
+                Dictionary<string, object> dbPlayers = (Dictionary<string, object>)dbInfo[DbConstants.PARTY_FIELD_MEMBER_INFO];
                 players = new List<Player>();
-                foreach (Dictionary<string, object> o in dbPlayers)
+                foreach (var key in dbPlayers.Keys)
                 {
                     Player p = JSONSystem.GetDefaultPlayer();
-                    p.LoadSerializable(o);
+                    p.LoadSerializable((Dictionary<string, object>)dbPlayers[key]);
+                    p.SetId(key);
                     players.Add(p);
                 }
             }
 
-            dbOperation = (Int64)dbInfo[DbConstants.BATTLE_DB_OPERATION_ID];
             battleActive = (bool)dbInfo[DbConstants.BATTLE_ACTIVE];
          
             if (!battleActive) return;
@@ -133,7 +125,7 @@ namespace MMOTFG_Bot
 
             foreach (Dictionary<string, object> o in enemiesDict)
             {
-                Battler b = new Battler();
+                Battler b = JSONSystem.GetEnemy((string)o[DbConstants.BATTLER_FIELD_NAME]);
                 b.LoadSerializable(o);
                 enemies.Add(b);
             }
@@ -151,8 +143,8 @@ namespace MMOTFG_Bot
             Player player = JSONSystem.GetDefaultPlayer();
             player.SetName((string)(await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId, DbConstants.COLLEC_PLAYERS))[DbConstants.PLAYER_FIELD_NAME]);
             update.Add(DbConstants.BATTLE_ACTIVE, false);
+            update.Add(DbConstants.BATTLE_PAUSED, false);
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_INFO, player.GetSerializable());
-            update.Add(DbConstants.BATTLE_DB_OPERATION_ID, 0);
             update.Add(DbConstants.BATTLE_ENEMY_LIST, null);
 
             await DatabaseManager.ModifyDocumentFromCollection(update, chatId, DbConstants.COLLEC_PLAYERS);
@@ -163,15 +155,16 @@ namespace MMOTFG_Bot
             Dictionary<string, object> update = new Dictionary<string, object>();
 
             update.Add(DbConstants.BATTLE_ACTIVE, false);
-            update.Add(DbConstants.BATTLE_DB_OPERATION_ID, 0);
+            update.Add(DbConstants.BATTLE_PAUSED, false);
             //Save players of the party 
-            List<Dictionary<string, object>> playersDict = new List<Dictionary<string, object>>();
+            Dictionary<string, object> playersDict = new Dictionary<string, object>();
             List<string> ids = await PartySystem.GetPartyMembers(partyCode, true);
             foreach (string id in ids)
             {
                 Player player = await CreatePlayer(id);
                 player.SetName((string)(await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, id, DbConstants.COLLEC_PLAYERS))[DbConstants.PLAYER_FIELD_NAME]);
-                playersDict.Add(player.GetSerializable());
+                player.SetId(id);
+                playersDict.Add(id, player.GetSerializable());
             }
             update.Add(DbConstants.PARTY_FIELD_MEMBER_INFO, playersDict);
             update.Add(DbConstants.BATTLE_ENEMY_LIST, null);
@@ -193,12 +186,9 @@ namespace MMOTFG_Bot
         {
             await LoadPlayerBattle(chatIds.First());
             enemies = eSide;
-            partyCode = await PartySystem.GetPartyCode(chatIds.First());
-            players = new List<Player>();
-            foreach (string id in chatIds) players.Add(await CreatePlayer(id));           
             battlers = new List<Battler>();
-            battlers.AddRange(enemies);
             battlers.AddRange(players);
+            battlers.AddRange(enemies);
             battleActive = true;
             battlePaused = false;
             if(eSide.Count == 1)
@@ -371,7 +361,8 @@ namespace MMOTFG_Bot
                 target.turnOver = true;
                 await TelegramCommunicator.SendText(chatId, message, true);
                 await target.OnBehaviour(chatId, target.onKill);
-                if (target as Player == null)
+                bool isPlayer = (target as Player != null);
+                if (!isPlayer)
                 {
                     string msg = $"{target.name} died!";
                     if (target.droppedItem != null)
@@ -385,28 +376,27 @@ namespace MMOTFG_Bot
                     {
                         List<Task> tasks = new List<Task>();
                         foreach (Player p in players) 
-                            tasks.Add(p.GainExperience(chatId, target.experienceGiven));
+                            tasks.Add(p.GainExperience(p.id, target.experienceGiven));
                         await Task.WhenAll(tasks);
                     }
                 }
                 else await TelegramCommunicator.SendText(chatId, $"{target.name} died!", true);
-                List<Battler> side = (target as Player == null) ? enemies : players.Select(p => (Battler)p).ToList();
+                List<Battler> side = (isPlayer) ? players.Select(p => (Battler)p).ToList() : enemies;
                 //if entire side has been defeated, end battle
                 if (side.FirstOrDefault(x => x.GetStat(HP) > 0) == null)
                 {
                     await SavePlayerBattle(chatId);
                     battleActive = false;
-                    List<string> ids = new List<string> { chatId };
-                    if (partyCode != null)
+                    await TelegramCommunicator.SendText(chatId, "Battle ends!", true);
+                    //if in party and party wiped out
+                    if (partyCode != null && isPlayer)
                     {
                         await PartySystem.WipeOutParty(partyCode, true);
                         await TelegramCommunicator.SendText(chatId, "The whole party died! boo hoo", true);
-                        ids = await PartySystem.GetPartyMembers(partyCode, true);
                     }
-                    foreach (string id in ids)
-                    {
-                        if (!battlePaused) await TelegramCommunicator.RemoveReplyMarkup(id, "Battle ends!");
-                        await (await GetPlayer(id)).OnBattleOver(id);
+                    foreach (Player p in players)
+                    {                    
+                        await p.OnBattleOver(p.id);
                     }
                     if(partyCode != null)
                         //restore party
@@ -421,7 +411,7 @@ namespace MMOTFG_Bot
                 await TelegramCommunicator.SendText(chatId, message, true);
             }
 
-            if(user == await GetPlayer(chatId)) await TelegramCommunicator.RemoveReplyMarkup(chatId, "Turn over");
+            if(user == await GetPlayer(chatId) && !battlePaused) await TelegramCommunicator.RemoveReplyMarkup(chatId, "Turn over");
 
             await SavePlayerBattle(chatId);
             if (battleActive) await NextAttack(chatId);
@@ -430,14 +420,28 @@ namespace MMOTFG_Bot
         //for instances where the battle needs to be paused (such as move learning)
         public static async Task PauseBattle(string chatId)
         {
-            await DatabaseManager.ModifyFieldOfDocument(DbConstants.BATTLE_PAUSED, true, chatId, DbConstants.COLLEC_PLAYERS);
+            battlePaused = players.FirstOrDefault(x => x.learningAttack != null) != null;
+            if(partyCode == null)
+                await DatabaseManager.ModifyFieldOfDocument(DbConstants.BATTLE_PAUSED, battlePaused, chatId, DbConstants.COLLEC_PLAYERS);
+            else
+                await DatabaseManager.ModifyFieldOfDocument(DbConstants.BATTLE_PAUSED, battlePaused, partyCode, DbConstants.COLLEC_PARTIES);
         }
 
         //call only if battle has been paused
         public static async Task ResumeBattle(string chatId)
         {
-            await DatabaseManager.ModifyFieldOfDocument(DbConstants.BATTLE_PAUSED, false, chatId, DbConstants.COLLEC_PLAYERS);
-            var playerInfo = await DatabaseManager.GetDocument(chatId, DbConstants.COLLEC_PLAYERS);
+            battlePaused = players.FirstOrDefault(x => x.learningAttack != null) != null;
+            Dictionary<string, object> playerInfo;
+            if (partyCode == null)
+            {
+                await DatabaseManager.ModifyFieldOfDocument(DbConstants.BATTLE_PAUSED, battlePaused, chatId, DbConstants.COLLEC_PLAYERS);
+                playerInfo = await DatabaseManager.GetDocument(chatId, DbConstants.COLLEC_PLAYERS);
+            }
+            else
+            {
+                await DatabaseManager.ModifyFieldOfDocument(DbConstants.BATTLE_PAUSED, battlePaused, partyCode, DbConstants.COLLEC_PARTIES);
+                playerInfo = await DatabaseManager.GetDocument(partyCode, DbConstants.COLLEC_PARTIES);
+            }
             if ((bool)playerInfo[DbConstants.BATTLE_ACTIVE]) await NextAttack(chatId);
         }
 
@@ -458,8 +462,8 @@ namespace MMOTFG_Bot
             Battler b = null;
 
             await LoadPlayerBattle(chatId);
-            
-            if (name == null) b = players.First();
+
+            if (name == null) b = await GetPlayer(chatId);
             else if (battleActive) b = battlers.FirstOrDefault(x => x.name == name);
 
             string friendId = await PartySystem.GetFriendId(chatId, name);

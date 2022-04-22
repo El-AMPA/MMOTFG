@@ -22,6 +22,8 @@ namespace MMOTFG_Bot
         [DefaultValue(1)]
         public int level;
 
+        public string id;
+
         public Player()
         {
         }
@@ -47,6 +49,11 @@ namespace MMOTFG_Bot
         public void SetName(string playerName)
         {
             name = playerName;
+        }
+
+        public void SetId(string chatId)
+        {
+            id = chatId;
         }
 
         public Attack GetAttack(string name)

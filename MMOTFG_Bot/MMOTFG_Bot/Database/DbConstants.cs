@@ -32,7 +32,6 @@ namespace MMOTFG_Bot
 		readonly public static string BATTLE_ENEMY_LIST = "enemies";
 		readonly public static string BATTLE_UP_NEXT = "up_next";
 		readonly public static string BATTLE_PAUSED = "battle_paused";
-		readonly public static string BATTLE_DB_OPERATION_ID = "operation_id";
 
 		readonly public static string PARTY_FIELD_CODE = "party_code";
 		readonly public static string PARTY_FIELD_LEADER = "party_leaderId";

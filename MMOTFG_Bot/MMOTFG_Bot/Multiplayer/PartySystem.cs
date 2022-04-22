@@ -66,6 +66,7 @@ namespace MMOTFG_Bot
 
 			await AddPartyMember(code, chatId);
 			await SetPlayerInParty(chatId, code);
+
 			await TelegramCommunicator.SendText(chatId, "You have joined the party with code " + code);
 			await TelegramCommunicator.SendText(chatId, await GetPlayerName(chatId) + " has joined the party!", true, chatId);
 		}
@@ -80,6 +81,11 @@ namespace MMOTFG_Bot
 
 		static async Task AddPartyMember(string code, string chatId)
         {
+			Dictionary<string, object> partyBattleData = (Dictionary<string, object>)(await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES))[DbConstants.PARTY_FIELD_MEMBER_INFO];
+			Dictionary<string, object> playerBattleData = (Dictionary<string, object>)(await DatabaseManager.GetDocument(chatId, DbConstants.COLLEC_PLAYERS))[DbConstants.PLAYER_FIELD_BATTLE_INFO];
+			partyBattleData.Add(chatId, playerBattleData);
+			await DatabaseManager.ModifyFieldOfDocument(DbConstants.PARTY_FIELD_MEMBER_INFO, partyBattleData, code, DbConstants.COLLEC_PARTIES);
+
 			var party = await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES);
 			List<object> members = (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
 			members.Add(chatId);
@@ -93,6 +99,16 @@ namespace MMOTFG_Bot
 		static async Task RemovePartyMember(string code, string chatId)
         {
 			var party = await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES);
+
+			//Saves the player info stored in the party in the individual player data section
+			var battlerInfo = (Dictionary<string, object>)(await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES))[DbConstants.PARTY_FIELD_MEMBER_INFO];
+			await DatabaseManager.ModifyFieldOfDocument(DbConstants.PLAYER_FIELD_BATTLE_INFO, battlerInfo[chatId], chatId, DbConstants.COLLEC_PLAYERS);
+
+			//Removes the player data from the party database
+			battlerInfo.Remove(chatId);
+			await DatabaseManager.ModifyFieldOfDocument(DbConstants.PARTY_FIELD_MEMBER_INFO, battlerInfo, code, DbConstants.COLLEC_PARTIES);
+			
+			//Removes the player id from the member list
 			List<object> members = (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
 			members.Remove(chatId);
 			Dictionary<string, object> newMembersData = new Dictionary<string, object>
@@ -128,9 +144,6 @@ namespace MMOTFG_Bot
 			string playerName = await GetPlayerName(chatId);
 			bool isLeader = await IsLeader(chatId);
 
-			var battlerInfo = (Dictionary<string, object>)(await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES))[DbConstants.PARTY_FIELD_MEMBER_INFO];
-			await DatabaseManager.ModifyFieldOfDocument(DbConstants.PLAYER_FIELD_BATTLE_INFO, (Dictionary<string, object>)battlerInfo[chatId], chatId, DbConstants.COLLEC_PLAYERS);
-
 			if (!isLeader)
             {
 				await TelegramCommunicator.SendText(chatId, playerName + " has left the party.", true, chatId);
@@ -150,8 +163,7 @@ namespace MMOTFG_Bot
         {
 			var party = await DatabaseManager.GetDocument(code, DbConstants.COLLEC_PARTIES);
 
-			List<object> members = (List<object>)party[DbConstants.PARTY_FIELD_MEMBERS];
-			members.Add(party[DbConstants.PARTY_FIELD_LEADER]);
+			List<string> members = await GetPartyMembers(code, true);
 
 			foreach (string id in members) await SetPlayerOutOfParty(id);
 
