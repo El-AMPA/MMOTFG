@@ -97,6 +97,7 @@ namespace MMOTFG_Bot
                 Player p = JSONSystem.GetDefaultPlayer();
                 p.LoadSerializable((Dictionary<string, object>)dbInfo[DbConstants.PLAYER_FIELD_BATTLE_INFO]);
                 p.SetId(chatId);
+                players = new List<Player>();
                 players.Add(p);
             }
             else
