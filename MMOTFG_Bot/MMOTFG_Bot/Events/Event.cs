@@ -5,6 +5,8 @@ using System.IO;
 using Newtonsoft.Json;
 using JsonSubTypes;
 using System.Threading.Tasks;
+using System.ComponentModel;
+using MMOTFG_Bot.Navigation;
 
 namespace MMOTFG_Bot.Events
 {
@@ -19,6 +21,7 @@ namespace MMOTFG_Bot.Events
     [JsonSubtypes.KnownSubType(typeof(eSetFlag), "eSetFlag")]
     [JsonSubtypes.KnownSubType(typeof(eStartBattle), "eStartBattle")]
     [JsonSubtypes.KnownSubType(typeof(eLearnAttack), "eLearnAttack")]
+    [JsonSubtypes.KnownSubType(typeof(eChangeStat), "eChangeStat")]
 
     //Even though it's used as if it were an abstract class, it can't be abstract because in the process of deserializing into the child class,
     //it creates an instance of the parent class.
@@ -31,9 +34,35 @@ namespace MMOTFG_Bot.Events
             set;
         }
 
+        protected Battler user;
+
+        [DefaultValue(1)]
+        public float Chance;
+
         public virtual Task Execute(string chatId)
         {
             return Task.CompletedTask;
+        }
+
+        public async Task ExecuteEvent(string chatId)
+        {
+            bool condition = true;
+
+            if (TriggerCondition != null)
+            {
+                condition = ProgressKeeper.IsFlagActive(chatId, TriggerCondition);
+            }
+
+            if (condition)
+            {
+                if (Chance == 1 || RNG.Next(0, 100) < Chance * 100)
+                    await Execute(chatId);
+            }
+        }
+
+        public void SetUser(Battler u)
+        {
+            user = u;
         }
     }
 }

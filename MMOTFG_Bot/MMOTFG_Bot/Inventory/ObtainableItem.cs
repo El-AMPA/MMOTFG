@@ -1,5 +1,7 @@
 ﻿using JsonSubTypes;
+using MMOTFG_Bot.Events;
 using MMOTFG_Bot.Items;
+using MMOTFG_Bot.Navigation;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,7 +15,7 @@ namespace MMOTFG_Bot
     [JsonSubtypes.KnownSubType(typeof(EquipableItem), "EquipableItem")]
     class ObtainableItem
     {
-        public List<KeyValuePair<string, Behaviour>> key_words = new List<KeyValuePair<string, Behaviour>>();
+        public Dictionary<string, List<Event>> key_words = new Dictionary<string, List<Event>>();
 
         public virtual void Init() { }
 
@@ -24,29 +26,23 @@ namespace MMOTFG_Bot
 
         public bool UnderstandsCommand(string command)
         {
-            foreach (KeyValuePair<string, Behaviour> a in key_words)
-            {
-                if (a.Key == command)
-                {
-                    return true;
-                }
-            }
-            return false;
+            return key_words.ContainsKey(command);
         }
 
-        public async Task<bool> ProcessCommand(string command, string chatId, string[] args = null)
+        public async Task ProcessCommand(string command, string chatId, string[] args = null)
         {
-            foreach (KeyValuePair<string, Behaviour> a in key_words)
+            List<Event> events = key_words[command];
+
+            await ProgressKeeper.LoadSerializable(chatId);
+
+            foreach (Event e in events)
             {
-                if (a.Key == command)
-                {
-                    await a.Value.Execute(chatId, (await BattleSystem.GetPlayer(chatId)));
-                    if (a.Value.message != null) await TelegramCommunicator.SendText(chatId, a.Value.message);
-                    await BattleSystem.SavePlayerBattle(chatId);
-                    return true;
-                }
+                e.SetUser(await BattleSystem.GetPlayer(chatId));
+                await e.ExecuteEvent(chatId);
             }
-            return false;
+
+            await ProgressKeeper.SaveSerializable(chatId);
+            await BattleSystem.SavePlayerBattle(chatId);
         }
 
         public ObtainableItem()

@@ -10,17 +10,21 @@
     "LevelUpEvents": [
       {
         "Level": 2,
-        "Ev": {
-          "EventType": "eLearnAttack",
-          "Attack": "Tortazo"
-        }
+        "Events": [
+          {
+            "EventType": "eLearnAttack",
+            "Attack": "Tortazo"
+          }
+        ]
       },
       {
         "Level": 3,
-        "Ev": {
-          "EventType": "eLearnAttack",
-          "Attack": "Tortilla"
-        }
+        "Events": [
+          {
+            "EventType": "eLearnAttack",
+            "Attack": "Tortilla"
+          }
+        ]
       }
     ]
   }

@@ -2,50 +2,46 @@
   {
     "Name": "health_potion",
     "MaxStackQuantity": 5,
-    "Key_Words": [
-      {
-        "Key": "drink",
-        "Value": {
-          "BehaviourType": "bChangeStat",
+    "Key_Words": {
+      "drink": [
+        {
+          "EventType": "eChangeStat",
           "StatToChange": "HP",
           "Change": 500,
           "Message": "Gained 500HP"
         }
-      },
-      {
-        "Key": "eat",
-        "Value": {
-          "BehaviourType": "bChangeStat",
+      ],
+      "eat": [
+        {
+          "EventType": "eChangeStat",
           "StatToChange": "HP",
           "Change": -2,
           "Message": "Why would you eat a potion you freak.\nYour health has been reduced by 2 points."
         }
-      }
-    ]
+      ]
+    }
   },
   {
     "Name": "mana_potion",
     "MaxStackQuantity": 3,
-    "Key_Words": [
-      {
-        "Key": "drink",
-        "Value": {
-          "BehaviourType": "bChangeStat",
+    "Key_Words": {
+      "drink": [
+        {
+          "EventType": "eChangeStat",
           "StatToChange": "MP",
           "Change": 500,
           "Message": "Gained 500MP"
         }
-      },
-      {
-        "Key": "eat",
-        "Value": {
-          "BehaviourType": "bChangeStat",
+      ],
+      "eat": [
+        {
+          "EventType": "eChangeStat",
           "StatToChange": "MP",
           "Change": -2,
           "Message": "Why would you eat a potion you freak.\nYour MP has been reduced by 2 points."
         }
-      }
-    ]
+      ]
+    }
   },
   {
     "ItemType": "EquipableItem",

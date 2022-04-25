@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MMOTFG_Bot.Events;
+using MMOTFG_Bot.Navigation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -22,9 +24,9 @@ namespace MMOTFG_Bot
 
         public string name;
 
-        public Behaviour onHit;
-        public Behaviour onTurnEnd;
-        public Behaviour onKill;
+        public List<Event> onHit;
+        public List<Event> onTurnEnd;
+        public List<Event> onKill;
 
         public bool turnOver;
 
@@ -59,6 +61,8 @@ namespace MMOTFG_Bot
             SetAttacks();           
             maxStats = (float[])stats.Clone();
             originalStats = (float[])stats.Clone();
+            //by default, every enemy creates a flag upon death
+            onKill.Add(new eSetFlag() { Name = name + "Killed", SetAs = true });
         }
 
         public void SetAttacks()
@@ -133,17 +137,18 @@ namespace MMOTFG_Bot
         }
 
         //For events such as OnHit, OnKill or OnTurnEnd
-        public async Task OnBehaviour(string chatId, Behaviour b) {
-            if (b != null)
+        public async Task OnBehaviour(string chatId, List<Event> events) {
+            if (events != null)
             {
-                //If behaviour has already happened or isn't activated by chance, skip
-                if (!b.flag || RNG.Next(0, 100) > b.chance * 100) return;
-                if (await b.Execute(chatId, this))
+                await ProgressKeeper.LoadSerializable(chatId);
+
+                foreach (Event e in events)
                 {
-                    if (b.message != null) await TelegramCommunicator.SendText(chatId, b.message);
-                    //Events that happen once are deactivated
-                    b.flag = !b.activateOnce;
-                }           
+                    e.SetUser(this);
+                    await e.ExecuteEvent(chatId);
+                }
+
+                await ProgressKeeper.SaveSerializable(chatId);
             }
         }
 

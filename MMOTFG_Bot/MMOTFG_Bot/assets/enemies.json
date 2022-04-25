@@ -8,27 +8,26 @@
     "DroppedItem": "health_potion",
     "DroppedItemAmount": 2,
     "ExperienceGiven": 2,
-    "Attacks": [ "Slap", "Swords Dance", "MpScale" ],     
-    "OnHit": {
-      "BehaviourType": "bChangeStat",
-      "StatToChange": "ATK",
-      "Multiple": 2,
-      "StatToDepend": "HP",
-      "Threshold": 0.5,
-      "Message": "Manuela se ha enfadado! Sus ataques harán más daño."
-    },
-    "OnTurnEnd": {
-      "BehaviourType": "bChangeStat",
-      "StatToChange": "HP",
-      "Change": 5,
-      "ActivateOnce": false,
-      "Message": "El poder de la amistad cura 5 HP a Manuela."
-    },
-    "OnKill":{
-      "BehaviourType": "bSetFlag",
-      "Name": "ManuelaKilled",
-      "SetAs":"True"
-    }
+    "Attacks": [ "Slap", "Swords Dance", "MpScale" ],
+    "OnHit": [
+      {
+        "EventType": "eChangeStat",
+        "StatToChange": "ATK",
+        "Multiple": 2,
+        "StatToDepend": "HP",
+        "Threshold": 0.5,
+        "Message": "Manuela se ha enfadado! Sus ataques harán más daño."
+      }
+    ],
+    "OnTurnEnd": [
+      {
+        "EventType": "eChangeStat",
+        "StatToChange": "HP",
+        "Change": 5,
+        "ActivateOnce": false,
+        "Message": "El poder de la amistad cura 5 HP a Manuela."
+      }
+    ]
   },
   {
     "Name": "Cleonft",
@@ -40,16 +39,11 @@
     "DroppedItemAmount": 2,
     "Attacks": [ "Chiste sobre javascript", "El PCE es maravilloso", "No Fucking Thanks" ],
     "OnHit": {
-      "BehaviourType": "bChangeStat",
+      "EventType": "eChangeStat",
       "StatToChange": "ATK",
       "Change": -1,
       "Chance": 0.5,
       "Message": "Cleon y el mono se debaten sobre si deberían matarte o no. Su ataque baja un poco."
-    },
-    "OnKill":{
-      "BehaviourType":"bSetFlag",
-      "Name":"CleonftDefeated",
-      "SetAs":"True"
     }
   },
   {
@@ -62,17 +56,12 @@
     "DroppedItemAmount": 2,
     "Attacks": [ "Chapa en PowerPoint", "Deconstructción", "Fantasma de la ópera" ],
     "OnHit": {
-      "BehaviourType": "bChangeStat",
+      "EventType": "eChangeStat",
       "StatToChange": "MP",
       "Multiple": 100,
       "StatToDepend": "HP",
       "Threshold": 0.5,
       "Message": "¡Fedejimbo conjura un patrón de diseño arcano de su libro y se recuperan todos sus MP!"
-    },
-    "OnKill":{
-      "BehaviourType":"bSetFlag",
-      "Name":"FedejimboDefeated",
-      "SetAs":"True"
     }
   },
   {
@@ -85,17 +74,12 @@
     "DroppedItemAmount": 2,
     "Attacks": [ "Latigazo correa", "Plástico sospechoso" ],
     "OnHit": {
-      "BehaviourType": "bChangeStat",
+      "EventType": "eChangeStat",
       "StatToChange": "ATK",
       "Multiple": 0.5,
       "StatToDepend": "HP",
       "Threshold": 0.5,
       "Message": "Sein se está cansando de jugar contigo y notas que pronto va a dejar de hacerte caso."
-    },
-    "OnKill":{
-      "BehaviourType":"bSetFlag",
-      "Name":"SeinDefeated",
-      "SetAs":"True"
     }
   },
   {
@@ -108,16 +92,12 @@
     "DroppedItemAmount": 2,
     "Attacks": [ "Ondas del wifi", "La Chancla", "Modo capitalismo" ],
     "OnHit": {
-      "BehaviourType": "bChangeStat",
+      "EventType": "eChangeStat",
       "StatToChange": "ATK",
       "Multiple": 0.25,
       "StatToDepend": "HP",
       "Threshold": 0.25,
       "Message": "¡Ya solo queda uno! Habrá ganado la partida del PCE, pero no la batalla contigo."
-    },
-    "OnKill":{
-      "BehaviourType":"bSetFlag",
-      "SetFlagAsTrue":"StratospeersDefeated"
     }
   },
   {
@@ -130,17 +110,12 @@
     "DroppedItemAmount": 2,
     "Attacks": [ "ñom", "Barras (de pan)", "Ahora puedes jugar a Blown to Blacksmithereens desde el navegador en http://www.tai1games.itch.io" ],
     "OnHit": {
-      "BehaviourType": "bChangeStat",
+      "EventType": "eChangeStat",
       "StatToChange": "HP",
       "Change": -25,
       "StatToDepend": "HP",
       "Threshold": 0.5,
       "Message": "El thiccboi intenta comerse una silla pero no sale bien..."
-    },
-    "OnKill":{
-      "BehaviourType":"bSetFlag",
-      "Name":"ThiccboiDefeated",
-      "SetAs":"True"
     }
   },
   {

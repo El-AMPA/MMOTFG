@@ -32,7 +32,7 @@ namespace MMOTFG_Bot
         public struct LevelUpEvent
         {
             public int level;
-            public Event ev;
+            public List<Event> events;
         }
 
         public List<LevelUpEvent> levelUpEvents;

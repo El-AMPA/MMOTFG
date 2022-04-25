@@ -1,4 +1,5 @@
-﻿using MMOTFG_Bot.Navigation;
+﻿using MMOTFG_Bot.Events;
+using MMOTFG_Bot.Navigation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -82,8 +83,18 @@ namespace MMOTFG_Bot
                 //if there is an event for that level
                 if (levelUpRoadmap.levelUpEvents != null)
                 {
-                    var event_ = levelUpRoadmap.levelUpEvents.Find(x => x.level == level);
-                    if (event_.ev != null) await event_.ev.Execute(chatId);
+                    var lvlup = levelUpRoadmap.levelUpEvents.Find(x => x.level == level);
+                    if (lvlup.events != null)
+                    {
+                        await ProgressKeeper.LoadSerializable(chatId);
+
+                        foreach (Event e in lvlup.events)
+                        {
+                            await e.ExecuteEvent(chatId);
+                        }
+
+                        await ProgressKeeper.SaveSerializable(chatId);
+                    }
                 }
                 if (level == levelUpRoadmap.maxLevel) return;
                 neededExp = levelUpRoadmap.neededExperience[level - 1];

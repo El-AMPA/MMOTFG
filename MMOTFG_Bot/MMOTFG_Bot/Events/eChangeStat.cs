@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MMOTFG_Bot.Events;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MMOTFG_Bot
 {
-    class bChangeStat : Behaviour
+    class eChangeStat : Event
     {
         [JsonConverter(typeof(StringEnumConverter))]
         public StatName statToChange;
@@ -26,14 +27,15 @@ namespace MMOTFG_Bot
 
         public bool changeMax;
 
-        public override async Task<bool> Execute(string chatId, Battler user) {
+        public string message;
+
+        public override async Task Execute(string chatId) {
             if (threshold == 0 || (user.GetStat(statToDepend) / user.GetMaxStat(statToDepend)) <= threshold)
             {
                 if (multiple == 0) user.AddToStat(statToChange, change, changeMax);
                 else user.MultiplyStat(statToChange, multiple, changeMax);
-                return true;
+                await TelegramCommunicator.SendText(chatId, message, true);
             }
-            else return false;
         }
     }
 }
