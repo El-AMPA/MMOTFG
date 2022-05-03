@@ -23,4 +23,4 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: jajasi
-        run: dockerBuilandRunBot.bat
+        run: dockerBuildandRunBot.bat
