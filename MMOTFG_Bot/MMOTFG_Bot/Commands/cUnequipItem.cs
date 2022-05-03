@@ -36,7 +36,7 @@ Use: unequip [item name] / unequip [gear slot]";
                     //If it's valid, unequip the item from the player's gear
                     await InventorySystem.UnequipGear(chatId, (EquipableItem)item);
                 }
-                else await TelegramCommunicator.SendText(chatId, "The specified equippable item or gear slot doesn't exist");
+                else await Program.Communicator.SendText(chatId, "The specified equippable item or gear slot doesn't exist");
             }
         }
 

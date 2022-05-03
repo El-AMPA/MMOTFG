@@ -130,7 +130,7 @@ namespace MMOTFG_Bot
             {
                 Battler b = eSide.First();
                 if (b.imageName != null)
-                    await TelegramCommunicator.SendImage(chatId, b.imageName, b.imageCaption);
+                    await Program.Communicator.SendImage(chatId, b.imageName, b.imageCaption);
             }
             else
             {
@@ -147,8 +147,8 @@ namespace MMOTFG_Bot
                         caption += $" and {b.name} appear!";
                     else caption += $", {b.name}";
                 }
-                await TelegramCommunicator.SendImageCollection(chatId, imageNames.ToArray());
-                await TelegramCommunicator.SendText(chatId, caption);
+                await Program.Communicator.SendImageCollection(chatId, imageNames.ToArray());
+                await Program.Communicator.SendText(chatId, caption);
             }
             //all battlers start being able to move
             foreach (Battler ba in battlers)
@@ -186,7 +186,7 @@ namespace MMOTFG_Bot
             //if the battler is an enemy
             if((b as Player) == null)
             {
-                await TelegramCommunicator.SendText(chatId, $"{b.name}'s turn");
+                await Program.Communicator.SendText(chatId, $"{b.name}'s turn");
                 Attack a = b.nextAttack();
                 Battler target = b;
                 if (!a.affectsSelf)
@@ -211,30 +211,30 @@ namespace MMOTFG_Bot
 
         public static async Task SetPlayerOptions(string chatId, string text)
         {
-            await TelegramCommunicator.SendButtons(chatId, text, player.attacks);
+            await Program.Communicator.SendButtons(chatId, text, player.attacks);
         }
 
         public static async Task PlayerAttack(string chatId, string attackName, string targetName = null)
         {
             if (!battleActive)
             {
-                await TelegramCommunicator.SendText(chatId, "No battle currently active");
+                await Program.Communicator.SendText(chatId, "No battle currently active");
                 return;
             }
             if (!player.upNext)
             {
-                await TelegramCommunicator.SendText(chatId, "Not your turn");
+                await Program.Communicator.SendText(chatId, "Not your turn");
                 return;
             }
             Attack attack = player.GetAttack(attackName);
             if (attack == null)
             {
-                await TelegramCommunicator.SendText(chatId, "Invalid attack");
+                await Program.Communicator.SendText(chatId, "Invalid attack");
                 return;
             }
             if (attack.mpCost > player.GetStat(MP))
             {
-                await TelegramCommunicator.SendText(chatId, "Not enough MP for that attack");
+                await Program.Communicator.SendText(chatId, "Not enough MP for that attack");
                 return;
             }
             Battler target = player;
@@ -262,7 +262,7 @@ namespace MMOTFG_Bot
                     {
                         List<string> targetNames = new List<string>();
                         foreach (Battler b in otherAliveBattlers) targetNames.Add($"{attack.name} {b.name}");
-                        await TelegramCommunicator.SendButtons(chatId, message, targetNames);
+                        await Program.Communicator.SendButtons(chatId, message, targetNames);
                         //Program.SetAttackKeywords(targetNames);
                         return;
                     }
@@ -291,7 +291,7 @@ namespace MMOTFG_Bot
             if (target.GetStat(HP) <= 0)
             {
                 target.turnOver = true;
-                await TelegramCommunicator.SendText(chatId, message);
+                await Program.Communicator.SendText(chatId, message);
                 await target.OnBehaviour(chatId, target.onKill);
                 if(!target.isAlly)
                 {
@@ -303,7 +303,7 @@ namespace MMOTFG_Bot
                         msg += $"\nYou obtained {target.droppedItem} x{target.droppedItemAmount}";
                         await InventorySystem.AddItem(chatId, target.droppedItem, target.droppedItemAmount);
                     }                    
-                    await TelegramCommunicator.SendText(chatId, msg);
+                    await Program.Communicator.SendText(chatId, msg);
                     if (target.experienceGiven != 0)
                     {
                         await player.GainExperience(chatId, target.experienceGiven);
@@ -314,7 +314,7 @@ namespace MMOTFG_Bot
                 if (side.FirstOrDefault(x => x.GetStat(HP) > 0) == null)
                 {
                     battleActive = false;
-                    if(!battlePaused) await TelegramCommunicator.RemoveReplyMarkup(chatId);
+                    if(!battlePaused) await Program.Communicator.RemoveReplyMarkup(chatId);
                     await player.OnBattleOver(chatId);
                 }
             }
@@ -322,7 +322,7 @@ namespace MMOTFG_Bot
             {
                 await target.OnBehaviour(chatId, target.onHit);
                 if(damage != 0) message += $"\n{target.name} HP: {GetStatBar(target, HP)}";
-                await TelegramCommunicator.SendText(chatId, message);
+                await Program.Communicator.SendText(chatId, message);
             }
 
             await SavePlayerBattle(chatId);
@@ -366,7 +366,7 @@ namespace MMOTFG_Bot
         {
             await LoadPlayerBattle(chatId);
             if (!battleActive && b != player){
-                await TelegramCommunicator.SendText(chatId, "No battle currently active");
+                await Program.Communicator.SendText(chatId, "No battle currently active");
                 return;
             }
             string s = $"{b.name} Status:\n";
@@ -379,7 +379,7 @@ namespace MMOTFG_Bot
                 s += "\n";
             }
 
-            await TelegramCommunicator.SendText(chatId, s);
+            await Program.Communicator.SendText(chatId, s);
         }
     }
 }

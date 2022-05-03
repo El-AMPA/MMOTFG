@@ -32,10 +32,10 @@ Use: delete [character name]";
 			if (tempDict != null && arg0 == tempDict[DbConstants.PLAYER_FIELD_NAME].ToString())
 			{
 				await DatabaseManager.DeleteDocumentById(chatId.ToString(), DbConstants.COLLEC_DEBUG);
-				await TelegramCommunicator.SendText(chatId, "Bye 😭");
+				await Program.Communicator.SendText(chatId, "Bye 😭");
 			}else
 			{
-				await TelegramCommunicator.SendText(chatId, "Use: delete [character name]. You can only delete you own character!");
+				await Program.Communicator.SendText(chatId, "Use: delete [character name]. You can only delete you own character!");
 			}
 				
 

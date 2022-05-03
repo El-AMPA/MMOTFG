@@ -18,7 +18,7 @@ namespace MMOTFG_Bot.Events
 
         public override async Task Execute(string chatId)
         {
-            await TelegramCommunicator.SendText(chatId, Description);
+            await Program.Communicator.SendText(chatId, Description);
         }
     }
 }

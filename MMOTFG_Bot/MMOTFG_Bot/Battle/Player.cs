@@ -60,7 +60,7 @@ namespace MMOTFG_Bot
         {
             if (level == levelUpRoadmap.maxLevel) return;
             experience += exp;
-            await TelegramCommunicator.SendText(chatId, $"Gained {exp} experience points.");
+            await Program.Communicator.SendText(chatId, $"Gained {exp} experience points.");
             //check if new level reached
             int neededExp = levelUpRoadmap.neededExperience[level - 1];
             while (experience >= neededExp)
@@ -73,7 +73,7 @@ namespace MMOTFG_Bot
                     AddToStat((StatName)i, change, changeMax: true, permanent: true);
                     statChanges += $"{(StatName)i} {((change >= 0) ? "+" : "")}{change}\n";
                 }
-                await TelegramCommunicator.SendText(chatId, $"Reached level {level}!\n" + statChanges);
+                await Program.Communicator.SendText(chatId, $"Reached level {level}!\n" + statChanges);
                 //if there is an event for that level
                 if (levelUpRoadmap.levelUpEvents != null)
                 {
@@ -93,7 +93,7 @@ namespace MMOTFG_Bot
                 List<string> options = new List<string>(attacks);
                 options.Add("Skip");
                 if (BattleSystem.battleActive) await BattleSystem.PauseBattle(chatId);
-                await TelegramCommunicator.SendButtons(chatId, $"Do you want to learn {attackName}? Choose an attack to replace or Skip to skip",
+                await Program.Communicator.SendButtons(chatId, $"Do you want to learn {attackName}? Choose an attack to replace or Skip to skip",
                     options, 2, 3);
             }
             else
@@ -101,8 +101,8 @@ namespace MMOTFG_Bot
                 learningAttack = null;
                 attacks_.Add(JSONSystem.GetAttack(attackName));
                 SetAttackNames();
-                await TelegramCommunicator.SendText(chatId, $"Learnt {attackName}!");
-                if (!BattleSystem.battleActive) await TelegramCommunicator.RemoveReplyMarkup(chatId);
+                await Program.Communicator.SendText(chatId, $"Learnt {attackName}!");
+                if (!BattleSystem.battleActive) await Program.Communicator.RemoveReplyMarkup(chatId);
                 else if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
             }
             //save move changes
@@ -114,20 +114,20 @@ namespace MMOTFG_Bot
             if (attackName == "skip")
             {
                 learningAttack = null;
-                await TelegramCommunicator.SendText(chatId, "Skipped move learning");
-                if (!BattleSystem.battleActive) await TelegramCommunicator.RemoveReplyMarkup(chatId);
+                await Program.Communicator.SendText(chatId, "Skipped move learning");
+                if (!BattleSystem.battleActive) await Program.Communicator.RemoveReplyMarkup(chatId);
                 else if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
                 return;
             }
             Attack atk = attacks_.FirstOrDefault(x => x.name.ToLower() == attackName);
             if (atk == null)
             {
-                await TelegramCommunicator.SendText(chatId, "Not a valid attack to forget");
+                await Program.Communicator.SendText(chatId, "Not a valid attack to forget");
             }
             else
             {
                 attacks_.Remove(atk);
-                await TelegramCommunicator.SendText(chatId, $"Forgot {atk.name}");
+                await Program.Communicator.SendText(chatId, $"Forgot {atk.name}");
                 await LearnAttack(chatId, learningAttack);
             }
         }

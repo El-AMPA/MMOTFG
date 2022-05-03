@@ -21,7 +21,7 @@ namespace MMOTFG_Bot
         {
             if (information.ContainsKey(key))
             {
-                await TelegramCommunicator.SendText(chatId, information[key]);
+                await Program.Communicator.SendText(chatId, information[key]);
             }
         }
     }

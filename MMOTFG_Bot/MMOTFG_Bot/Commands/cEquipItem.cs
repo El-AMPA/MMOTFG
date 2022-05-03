@@ -28,7 +28,7 @@ Use: equip [item name]";
                 EquipableItem eItem = (EquipableItem)item;
                 await InventorySystem.EquipGear(chatId, eItem);
             }
-            else await TelegramCommunicator.SendText(chatId, "The specified item doesn't exist");
+            else await Program.Communicator.SendText(chatId, "The specified item doesn't exist");
         }
 
         internal override bool IsFormattedCorrectly(string[] args)

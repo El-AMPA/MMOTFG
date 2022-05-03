@@ -48,7 +48,7 @@ Use: help [command name]";
 
 				response += @"For further information on a given command, please use help [command name]";
 
-				await TelegramCommunicator.SendText(chatId, response);
+				await Program.Communicator.SendText(chatId, response);
 			}
 			else if (args.Length == 1)
 			{
@@ -57,12 +57,12 @@ Use: help [command name]";
 					if (c.ContainsKeyWord(args[0]))
 					{
 						response = c.GetDescription();
-						await TelegramCommunicator.SendText(chatId, response);
+						await Program.Communicator.SendText(chatId, response);
 						return;
 					}
 				}
 				response = "That command doesn't exist";
-				await TelegramCommunicator.SendText(chatId, response);
+				await Program.Communicator.SendText(chatId, response);
 			}
 			
 		}

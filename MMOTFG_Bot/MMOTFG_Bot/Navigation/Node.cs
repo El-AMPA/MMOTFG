@@ -150,7 +150,7 @@ namespace MMOTFG_Bot.Navigation
 
                 await ProgressKeeper.SaveSerializable(chatId);
             }
-            if(!triggeredEvent) await TelegramCommunicator.SendText(chatId, "There is nothing of interest in here.");
+            if(!triggeredEvent) await Program.Communicator.SendText(chatId, "There is nothing of interest in here.");
         }
 
         /// <summary>

@@ -13,13 +13,13 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace MMOTFG_Bot
 {
-	class TelegramCommunicator
+	class TelegramCommunicator : Communicator
     {
-		static private string assetsPath = "./Assets/";
-
 		private static ITelegramBotClient botClient;
 
-		public static void Init(ITelegramBotClient client)
+		public TelegramCommunicator() { }
+
+		public void Init(ITelegramBotClient client)
         {
 			botClient = client;
 		}
@@ -27,7 +27,7 @@ namespace MMOTFG_Bot
 		/// <summary>
 		/// Send a single image to a user. ImageCaption supports HTML formatting.
 		/// </summary>
-		public static async Task SendImage(string chatId, string imageName, string imageCaption = "")
+		public override async Task SendImage(string chatId, string imageName, string imageCaption = "")
 		{
 			using (var stream = System.IO.File.OpenRead(assetsPath + imageName))
 			{
@@ -44,7 +44,7 @@ namespace MMOTFG_Bot
 		/// normal images do. You have to open the individual images of the collection to see the text. Not worth
 		/// the effort.
 		/// </summary>
-		static public async Task SendImageCollection(string chatId, string[] imagesNames)
+		override public async Task SendImageCollection(string chatId, string[] imagesNames)
 		{
 			List<FileStream> streams = new List<FileStream>();
 			List<InputMediaPhoto> media = new List<InputMediaPhoto>();
@@ -63,7 +63,7 @@ namespace MMOTFG_Bot
 		/// <summary>
 		/// Send an audio to a user. ImageCaption supports HTML formatting.
 		/// </summary>
-		static public async Task SendAudio(string chatId, string audioName, string audioCaption)
+		override public async Task SendAudio(string chatId, string audioName, string audioCaption)
 		{
 			using (var stream = System.IO.File.OpenRead(assetsPath + audioName))
 			{
@@ -74,12 +74,12 @@ namespace MMOTFG_Bot
 			}
 		}
 
-		static public async Task SendText(string chatId, string text, ParseMode parseMode = ParseMode.Html)
+		override public async Task SendText(string chatId, string text)
         {
-			await botClient.SendTextMessageAsync(chatId, text, parseMode);
+			await botClient.SendTextMessageAsync(chatId, text, parseMode: ParseMode.Html);
         }
 
-		static public async Task SendButtons(string chatId, string text, List<string> buttonNames, int rows = 2, int columns = 2)
+		override public async Task SendButtons(string chatId, string text, List<string> buttonNames, int rows = 2, int columns = 2)
         {
 			for (int i = buttonNames.Count; i < rows * columns; i++) buttonNames.Add("");
 			var keyboard = new List<List<KeyboardButton>>();
@@ -95,7 +95,7 @@ namespace MMOTFG_Bot
 			await botClient.SendTextMessageAsync(chatId, text, replyMarkup: rkm);
 		}
 
-		static public async Task RemoveReplyMarkup(string chatId)
+		override public async Task RemoveReplyMarkup(string chatId)
         {
 			await botClient.SendTextMessageAsync(chatId, "Battle ends!", replyMarkup: new ReplyKeyboardRemove());
         }

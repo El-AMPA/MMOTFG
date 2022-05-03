@@ -28,7 +28,7 @@ namespace MMOTFG_Bot.Navigation
 
             if (await BattleSystem.IsPlayerInBattle(chatId))
             {
-                await TelegramCommunicator.SendText(chatId, "I can't run away from battles!");
+                await Program.Communicator.SendText(chatId, "I can't run away from battles!");
             }
             else
             {
@@ -43,7 +43,7 @@ namespace MMOTFG_Bot.Navigation
                 }
                 else
                 {
-                    await TelegramCommunicator.SendText(chatId, "Can't move in that direction");
+                    await Program.Communicator.SendText(chatId, "Can't move in that direction");
                 }
             }
         }
@@ -102,7 +102,7 @@ namespace MMOTFG_Bot.Navigation
                 msg += "\n/go_" + connection.Key;
             }
 
-            await TelegramCommunicator.SendText(chatId, msg);
+            await Program.Communicator.SendText(chatId, msg);
         }
 
         /// <summary>

@@ -144,7 +144,7 @@ namespace MMOTFG_Bot
                 if (!b.flag || RNG.Next(0, 100) > b.chance * 100) return;
                 if (await b.Execute(chatId, this))
                 {
-                    if (b.message != null) await TelegramCommunicator.SendText(chatId, b.message);
+                    if (b.message != null) await Program.Communicator.SendText(chatId, b.message);
                     //Events that happen once are deactivated
                     b.flag = !b.activateOnce;
                 }           

@@ -172,15 +172,15 @@ namespace MMOTFG_Bot
                         else
                         {
                             //There is no available space in the inventory
-                            await TelegramCommunicator.SendText(chatId, "Item " + item.name + " couldn't be added because inventory is full.");
+                            await Program.Communicator.SendText(chatId, "Item " + item.name + " couldn't be added because inventory is full.");
                             break;
                         }
                     }
                 }
-                if (quantityToAdd == 1) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was added to the inventory.");
-                else await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was added " + (quantityToAdd - quantityToAddAux) + " times");
+                if (quantityToAdd == 1) await Program.Communicator.SendText(chatId, "Item " + item.name + " was added to the inventory.");
+                else await Program.Communicator.SendText(chatId, "Item " + item.name + " was added " + (quantityToAdd - quantityToAddAux) + " times");
             }
-            else await TelegramCommunicator.SendText(chatId, "Item " + itemString + " doesn't exist");
+            else await Program.Communicator.SendText(chatId, "Item " + itemString + " doesn't exist");
 
             await SavePlayerInventory(chatId);
         }
@@ -199,14 +199,14 @@ namespace MMOTFG_Bot
             {
                 if (command != null && !item.UnderstandsCommand(command))
                 {
-                    await TelegramCommunicator.SendText(chatId, "Can't do that with that item");
+                    await Program.Communicator.SendText(chatId, "Can't do that with that item");
                     return;
                 }
 
                 //If the item isn't contained in the inventory, there is no point in continuing.
                 if (!InventoryRecords.Exists(x => x.InventoryItem.iD == item.iD))
                 {
-                    await TelegramCommunicator.SendText(chatId, "Item " + item.name + " couldn't be consumed as it was not found in your inventory");
+                    await Program.Communicator.SendText(chatId, "Item " + item.name + " couldn't be consumed as it was not found in your inventory");
                     return;
                 }
 
@@ -222,7 +222,7 @@ namespace MMOTFG_Bot
                 { //If the user is on a battle, it can only use 1 item in it's turn.
                     if (quantityToConsume > 1)
                     {
-                        await TelegramCommunicator.SendText(chatId, "You can only use 1 item on your turn.");
+                        await Program.Communicator.SendText(chatId, "You can only use 1 item on your turn.");
                         return;
                     }
                 }
@@ -255,14 +255,14 @@ namespace MMOTFG_Bot
                 {
                     //Couldn't consume every item.
                 }
-                if (quantityToConsume == 1) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was consumed.");
-                else await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was consumed " + (quantityToConsume - quantityToConsumeAux) + " times");
+                if (quantityToConsume == 1) await Program.Communicator.SendText(chatId, "Item " + item.name + " was consumed.");
+                else await Program.Communicator.SendText(chatId, "Item " + item.name + " was consumed " + (quantityToConsume - quantityToConsumeAux) + " times");
                 //enemie's turn
                 if (playerInBattle) await BattleSystem.player.SkipTurn(chatId);
 
                 await SavePlayerInventory(chatId);
             }
-            else await TelegramCommunicator.SendText(chatId, "Item " + itemString + " doesn't exist");
+            else await Program.Communicator.SendText(chatId, "Item " + itemString + " doesn't exist");
         }
 
         public static async Task ThrowAwayItem(string chatId, string itemString, int quantityToThrowAway)
@@ -274,7 +274,7 @@ namespace MMOTFG_Bot
                 //If the item isn't contained in the inventory, there is no point in continuing.
                 if (!InventoryRecords.Exists(x => x.InventoryItem.iD == item.iD))
                 {
-                    await TelegramCommunicator.SendText(chatId, "Item " + item.name + " couldn't be thrown away as it was not found in your inventory");
+                    await Program.Communicator.SendText(chatId, "Item " + item.name + " couldn't be thrown away as it was not found in your inventory");
                     return;
                 }
 
@@ -307,12 +307,12 @@ namespace MMOTFG_Bot
                 {
                     //Couldn't consume every item.
                 }
-                if (quantityToThrowAway == 1) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was thrown away.");
-                else await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was thrown away " + (quantityToThrowAway - quantityToThrowAwayAux) + " times");
+                if (quantityToThrowAway == 1) await Program.Communicator.SendText(chatId, "Item " + item.name + " was thrown away.");
+                else await Program.Communicator.SendText(chatId, "Item " + item.name + " was thrown away " + (quantityToThrowAway - quantityToThrowAwayAux) + " times");
 
                 await SavePlayerInventory(chatId);
             }
-            else await TelegramCommunicator.SendText(chatId, "Item " + itemString + " doesn't exist");
+            else await Program.Communicator.SendText(chatId, "Item " + itemString + " doesn't exist");
 
         }
 
@@ -338,7 +338,7 @@ namespace MMOTFG_Bot
                 message += i.InventoryItem.name + " x" + i.Quantity + "\n";
             }
 
-            if (message != "") await TelegramCommunicator.SendText(chatId, message);
+            if (message != "") await Program.Communicator.SendText(chatId, message);
         }
 
         /// <summary>
@@ -355,7 +355,7 @@ namespace MMOTFG_Bot
                 else message += equipment[k].name;
             }
 
-            if (message != "") await TelegramCommunicator.SendText(chatId, message);
+            if (message != "") await Program.Communicator.SendText(chatId, message);
         }
 
         /// <summary>
@@ -368,7 +368,7 @@ namespace MMOTFG_Bot
             if (equipment[(int)slot] == null) message += " empty";
             else message += equipment[(int)slot].name;
 
-            if (message != "") await TelegramCommunicator.SendText(chatId, message);
+            if (message != "") await Program.Communicator.SendText(chatId, message);
         }
 
         /// <summary>
@@ -379,7 +379,7 @@ namespace MMOTFG_Bot
             await LoadPlayerInventory(chatId);
             if (await BattleSystem.IsPlayerInBattle(chatId))
             {
-                await TelegramCommunicator.SendText(chatId, "Can't unequip your gear in battle");
+                await Program.Communicator.SendText(chatId, "Can't unequip your gear in battle");
             }
             else
             {
@@ -398,7 +398,7 @@ namespace MMOTFG_Bot
                             else msg += "+" + Math.Abs(stat.Value);
                         }
                     }
-                    await TelegramCommunicator.SendText(chatId, msg);
+                    await Program.Communicator.SendText(chatId, msg);
 
                     equipment[(int)slot] = null;
 
@@ -409,7 +409,7 @@ namespace MMOTFG_Bot
                 }
                 else
                 {
-                    await TelegramCommunicator.SendText(chatId, "Couldn't unequip an item from your " + slot.ToString().ToLower() + " gear slot because it's empty.");
+                    await Program.Communicator.SendText(chatId, "Couldn't unequip an item from your " + slot.ToString().ToLower() + " gear slot because it's empty.");
                 }
             }
         }
@@ -423,13 +423,13 @@ namespace MMOTFG_Bot
             EquipableItem currentItem = await GetItemFromEquipmentSlot(chatId, item.gearSlot);
 
             //If there are NO items being equipped in that slot...
-            if(currentItem == null) await TelegramCommunicator.SendText(chatId, "You are not wearing anything on your " + item.gearSlot + " slot");
+            if(currentItem == null) await Program.Communicator.SendText(chatId, "You are not wearing anything on your " + item.gearSlot + " slot");
 
             //If the currently equipped item is the same item you want to unequip... (This is what we expect the user to do)
             else if (currentItem.iD == item.iD) await UnequipGear(chatId, item.gearSlot);
 
             //If there is an item currently being equipped on that slot but it's not the requested item to unequip
-            else await TelegramCommunicator.SendText(chatId, "You are not wearing that item\nDid you mean /unequip_" + currentItem.name + " ?");
+            else await Program.Communicator.SendText(chatId, "You are not wearing that item\nDid you mean /unequip_" + currentItem.name + " ?");
         }
 
         /// <summary>
@@ -442,7 +442,7 @@ namespace MMOTFG_Bot
             //If the player is in the middle of a battle, it can't change it's equipment
             if (await BattleSystem.IsPlayerInBattle(chatId))
             {
-                await TelegramCommunicator.SendText(chatId, "Can't equip gear in battle");
+                await Program.Communicator.SendText(chatId, "Can't equip gear in battle");
             }
             //If the player is not in a battle...
             else
@@ -450,7 +450,7 @@ namespace MMOTFG_Bot
                 //Checks if the item is in the player's inventory. Parse from string
                 if (!InventoryRecords.Exists(x => x.InventoryItem.iD == item.iD))
                 {
-                    await TelegramCommunicator.SendText(chatId, "Item " + item.name + " couldn't be equipped as it was not found in your inventory");
+                    await Program.Communicator.SendText(chatId, "Item " + item.name + " couldn't be equipped as it was not found in your inventory");
                 }
                 //If the item in in the player's inventory...
                 else
@@ -459,7 +459,7 @@ namespace MMOTFG_Bot
                     if (equipment[(int)item.gearSlot] != null)
                     {
                         //If it's being occupied by the same item, just leave it as it is.
-                        if (item.iD == equipment[(int)item.gearSlot].iD) await TelegramCommunicator.SendText(chatId, "You are already using that item");
+                        if (item.iD == equipment[(int)item.gearSlot].iD) await Program.Communicator.SendText(chatId, "You are already using that item");
                         //If it's being occupied, swap the gear pieces.
                         else await SwapGear(chatId, item);
                     }
@@ -480,7 +480,7 @@ namespace MMOTFG_Bot
                                 else msg += stat.Value;
                             }
                         }
-                        await TelegramCommunicator.SendText(chatId, msg);
+                        await Program.Communicator.SendText(chatId, msg);
 
                         equipment[(int)item.gearSlot] = item;
 
@@ -516,7 +516,7 @@ namespace MMOTFG_Bot
                 if (stat.Value >= 0) msg += "+" + stat.Value;
                 else msg += stat.Value;
             }
-            await TelegramCommunicator.SendText(chatId, msg);
+            await Program.Communicator.SendText(chatId, msg);
 
             //Add the unequipped item to the inventory
             await AddItem(chatId, oldItem.name, 1);

@@ -22,6 +22,8 @@ namespace MMOTFG_Bot
 		static cHelp helpCommand = new cHelp();
 		static cCreateCharacter createCommand = new cCreateCharacter();
 
+		public static Communicator Communicator;
+
 		public static List<ICommand> commandList = new List<ICommand> { new cDeleteCharacter(), new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
             new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
 			new cNavigate(), new cDirections(), new cInspectRoom(), new cAttack(), helpCommand};
@@ -55,8 +57,15 @@ namespace MMOTFG_Bot
 			var me = await botClient.GetMeAsync();
 			launchTime = DateTime.UtcNow.Ticks;
 
+			//Telegram Communicator
+			//communicator = new Program.Communicator();
+			//communicator.Init(botClient);
+
+			//File Communicator
+			Communicator = new FileCommunicator();
+			Communicator.Init();
+
 			//Module initializers
-			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
 			Map.Init("assets/map.json", "assets/directionSynonyms.json");
 			JSONSystem.Init("assets/enemies.json", "assets/player.json", "assets/attacks.json", "assets/items.json");
@@ -137,7 +146,6 @@ namespace MMOTFG_Bot
 		{
 			var chatId = message.Chat.Id.ToString();
 			var senderName = message.From.FirstName;
-			var senderID = message.From.Id;
 
 			if (!processedNewEvents) //Don't process messages with a date prior to the program's launch date
 			{
@@ -158,7 +166,7 @@ namespace MMOTFG_Bot
 
 				if (!await canUseCommand(chatId.ToString(), command))
 				{
-					await TelegramCommunicator.SendText(chatId, "You need a character to play, use /create to create a new character");
+					await Communicator.SendText(chatId, "You need a character to play, use /create to create a new character");
 					return;
 				}
 				foreach (ICommand c in commandList)
@@ -168,12 +176,21 @@ namespace MMOTFG_Bot
 						recognizedCommand = true;
 						if (await c.TryExecute(command, chatId, args)) break;
 
-						else await TelegramCommunicator.SendText(chatId, "Incorrect use of that command.\nUse /help_" + command + " for further information.");
+						else await Communicator.SendText(chatId, "Incorrect use of that command.\nUse /help_" + command + " for further information.");
 					}
 				}
-				if (!recognizedCommand) await TelegramCommunicator.SendText(chatId, "Unrecognized command.\n Try /help if you don't know what to use");
+				if (!recognizedCommand) await Communicator.SendText(chatId, "Unrecognized command.\n Try /help if you don't know what to use");
 			}
 		}
+
+		private void OnFileRead(string inputPath)
+        {
+			StreamReader inputFile = new StreamReader(inputPath);
+			string line;
+            while((line = inputFile.ReadLine()) != null){
+
+            }
+        }
 
 		/// <summary>
 		/// Processes the message recieved from the user by filtering out certain chars and splitting it into words
@@ -227,7 +244,7 @@ Remember that you can get help with /help .";
 
 				string chatId = update.MyChatMember.From.Id.ToString();
 
-				await TelegramCommunicator.SendText(chatId, response);
+				await Communicator.SendText(chatId, response);
 			}
 		}
 	}

@@ -41,7 +41,7 @@ namespace MMOTFG_Bot
                 if (a.Key == command)
                 {
                     await a.Value.Execute(chatId, BattleSystem.player);
-                    if (a.Value.message != null) await TelegramCommunicator.SendText(chatId, a.Value.message);
+                    if (a.Value.message != null) await Program.Communicator.SendText(chatId, a.Value.message);
                     await BattleSystem.SavePlayerBattle(chatId);
                     return true;
                 }

@@ -35,7 +35,7 @@ namespace MMOTFG_Bot.Commands
 				case "delete":
 					await DatabaseManager.DeleteDocumentById(chatId.ToString(), DbConstants.COLLEC_DEBUG);
 					Console.WriteLine("--- using debug command {0} ---", arg0);
-					await TelegramCommunicator.SendText(chatId, "hasta siempre 😭");
+					await Program.Communicator.SendText(chatId, "hasta siempre 😭");
 					break;
 			}
 				
