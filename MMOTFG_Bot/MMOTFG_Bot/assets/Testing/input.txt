@@ -1,0 +1,3 @@
+create patata
+go puerta
+go south

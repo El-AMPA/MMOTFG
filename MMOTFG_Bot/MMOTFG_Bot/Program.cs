@@ -84,8 +84,18 @@ namespace MMOTFG_Bot
 			using var cts = new CancellationTokenSource();
 
 			//var a = new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync);
-			botClient.StartReceiving(new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync), null, cts.Token);
-			BotCommand command = new BotCommand();
+			if (Communicator as TelegramCommunicator != null)
+			{
+				botClient.StartReceiving(new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync), null, cts.Token);
+				BotCommand command = new BotCommand();
+			}
+			else {
+				FileCommunicator f = Communicator as FileCommunicator;
+				if (f != null)
+				{
+					await OnFileRead(f.InputPath);
+				}
+			}
 
 			Console.WriteLine($"Start listening for @{me.Username}");
 			Thread.Sleep(Timeout.Infinite);
@@ -144,8 +154,8 @@ namespace MMOTFG_Bot
 
 		static async Task BotOnMessageReceived(ITelegramBotClient botClient, Message message)
 		{
-			var chatId = message.Chat.Id.ToString();
-			var senderName = message.From.FirstName;
+			string chatId = message.Chat.Id.ToString();
+			string senderName = message.From.FirstName;
 
 			if (!processedNewEvents) //Don't process messages with a date prior to the program's launch date
 			{
@@ -157,38 +167,43 @@ namespace MMOTFG_Bot
 
 			if (message.Type == MessageType.Text) //Si le mandas una imagen explota ahora mismo
 			{
-				List<string> subStrings = ProcessMessage(message.Text);
-				string command = subStrings[0];
-				string[] args = new string[subStrings.Count - 1];
-				subStrings.CopyTo(1, args, 0, args.Length);
-
-				bool recognizedCommand = false;
-
-				if (!await canUseCommand(chatId.ToString(), command))
-				{
-					await Communicator.SendText(chatId, "You need a character to play, use /create to create a new character");
-					return;
-				}
-				foreach (ICommand c in commandList)
-				{
-					if (c.ContainsKeyWord(command))
-					{
-						recognizedCommand = true;
-						if (await c.TryExecute(command, chatId, args)) break;
-
-						else await Communicator.SendText(chatId, "Incorrect use of that command.\nUse /help_" + command + " for further information.");
-					}
-				}
-				if (!recognizedCommand) await Communicator.SendText(chatId, "Unrecognized command.\n Try /help if you don't know what to use");
+				await ReceiveMessage(message.Text, chatId);
 			}
 		}
 
-		private void OnFileRead(string inputPath)
+		static private async Task ReceiveMessage(string message, string chatId = "0")
+        {
+			List<string> subStrings = ProcessMessage(message);
+			string command = subStrings[0];
+			string[] args = new string[subStrings.Count - 1];
+			subStrings.CopyTo(1, args, 0, args.Length);
+
+			bool recognizedCommand = false;
+
+			if (!await canUseCommand(chatId, command))
+			{
+				await Communicator.SendText(chatId, "You need a character to play, use /create to create a new character");
+				return;
+			}
+			foreach (ICommand c in commandList)
+			{
+				if (c.ContainsKeyWord(command))
+				{
+					recognizedCommand = true;
+					if (await c.TryExecute(command, chatId, args)) break;
+
+					else await Communicator.SendText(chatId, "Incorrect use of that command.\nUse /help_" + command + " for further information.");
+				}
+			}
+			if (!recognizedCommand) await Communicator.SendText(chatId, "Unrecognized command.\n Try /help if you don't know what to use");
+		}
+
+		static private async Task OnFileRead(string inputPath)
         {
 			StreamReader inputFile = new StreamReader(inputPath);
 			string line;
             while((line = inputFile.ReadLine()) != null){
-
+				await ReceiveMessage(line);
             }
         }
 
