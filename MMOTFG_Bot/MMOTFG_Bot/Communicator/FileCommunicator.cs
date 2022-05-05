@@ -10,15 +10,19 @@ namespace MMOTFG_Bot
 {
 	class FileCommunicator: Communicator
 	{
-		public string InputPath = assetsPath + "Input.txt";
-		private string OutputPath = assetsPath + "Output.txt";
+		public string BasePath = assetsPath + "/Testing";
+		public string InputPath;
+		private string OutputPath;
 
 		StreamWriter outputFile;
 
-		public FileCommunicator() { }
+		public FileCommunicator() {
+		}
 
-		public void Init()
-		{
+		public void Init(string inputPath, string outputPath)
+		{			
+			InputPath = inputPath;
+			OutputPath = outputPath;
 			outputFile = new StreamWriter(OutputPath);
 		}
 
@@ -57,5 +61,11 @@ namespace MMOTFG_Bot
 		{
 			await outputFile.WriteLineAsync("Reply Markup removed");
 		}
+
+		public async Task Flush()
+        {
+			await outputFile.FlushAsync();
+			outputFile.Close();
+        }
 	}
 }

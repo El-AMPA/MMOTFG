@@ -30,6 +30,8 @@ namespace MMOTFG_Bot
 
 		static async Task Main(string[] args)
 		{
+			//en args se puede poner [nombre del archivo de input] [nombre del archivo de output]
+
 			/*Si estamos depurando en visual studio, tenemos que cambiar la ruta relativa en PC
 			* para que funcione igual que en el contenedor de Docker*/
 			if (Environment.GetEnvironmentVariable("PLATFORM_PC") != null)
@@ -62,10 +64,8 @@ namespace MMOTFG_Bot
 			//communicator.Init(botClient);
 
 			//File Communicator
-			Communicator = new FileCommunicator();
-			Communicator.Init();
-
-			//Module initializers
+			Communicator = new FileCommunicator();	
+						//Module initializers
 			InventorySystem.Init();
 			Map.Init("assets/map.json", "assets/directionSynonyms.json");
 			JSONSystem.Init("assets/enemies.json", "assets/player.json", "assets/attacks.json", "assets/items.json");
@@ -83,7 +83,6 @@ namespace MMOTFG_Bot
 
 			using var cts = new CancellationTokenSource();
 
-			//var a = new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync);
 			if (Communicator as TelegramCommunicator != null)
 			{
 				botClient.StartReceiving(new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync), null, cts.Token);
@@ -93,7 +92,7 @@ namespace MMOTFG_Bot
 				FileCommunicator f = Communicator as FileCommunicator;
 				if (f != null)
 				{
-					await OnFileRead(f.InputPath);
+					await OnFileRead(f);
 				}
 			}
 
@@ -171,7 +170,7 @@ namespace MMOTFG_Bot
 			}
 		}
 
-		static private async Task ReceiveMessage(string message, string chatId = "0")
+		static private async Task ReceiveMessage(string message, string chatId = "4353453")
         {
 			List<string> subStrings = ProcessMessage(message);
 			string command = subStrings[0];
@@ -198,14 +197,21 @@ namespace MMOTFG_Bot
 			if (!recognizedCommand) await Communicator.SendText(chatId, "Unrecognized command.\n Try /help if you don't know what to use");
 		}
 
-		static private async Task OnFileRead(string inputPath)
+		static private async Task OnFileRead(FileCommunicator f)
         {
-			StreamReader inputFile = new StreamReader(inputPath);
-			string line;
-            while((line = inputFile.ReadLine()) != null){
-				await ReceiveMessage(line);
-            }
-        }
+			var paths = Directory.GetDirectories(f.BasePath);
+			foreach(string path in paths){
+				f.Init(path + "/Input.txt", path + "/Output.txt");
+				StreamReader inputFile = new StreamReader(f.InputPath);
+				string line;
+				while ((line = inputFile.ReadLine()) != null)
+				{
+					await ReceiveMessage(line);
+				}
+				await f.Flush();	
+			}
+			Environment.Exit(0);
+		}
 
 		/// <summary>
 		/// Processes the message recieved from the user by filtering out certain chars and splitting it into words
