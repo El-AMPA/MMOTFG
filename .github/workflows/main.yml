@@ -30,18 +30,11 @@ jobs:
       - name: create private folder
         run: mkdir .\MMOTFG_Bot\MMOTFG_Bot\assets\private\
 
-      - name: arbolito
-        run: tree /f /a
-
       - name: createFile
         run: echo .\MMOTFG_Bot\MMOTFG_Bot\assets\private\firebase-admin.json 
       
       - name: writeFile
         run: echo '${{secrets.FIREBASE_TOKEN}}' >> .\MMOTFG_Bot\MMOTFG_Bot\assets\private\firebase-admin.json
-      
-      - name: dir
-        run: dir
-        working-directory: MMOTFG_Bot\MMOTFG_Bot\bin\Release\netcoreapp3.1\
       
       - name: execute program
         run: .\MMOTFG_Bot.exe -t
