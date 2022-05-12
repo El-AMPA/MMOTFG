@@ -12,26 +12,35 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   
-  # buildBot:
-  #   runs-on: windows-latest
-  #   steps:
-  #     - name: checkout
-  #       uses: actions/checkout@v3
+  buildBot:
+    runs-on: windows-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
       
-  #     - name: Add msbuild to PATH
-  #       uses: microsoft/setup-msbuild@v1.1
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
 
-  #     - name: restore
-  #       run: dotnet restore .\MMOTFG_Bot\
+      - name: restore
+        run: dotnet restore .\MMOTFG_Bot\
       
-  #     - name: execute build
-  #       run: MSBuild.exe .\MMOTFG_Bot\MMOTFG_Bot\MMOTFG_Bot.csproj /p:Configuration=Release
+      - name: execute build
+        run: MSBuild.exe .\MMOTFG_Bot\MMOTFG_Bot\MMOTFG_Bot.csproj /p:Configuration=Release
   
   createFirebaseToken:
+    needs: buildBot
     runs-on: ubuntu-latest
     steps:
       - name: createFile
-        run: echo ${{secrets.FIREBASE_TOKEN}}
-          echo "hola" 
-    
+        run: 
+          touch .\MMOTFG_Bot\MMOTFG_Bot\assets\private\firebase-admin.json
+          echo ${{secrets.FIREBASE_TOKEN}} >> .\MMOTFG_Bot\MMOTFG_Bot\assets\private\firebase-admin.json
+          
+  runBot:
+    needs: createFirebaseToken
+    runs-on: windows-latest
+    steps:
+      - name: run
+        run: .\MMOTFG_Bot\MMOTFG_Bot\bin\Release\netcoreapp3.1\MMOTFG_Bot.exe -t
+
           
