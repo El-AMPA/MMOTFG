@@ -36,7 +36,7 @@ jobs:
           touch .\MMOTFG_Bot\MMOTFG_Bot\assets\private\firebase-admin.json 
       - name: writeFile
         shell: bash
-        run: echo ${{secrets.FIREBASE_TOKEN}} >> $.\MMOTFG_Bot\MMOTFG_Bot\assets\private\firebase-admin.json
+        run: echo "hola" >> .\MMOTFG_Bot\MMOTFG_Bot\assets\private\firebase-admin.json
           
   runBot:
     needs: createFirebaseToken
