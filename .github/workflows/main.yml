@@ -42,6 +42,8 @@ jobs:
     needs: createFirebaseToken
     runs-on: windows-latest
     steps:
+      - name: arbolito
+        run: tree
       - name: run
         run: .\MMOTFG_Bot\MMOTFG_Bot\bin\Release\netcoreapp3.1\MMOTFG_Bot.exe -t
 
