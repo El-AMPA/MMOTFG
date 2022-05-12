@@ -39,8 +39,12 @@ jobs:
       - name: writeFile
         run: echo "${{secrets.FIREBASE_TOKEN}}" >> .\MMOTFG_Bot\MMOTFG_Bot\assets\private\firebase-admin.json
       
-      - name: run app test mode
-        run: .\MMOTFG_Bot\MMOTFG_Bot\bin\Release\netcoreapp3.1\MMOTFG_Bot.exe -t
+      - name: go to exe dir
+        run: cd .\MMOTFG_Bot\MMOTFG_Bot\bin\Release\netcoreapp3.1\
+        
+      -name: execute program
+        run: MMOTFG_Bot.exe -t
+
      
 
           
