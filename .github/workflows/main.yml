@@ -42,7 +42,7 @@ jobs:
       - name: go to exe dir
         run: cd .\MMOTFG_Bot\MMOTFG_Bot\bin\Release\netcoreapp3.1\
         
-      -name: execute program
+      - name: execute program
         run: MMOTFG_Bot.exe -t
 
      
