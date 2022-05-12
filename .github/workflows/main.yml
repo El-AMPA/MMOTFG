@@ -20,6 +20,9 @@ jobs:
       
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
+
+      - name: restore
+        run: dotnet restore .\MMOTFG_Bot\
       
       - name: execute build
         run: MSBuild.exe .\MMOTFG_Bot\MMOTFG_Bot\MMOTFG_Bot.csproj /p:Configuration=Release
