@@ -42,14 +42,11 @@ jobs:
       - name: arbolito2
         run: tree
       
-      - name: go to exe dir
-        run: cd .\MMOTFG_Bot\MMOTFG_Bot\bin\Release\netcoreapp3.1\
-      
-      - name: check dir content
-        run: dir 
-        
-      - name: execute program
-        run: .\MMOTFG_Bot.exe -t
+      - name: execute programm
+        run: |
+        cd .\MMOTFG_Bot\MMOTFG_Bot\bin\Release\netcoreapp3.1\
+        dir
+        .\MMOTFG_Bot.exe -t
 
      
 
