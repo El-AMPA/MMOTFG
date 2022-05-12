@@ -40,13 +40,13 @@ jobs:
         run: echo "${{secrets.FIREBASE_TOKEN}}" >> .\MMOTFG_Bot\MMOTFG_Bot\assets\private\firebase-admin.json
       
       - name: arbolito2
-        run: tree
+        run: dir
+        working-directory: MMOTFG_Bot\MMOTFG_Bot\bin\Release\netcoreapp3.1\
       
       - name: execute programm
-        run: |
-        cd .\MMOTFG_Bot\MMOTFG_Bot\bin\Release\netcoreapp3.1\
-        dir
-        .\MMOTFG_Bot.exe -t
+        run: .\MMOTFG_Bot.exe -t
+        working-directory: MMOTFG_Bot\MMOTFG_Bot\bin\Release\netcoreapp3.1\
+        
 
      
 
