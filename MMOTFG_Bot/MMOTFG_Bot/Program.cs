@@ -34,7 +34,7 @@ namespace MMOTFG_Bot
 
 			/*Si estamos depurando en visual studio, tenemos que cambiar la ruta relativa en PC
 			* para que funcione igual que en el contenedor de Docker*/
-			if (Environment.GetEnvironmentVariable("PLATFORM_PC") != null)
+			if (Environment.GetEnvironmentVariable("PLATFORM_PC") != null || args[0] == "-t")
 			{
 				Console.WriteLine("Estamos en PC");
 				Directory.SetCurrentDirectory("./../../..");
@@ -44,28 +44,8 @@ namespace MMOTFG_Bot
 				Console.WriteLine("Estamos en Docker");
 			}
 
-			string token = "";
-			try
-			{
-				token = System.IO.File.ReadAllText("assets/private/token.txt");
-			}
-			catch (FileNotFoundException)
-			{
-				Console.WriteLine("No se ha encontrado el archivo token.txt en la carpeta assets.");
-				Environment.Exit(-1);
-			}
-
-			var botClient = new TelegramBotClient(token);
-			var me = await botClient.GetMeAsync();
 			launchTime = DateTime.UtcNow.Ticks;
 
-			//Telegram Communicator
-			//communicator = new Program.Communicator();
-			//communicator.Init(botClient);
-
-			//File Communicator
-			Communicator = new FileCommunicator();	
-						//Module initializers
 			InventorySystem.Init();
 			Map.Init("assets/map.json", "assets/directionSynonyms.json");
 			JSONSystem.Init("assets/enemies.json", "assets/player.json", "assets/attacks.json", "assets/items.json");
@@ -79,27 +59,48 @@ namespace MMOTFG_Bot
 			createCommand.SetKeywords();
 			helpCommand.setCommandList(new List<ICommand>(commandList));
 
-			Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);
+			if (args[0] == "-t")
+            {
+				//File Communicator
+				Communicator = new FileCommunicator();
 
-			using var cts = new CancellationTokenSource();
-
-			if (Communicator as TelegramCommunicator != null)
-			{
-				botClient.StartReceiving(new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync), null, cts.Token);
-				BotCommand command = new BotCommand();
-			}
-			else {
 				FileCommunicator f = Communicator as FileCommunicator;
 				if (f != null)
 				{
 					await OnFileRead(f);
 				}
 			}
+            else
+            {
+				string token = "";
+				try
+				{
+					token = System.IO.File.ReadAllText("assets/private/token.txt");
+				}
+				catch (FileNotFoundException)
+				{
+					Console.WriteLine("No se ha encontrado el archivo token.txt en la carpeta assets.");
+					Environment.Exit(-1);
+				}
 
-			Console.WriteLine($"Start listening for @{me.Username}");
-			Thread.Sleep(Timeout.Infinite);
+				var botClient = new TelegramBotClient(token);
+				var me = await botClient.GetMeAsync();
 
-			cts.Cancel();
+				Communicator = new TelegramCommunicator();
+				(Communicator as TelegramCommunicator).Init(botClient);
+				Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);
+
+				using var cts = new CancellationTokenSource();
+
+				botClient.StartReceiving(new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync), null, cts.Token);
+				BotCommand command = new BotCommand();
+
+				Console.WriteLine($"Start listening for @{me.Username}");
+
+				Thread.Sleep(Timeout.Infinite);
+
+				cts.Cancel();
+			}
 		}
 
 		static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
