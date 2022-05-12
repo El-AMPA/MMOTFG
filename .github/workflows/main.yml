@@ -32,5 +32,6 @@ jobs:
     steps:
       - name: createFile
         run: echo ${{secrets.FIREBASE_TOKEN}}
+          echo "hola" 
     
           
