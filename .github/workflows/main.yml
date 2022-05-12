@@ -31,8 +31,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: createFile
-        env:
-        FIREBASE_TOKEN : ${{secrets.FIREBASE_TOKEN}}
-        run: echo $FIREBASE_TOKEN
+        run: echo ${{secrets.FIREBASE_TOKEN}}
     
           
