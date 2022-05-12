@@ -43,7 +43,7 @@ jobs:
         run: cd .\MMOTFG_Bot\MMOTFG_Bot\bin\Release\netcoreapp3.1\
         
       - name: execute program
-        run: MMOTFG_Bot.exe -t
+        run: ./MMOTFG_Bot.exe -t
 
      
 
