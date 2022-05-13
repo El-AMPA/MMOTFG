@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MMOTFG_Bot.Battle;
+using MMOTFG_Bot.Inventory;
 
 namespace MMOTFG_Bot
 {
-    static class JSONSystem
+    static class JSONDeserializer
     {
         private static List<Battler> enemies;
         private static Player player;
@@ -133,7 +135,7 @@ namespace MMOTFG_Bot
             Battler e = enemies.FirstOrDefault(x => x.name == name);
             if (e != null)
             {
-                e.New();
+                e.Reset();
                 return e;
             }
             else return e;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using MMOTFG_Bot.Inventory;
+using MMOTFG_Bot.Battle;
 
 
 namespace MMOTFG_Bot.Commands

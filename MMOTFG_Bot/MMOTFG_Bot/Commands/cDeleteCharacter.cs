@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using MMOTFG_Bot.Database;
 
 namespace MMOTFG_Bot.Commands
 {/// <summary>

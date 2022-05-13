@@ -1,12 +1,12 @@
 ﻿using MMOTFG_Bot.Navigation;
+using MMOTFG_Bot.Database;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Battle
 {
     class Player : Battler
     {
@@ -36,15 +36,6 @@ namespace MMOTFG_Bot
             originalStats = (float[])stats.Clone();
             levelUpRoadmap.CalculateLevels();
         }
-
-        private void SetAttackNames()
-        {
-            attacks = new List<string>();
-            foreach (Attack a in attacks_)
-            {
-                attacks.Add(a.name);
-            }
-        }
       
         public void SetName(string playerName)
         {
@@ -69,7 +60,7 @@ namespace MMOTFG_Bot
                 string statChanges = "";
                 for (int i = 0; i < Stats.statNum; i++)
                 {
-                    int change = (int)levelUpRoadmap.getStatDifference(i);
+                    int change = (int)levelUpRoadmap.GetStatDifference(i);
                     AddToStat((StatName)i, change, changeMax: true, permanent: true);
                     statChanges += $"{(StatName)i} {((change >= 0) ? "+" : "")}{change}\n";
                 }
@@ -99,7 +90,7 @@ namespace MMOTFG_Bot
             else
             {
                 learningAttack = null;
-                attacks_.Add(JSONSystem.GetAttack(attackName));
+                attacks_.Add(JSONDeserializer.GetAttack(attackName));
                 SetAttackNames();
                 await TelegramCommunicator.SendText(chatId, $"Learnt {attackName}!");
                 if (!BattleSystem.battleActive) await TelegramCommunicator.RemoveReplyMarkup(chatId);
@@ -138,7 +129,7 @@ namespace MMOTFG_Bot
             for (int i = 0; i < Stats.statNum; i++)
             {
                 //(HP/MP only if player died)
-                if (!Stats.isBounded((StatName)i) || dead)
+                if (!Stats.IsBounded((StatName)i) || dead)
                     stats[i] = originalStats[i];
                 if (dead)
                 {
@@ -188,6 +179,15 @@ namespace MMOTFG_Bot
             upNext = Convert.ToBoolean(eInfo[DbConstants.PLAYER_FIELD_LEVEL]);
 
             learningAttack = eInfo[DbConstants.PLAYER_FIELD_LEARNING_ATTACK] as string;
+        }
+
+        private void SetAttackNames()
+        {
+            attacks = new List<string>();
+            foreach (Attack a in attacks_)
+            {
+                attacks.Add(a.name);
+            }
         }
     }
 }

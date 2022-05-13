@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using MMOTFG_Bot.Battle;
 
 namespace MMOTFG_Bot.Events
 {
@@ -16,11 +17,11 @@ namespace MMOTFG_Bot.Events
         public async override Task Execute(string chatId)
         {
             if (Enemy != null)
-                await BattleSystem.StartBattle(chatId, JSONSystem.GetEnemy(Enemy));
+                await BattleSystem.StartBattle(chatId, JSONDeserializer.GetEnemy(Enemy));
             else
             {
                 List<Battler> enemies = new List<Battler>();
-                foreach (string s in Enemies) enemies.Add(JSONSystem.GetEnemy(s));
+                foreach (string s in Enemies) enemies.Add(JSONDeserializer.GetEnemy(s));
                 await BattleSystem.StartBattle(chatId, enemies);
             }
         }

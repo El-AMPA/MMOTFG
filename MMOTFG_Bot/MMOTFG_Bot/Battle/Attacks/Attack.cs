@@ -5,9 +5,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
-using static MMOTFG_Bot.StatName;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Battle
 {
     //If you want to create a new Attack class, add it below so JsonSubtypes recognizes it
     //when deserializing the battlers.
@@ -20,10 +19,9 @@ namespace MMOTFG_Bot
         public string name;
         public float power;
         public float mpCost;
+        public bool affectsSelf;
         protected Battler user;
         protected Battler target;
-
-        public bool affectsSelf;
 
         public Attack(string name_, float power_, float mpCost_)
         {
@@ -44,7 +42,7 @@ namespace MMOTFG_Bot
 
         public virtual float GetDamage()
         {
-            return user.GetStat(ATK) * power;
+            return user.GetStat(StatName.ATK) * power;
         }
 
         public virtual async Task OnAttack(string chatId) { }

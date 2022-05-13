@@ -1,13 +1,12 @@
 ﻿using JsonSubTypes;
-using MMOTFG_Bot.Items;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Threading.Tasks;
+using MMOTFG_Bot.Battle;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Inventory
 {
     [JsonConverter(typeof(JsonSubtypes), "ItemType")]
     [JsonSubtypes.KnownSubType(typeof(EquipableItem), "EquipableItem")]

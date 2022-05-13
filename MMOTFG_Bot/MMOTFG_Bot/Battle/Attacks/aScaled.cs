@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Battle
 {
     class aScaled : Attack
     {
-        public aScaled(string name_, float power_, float mpCost_) : base(name_, power_, mpCost_) { }
-
         [JsonConverter(typeof(StringEnumConverter))]
         public StatName statToScale;
 
         public float fixedDamage;
+
+        public aScaled(string name_, float power_, float mpCost_) : base(name_, power_, mpCost_) { }
 
         public override float GetDamage()
         {

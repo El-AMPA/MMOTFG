@@ -25,6 +25,5 @@ namespace MMOTFG_Bot.Inventory
                     {InventoryItem.name, Quantity}
                 };
         }
-
     }
 }

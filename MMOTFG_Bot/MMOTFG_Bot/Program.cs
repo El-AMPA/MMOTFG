@@ -1,6 +1,8 @@
 ﻿using MMOTFG_Bot.Commands;
 using MMOTFG_Bot.Navigation;
 using MMOTFG_Bot.Inventory;
+using MMOTFG_Bot.Battle;
+using MMOTFG_Bot.Database;
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -60,7 +62,7 @@ namespace MMOTFG_Bot
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
 			Map.Init("assets/map.json", "assets/directionSynonyms.json");
-			JSONSystem.Init("assets/enemies.json", "assets/player.json", "assets/attacks.json", "assets/items.json");
+			JSONDeserializer.Init("assets/enemies.json", "assets/player.json", "assets/attacks.json", "assets/items.json");
 			BattleSystem.Init();
 			DatabaseManager.Init();
 			foreach (ICommand c in commandList)

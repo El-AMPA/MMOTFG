@@ -5,6 +5,8 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using MMOTFG_Bot.Battle;
+using MMOTFG_Bot.Database;
 
 namespace MMOTFG_Bot.Navigation
 {

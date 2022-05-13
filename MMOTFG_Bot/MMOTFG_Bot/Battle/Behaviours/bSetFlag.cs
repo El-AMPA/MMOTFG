@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MMOTFG_Bot.Navigation;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Battle
 {
     class bSetFlag : Behaviour
     {

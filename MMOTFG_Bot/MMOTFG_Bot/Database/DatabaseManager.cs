@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Google.Cloud.Firestore;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Database
 {
 	static class DatabaseManager
 	{

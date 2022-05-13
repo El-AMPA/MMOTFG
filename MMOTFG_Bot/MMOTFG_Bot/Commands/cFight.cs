@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using MMOTFG_Bot.Battle;
 
 namespace MMOTFG_Bot.Commands
 {
@@ -21,7 +22,7 @@ namespace MMOTFG_Bot.Commands
         internal override async Task Execute(string command, string chatId, string[] args = null)
         {
             //habría que preguntar al mapa qué enemigo hay en esta sala
-            await BattleSystem.StartBattle(chatId, JSONSystem.GetEnemy("Manuela"));
+            await BattleSystem.StartBattle(chatId, JSONDeserializer.GetEnemy("Manuela"));
         }
 
         internal override bool IsFormattedCorrectly(string[] args)

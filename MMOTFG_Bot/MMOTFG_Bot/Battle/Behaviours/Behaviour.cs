@@ -1,12 +1,9 @@
 ﻿using JsonSubTypes;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Battle
 {
     //If you want to create a new Behaviour class, add it below so JsonSubtypes recognizes it
     //when deserializing the battlers.

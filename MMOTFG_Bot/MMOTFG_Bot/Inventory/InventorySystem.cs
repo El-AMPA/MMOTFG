@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using MMOTFG_Bot.Items;
+using MMOTFG_Bot.Battle;
+using MMOTFG_Bot.Database;
 
 namespace MMOTFG_Bot.Inventory
 {
@@ -123,7 +123,7 @@ namespace MMOTFG_Bot.Inventory
         //traducirlo aquí
         public static bool StringToItem(string s, out ObtainableItem item)
         {
-            item = JSONSystem.GetItem(s);
+            item = JSONDeserializer.GetItem(s);
             return item != null;
         }
 

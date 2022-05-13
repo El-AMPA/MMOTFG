@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Battle
 {
     class bPlayerDeath : Behaviour
     {

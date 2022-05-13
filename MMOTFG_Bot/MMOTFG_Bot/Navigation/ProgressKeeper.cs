@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MMOTFG_Bot.Database;
 
 namespace MMOTFG_Bot.Navigation
 {
     class ProgressKeeper
     {
-        public static Dictionary<string, bool> PlayerRecords = new Dictionary<string, bool>();
+        private static Dictionary<string, bool> PlayerRecords = new Dictionary<string, bool>();
 
         public static async Task CreateProgressKeeper(string chatId)
         {

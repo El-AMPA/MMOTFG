@@ -1,17 +1,12 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Battle
 {
     class aStatChanging : Attack
     {
-        public aStatChanging(string name_, float power_, float mpCost_) : base(name_, power_, mpCost_) { }
-
         [JsonConverter(typeof(StringEnumConverter))]
         public StatName statToChange;
 
@@ -23,6 +18,8 @@ namespace MMOTFG_Bot
 
         [DefaultValue(true)]
         public bool changeMax;
+
+        public aStatChanging(string name_, float power_, float mpCost_) : base(name_, power_, mpCost_) { }
 
         public override async Task OnAttack(string chatId) 
         {

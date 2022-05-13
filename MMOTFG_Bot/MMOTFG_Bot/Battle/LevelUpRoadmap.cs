@@ -1,13 +1,9 @@
 ﻿using MMOTFG_Bot.Events;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.Serialization;
-using System.Text;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Battle
 {
     class LevelUpRoadmap
     {
@@ -29,16 +25,16 @@ namespace MMOTFG_Bot
         //stats at max level
         public float[] finalStats;
 
+        public List<LevelUpEvent> levelUpEvents;
+
+        //experience needed for each level
+        public List<int> neededExperience;
+
         public struct LevelUpEvent
         {
             public int level;
             public Event ev;
         }
-
-        public List<LevelUpEvent> levelUpEvents;
-
-        //experience needed for each level
-        public List<int> neededExperience; 
 
         public void CalculateLevels()
         {
@@ -50,7 +46,7 @@ namespace MMOTFG_Bot
             }
         }
 
-        public float getStatDifference(int s)
+        public float GetStatDifference(int s)
         {
             return (finalStats[s] - firstStats[s]) / (maxLevel - minLevel);
         }

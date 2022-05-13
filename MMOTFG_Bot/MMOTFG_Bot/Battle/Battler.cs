@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using MMOTFG_Bot.Database;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Battle
 {
     class Battler
     {
@@ -31,7 +32,6 @@ namespace MMOTFG_Bot
         public string imageName;
         public string imageCaption;
 
-        public float droppedMoney;
         public string droppedItem;
         [DefaultValue(1)]
         public int droppedItemAmount;
@@ -49,7 +49,7 @@ namespace MMOTFG_Bot
         }
 
         //Gets a random attack the enemy has enough MP to use (basic attack should always cost 0 to avoid problems)
-        public Attack nextAttack()
+        public Attack NextAttack()
         {
             int i = attacks_.Count - 1;
             while (attacks_[i].mpCost > stats[(int)StatName.MP])
@@ -69,7 +69,7 @@ namespace MMOTFG_Bot
         {
             attacks_ = new List<Attack>();
             //get attacks by name
-            foreach (string s in attacks) attacks_.Add(JSONSystem.GetAttack(s));
+            foreach (string s in attacks) attacks_.Add(JSONDeserializer.GetAttack(s));
             //attacks are automatically sorted by mpCost
             attacks_.Sort((a1, a2) => a1.mpCost.CompareTo(a2.mpCost));
         }
@@ -81,7 +81,7 @@ namespace MMOTFG_Bot
             if (changeMax)
             {
                 //Proportion is maintained for bounded stats
-                if (Stats.isBounded(stat))
+                if (Stats.IsBounded(stat))
                 {
                     float currentPercent = stats[(int)stat] / maxStats[(int)stat];
                     stats[(int)stat] = (float)Math.Round(newValue * currentPercent, 2);
@@ -93,7 +93,7 @@ namespace MMOTFG_Bot
             else
             {
                 //Bounded stats are clamped
-                if (Stats.isBounded(stat))
+                if (Stats.IsBounded(stat))
                 {
                     float max = maxStats[s];
                     stats[s] = (float)Math.Round(Math.Clamp(newValue, 0, max), 2);
@@ -115,7 +115,7 @@ namespace MMOTFG_Bot
             SetStat(stat, statn * mult, changeMax, permanent);
         }
 
-        public void New()
+        public void Reset()
         {
             stats = (float[])originalStats.Clone();
             maxStats = (float[])originalStats.Clone();
@@ -197,8 +197,6 @@ namespace MMOTFG_Bot
 
             battlerInfo.Add(DbConstants.BATTLER_FIELD_NAME, name);
 
-            battlerInfo.Add(DbConstants.BATTLER_FIELD_MONEY_DROP, droppedMoney);
-
             battlerInfo.Add(DbConstants.BATTLER_FIELD_ITEM_DROP, droppedItem);
 
             battlerInfo.Add(DbConstants.BATTLER_FIELD_ITEM_DROP_AMOUNT, droppedItemAmount);
@@ -246,7 +244,6 @@ namespace MMOTFG_Bot
 
             name = eInfo[DbConstants.BATTLER_FIELD_NAME].ToString();
 
-            droppedMoney = Convert.ToSingle(eInfo[DbConstants.BATTLER_FIELD_MONEY_DROP]);
             droppedItem = eInfo[DbConstants.BATTLER_FIELD_ITEM_DROP] as string;
 
             droppedItemAmount = Convert.ToInt32(eInfo[DbConstants.BATTLER_FIELD_ITEM_DROP_AMOUNT]);

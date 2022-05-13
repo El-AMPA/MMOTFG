@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MMOTFG_Bot.Battle;
 
 namespace MMOTFG_Bot.Commands
 {
@@ -15,7 +16,7 @@ namespace MMOTFG_Bot.Commands
         public override void SetKeywords()
         {
             //keywords are every possible attack
-            key_words = JSONSystem.GetAllAttackNames().ConvertAll(x => x.ToLower()).ToArray();
+            key_words = JSONDeserializer.GetAllAttackNames().ConvertAll(x => x.ToLower()).ToArray();
         }
 
         internal override async Task Execute(string command, string chatId, string[] args = null)

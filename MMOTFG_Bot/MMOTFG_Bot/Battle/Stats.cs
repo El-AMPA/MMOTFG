@@ -1,11 +1,8 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Battle
 {   
     public enum StatName {
         [EnumMember(Value = "HP")]
@@ -24,7 +21,7 @@ namespace MMOTFG_Bot
 
         public static int statNum = Enum.GetNames(typeof(StatName)).Length;
 
-        public static bool isBounded(StatName stat)
+        public static bool IsBounded(StatName stat)
         {
             return boundedStats.Contains(stat);
         }
