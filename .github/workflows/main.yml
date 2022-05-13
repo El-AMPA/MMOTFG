@@ -41,15 +41,25 @@ jobs:
         working-directory: MMOTFG_Bot\MMOTFG_Bot\bin\Release\netcoreapp3.1\
 
 
-      - name: UploadTestArtifacts
+      - name: uploadTestArtifacts
         uses: actions/upload-artifact@v2
         with:
-            name: TestOutputArtifact
+            name: testOutputArtifact
             path: .\MMOTFG_Bot\MMOTFG_Bot\assets\Testing
             if-no-files-found: error
             retention-days: 1
         
+  DiffTest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
 
-     
-
+      - name: uploadTestArtifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: testOutputArtifact
+      
+      - name: checkDownloadArtifact
+        run: ls -R
           
