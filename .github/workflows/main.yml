@@ -51,10 +51,10 @@ jobs:
   diffTestResults:
 
     runs-on: windows-latest
-    steps:
+    needs: buildAndTest
 
-      - needs: buildAndTest
-      
+    steps:
+       
       - name: checkDownloadArtifact 
         uses: actions/download-artifact@v2
         with:
