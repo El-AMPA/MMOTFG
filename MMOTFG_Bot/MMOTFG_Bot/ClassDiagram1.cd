@@ -1,0 +1,396 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MMOTFG_Bot.aScaled" Collapsed="true">
+    <Position X="12.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAQAAAAAAAAAAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Battle\Attacks\aScaled.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.aStatChanging" Collapsed="true">
+    <Position X="14.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAACAAAAAABAAABAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Battle\Attacks\aStatChanging.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.bChangeStat" Collapsed="true">
+    <Position X="4.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAQAAAAAABAAABAAACAAAAAAAAAAgIA=</HashCode>
+      <FileName>Battle\Behaviours\bChangeStat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Behaviour" Collapsed="true">
+    <Position X="6.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQIAIAAAAAABAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Battle\Behaviours\Behaviour.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.bPlayerDeath" Collapsed="true">
+    <Position X="6.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Battle\Behaviours\bPlayerDeath.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.bSetFlag" Collapsed="true">
+    <Position X="9" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAQAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Battle\Behaviours\bSetFlag.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.LevelUpRoadmap" Collapsed="true">
+    <Position X="48" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAQEABgAAAABCAQAAgAAQ=</HashCode>
+      <FileName>Battle\Level\LevelUpRoadmap.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Attack" Collapsed="true">
+    <Position X="13.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAgAAACAoAAAAAAAAAEEAAAAAAABAAAAAQI=</HashCode>
+      <FileName>Battle\Attack.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Battler" Collapsed="true">
+    <Position X="7.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgiAAAAyAgBAIGEAEAAAAA0EACQEgwABJAAAQAAAKEA=</HashCode>
+      <FileName>Battle\Battler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.BattleSystem" Collapsed="true">
+    <Position X="44.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gBAABAABBAgAACgAIRAICAAAAAEAAAgBIAACAQAAAAA=</HashCode>
+      <FileName>Battle\BattleSystem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.JSONSystem" Collapsed="true">
+    <Position X="46.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAACAAAEEBAAkAAAAAAAAACAAhAAACAAAQIAA=</HashCode>
+      <FileName>Battle\JSONSystem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Player" Collapsed="true">
+    <Position X="7.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEQQAQIAAAAAAAAEAAECEEQECIAABAQAAAIAA=</HashCode>
+      <FileName>Battle\Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Stats" Collapsed="true">
+    <Position X="44.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAACAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Battle\Stats.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.ICommand" Collapsed="true">
+    <Position X="24" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAACAIAAAAAAQAIAACAAAAAEAAAIAAAAAgAAAgAAA=</HashCode>
+      <FileName>Commands\ICommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.TelegramCommunicator" Collapsed="true">
+    <Position X="46.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAECAAAAAAAAAAAAgAQEAEACAAACAAAAAAI=</HashCode>
+      <FileName>Communicator\TelegramCommunicator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.DatabaseManager" Collapsed="true">
+    <Position X="46.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAgAYQCAACQAACAIAAAAQAAAAABAgCAAIAAEA=</HashCode>
+      <FileName>Database\DatabaseManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.DbConstants" Collapsed="true">
+    <Position X="48" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAoKAACCAgAAhIAiGpgAAAAAiCCgAAggAAAACAAACA=</HashCode>
+      <FileName>Database\DbConstants.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.InventorySystem" Collapsed="true">
+    <Position X="44.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAEAAgEEAAACBAACAAEACCAAgAEEAAAAEIAKACAAAAE=</HashCode>
+      <FileName>Inventory\InventorySystem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.ObtainableItem" Collapsed="true">
+    <Position X="4.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAKAAAAAAAGAEAACABAACAAAAAAA=</HashCode>
+      <FileName>Inventory\ObtainableItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.InformationSystem" Collapsed="true">
+    <Position X="49.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>InformationSystem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Program" Collapsed="true">
+    <Position X="46.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAgAAAAEAQEQAAQAAAAAAAAEAEAAAAAFBAAAAAg=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.RNG" Collapsed="true">
+    <Position X="49.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>RNG.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Commands.cAddItem">
+    <Position X="6" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAQAAAACAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Commands\cAddItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Commands.cAttack" Collapsed="true">
+    <Position X="12.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAQAAAACAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Commands\cAttack.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Commands.cCreateCharacter" Collapsed="true">
+    <Position X="17.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAQAAAACAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Commands\cCreateCharacter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Commands.cDebug" Collapsed="true">
+    <Position X="21.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAQAAAACAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Commands\cDebug.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Commands.cDeleteCharacter" Collapsed="true">
+    <Position X="26.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAQAAAACAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Commands\cDeleteCharacter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Commands.cDirections" Collapsed="true">
+    <Position X="30.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAQAAAACAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Commands\cDirections.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Commands.cEquipItem" Collapsed="true">
+    <Position X="35.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAQAAAACAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Commands\cEquipItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Commands.cFight" Collapsed="true">
+    <Position X="39.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAQAAAACAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Commands\cFight.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Commands.cHelp">
+    <Position X="8.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAQAAAACIAgAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Commands\cHelp.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Commands.cInfo" Collapsed="true">
+    <Position X="15" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAQAAAACAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Commands\cInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Commands.cInspectRoom" Collapsed="true">
+    <Position X="19.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAQAAAACAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Commands\cInspectRoom.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Commands.cNavigate" Collapsed="true">
+    <Position X="24" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAQAAAACAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Commands\cNavigate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Commands.cShowInventory" Collapsed="true">
+    <Position X="28.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAQAAAACAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Commands\cShowInventory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Commands.cStatus" Collapsed="true">
+    <Position X="33" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAQAAAACAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Commands\cStatus.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Commands.cThrowItem" Collapsed="true">
+    <Position X="37.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAQAAAACAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Commands\cThrowItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Commands.cUnequipItem" Collapsed="true">
+    <Position X="42" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAQAAAACAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Commands\cUnequipItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Commands.cUseItem">
+    <Position X="10.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAQAAAACAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Commands\cUseItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Events.eGiveItem" Collapsed="true">
+    <Position X="9.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\eGiveItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Events.eLearnAttack" Collapsed="true">
+    <Position X="11.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\eLearnAttack.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Events.eSendAudio" Collapsed="true">
+    <Position X="14" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Events\eSendAudio.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Events.eSendImage" Collapsed="true">
+    <Position X="16.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAQAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\eSendImage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Events.eSendImageCollection" Collapsed="true">
+    <Position X="18.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\eSendImageCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Events.eSendText" Collapsed="true">
+    <Position X="20.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\eSendText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Events.eSetFlag" Collapsed="true">
+    <Position X="5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAQAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\eSetFlag.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Events.eStartBattle" Collapsed="true">
+    <Position X="7.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAQAAAAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\eStartBattle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Events.Event" Collapsed="true">
+    <Position X="12.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\Event.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Items.EquipableItem" Collapsed="true">
+    <Position X="4.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIBAAQAAAAAAAAEAAAAAAAAAAAAIAEAA=</HashCode>
+      <FileName>Inventory\EquipableItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Navigation.Map" Collapsed="true">
+    <Position X="49.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEQAIQAACAAAAASAAAgAAAAgAAAAEAAAQAgTAAAAIAA=</HashCode>
+      <FileName>Navigation\Map.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Navigation.Node" Collapsed="true">
+    <Position X="44.5" Y="2.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="MMOTFG_Bot.Navigation.Node.NodeConnection" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Navigation\Node.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAQECAAQAAEACAAAAAAQAAAAQAAIAAAAAAggAAAA=</HashCode>
+      <FileName>Navigation\Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMOTFG_Bot.Navigation.ProgressKeeper" Collapsed="true">
+    <Position X="48" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAAQAAAEAAAAAAAAEAAAAAAAAAABAAAQ=</HashCode>
+      <FileName>Navigation\ProgressKeeper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="MMOTFG_Bot.Events.ItemLot" Collapsed="true">
+    <Position X="44.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAEAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Events\eGiveItem.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="MMOTFG_Bot.StatName" Collapsed="true">
+    <Position X="46.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAAAAAAAAAAAAQoAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Battle\Stats.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MMOTFG_Bot.EQUIPMENT_SLOT" Collapsed="true">
+    <Position X="44.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIBAAACAgAAAAIAASCAABEABAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Inventory\EquipmentSlots.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
