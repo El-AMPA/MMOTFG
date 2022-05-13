@@ -30,9 +30,9 @@ if %index% LEQ %count% (
 
     echo index: !index!
 
-    for /f "tokens=3" %%f in ('find /c /v "" ./Test%index%/expectedOutput.txt') do ( set textSize1=%%f ) 
+    for /f "tokens=3" %%f in ('find /c /v "" .\\Test%index%\\expectedOutput.txt') do ( set textSize1=%%f ) 
 
-    for /f "tokens=3" %%f in ('find /c /v "" ./Test%index%/Output.txt') do ( set textSize2=%%f )
+    for /f "tokens=3" %%f in ('find /c /v "" .\\Test%index%\\Output.txt') do ( set textSize2=%%f )
 
     echo Test!index!/expectedOutput.txt
     echo a: !textSize1!
@@ -43,8 +43,8 @@ if %index% LEQ %count% (
     if !textSize1! NEQ !textSize2! ( goto :failedSize )
 
     echo Archivos con el mismo tamanio
-        
-    fc ./Test!index!/expectedOutput.txt ./Test!index!/Output.txt > diffResult.txt
+
+    fc .\\Test%index%\\expectedOutput.txt .\\Test%index%\\Output.txt > diffResult.txt
 
     for /f "tokens=3" %%f in ('find /c /v "" diffResult.txt') do ( set diffText=%%f ) 
 
@@ -55,6 +55,8 @@ if %index% LEQ %count% (
     SET /A index = %index% + 1
 
     echo index: !index!
+
+    echo "          \n"
 
     goto :while
 )
