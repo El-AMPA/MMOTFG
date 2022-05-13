@@ -48,12 +48,6 @@ jobs:
             path: .\MMOTFG_Bot\MMOTFG_Bot\assets\Testing
             if-no-files-found: error
             retention-days: 1
-        
-  DiffTest:
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
 
       - name: uploadTestArtifacts
         uses: actions/download-artifact@v2
@@ -62,4 +56,5 @@ jobs:
       
       - name: checkDownloadArtifact
         run: ls -R
+      
           
