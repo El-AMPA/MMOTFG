@@ -1,5 +1,6 @@
 ﻿using MMOTFG_Bot.Commands;
 using MMOTFG_Bot.Navigation;
+using MMOTFG_Bot.Inventory;
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -22,8 +23,8 @@ namespace MMOTFG_Bot
 		static cHelp helpCommand = new cHelp();
 		static cCreateCharacter createCommand = new cCreateCharacter();
 
-		public static List<ICommand> commandList = new List<ICommand> { new cDeleteCharacter(), new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
-            new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
+		public static List<ICommand> commandList = new List<ICommand> { new cDeleteCharacter(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
+            new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cStatus(), new cFight(),
 			new cNavigate(), new cDirections(), new cInspectRoom(), new cAttack(), helpCommand};
 
 		static async Task Main(string[] args)

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using static MMOTFG_Bot.StatName;
-using System.Linq;
+using MMOTFG_Bot.Inventory;
+
 
 namespace MMOTFG_Bot
 {

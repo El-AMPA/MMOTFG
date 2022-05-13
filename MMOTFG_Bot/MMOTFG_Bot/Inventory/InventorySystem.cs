@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MMOTFG_Bot.Items;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Inventory
 {
     static class InventorySystem
     {
@@ -527,30 +527,6 @@ namespace MMOTFG_Bot
             equipment[(int)newItem.gearSlot] = newItem;
             equipment[(int)newItem.gearSlot].OnEquip(chatId);
             await BattleSystem.SavePlayerBattle(chatId);
-        }
-
-        public class InventoryRecord
-        {
-            public ObtainableItem InventoryItem { get; private set; }
-            public int Quantity { get; private set; }
-            public InventoryRecord(ObtainableItem item, int quantity)
-            {
-                InventoryItem = item;
-                Quantity = quantity;
-            }
-            public void AddToQuantity(int amountToAdd)
-            {
-                Quantity += amountToAdd;
-            }
-
-            public Dictionary<string, object> GetSerializable()
-            {
-                return new Dictionary<string, object>
-                {
-                    {InventoryItem.name, Quantity}
-                };
-            }
-
         }
     }
 }
