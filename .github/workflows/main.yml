@@ -40,7 +40,6 @@ jobs:
         run: .\MMOTFG_Bot.exe -t
         working-directory: MMOTFG_Bot\MMOTFG_Bot\bin\Release\netcoreapp3.1\
 
-
       - name: uploadTestArtifacts
         uses: actions/upload-artifact@v2
         with:
@@ -49,12 +48,20 @@ jobs:
             if-no-files-found: error
             retention-days: 1
 
-      - name: uploadTestArtifacts 
+  diffTestResults:
+
+    runs-on: windows-latest
+    steps:
+
+      - needs: buildAndTest
+      
+      - name: checkDownloadArtifact 
         uses: actions/download-artifact@v2
         with:
           name: testOutputArtifact
       
-      - name: checkDownloadArtifact
-        run: ls -R
+      - name: checkCorrectOutput
+        run: ./Diff.bat
+      
       
           
