@@ -49,7 +49,7 @@ jobs:
             if-no-files-found: error
             retention-days: 1
 
-      - name: uploadTestArtifacts
+      - name: uploadTestArtifacts 
         uses: actions/download-artifact@v2
         with:
           name: testOutputArtifact

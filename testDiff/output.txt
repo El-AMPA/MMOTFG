@@ -1,6 +1,0 @@
-3c3
-< tall
-\ No newline at end of file
----
-> tal
-\ No newline at end of file
