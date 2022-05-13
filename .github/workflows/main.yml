@@ -39,6 +39,15 @@ jobs:
       - name: execute program
         run: .\MMOTFG_Bot.exe -t
         working-directory: MMOTFG_Bot\MMOTFG_Bot\bin\Release\netcoreapp3.1\
+
+
+      - name: UploadTestArtifacts
+        uses: actions/upload-artifact@v2
+        with:
+            name: TestOutputArtifact
+            path: .\MMOTFG_Bot\MMOTFG_Bot\assets\Testing
+            if-no-files-found: error
+            retention-days: 1
         
 
      
