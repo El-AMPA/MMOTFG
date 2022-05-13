@@ -54,11 +54,17 @@ jobs:
     needs: buildAndTest
 
     steps:
-       
-      - name: checkDownloadArtifact 
+
+      - name: downloadArtifact 
         uses: actions/download-artifact@v2
         with:
           name: testOutputArtifact
+
+      - name: checkExpectedOutput
+        run: TYPE ./Test1/expectedOutput.txt
+
+      - name: checkRealOutput
+        run: TYPE ./Test1/Output.txt
       
       - name: checkCorrectOutput
         run: ./Diff.bat
