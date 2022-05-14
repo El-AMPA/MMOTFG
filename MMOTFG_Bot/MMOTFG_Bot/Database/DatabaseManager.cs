@@ -329,5 +329,29 @@ namespace MMOTFG_Bot
 			return docSnap.Exists;
 
 		}
+
+		public static async Task DeleteCollection(string collection)
+		{
+			CollectionReference colRef = db.Collection(collection);
+
+			if (colRef == null)
+			{
+				Console.WriteLine("Collection {0} doesnt exist, remember its case sentitive.", collection);
+				return;
+			}
+
+			QuerySnapshot snapshot = await colRef.GetSnapshotAsync();
+			IReadOnlyList<DocumentSnapshot> documents = snapshot.Documents;
+			while (documents.Count > 0)
+			{
+				foreach (DocumentSnapshot document in documents)
+				{
+					await document.Reference.DeleteAsync();
+				}
+				snapshot = await colRef.GetSnapshotAsync();
+				documents = snapshot.Documents;
+			}
+			Console.WriteLine("Finished deleting all documents from the collection.");
+		}
 	}
 }
