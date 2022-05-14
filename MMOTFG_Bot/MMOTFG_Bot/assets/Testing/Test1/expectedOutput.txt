@@ -1,4 +1,31 @@
-You can only have one character per player
-Este es el pasillo de las chicas. No debería estar aquí, pero tampoco es que vaya a ser el primer guarro que se cuela.
-Can't move in that direction
-No battle currently active
+Hello patata, ready for a good time?
+En mi habitación no hay mucho que ver. Debería bajar a ver qué hacen los demás (o también podría quedarme jugando al Elden Ring lmao).
+Mi habitación está al final del pasillo. Justo enfrente está la de Pj. Parece que tiene montada una rave en su habitación??? En fin, la salida está hacia el sur.
+En cuanto piso el pasillo sé que algo anda mal. Cuando hay tan poca gente por aquí es porque ÉL anda de guardia. Y si no hemos terminado de hacer el proyecto de construct... Pues eso, que de aquí no paso lol-
+manuela.jpg
+fedejimbo.png
+Manuela and Fedejimbo appear!
+Manuela's turn
+Manuela used Slap! patata took 10 damage.
+patata HP: 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩
+Patada
+Burla
+Overkill
+patata used Overkill! Fedejimbo took 1000 damage.
+Item mana_potion was added 2 times
+Fedejimbo died!
+You gained 666€
+You obtained mana_potion x2
+Gained 1 experience points.
+Reached level 2!
+HP +100
+ATK +21
+SPE +15
+MP +0
+
+Learnt Tortazo!
+El poder de la amistad cura 5 HP a Manuela.
+Tortazo
+Patada
+Burla
+Overkill

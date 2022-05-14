@@ -1,3 +1,5 @@
-delete patata
-create juan
+delete all
+create pablo
+equip sword
+unequip sword
 go casita
