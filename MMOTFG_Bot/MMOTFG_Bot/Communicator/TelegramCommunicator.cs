@@ -41,8 +41,7 @@ namespace MMOTFG_Bot
 		/// <summary>
 		/// Send a collection of images to a user.
 		/// Currently doesn't support captions on individual images because they're not shown as text on chat as
-		/// normal images do. You have to open the individual images of the collection to see the text. Not worth
-		/// the effort.
+		/// normal images do. You have to open the individual images of the collection to see the text.
 		/// </summary>
 		static public async Task SendImageCollection(string chatId, string[] imagesNames)
 		{
@@ -63,13 +62,13 @@ namespace MMOTFG_Bot
 		/// <summary>
 		/// Send an audio to a user. ImageCaption supports HTML formatting.
 		/// </summary>
-		static public async Task SendAudio(string chatId, string audioName, string audioCaption)
+		static public async Task SendAudio(string chatId, string audioName, string audioCaption, ParseMode parseMode = ParseMode.Html)
 		{
 			using (var stream = System.IO.File.OpenRead(assetsPath + audioName))
 			{
 				InputOnlineFile inputOnlineFile = new InputOnlineFile(stream);
 
-				await botClient.SendAudioAsync(chatId, inputOnlineFile, audioCaption, ParseMode.Html);
+				await botClient.SendAudioAsync(chatId, inputOnlineFile, audioCaption, parseMode);
 				stream.Close();
 			}
 		}
