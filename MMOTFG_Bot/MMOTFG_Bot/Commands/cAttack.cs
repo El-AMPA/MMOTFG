@@ -39,6 +39,7 @@ namespace MMOTFG_Bot.Commands
         internal override bool IsFormattedCorrectly(string[] args)
         {
             //Format: attackName target (optional)
+            if (args.Length > 1) return false;
             return true;
         }
     }
