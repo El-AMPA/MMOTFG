@@ -9,13 +9,11 @@ namespace MMOTFG_Bot
 {
     class Battler
     {
-        //estudiar para el futuro
-        //public Dictionary<string, float> stats = new Dictionary<string, float>();
-
-        //changes inside battle
+        //current stats
         public float[] stats;
+        //max stats (por HP and MP)
         protected float[] maxStats;
-        //permanent changes
+        //original stats (to revert changes in battle)
         protected float[] originalStats;
 
         protected List<Attack> attacks_;
@@ -46,13 +44,15 @@ namespace MMOTFG_Bot
             maxStats = new float[Stats.statNum];
         }
 
-        //Gets a random attack the enemy has enough MP to use (basic attack should always cost 0 to avoid problems)
+        //Gets a random attack the enemy has enough MP to use (basic attack always costs 0 to avoid problems)
         public Attack NextAttack()
         {
             int i = attacks_.Count - 1;
             while (attacks_[i].mpCost > stats[(int)StatName.MP])
                 i--;
-            int attack = RNG.Next(0, i + 1);
+            //if no attacks available, return base attack
+            if (i < 0) return new Attack("Struggle", 1, 0);
+            int attack = RNG.Next(0, i + 1); 
             return attacks_[attack];
         }
 
@@ -62,6 +62,7 @@ namespace MMOTFG_Bot
             maxStats = (float[])stats.Clone();
             originalStats = (float[])stats.Clone();
             //by default, every enemy creates a flag upon death
+            if (onKill == null) onKill = new List<Event>();
             onKill.Add(new eSetFlag() { Name = name + "Killed", SetAs = true });
         }
 
@@ -101,6 +102,32 @@ namespace MMOTFG_Bot
                 else stats[s] = newValue;
             }
             if (permanent) originalStats[s] = newValue;
+        }
+
+        public string GetStatus()
+        {
+            string s = $"{name} Status:\n";
+            for (int i = 0; i < Stats.statNum; i++)
+            {
+                StatName sn = (StatName)i;
+                s += $"{sn}: {GetStat(sn)}";
+                if (Stats.isBounded(sn))
+                    s += $"/{GetMaxStat(sn)}";
+                s += "\n";
+            }
+            return s;
+        }        
+
+        public string GetStatBar(StatName s)
+        {
+            int green = (int)(10 * GetStat(s) / GetOriginalStat(s));
+            string bar = "";
+            for (int i = 0; i < 10; i++)
+            {
+                if (i <= green) bar += "\U0001F7E9"; //green
+                else bar += "\U0001F7E5"; //red
+            }
+            return bar;
         }
 
         public void AddToStat(StatName stat, float change, bool changeMax = false, bool permanent = false)

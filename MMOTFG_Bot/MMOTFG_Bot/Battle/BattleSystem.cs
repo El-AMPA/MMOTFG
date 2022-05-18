@@ -209,11 +209,8 @@ namespace MMOTFG_Bot
                     if (b.imageName != null)
                         imageNames.Add(b.imageName);
 
-                    if (b == eSide.First())
-                        caption += b.name;
-                    else if (b == eSide.Last())
-                        caption += $" and {b.name} appear!";
-                    else caption += $", {b.name}";
+                    if (b.imageCaption != null)
+                        caption += b.imageCaption;
                 }
 
                 await TelegramCommunicator.SendImageCollection(chatIds.First(), imageNames.ToArray(), true);
@@ -408,7 +405,7 @@ namespace MMOTFG_Bot
             else
             {
                 await target.OnBehaviour(chatId, target.onHit);
-                if (damage != 0) message += $"\n{target.name} HP: \n{GetStatBar(target, HP)}";
+                if (damage != 0) message += $"\n{target.name} HP: \n{target.GetStatBar(HP)}";
                 await TelegramCommunicator.SendText(chatId, message, true);
             }
 
@@ -444,19 +441,7 @@ namespace MMOTFG_Bot
                 playerInfo = await DatabaseManager.GetDocument(partyCode, DbConstants.COLLEC_PARTIES);
             }
             if ((bool)playerInfo[DbConstants.BATTLE_ACTIVE]) await NextAttack(chatId);
-        }
-
-        private static string GetStatBar(Battler b, StatName s)
-        {
-            int green = (int)(10 * b.GetStat(s) / b.GetOriginalStat(s));
-            string bar = "";
-            for (int i = 0; i < 10; i++)
-            {
-                if (i <= green) bar += "\U0001F7E9"; //green
-                else bar += "\U0001F7E5"; //red
-            }
-            return bar;
-        }
+        }       
 
         public static async Task ShowStatus(string chatId, string name = null)
         {
@@ -477,15 +462,7 @@ namespace MMOTFG_Bot
                 return;
             }
 
-            string s = $"{b.name} Status:\n";
-            for (int i = 0; i < Stats.statNum; i++)
-            {
-                StatName sn = (StatName)i;
-                s += $"{sn}: {b.GetStat(sn)}";
-                if (Stats.isBounded(sn))
-                    s += $"/{b.GetMaxStat(sn)}";
-                s += "\n";
-            }
+            string s = b.GetStatus();
 
             await TelegramCommunicator.SendText(chatId, s);
         }

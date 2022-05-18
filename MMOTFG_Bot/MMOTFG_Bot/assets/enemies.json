@@ -38,13 +38,15 @@
     "DroppedItem": "mana_potion",
     "DroppedItemAmount": 2,
     "Attacks": [ "Chiste sobre javascript", "El PCE es maravilloso", "No Fucking Thanks" ],
-    "OnHit": {
-      "EventType": "eChangeStat",
-      "StatToChange": "ATK",
-      "Change": -1,
-      "Chance": 0.5,
-      "Message": "Cleon y el mono se debaten sobre si deberían matarte o no. Su ataque baja un poco."
-    }
+    "OnHit": [
+      {
+        "EventType": "eChangeStat",
+        "StatToChange": "ATK",
+        "Change": -1,
+        "Chance": 0.5,
+        "Message": "Cleon y el mono se debaten sobre si deberían matarte o no. Su ataque baja un poco."
+      }
+    ]
   },
   {
     "Name": "Fedejimbo",
@@ -55,14 +57,16 @@
     "DroppedItem": "mana_potion",
     "DroppedItemAmount": 2,
     "Attacks": [ "Chapa en PowerPoint", "Deconstructción", "Fantasma de la ópera" ],
-    "OnHit": {
-      "EventType": "eChangeStat",
-      "StatToChange": "MP",
-      "Multiple": 100,
-      "StatToDepend": "HP",
-      "Threshold": 0.5,
-      "Message": "¡Fedejimbo conjura un patrón de diseño arcano de su libro y se recuperan todos sus MP!"
-    }
+    "OnHit": [
+      {
+        "EventType": "eChangeStat",
+        "StatToChange": "MP",
+        "Multiple": 100,
+        "StatToDepend": "HP",
+        "Threshold": 0.5,
+        "Message": "¡Fedejimbo conjura un patrón de diseño arcano de su libro y se recuperan todos sus MP!"
+      }
+    ]
   },
   {
     "Name": "Sein",
@@ -73,14 +77,16 @@
     "DroppedItem": "health_potion",
     "DroppedItemAmount": 2,
     "Attacks": [ "Latigazo correa", "Plástico sospechoso" ],
-    "OnHit": {
-      "EventType": "eChangeStat",
-      "StatToChange": "ATK",
-      "Multiple": 0.5,
-      "StatToDepend": "HP",
-      "Threshold": 0.5,
-      "Message": "Sein se está cansando de jugar contigo y notas que pronto va a dejar de hacerte caso."
-    }
+    "OnHit": [
+      {
+        "EventType": "eChangeStat",
+        "StatToChange": "ATK",
+        "Multiple": 0.5,
+        "StatToDepend": "HP",
+        "Threshold": 0.5,
+        "Message": "Sein se está cansando de jugar contigo y notas que pronto va a dejar de hacerte caso."
+      }
+    ]
   },
   {
     "Name": "Stratospeers",
@@ -91,14 +97,16 @@
     "DroppedItem": "health_potion",
     "DroppedItemAmount": 2,
     "Attacks": [ "Ondas del wifi", "La Chancla", "Modo capitalismo" ],
-    "OnHit": {
-      "EventType": "eChangeStat",
-      "StatToChange": "ATK",
-      "Multiple": 0.25,
-      "StatToDepend": "HP",
-      "Threshold": 0.25,
-      "Message": "¡Ya solo queda uno! Habrá ganado la partida del PCE, pero no la batalla contigo."
-    }
+    "OnHit": [
+      {
+        "EventType": "eChangeStat",
+        "StatToChange": "ATK",
+        "Multiple": 0.25,
+        "StatToDepend": "HP",
+        "Threshold": 0.25,
+        "Message": "¡Ya solo queda uno! Habrá ganado la partida del PCE, pero no la batalla contigo."
+      }
+    ]
   },
   {
     "Name": "Thiccboi",
@@ -109,14 +117,16 @@
     "DroppedItem": "health_potion",
     "DroppedItemAmount": 2,
     "Attacks": [ "ñom", "Barras (de pan)", "Ahora puedes jugar a Blown to Blacksmithereens desde el navegador en http://www.tai1games.itch.io" ],
-    "OnHit": {
-      "EventType": "eChangeStat",
-      "StatToChange": "HP",
-      "Change": -25,
-      "StatToDepend": "HP",
-      "Threshold": 0.5,
-      "Message": "El thiccboi intenta comerse una silla pero no sale bien..."
-    }
+    "OnHit": [
+      {
+        "EventType": "eChangeStat",
+        "StatToChange": "HP",
+        "Change": -25,
+        "StatToDepend": "HP",
+        "Threshold": 0.5,
+        "Message": "El thiccboi intenta comerse una silla pero no sale bien..."
+      }
+    ]
   },
   {
     "Name": "Tinky.exe",
@@ -126,8 +136,10 @@
     "DroppedItem": "health_potion",
     "DroppedItemAmount": 2,
     "Attacks": [ "t̶͖̮̙̦̯̮͓̲̎u̴̧̡̢͓̮͉͓̻͙̰̟̳͖̠̇͆̽̀͂̈̈̆ ̷̡̛̭̩̲̦͉̱͓̈́̄͑c̷͕̜͎͚̑́̂͑́ỏ̶̧̢̩̳̗̤̎̄͠d̸̮̮͍͚̜̝̋̃̔̽̃̐̎̏̕͘͜͝ͅì̴̥̈́̕̚g̸̡͇̖̞̯̯̑ơ̸̡̙̳̝̟̐̒̾̈́͒̔̕ ̷̧̡̧̫̤̮̳̦͈̩̫̪̬̐́͆̈̿͜ȩ̵̡̨̨̪͇͇̼͎̳͓̣̥̙̺̃s̵̟̘͈̖̘͔̣͛̔̓͒ ̸̬̑̈̾s̴̢̺͇͎̈́̂̇̓̄̎͋e̴̡̺̙͉̥̳͕̣̤̩͔͉̽̀͆̔̂͐̆̓̔̈́̚͜͝ͅň̶̞͑̍́͊̑̃̅̎̏͜͝c̶̨̥͈̙͛̄͛̓̾̕̕ͅi̶̳͈̼͈̰̲͖͗̅l̶̥̞̽͛̾̎̂͐̓̾̆̀̓̓̐̕͝l̸̫̤̥̹̫̅̀͗̐́̽̃̆̆̉̀́͊͘͝ȧ̵̮̱͇̱͉̯̱̲̝̣̦̲͋̑͛̈́̿̈́͊́̑̈́̒̏̚͜͜m̶̹̩̖̠̀͌̑̄͗̉ę̶̧̦̙̰̤̫̤̘͇̫̠̘͊̈́̓͊͐̊̄̚͝͝͝ͅn̵̨̙̭̣͉̤̱̮̙̤̣͎͑̂́́͒͑͗t̵̡͚̣̖͊̇̄̈́̓́͌̔̏͝e̷͙̜̳̠͍̠̦̓̈̄̾̍ͅ ̵͖̘̭̝͈̯̩̪̩͈̳͖͆͑̽̓͂͋̈͑̎͘̕͜͜ḻ̸̗͇͇͇͕̹̬̝͚̺̐̈̌̀̈̌͊̏͌̍̀̓͘͘å̵̧̛̗̞͉̮̽͌̎̆̎͗̇͌̾̂̾͝m̷͉͕̞̳͍͙̣͌̈̈̏̾͛̍͋̄͂͛̚e̸̡͈̹̩̯̭̝͗̅̀́͗̑̑͝n̵̛̯͖͈̩̩͚͖̥͍̬͖̹̮͑̐̿̉͌͆̐̐̓́͜͜͠t̵̛͖̥͍̎̋͌͊̀̿̕̕a̴̛̗̐͌͑̊͌͋͑̈́̆͂͋̈́̈́͘ḅ̴̧͕͙̗͙̩̖̦͓̓̆͘ļ̸̢͕̞̦͚̰͚̝̲̲̃ề̷̛̗̠̟͊͌͐̂̃̀͘͝" ],
-    "OnHit": {
-      "Message": "n̵͔͚̟̈o̸̳̐̾͘ ̵̢̠̋͑p̶̰̦͂u̸̮͒e̷͈̰̜͗́d̵̦̻̦̔̾e̶̼̍̀̚s̵̢̮͉̑̈́̎ ̵͔̣̌̎͑p̵̛̞͇̎ḁ̷̛̉̂ş̸͓̺͠ȧ̸̦͙̥͝r̶̨͐t̸͔̻̋ë̵́͜ ̷̡̭̤̽e̶̙͒š̷̛̲̬t̴̡͖̕e̷̩̳̦͋̾ ̷̻͔̽j̷͎̇͊ę̷̗̋ḟ̶̫̦e̷͉͚̥͊̎̊ ̵̘͍͊̅͐n̶̻̓͝o̵̘̓̒̃ ̵̨͔̲̊͊̐h̵̬͆à̷̝͝y̷̢̆͐ ̸̺͆̉m̶̟͉͆͋͝á̵͕s̴̭̪̙̀̈́͛ ̷̳͚̒c̶̩̦̾͊o̵̟̭̍̊n̷̝̞̬̋̒ţ̴̜͊ȅ̴͚n̵̛͐̈́͜ĭ̷̞̈́͘d̵̯̯̳͝o̵̘͔̍̉̀ ̸͖̭̘̀̅͝a̷͕̽͒ ̶̞̼͕̎̓͝p̷͚̚ͅa̸͉̓͊͊r̵̭͕͐̿͝t̷͎̔̽i̴͕͌̈́r̵̻̻̅̒ ̷̬̲̳̃d̷͙̲͗ͅě̵̩̫̈ ̷̝̓͗͘a̴̰̫͑͜q̷̘͙͈̄̆ṵ̴̧̔́ͅi̵̧̤̠̋̌"
-    }
+    "OnHit": [
+      {
+        "Message": "n̵͔͚̟̈o̸̳̐̾͘ ̵̢̠̋͑p̶̰̦͂u̸̮͒e̷͈̰̜͗́d̵̦̻̦̔̾e̶̼̍̀̚s̵̢̮͉̑̈́̎ ̵͔̣̌̎͑p̵̛̞͇̎ḁ̷̛̉̂ş̸͓̺͠ȧ̸̦͙̥͝r̶̨͐t̸͔̻̋ë̵́͜ ̷̡̭̤̽e̶̙͒š̷̛̲̬t̴̡͖̕e̷̩̳̦͋̾ ̷̻͔̽j̷͎̇͊ę̷̗̋ḟ̶̫̦e̷͉͚̥͊̎̊ ̵̘͍͊̅͐n̶̻̓͝o̵̘̓̒̃ ̵̨͔̲̊͊̐h̵̬͆à̷̝͝y̷̢̆͐ ̸̺͆̉m̶̟͉͆͋͝á̵͕s̴̭̪̙̀̈́͛ ̷̳͚̒c̶̩̦̾͊o̵̟̭̍̊n̷̝̞̬̋̒ţ̴̜͊ȅ̴͚n̵̛͐̈́͜ĭ̷̞̈́͘d̵̯̯̳͝o̵̘͔̍̉̀ ̸͖̭̘̀̅͝a̷͕̽͒ ̶̞̼͕̎̓͝p̷͚̚ͅa̸͉̓͊͊r̵̭͕͐̿͝t̷͎̔̽i̴͕͌̈́r̵̻̻̅̒ ̷̬̲̳̃d̷͙̲͗ͅě̵̩̫̈ ̷̝̓͗͘a̴̰̫͑͜q̷̘͙͈̄̆ṵ̴̧̔́ͅi̵̧̤̠̋̌"
+      }
+    ]
   }
 ]
