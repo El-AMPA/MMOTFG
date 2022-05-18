@@ -53,25 +53,26 @@ namespace MMOTFG_Bot
 		/// </summary>
 		static public async Task SendImageCollection(string chatId, string[] imagesNames, bool broadcast = false)
 		{
-			List<FileStream> streams = new List<FileStream>();
-			List<InputMediaPhoto> media = new List<InputMediaPhoto>();
-			foreach (string imageName in imagesNames)
-			{
-				FileStream stream = System.IO.File.OpenRead(assetsPath + imageName);
-				streams.Add(stream);
-				media.Add(new InputMediaPhoto(new InputMedia(stream, imageName)));
-			}
+			List<string> chatIds = new List<string>();
+			if(broadcast && await PartySystem.IsInParty(chatId)) chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
+			else chatIds.Add(chatId);
 
-			if (broadcast && await PartySystem.IsInParty(chatId))
-			{ 
-				List<Task> tasks = new List<Task>();
-				List<string> chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
-				foreach (string id in chatIds) tasks.Add(botClient.SendMediaGroupAsync(id, media));
-				//await Task.WhenAll(tasks);
-			}
-			else await botClient.SendMediaGroupAsync(chatId, media);
+			List<Task> tasks = new List<Task>();
 
-			foreach (var stream in streams) stream.Close();
+			foreach(string id in chatIds)
+            {
+				List<FileStream> streams = new List<FileStream>();
+				List<InputMediaPhoto> media = new List<InputMediaPhoto>();
+				foreach (string imageName in imagesNames)
+				{
+					FileStream stream = System.IO.File.OpenRead(assetsPath + imageName);
+					streams.Add(stream);
+					media.Add(new InputMediaPhoto(new InputMedia(stream, imageName)));
+				}
+				tasks.Add(botClient.SendMediaGroupAsync(id, media));
+				//foreach (var stream in streams) stream.Close();
+			}
+			await Task.WhenAll(tasks);
 		}
 
 		/// <summary>
