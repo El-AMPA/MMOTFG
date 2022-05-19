@@ -316,7 +316,7 @@ namespace MMOTFG_Bot.Inventory
 
         }
 
-        public static async Task<int> GetNumberOfItemsInInventory(string chatId, ObtainableItem item)
+        private static async Task<int> GetNumberOfItemsInInventory(string chatId, ObtainableItem item)
         {
             await LoadPlayerInventory(chatId);
             int numItems = 0;
