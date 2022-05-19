@@ -19,8 +19,8 @@ namespace MMOTFG_Bot
 
 		public static void Init()
 		{
-			Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", "assets/private/firebase-admin.json");
-			string jsontext = System.IO.File.ReadAllText("assets/private/firebase-admin.json");
+			Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", "Assets/private/firebase-admin.json");
+			string jsontext = System.IO.File.ReadAllText("Assets/private/firebase-admin.json");
 			var dbInfo = JObject.Parse(jsontext);
 			db = FirestoreDb.Create(dbInfo["project_id"].Value<String>());
 			docRefBase = db.Collection(collectionName).Document(documentName);

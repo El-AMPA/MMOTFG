@@ -41,7 +41,7 @@ namespace MMOTFG_Bot
 			string token = "";
 			try
 			{
-				token = System.IO.File.ReadAllText("assets/private/token.txt");
+				token = System.IO.File.ReadAllText("Assets/private/token.txt");
 			}
 			catch (FileNotFoundException)
 			{
@@ -56,8 +56,8 @@ namespace MMOTFG_Bot
 			//Module initializers
 			TelegramCommunicator.Init(botClient);
 			InventorySystem.Init();
-			Map.Init("assets/map.json", "assets/directionSynonyms.json");
-			JSONSystem.Init("assets/enemies.json", "assets/player.json", "assets/attacks.json", "assets/items.json");
+			Map.Init("Assets/GameFiles/map.json", "Assets/GameFiles/directionSynonyms.json");
+			JSONSystem.Init("Assets/GameFiles/enemies.json", "Assets/GameFiles/player.json", "Assets/GameFiles/attacks.json", "Assets/GameFiles/items.json");
 			BattleSystem.Init();
 			DatabaseManager.Init();
 			foreach (ICommand c in commandList)
