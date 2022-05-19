@@ -1,0 +1,158 @@
+﻿[
+  {
+    "Name": "Manuela",
+    "Stats": [ 100, 10, 15, 25 ],
+    "ImageName": "manuela.jpg",
+    "ImageCaption": "Manuela ataca!",
+    "DroppedMoney": 100,
+    "DroppedItem": "health_potion",
+    "DroppedItemAmount": 2,
+    "ExperienceGiven": 2,
+    "Attacks": [ "Slap", "Swords Dance", "MpScale" ],     
+    "OnHit": {
+      "BehaviourType": "bChangeStat",
+      "StatToChange": "ATK",
+      "Multiple": 2,
+      "StatToDepend": "HP",
+      "Threshold": 0.5,
+      "Message": "Manuela se ha enfadado! Sus ataques harán más daño."
+    },
+    "OnTurnEnd": {
+      "BehaviourType": "bChangeStat",
+      "StatToChange": "HP",
+      "Change": 5,
+      "ActivateOnce": false,
+      "Message": "El poder de la amistad cura 5 HP a Manuela."
+    },
+    "OnKill":{
+      "BehaviourType": "bSetFlag",
+      "Name": "ManuelaKilled",
+      "SetAs":"True"
+    }
+  },
+  {
+    "Name": "Cleonft",
+    "Stats": [ 100, 5, 15, 20 ],
+    "ImageName": "cleonft.png",
+    "ImageCaption": "¡Cleonft viene a mintearte la carrera!",
+    "DroppedMoney": 2223,
+    "DroppedItem": "mana_potion",
+    "DroppedItemAmount": 2,
+    "Attacks": [ "Chiste sobre javascript", "El PCE es maravilloso", "No Fucking Thanks" ],
+    "OnHit": {
+      "BehaviourType": "bChangeStat",
+      "StatToChange": "ATK",
+      "Change": -1,
+      "Chance": 0.5,
+      "Message": "Cleon y el mono se debaten sobre si deberían matarte o no. Su ataque baja un poco."
+    },
+    "OnKill":{
+      "BehaviourType":"bSetFlag",
+      "Name":"CleonftDefeated",
+      "SetAs":"True"
+    }
+  },
+  {
+    "Name": "Fedejimbo",
+    "Stats": [ 100, 10, 5, 25 ],
+    "ImageName": "fedejimbo.png",
+    "ImageCaption": "¡Fedejimbo no te deja pasar de esta esquina!",
+    "DroppedMoney": 666,
+    "DroppedItem": "mana_potion",
+    "DroppedItemAmount": 2,
+    "Attacks": [ "Chapa en PowerPoint", "Deconstructción", "Fantasma de la ópera" ],
+    "OnHit": {
+      "BehaviourType": "bChangeStat",
+      "StatToChange": "MP",
+      "Multiple": 100,
+      "StatToDepend": "HP",
+      "Threshold": 0.5,
+      "Message": "¡Fedejimbo conjura un patrón de diseño arcano de su libro y se recuperan todos sus MP!"
+    },
+    "OnKill":{
+      "BehaviourType":"bSetFlag",
+      "Name":"FedejimboDefeated",
+      "SetAs":"True"
+    }
+  },
+  {
+    "Name": "Sein",
+    "Stats": [ 100, 10, 30, 25 ],
+    "ImageName": "sein.png",
+    "ImageCaption": "¡Sein quiere jugar a pegarse!",
+    "DroppedMoney": 6969,
+    "DroppedItem": "health_potion",
+    "DroppedItemAmount": 2,
+    "Attacks": [ "Latigazo correa", "Plástico sospechoso" ],
+    "OnHit": {
+      "BehaviourType": "bChangeStat",
+      "StatToChange": "ATK",
+      "Multiple": 0.5,
+      "StatToDepend": "HP",
+      "Threshold": 0.5,
+      "Message": "Sein se está cansando de jugar contigo y notas que pronto va a dejar de hacerte caso."
+    },
+    "OnKill":{
+      "BehaviourType":"bSetFlag",
+      "Name":"SeinDefeated",
+      "SetAs":"True"
+    }
+  },
+  {
+    "Name": "Stratospeers",
+    "Stats": [ 40, 10, 10, 10 ],
+    "ImageName": "stratospeers.png",
+    "ImageCaption": "¡Los astronautas del PCE pasan de convivir contigo!",
+    "DroppedMoney": 1920,
+    "DroppedItem": "health_potion",
+    "DroppedItemAmount": 2,
+    "Attacks": [ "Ondas del wifi", "La Chancla", "Modo capitalismo" ],
+    "OnHit": {
+      "BehaviourType": "bChangeStat",
+      "StatToChange": "ATK",
+      "Multiple": 0.25,
+      "StatToDepend": "HP",
+      "Threshold": 0.25,
+      "Message": "¡Ya solo queda uno! Habrá ganado la partida del PCE, pero no la batalla contigo."
+    },
+    "OnKill":{
+      "BehaviourType":"bSetFlag",
+      "SetFlagAsTrue":"StratospeersDefeated"
+    }
+  },
+  {
+    "Name": "Thiccboi",
+    "Stats": [ 100, 10, 1, 25 ],
+    "ImageName": "thiccboi.png",
+    "ImageCaption": "¡El thiccboi abre la boca!",
+    "DroppedMoney": 345,
+    "DroppedItem": "health_potion",
+    "DroppedItemAmount": 2,
+    "Attacks": [ "ñom", "Barras (de pan)", "Ahora puedes jugar a Blown to Blacksmithereens desde el navegador en http://www.tai1games.itch.io" ],
+    "OnHit": {
+      "BehaviourType": "bChangeStat",
+      "StatToChange": "HP",
+      "Change": -25,
+      "StatToDepend": "HP",
+      "Threshold": 0.5,
+      "Message": "El thiccboi intenta comerse una silla pero no sale bien..."
+    },
+    "OnKill":{
+      "BehaviourType":"bSetFlag",
+      "Name":"ThiccboiDefeated",
+      "SetAs":"True"
+    }
+  },
+  {
+    "Name": "Tinky.exe",
+    "Stats": [ 100, 100, 100, 100 ],
+    "ImageName": "tinkyexe.png",
+    "ImageCaption": "T̵i̶n̵k̴y̸",
+    "DroppedItem": "health_potion",
+    "DroppedItemAmount": 2,
+    "Attacks": [ "t̶͖̮̙̦̯̮͓̲̎u̴̧̡̢͓̮͉͓̻͙̰̟̳͖̠̇͆̽̀͂̈̈̆ ̷̡̛̭̩̲̦͉̱͓̈́̄͑c̷͕̜͎͚̑́̂͑́ỏ̶̧̢̩̳̗̤̎̄͠d̸̮̮͍͚̜̝̋̃̔̽̃̐̎̏̕͘͜͝ͅì̴̥̈́̕̚g̸̡͇̖̞̯̯̑ơ̸̡̙̳̝̟̐̒̾̈́͒̔̕ ̷̧̡̧̫̤̮̳̦͈̩̫̪̬̐́͆̈̿͜ȩ̵̡̨̨̪͇͇̼͎̳͓̣̥̙̺̃s̵̟̘͈̖̘͔̣͛̔̓͒ ̸̬̑̈̾s̴̢̺͇͎̈́̂̇̓̄̎͋e̴̡̺̙͉̥̳͕̣̤̩͔͉̽̀͆̔̂͐̆̓̔̈́̚͜͝ͅň̶̞͑̍́͊̑̃̅̎̏͜͝c̶̨̥͈̙͛̄͛̓̾̕̕ͅi̶̳͈̼͈̰̲͖͗̅l̶̥̞̽͛̾̎̂͐̓̾̆̀̓̓̐̕͝l̸̫̤̥̹̫̅̀͗̐́̽̃̆̆̉̀́͊͘͝ȧ̵̮̱͇̱͉̯̱̲̝̣̦̲͋̑͛̈́̿̈́͊́̑̈́̒̏̚͜͜m̶̹̩̖̠̀͌̑̄͗̉ę̶̧̦̙̰̤̫̤̘͇̫̠̘͊̈́̓͊͐̊̄̚͝͝͝ͅn̵̨̙̭̣͉̤̱̮̙̤̣͎͑̂́́͒͑͗t̵̡͚̣̖͊̇̄̈́̓́͌̔̏͝e̷͙̜̳̠͍̠̦̓̈̄̾̍ͅ ̵͖̘̭̝͈̯̩̪̩͈̳͖͆͑̽̓͂͋̈͑̎͘̕͜͜ḻ̸̗͇͇͇͕̹̬̝͚̺̐̈̌̀̈̌͊̏͌̍̀̓͘͘å̵̧̛̗̞͉̮̽͌̎̆̎͗̇͌̾̂̾͝m̷͉͕̞̳͍͙̣͌̈̈̏̾͛̍͋̄͂͛̚e̸̡͈̹̩̯̭̝͗̅̀́͗̑̑͝n̵̛̯͖͈̩̩͚͖̥͍̬͖̹̮͑̐̿̉͌͆̐̐̓́͜͜͠t̵̛͖̥͍̎̋͌͊̀̿̕̕a̴̛̗̐͌͑̊͌͋͑̈́̆͂͋̈́̈́͘ḅ̴̧͕͙̗͙̩̖̦͓̓̆͘ļ̸̢͕̞̦͚̰͚̝̲̲̃ề̷̛̗̠̟͊͌͐̂̃̀͘͝" ],
+    "OnHit": {
+      "Message": "n̵͔͚̟̈o̸̳̐̾͘ ̵̢̠̋͑p̶̰̦͂u̸̮͒e̷͈̰̜͗́d̵̦̻̦̔̾e̶̼̍̀̚s̵̢̮͉̑̈́̎ ̵͔̣̌̎͑p̵̛̞͇̎ḁ̷̛̉̂ş̸͓̺͠ȧ̸̦͙̥͝r̶̨͐t̸͔̻̋ë̵́͜ ̷̡̭̤̽e̶̙͒š̷̛̲̬t̴̡͖̕e̷̩̳̦͋̾ ̷̻͔̽j̷͎̇͊ę̷̗̋ḟ̶̫̦e̷͉͚̥͊̎̊ ̵̘͍͊̅͐n̶̻̓͝o̵̘̓̒̃ ̵̨͔̲̊͊̐h̵̬͆à̷̝͝y̷̢̆͐ ̸̺͆̉m̶̟͉͆͋͝á̵͕s̴̭̪̙̀̈́͛ ̷̳͚̒c̶̩̦̾͊o̵̟̭̍̊n̷̝̞̬̋̒ţ̴̜͊ȅ̴͚n̵̛͐̈́͜ĭ̷̞̈́͘d̵̯̯̳͝o̵̘͔̍̉̀ ̸͖̭̘̀̅͝a̷͕̽͒ ̶̞̼͕̎̓͝p̷͚̚ͅa̸͉̓͊͊r̵̭͕͐̿͝t̷͎̔̽i̴͕͌̈́r̵̻̻̅̒ ̷̬̲̳̃d̷͙̲͗ͅě̵̩̫̈ ̷̝̓͗͘a̴̰̫͑͜q̷̘͙͈̄̆ṵ̴̧̔́ͅi̵̧̤̠̋̌"
+    }
+  }
+]

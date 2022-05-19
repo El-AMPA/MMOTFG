@@ -1,0 +1,27 @@
+﻿{
+  "Name": "Player",
+  "Stats": [ 100, 10, 10, 50 ],
+  "Attacks": [ "Overkill", "Patada", "Burla" ],
+  "LevelUpRoadmap": {
+    "MaxLevel": 10,
+    "FirstStats": [ 100, 10, 10, 100 ],
+    "FinalStats": [ 1000, 200, 150, 100 ],
+    "LevelUpExponent": 1,
+    "LevelUpEvents": [
+      {
+        "Level": 2,
+        "Ev": {
+          "EventType": "eLearnAttack",
+          "Attack": "Tortazo"
+        }
+      },
+      {
+        "Level": 3,
+        "Ev": {
+          "EventType": "eLearnAttack",
+          "Attack": "Tortilla"
+        }
+      }
+    ]
+  }
+}
