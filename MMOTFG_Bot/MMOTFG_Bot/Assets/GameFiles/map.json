@@ -189,7 +189,7 @@
       },
       {
         "EventType":"eSendImage",
-        "ImageName":"MochilaLoona.png",
+        "ImageName":"mochilaloona.png",
         "TriggerCondition":"!LoonaCapFound AND SeinDefeated"
       },
       {
