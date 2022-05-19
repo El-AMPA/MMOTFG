@@ -22,7 +22,7 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Moves the player in the specified direction
         /// </summary>
-        public static async Task Navigate(string chatId, string dir)
+        public static async Task Navigate(string chatId, string dir, string partyCode = null)
         {
             await LoadPlayerPosition(chatId);
 
@@ -36,10 +36,17 @@ namespace MMOTFG_Bot.Navigation
                 //If currentNode doesn't have a connection in that direction, it doesn't move the player.
                 if (currentNode.GetConnectingNode(dir, out nextNode))
                 {
-                    await currentNode.OnExit(chatId);
-                    currentNode = nextNode;
-                    await currentNode.OnArrive(chatId);
-                    await SavePlayerPosition(chatId);
+                    List<string> players = new List<string>();
+					if (partyCode != null) { 
+						players = await PartySystem.GetPartyMembers(partyCode);
+                        await TelegramCommunicator.SendText(chatId, "The leader has moved towards: " + dir, true, chatId);
+					}
+					players.Add(chatId);
+
+					foreach (string id in players) await currentNode.OnExit(id);
+					currentNode = nextNode;
+					foreach (string id in players) await currentNode.OnArrive(id);
+					foreach (string id in players) await SavePlayerPosition(id);
                 }
                 else
                 {
@@ -108,10 +115,16 @@ namespace MMOTFG_Bot.Navigation
         /// <summary>
         /// Sends the 'OnInspectText' field of the current node of the player 
         /// </summary>
-        public static async Task OnInspect(string chatId)
+        public static async Task OnInspect(string chatId, string partyCode = null)
         {
             await LoadPlayerPosition(chatId);
-            await currentNode.OnInspect(chatId);
+			await currentNode.OnInspect(chatId);
+			if (partyCode != null)
+			{
+                await TelegramCommunicator.SendText(chatId, "The leader has inspected the current room", true, chatId);
+				List<string> members = await PartySystem.GetPartyMembers(partyCode);
+				foreach (string id in members) await currentNode.OnInspect(id);
+			}
         }
 
         /// <summary>
@@ -234,12 +247,12 @@ namespace MMOTFG_Bot.Navigation
         /// </summary>
         public static async Task SavePlayerPosition(string chatId)
 		{
-            Dictionary<string, object> update = new Dictionary<string, object>();
+			Dictionary<string, object> update = new Dictionary<string, object>();
 
-            update.Add(DbConstants.PLAYER_FIELD_ACTUAL_NODE, currentNode.Name);
+			update.Add(DbConstants.PLAYER_FIELD_ACTUAL_NODE, currentNode.Name);
 
-            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
-        }
+			await DatabaseManager.ModifyDocumentFromCollection(update, chatId, DbConstants.COLLEC_PLAYERS);
+		}
 
         /// <summary>
         /// Loads the actual node of the given player from the database
@@ -247,25 +260,25 @@ namespace MMOTFG_Bot.Navigation
         public static async Task LoadPlayerPosition(string chatId)
         {
             Dictionary<string, object> player = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID,
-                chatId.ToString(), DbConstants.COLLEC_DEBUG);
+                chatId, DbConstants.COLLEC_PLAYERS);
 
-            string currNodeName = player[DbConstants.PLAYER_FIELD_ACTUAL_NODE].ToString();
+			string currNodeName = (string)player[DbConstants.PLAYER_FIELD_ACTUAL_NODE];
 
-            currentNode = nodes.Find(x => (x.Name == currNodeName));
-        }
+			currentNode = nodes.Find(x => (x.Name == currNodeName));
+		}
 
         /// <summary>
         /// Creates the node field in the player document in the database
         /// </summary>
         public static async Task CreatePlayerPosition(string chatId)
 		{
-            Dictionary<string, object> update = new Dictionary<string, object>();
+			Dictionary<string, object> update = new Dictionary<string, object>();
 
-            update.Add(DbConstants.PLAYER_FIELD_ACTUAL_NODE, startingNode.Name);
+			update.Add(DbConstants.PLAYER_FIELD_ACTUAL_NODE, startingNode.Name);
 
             await Map.startingNode.OnArrive(chatId);
 
-            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+            await DatabaseManager.ModifyDocumentFromCollection(update, chatId, DbConstants.COLLEC_PLAYERS);
         }
     }
 }

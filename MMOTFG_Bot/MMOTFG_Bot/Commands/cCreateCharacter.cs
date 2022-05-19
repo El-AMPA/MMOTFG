@@ -28,15 +28,16 @@ Use: create [character name]";
 
 			string charName = args[0];
 
-			Dictionary<string,object>tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_NAME, charName, DbConstants.COLLEC_DEBUG);
+			Dictionary<string,object>tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_NAME, charName, DbConstants.COLLEC_PLAYERS);
+			var enemy = JSONSystem.GetEnemy(charName);
 
-			if(tempDict != null)
+			if(tempDict != null || enemy != null)
 			{
 				await TelegramCommunicator.SendText(chatId, "That name is already in use");
 				return;
 			}
 
-			tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+			tempDict = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId, DbConstants.COLLEC_PLAYERS);
 
 			if (tempDict != null)
 			{
@@ -47,10 +48,12 @@ Use: create [character name]";
 			Dictionary<string, object> dict = new Dictionary<string, object>
 			{
 				{ DbConstants.PLAYER_FIELD_NAME , charName},
-				{ DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId.ToString()}
+				{ DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId},
+				{ DbConstants.PLAYER_ISINPARTY_FLAG, false },
+				{ DbConstants.PLAYER_PARTY_CODE, null }
 			};
 
-			bool created = await DatabaseManager.AddDocumentToCollection(dict, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+			bool created = await DatabaseManager.AddDocumentToCollection(dict, chatId, DbConstants.COLLEC_PLAYERS);
 
 			if (!created)
 			{
@@ -63,7 +66,7 @@ Use: create [character name]";
 			Console.WriteLine("Telegram user {0} just created characater with name {1}", chatId, charName);
 
 			await InventorySystem.CreatePlayerInventory(chatId);
-			await BattleSystem.CreatePlayerBattle(chatId);
+			await BattleSystem.CreatePlayerBattleData(chatId);
 			await ProgressKeeper.CreateProgressKeeper(chatId);
 			await Map.CreatePlayerPosition(chatId);
 

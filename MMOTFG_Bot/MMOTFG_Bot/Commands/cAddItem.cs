@@ -22,8 +22,12 @@ Use: add [item name]";
 
         internal override async Task Execute(string command, string chatId, string[] args = null)
         {
-            if(args.Length == 1) await InventorySystem.AddItem(chatId, args[0], 1);
-            else await InventorySystem.AddItem(chatId, args[0], int.Parse(args[1]));
+            if (InventorySystem.StringToItem(args[0], out ObtainableItem item))
+            {
+                if (args.Length == 1) await InventorySystem.AddItem(chatId, item, 1);
+                else await InventorySystem.AddItem(chatId, item, int.Parse(args[1]));
+            }
+            else await TelegramCommunicator.SendText(chatId, "Item " + args[0] + " doesn't exist");
         }
 
         internal override bool IsFormattedCorrectly(string[] args)

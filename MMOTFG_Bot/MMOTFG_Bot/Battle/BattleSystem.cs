@@ -3,134 +3,202 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using static MMOTFG_Bot.StatName;
-using System.Linq;
 
 namespace MMOTFG_Bot
 {
     static class BattleSystem
     {
-        public static Player player;
-        //public static Enemy enemy;
+        public static List<Player> players;
+
+        public static List<Battler> enemies;
 
         public static List<Battler> battlers;
-        public static List<Battler> playerSide;
-        public static List<Battler> enemySide;
 
         public static bool battleActive = false;
         public static bool battlePaused = false;
 
+        private static string partyCode = null;
+
         public static void Init()
         {
-            player = JSONSystem.GetPlayer();
+        }
+
+        public static async Task<Player> GetPlayer(string chatId)
+        {
+            if (partyCode == null)
+                return players.First();
+            else
+            {
+                return players.FirstOrDefault(p => p.id == chatId);
+            }
+        }
+
+        public static async Task<Player> CreatePlayer(string chatId)
+        {
+            Player player = JSONSystem.GetDefaultPlayer();
+            var info = await DatabaseManager.GetFieldFromDocument(DbConstants.PLAYER_FIELD_BATTLE_INFO, chatId, DbConstants.COLLEC_PLAYERS);
+            if (info != null)
+                player.LoadSerializable((Dictionary<string, object>)info);
+            return player;
         }
 
         public static async Task SavePlayerBattle(string chatId)
-        {
-            Dictionary<string, object> update = new Dictionary<string, object>();
+        {     
+            if (partyCode == null)
+            {
+                //Save player info in the player field of the database
+                await DatabaseManager.ModifyFieldOfDocument(DbConstants.PLAYER_FIELD_BATTLE_INFO, players.First().GetSerializable(), chatId, DbConstants.COLLEC_PLAYERS);
+            }
+            else
+            {               
+                //Save players of the party 
+                Dictionary<string, object> playersDict = new Dictionary<string, object>();
+                foreach(Player p in players)
+                {
+                    playersDict.Add(p.id, p.GetSerializable());
+                }
+                await DatabaseManager.ModifyFieldOfDocument(DbConstants.PARTY_FIELD_MEMBER_INFO, playersDict, partyCode, DbConstants.COLLEC_PARTIES);
+            }
 
-            update.Add(DbConstants.PLAYER_FIELD_BATTLE_ACTIVE, battleActive);
-            update.Add(DbConstants.PLAYER_FIELD_BATTLE_PAUSED, battlePaused);
-            update.Add(DbConstants.PLAYER_FIELD_BATTLE_INFO, player.GetSerializable());
+            //Data of the battle (enemies, battle state, etc)
+            Dictionary<string, object> update = new Dictionary<string, object>();
+            update.Add(DbConstants.BATTLE_ACTIVE, battleActive);
+            update.Add(DbConstants.BATTLE_PAUSED, battlePaused);
             if (!battleActive)
             {
-                update.Add(DbConstants.PLAYER_FIELD_BATTLER_LIST, null);
+                update.Add(DbConstants.BATTLE_ENEMY_LIST, null);
             }
             else
             {
-                List<Dictionary<string, object>> battlerList = new List<Dictionary<string, object>>();
-                foreach (Battler b in battlers)
-                {     
-                    //player has already been saved
-                    if(b.name != player.name)
-                        battlerList.Add(b.GetSerializable());
+                List<Dictionary<string, object>> enemiesDict = new List<Dictionary<string, object>>();
+                foreach (Battler e in enemies)
+                {
+                    enemiesDict.Add(e.GetSerializable());
                 }
-                update.Add(DbConstants.PLAYER_FIELD_BATTLER_LIST, battlerList);
+                update.Add(DbConstants.BATTLE_ENEMY_LIST, enemiesDict);
             }
 
-            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+            //If the player is in a party the data is stored in the party database field (or in the player field if this is not the case)
+            if(partyCode != null)
+                await DatabaseManager.ModifyDocumentFromCollection(update, partyCode, DbConstants.COLLEC_PARTIES);
+            else await DatabaseManager.ModifyDocumentFromCollection(update, chatId, DbConstants.COLLEC_PLAYERS);
         }
 
         public static async Task LoadPlayerBattle(string chatId)
         {
-            Dictionary<string, object> dbPlayer = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID,
-                chatId.ToString(), DbConstants.COLLEC_DEBUG);
+            Dictionary<string, object> dbInfo = new Dictionary<string, object>();
 
-            battleActive = (bool)dbPlayer[DbConstants.PLAYER_FIELD_BATTLE_ACTIVE];
+            partyCode = await PartySystem.GetPartyCode(chatId);
 
-            player.LoadSerializable((Dictionary<string, object>) dbPlayer[DbConstants.PLAYER_FIELD_BATTLE_INFO]);
-            player.SetName((string)dbPlayer[DbConstants.PLAYER_FIELD_NAME]);
+            if (partyCode == null)
+            {
+                dbInfo = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID,
+                chatId, DbConstants.COLLEC_PLAYERS);
+                Player p = JSONSystem.GetDefaultPlayer();
+                p.LoadSerializable((Dictionary<string, object>)dbInfo[DbConstants.PLAYER_FIELD_BATTLE_INFO]);
+                p.SetId(chatId);
+                players = new List<Player>();
+                players.Add(p);
+            }
+            else
+            {
+                dbInfo = await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PARTY_FIELD_CODE, partyCode, DbConstants.COLLEC_PARTIES);
+                Dictionary<string, object> dbPlayers = (Dictionary<string, object>)dbInfo[DbConstants.PARTY_FIELD_MEMBER_INFO];
+                players = new List<Player>();
+                foreach (var key in dbPlayers.Keys)
+                {
+                    Player p = JSONSystem.GetDefaultPlayer();
+                    p.LoadSerializable((Dictionary<string, object>)dbPlayers[key]);
+                    p.SetId(key);
+                    players.Add(p);
+                }
+            }
 
+            battleActive = (bool)dbInfo[DbConstants.BATTLE_ACTIVE];
+         
             if (!battleActive) return;
 
-            battlePaused = (bool)dbPlayer[DbConstants.PLAYER_FIELD_BATTLE_PAUSED];
+            battlePaused = (bool)dbInfo[DbConstants.BATTLE_PAUSED];
+          
+            List<object> enemiesDict = (List<object>)dbInfo[DbConstants.BATTLE_ENEMY_LIST];
 
-            List<object> dbBattlers = (List<object>)dbPlayer[DbConstants.PLAYER_FIELD_BATTLER_LIST];
+            enemies = new List<Battler>();
 
-            battlers = new List<Battler>() { player };
-            enemySide = new List<Battler>();
-            playerSide = new List<Battler>() { player };
-
-            foreach (Dictionary<string, object> o in dbBattlers)
+            foreach (Dictionary<string, object> o in enemiesDict)
             {
-                Battler b = new Battler();
-                if ((bool)o[DbConstants.BATTLER_FIELD_IS_PLAYER])
-                {
-                    //player has already been loaded
-                    if ((string)o[DbConstants.BATTLER_FIELD_NAME] == player.name)
-                    {
-                        continue;
-                    }
-                }
-                else
-                {
-                    string enemyName = (string)o[DbConstants.BATTLER_FIELD_NAME];
-                    b = JSONSystem.GetEnemy(enemyName);
-                }
+                Battler b = JSONSystem.GetEnemy((string)o[DbConstants.BATTLER_FIELD_NAME]);
                 b.LoadSerializable(o);
-                battlers.Add(b);
-                if (b.isAlly) playerSide.Add(b);
-                else enemySide.Add(b);
+                enemies.Add(b);
             }
+
+            battlers = new List<Battler>();
+            battlers.AddRange(enemies);
+            battlers.AddRange(players);
         }
 
-        public static async Task CreatePlayerBattle(string chatId)
+        public static async Task CreatePlayerBattleData(string chatId)
         {
             Dictionary<string, object> update = new Dictionary<string, object>();
 
-            update.Add(DbConstants.PLAYER_FIELD_BATTLE_ACTIVE, false);
+            //Creamos un jugador nuevo con la info del json
+            Player player = JSONSystem.GetDefaultPlayer();
+            player.SetName((string)(await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, chatId, DbConstants.COLLEC_PLAYERS))[DbConstants.PLAYER_FIELD_NAME]);
+            update.Add(DbConstants.BATTLE_ACTIVE, false);
+            update.Add(DbConstants.BATTLE_PAUSED, false);
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_INFO, player.GetSerializable());
-            update.Add(DbConstants.PLAYER_FIELD_BATTLER_LIST, null);
+            update.Add(DbConstants.BATTLE_ENEMY_LIST, null);
 
-            await DatabaseManager.ModifyDocumentFromCollection(update, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+            await DatabaseManager.ModifyDocumentFromCollection(update, chatId, DbConstants.COLLEC_PLAYERS);
+        }
+
+        public static async Task CreatePartyBattleData(string partyCode)
+        {
+            Dictionary<string, object> update = new Dictionary<string, object>();
+
+            update.Add(DbConstants.BATTLE_ACTIVE, false);
+            update.Add(DbConstants.BATTLE_PAUSED, false);
+            //Save players of the party 
+            Dictionary<string, object> playersDict = new Dictionary<string, object>();
+            List<string> ids = await PartySystem.GetPartyMembers(partyCode, true);
+            foreach (string id in ids)
+            {
+                Player player = await CreatePlayer(id);
+                player.SetName((string)(await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, id, DbConstants.COLLEC_PLAYERS))[DbConstants.PLAYER_FIELD_NAME]);
+                player.SetId(id);
+                playersDict.Add(id, player.GetSerializable());
+            }
+            update.Add(DbConstants.PARTY_FIELD_MEMBER_INFO, playersDict);
+            update.Add(DbConstants.BATTLE_ENEMY_LIST, null);
+
+            await DatabaseManager.ModifyDocumentFromCollection(update, partyCode, DbConstants.COLLEC_PARTIES);
         }
 
         public static async Task<bool> IsPlayerInBattle(string chatId)
         {
-            //await LoadPlayerBattle(chatId);
-            //return battleActive;
-
-            return (bool)await DatabaseManager.GetFieldFromDocument(DbConstants.PLAYER_FIELD_BATTLE_ACTIVE, chatId.ToString(), DbConstants.COLLEC_DEBUG);
+            return (bool)await DatabaseManager.GetFieldFromDocument(DbConstants.BATTLE_ACTIVE, chatId, DbConstants.COLLEC_PLAYERS);
         }
 
         public static async Task StartBattle(string chatId, Battler eSide)
         {
-            await StartBattle(chatId, new List<Battler> { eSide });
+            await StartBattle(new List<string>() { chatId }, new List<Battler> { eSide });
         }
 
-        public static async Task StartBattle(string chatId, List<Battler> eSide)
+        public static async Task StartBattle(List<string> chatIds, List<Battler> eSide)
         {
-            enemySide = eSide;
-            playerSide = new List<Battler>() { player };
+            await LoadPlayerBattle(chatIds.First());
+            enemies = eSide;
             battlers = new List<Battler>();
-            battlers.AddRange(enemySide);
-            battlers.AddRange(playerSide);
+            battlers.AddRange(players);
+            battlers.AddRange(enemies);
             battleActive = true;
             battlePaused = false;
             if(eSide.Count == 1)
             {
                 Battler b = eSide.First();
                 if (b.imageName != null)
-                    await TelegramCommunicator.SendImage(chatId, b.imageName, b.imageCaption);
+                {
+                    await TelegramCommunicator.SendImage(chatIds.First(), b.imageName, true, b.imageCaption);
+                }
             }
             else
             {
@@ -147,18 +215,17 @@ namespace MMOTFG_Bot
                         caption += $" and {b.name} appear!";
                     else caption += $", {b.name}";
                 }
-                await TelegramCommunicator.SendImageCollection(chatId, imageNames.ToArray());
-                await TelegramCommunicator.SendText(chatId, caption);
+
+                await TelegramCommunicator.SendImageCollection(chatIds.First(), imageNames.ToArray(), true);
+                await TelegramCommunicator.SendText(chatIds.First(), caption, true);
             }
             //all battlers start being able to move
             foreach (Battler ba in battlers)
             {
                 ba.turnOver = false;
-                ba.isAlly = playerSide.Contains(ba);
-                ba.isPlayer = (ba as Player != null);
             }
-            await SavePlayerBattle(chatId);
-            await NextAttack(chatId);
+            await SavePlayerBattle(chatIds.First());
+            await NextAttack(chatIds.First());
         }
 
         public static async Task NextAttack(string chatId)
@@ -177,24 +244,23 @@ namespace MMOTFG_Bot
                         ba.turnOver = false;
                     }   
                 }
-            } 
+            }
             //sort battlers by speed
             battlers.Sort((b1, b2) => b2.GetStat(SPE).CompareTo(b1.GetStat(SPE)));
             //get first battler that hasn't moved that turn and is alive
             Battler b = battlers.First(x => x.turnOver == false);
 
+            string message = $"{b.name}'s turn";
+            await TelegramCommunicator.SendText(chatId, message, true);
             //if the battler is an enemy
-            if((b as Player) == null)
+            if (b as Player == null)
             {
-                await TelegramCommunicator.SendText(chatId, $"{b.name}'s turn");
-                Attack a = b.nextAttack();
+                Attack a = b.NextAttack();
                 Battler target = b;
                 if (!a.affectsSelf)
                 {
-                    //which side is the battler in
-                    List<Battler> otherSide = (b.isAlly) ? enemySide : playerSide;
-                    List<Battler> aliveOtherSide = otherSide.Where(x => x.GetStat(HP) > 0).ToList();
-                    target = aliveOtherSide[RNG.Next(0, aliveOtherSide.Count)];
+                    List<Player> alivePlayers = players.Where(x => x.GetStat(HP) > 0).ToList();
+                    target = alivePlayers[RNG.Next(0, alivePlayers.Count)];
                 }
                 await SavePlayerBattle(chatId);
                 await UseAttack(chatId, a, b, target);
@@ -202,20 +268,24 @@ namespace MMOTFG_Bot
             //if the battler is a player
             else
             {
-                Player p = b as Player;
-                p.upNext = true;
-                await SavePlayerBattle(chatId);
-                await SetPlayerOptions(chatId, "Your turn");
+                string id = chatId;
+                if (partyCode != null)
+                    id = await PartySystem.GetFriendId(chatId, b.name);
+                await SetPlayerOptions(id, "Select an attack");
             }
         }
 
         public static async Task SetPlayerOptions(string chatId, string text)
         {
+            Player player = await GetPlayer(chatId);
+            player.upNext = true;
+            await SavePlayerBattle(chatId);
             await TelegramCommunicator.SendButtons(chatId, text, player.attacks);
         }
 
         public static async Task PlayerAttack(string chatId, string attackName, string targetName = null)
         {
+            Player player = await GetPlayer(chatId);
             if (!battleActive)
             {
                 await TelegramCommunicator.SendText(chatId, "No battle currently active");
@@ -263,11 +333,10 @@ namespace MMOTFG_Bot
                         List<string> targetNames = new List<string>();
                         foreach (Battler b in otherAliveBattlers) targetNames.Add($"{attack.name} {b.name}");
                         await TelegramCommunicator.SendButtons(chatId, message, targetNames);
-                        //Program.SetAttackKeywords(targetNames);
                         return;
                     }
-                }            
-            }         
+                }
+            }
             player.upNext = false;
             await UseAttack(chatId, attack, player, target);
         }
@@ -291,39 +360,59 @@ namespace MMOTFG_Bot
             if (target.GetStat(HP) <= 0)
             {
                 target.turnOver = true;
-                await TelegramCommunicator.SendText(chatId, message);
+                await TelegramCommunicator.SendText(chatId, message, true);
                 await target.OnBehaviour(chatId, target.onKill);
-                if(!target.isAlly)
+                bool isPlayer = (target as Player != null);
+                if (!isPlayer)
                 {
                     string msg = $"{target.name} died!";
-                    if (target.droppedMoney > 0)
-                        msg += $"\nYou gained {target.droppedMoney}€";
                     if (target.droppedItem != null)
                     {
                         msg += $"\nYou obtained {target.droppedItem} x{target.droppedItemAmount}";
-                        await InventorySystem.AddItem(chatId, target.droppedItem, target.droppedItemAmount);
-                    }                    
-                    await TelegramCommunicator.SendText(chatId, msg);
+                        if (InventorySystem.StringToItem(target.droppedItem, out ObtainableItem droppedItem))
+                            await InventorySystem.AddItem(chatId, droppedItem, target.droppedItemAmount);
+                    }
+                    await TelegramCommunicator.SendText(chatId, msg, true);
                     if (target.experienceGiven != 0)
                     {
-                        await player.GainExperience(chatId, target.experienceGiven);
+                        List<Task> tasks = new List<Task>();
+                        foreach (Player p in players) 
+                            tasks.Add(p.GainExperience(p.id, target.experienceGiven));
+                        await Task.WhenAll(tasks);
                     }
                 }
-                List<Battler> side = (target.isAlly) ? playerSide : enemySide;
+                else await TelegramCommunicator.SendText(chatId, $"{target.name} died!", true);
+                List<Battler> side = (isPlayer) ? players.Select(p => (Battler)p).ToList() : enemies;
                 //if entire side has been defeated, end battle
                 if (side.FirstOrDefault(x => x.GetStat(HP) > 0) == null)
                 {
+                    await SavePlayerBattle(chatId);
                     battleActive = false;
-                    if(!battlePaused) await TelegramCommunicator.RemoveReplyMarkup(chatId);
-                    await player.OnBattleOver(chatId);
+                    await TelegramCommunicator.SendText(chatId, "Battle ends!", true);
+                    //if in party and party wiped out
+                    if (partyCode != null && isPlayer)
+                    {
+                        await PartySystem.WipeOutParty(partyCode, true);
+                        await TelegramCommunicator.SendText(chatId, "The whole party died! boo hoo", true);
+                    }
+                    foreach (Player p in players)
+                    {                    
+                        await p.OnBattleOver(p.id);
+                    }
+                    if(partyCode != null)
+                        //restore party
+                        await PartySystem.WipeOutParty(partyCode, false);
+                    await SavePlayerBattle(chatId);
                 }
             }
             else
             {
                 await target.OnBehaviour(chatId, target.onHit);
-                if(damage != 0) message += $"\n{target.name} HP: {GetStatBar(target, HP)}";
-                await TelegramCommunicator.SendText(chatId, message);
+                if (damage != 0) message += $"\n{target.name} HP: \n{GetStatBar(target, HP)}";
+                await TelegramCommunicator.SendText(chatId, message, true);
             }
+
+            if(user == await GetPlayer(chatId) && !battlePaused) await TelegramCommunicator.RemoveReplyMarkup(chatId, "Turn over");
 
             await SavePlayerBattle(chatId);
             if (battleActive) await NextAttack(chatId);
@@ -332,16 +421,29 @@ namespace MMOTFG_Bot
         //for instances where the battle needs to be paused (such as move learning)
         public static async Task PauseBattle(string chatId)
         {
-            await SavePlayerBattle(chatId);
-            battlePaused = true;
+            battlePaused = players.FirstOrDefault(x => x.learningAttack != null) != null;
+            if(partyCode == null)
+                await DatabaseManager.ModifyFieldOfDocument(DbConstants.BATTLE_PAUSED, battlePaused, chatId, DbConstants.COLLEC_PLAYERS);
+            else
+                await DatabaseManager.ModifyFieldOfDocument(DbConstants.BATTLE_PAUSED, battlePaused, partyCode, DbConstants.COLLEC_PARTIES);
         }
 
         //call only if battle has been paused
         public static async Task ResumeBattle(string chatId)
         {
-            battlePaused = false;
-            await SavePlayerBattle(chatId);
-            if (battleActive) await NextAttack(chatId);
+            battlePaused = players.FirstOrDefault(x => x.learningAttack != null) != null;
+            Dictionary<string, object> playerInfo;
+            if (partyCode == null)
+            {
+                await DatabaseManager.ModifyFieldOfDocument(DbConstants.BATTLE_PAUSED, battlePaused, chatId, DbConstants.COLLEC_PLAYERS);
+                playerInfo = await DatabaseManager.GetDocument(chatId, DbConstants.COLLEC_PLAYERS);
+            }
+            else
+            {
+                await DatabaseManager.ModifyFieldOfDocument(DbConstants.BATTLE_PAUSED, battlePaused, partyCode, DbConstants.COLLEC_PARTIES);
+                playerInfo = await DatabaseManager.GetDocument(partyCode, DbConstants.COLLEC_PARTIES);
+            }
+            if ((bool)playerInfo[DbConstants.BATTLE_ACTIVE]) await NextAttack(chatId);
         }
 
         private static string GetStatBar(Battler b, StatName s)
@@ -356,21 +458,27 @@ namespace MMOTFG_Bot
             return bar;
         }
 
-        public static async Task changePlayerStats(string chatId, StatName stat, float amount)
+        public static async Task ShowStatus(string chatId, string name = null)
         {
-            player.AddToStat(stat, amount);
-            await SavePlayerBattle(chatId);
-        }
+            Battler b = null;
 
-        public static async Task ShowStatus(string chatId, Battler b)
-        {
             await LoadPlayerBattle(chatId);
-            if (!battleActive && b != player){
-                await TelegramCommunicator.SendText(chatId, "No battle currently active");
+
+            if (name == null) b = await GetPlayer(chatId);
+            else if (battleActive) b = battlers.FirstOrDefault(x => x.name == name);
+
+            string friendId = await PartySystem.GetFriendId(chatId, name);
+            if (friendId != null)
+                b = await GetPlayer(friendId);
+
+            if (b == null)
+            {
+                await TelegramCommunicator.SendText(chatId, "Specified battler doesn't exist.");
                 return;
             }
+
             string s = $"{b.name} Status:\n";
-            for(int i = 0; i < Stats.statNum; i++)
+            for (int i = 0; i < Stats.statNum; i++)
             {
                 StatName sn = (StatName)i;
                 s += $"{sn}: {b.GetStat(sn)}";

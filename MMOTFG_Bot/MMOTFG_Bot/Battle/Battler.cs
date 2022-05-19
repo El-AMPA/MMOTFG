@@ -31,15 +31,11 @@ namespace MMOTFG_Bot
         public string imageName;
         public string imageCaption;
 
-        public float droppedMoney;
         public string droppedItem;
         [DefaultValue(1)]
         public int droppedItemAmount;
         [DefaultValue(1)]
-        public int experienceGiven;
-
-        public bool isAlly;
-        public bool isPlayer;       
+        public int experienceGiven;     
 
         public Battler()
         {
@@ -49,7 +45,7 @@ namespace MMOTFG_Bot
         }
 
         //Gets a random attack the enemy has enough MP to use (basic attack should always cost 0 to avoid problems)
-        public Attack nextAttack()
+        public Attack NextAttack()
         {
             int i = attacks_.Count - 1;
             while (attacks_[i].mpCost > stats[(int)StatName.MP])
@@ -197,15 +193,9 @@ namespace MMOTFG_Bot
 
             battlerInfo.Add(DbConstants.BATTLER_FIELD_NAME, name);
 
-            battlerInfo.Add(DbConstants.BATTLER_FIELD_MONEY_DROP, droppedMoney);
-
             battlerInfo.Add(DbConstants.BATTLER_FIELD_ITEM_DROP, droppedItem);
 
             battlerInfo.Add(DbConstants.BATTLER_FIELD_ITEM_DROP_AMOUNT, droppedItemAmount);
-
-            battlerInfo.Add(DbConstants.BATTLER_FIELD_IS_ALLY, isAlly);
-
-            battlerInfo.Add(DbConstants.BATTLER_FIELD_IS_PLAYER, isPlayer);
 
             battlerInfo.Add(DbConstants.BATTLER_FIELD_TURN_OVER, turnOver);
                     
@@ -246,12 +236,9 @@ namespace MMOTFG_Bot
 
             name = eInfo[DbConstants.BATTLER_FIELD_NAME].ToString();
 
-            droppedMoney = Convert.ToSingle(eInfo[DbConstants.BATTLER_FIELD_MONEY_DROP]);
             droppedItem = eInfo[DbConstants.BATTLER_FIELD_ITEM_DROP] as string;
 
             droppedItemAmount = Convert.ToInt32(eInfo[DbConstants.BATTLER_FIELD_ITEM_DROP_AMOUNT]);
-
-            isAlly = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_IS_ALLY]);
 
             turnOver = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_TURN_OVER]);            
         }

@@ -14,7 +14,7 @@ namespace MMOTFG_Bot.Events
 
         public async override Task Execute(string chatId)
         {
-            await BattleSystem.player.LearnAttack(chatId, attack);
+            await (await BattleSystem.GetPlayer(chatId)).LearnAttack(chatId, attack);
         }
     }
 }

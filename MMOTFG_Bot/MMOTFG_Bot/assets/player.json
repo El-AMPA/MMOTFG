@@ -2,11 +2,6 @@
   "Name": "Player",
   "Stats": [ 100, 10, 10, 50 ],
   "Attacks": [ "Overkill", "Patada", "Burla" ],
-  "OnKill": {
-    "BehaviourType": "bPlayerDeath",
-    "ActivateOnce": false,
-    "Message": "Has muerto..."
-  },
   "LevelUpRoadmap": {
     "MaxLevel": 10,
     "FirstStats": [ 100, 10, 10, 100 ],

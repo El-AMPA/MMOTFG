@@ -7,7 +7,7 @@
     "DroppedMoney": 100,
     "DroppedItem": "health_potion",
     "DroppedItemAmount": 2,
-    "ExperienceGiven": 1,
+    "ExperienceGiven": 2,
     "Attacks": [ "Slap", "Swords Dance", "MpScale" ],     
     "OnHit": {
       "BehaviourType": "bChangeStat",

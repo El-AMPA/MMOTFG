@@ -12,7 +12,6 @@ namespace MMOTFG_Bot
     //when deserializing the battlers.
     [JsonConverter(typeof(JsonSubtypes), "BehaviourType")]
     [JsonSubtypes.KnownSubType(typeof(bChangeStat), "bChangeStat")]
-    [JsonSubtypes.KnownSubType(typeof(bPlayerDeath), "bPlayerDeath")]
     [JsonSubtypes.KnownSubType(typeof(bSetFlag), "bSetFlag")]
     class Behaviour
     {

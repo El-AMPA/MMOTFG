@@ -25,12 +25,24 @@ Use: throw [item name]";
 
         internal override async Task Execute(string command, string chatId, string[] args = null)
         {
-            if(args.Length == 1) await InventorySystem.ThrowAwayItem(chatId, args[0], 1);
-            else
+            int itemsThrown;
+
+            if(InventorySystem.StringToItem(args[0], out ObtainableItem item))
             {
-                if (args[1] == "all") await InventorySystem.ThrowAwayItem(chatId, args[0], -1);
-                else await InventorySystem.ThrowAwayItem(chatId, args[0], int.Parse(args[1]));
+                if(await InventorySystem.PlayerHasItem(chatId, item))
+                {
+                    if (args.Length == 1) itemsThrown = await InventorySystem.ThrowAwayItem(chatId, item, 1);
+                    else
+                    {
+                        if (args[1] == "all") itemsThrown = await InventorySystem.ThrowAwayItem(chatId, item, -1);
+                        else itemsThrown = await InventorySystem.ThrowAwayItem(chatId, item, int.Parse(args[1]));
+                    }
+                    if (itemsThrown == 1) await TelegramCommunicator.SendText(chatId, "Item " + args[0] + " was thrown away.");
+                    else if (itemsThrown > 1) await TelegramCommunicator.SendText(chatId, "Item " + args[0] + " was thrown away " + itemsThrown + " times");
+                }
+                else await TelegramCommunicator.SendText(chatId, "Item " + item.name + " couldn't be found in your inventory");
             }
+            else await TelegramCommunicator.SendText(chatId, "Item " + args[1] + " doesn't exist");
         }
 
         internal override bool IsFormattedCorrectly(string[] args)

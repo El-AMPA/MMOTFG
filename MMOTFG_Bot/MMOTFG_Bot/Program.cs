@@ -24,21 +24,19 @@ namespace MMOTFG_Bot
 
 		public static List<ICommand> commandList = new List<ICommand> { new cDeleteCharacter(), new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
             new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
-			new cNavigate(), new cDirections(), new cInspectRoom(), new cAttack(), helpCommand};
+			new cNavigate(), new cDirections(), new cInspectRoom(), new cAttack(), helpCommand,
+			new cCreateParty(), new cJoinParty(), new cExitParty(), new cShowParty(), new cGiveItem()};
 
 		static async Task Main(string[] args)
 		{
-			/*Si estamos depurando en visual studio, tenemos que cambiar la ruta relativa en PC
+			/*Si estamos depurando, tenemos que cambiar la ruta relativa en PC
 			* para que funcione igual que en el contenedor de Docker*/
 			if (Environment.GetEnvironmentVariable("PLATFORM_PC") != null)
-			{
-				Console.WriteLine("Estamos en PC");
+            {
+				Console.WriteLine("Estamos en visual");
 				Directory.SetCurrentDirectory("./../../..");
-			}
-			else
-			{
-				Console.WriteLine("Estamos en Docker");
-			}
+			} else Console.WriteLine("Estamos en modo release o en Docker");
+			
 
 			string token = "";
 			try
@@ -156,7 +154,7 @@ namespace MMOTFG_Bot
 
 				bool recognizedCommand = false;
 
-				if (!await canUseCommand(chatId.ToString(), command))
+				if (!await canUseCommand(chatId, command))
 				{
 					await TelegramCommunicator.SendText(chatId, "You need a character to play, use /create to create a new character");
 					return;
@@ -208,7 +206,7 @@ namespace MMOTFG_Bot
 		static async Task<bool> canUseCommand(string chatId, string command)
 		{
 
-			bool characterExists = await DatabaseManager.IsDocumentInCollection(chatId, DbConstants.COLLEC_DEBUG);
+			bool characterExists = await DatabaseManager.IsDocumentInCollection(chatId, DbConstants.COLLEC_PLAYERS);
 
 			bool isIntroductoryCommand = createCommand.ContainsKeyWord(command) ||
 											helpCommand.ContainsKeyWord(command);

@@ -30,7 +30,7 @@ namespace MMOTFG_Bot.Items
         {
             foreach (var stat in statModifiers)
             {
-                BattleSystem.player.AddToStat(stat.Key, stat.Value, changeMax: true, permanent: true);
+                (await BattleSystem.GetPlayer(chatId)).AddToStat(stat.Key, stat.Value, changeMax: true, permanent: true);
             }
 
             if(onEquipEvents != null)
@@ -41,7 +41,7 @@ namespace MMOTFG_Bot.Items
         {
             foreach (var stat in statModifiers)
             {
-                BattleSystem.player.AddToStat(stat.Key, -stat.Value, changeMax: true, permanent: true);
+                (await BattleSystem.GetPlayer(chatId)).AddToStat(stat.Key, -stat.Value, changeMax: true, permanent: true);
             }
 
             if (onUnequipEvents != null)

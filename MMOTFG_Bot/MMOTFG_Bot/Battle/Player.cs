@@ -13,7 +13,6 @@ namespace MMOTFG_Bot
         public LevelUpRoadmap levelUpRoadmap;
 
         public bool upNext;
-        public bool dead;
         [DefaultValue(4)]
         public int maxAttacks;
 
@@ -23,9 +22,10 @@ namespace MMOTFG_Bot
         [DefaultValue(1)]
         public int level;
 
+        public string id;
+
         public Player()
         {
-
         }
 
         public override void OnCreate()
@@ -49,6 +49,11 @@ namespace MMOTFG_Bot
         public void SetName(string playerName)
         {
             name = playerName;
+        }
+
+        public void SetId(string chatId)
+        {
+            id = chatId;
         }
 
         public Attack GetAttack(string name)
@@ -101,9 +106,8 @@ namespace MMOTFG_Bot
                 learningAttack = null;
                 attacks_.Add(JSONSystem.GetAttack(attackName));
                 SetAttackNames();
-                await TelegramCommunicator.SendText(chatId, $"Learnt {attackName}!");
-                if (!BattleSystem.battleActive) await TelegramCommunicator.RemoveReplyMarkup(chatId);
-                else if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
+                await TelegramCommunicator.RemoveReplyMarkup(chatId, $"Learnt {attackName}!");
+                if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
             }
             //save move changes
             await BattleSystem.SavePlayerBattle(chatId);
@@ -114,9 +118,8 @@ namespace MMOTFG_Bot
             if (attackName == "skip")
             {
                 learningAttack = null;
-                await TelegramCommunicator.SendText(chatId, "Skipped move learning");
-                if (!BattleSystem.battleActive) await TelegramCommunicator.RemoveReplyMarkup(chatId);
-                else if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
+                await TelegramCommunicator.RemoveReplyMarkup(chatId, "Skipped move learning");
+                if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
                 return;
             }
             Attack atk = attacks_.FirstOrDefault(x => x.name.ToLower() == attackName);
@@ -137,17 +140,32 @@ namespace MMOTFG_Bot
             //reset stats to their original value
             for (int i = 0; i < Stats.statNum; i++)
             {
-                //(HP/MP only if player died)
-                if (!Stats.isBounded((StatName)i) || dead)
+                //(HP/MP not restored)
+                if (!Stats.isBounded((StatName)i))
                     stats[i] = originalStats[i];
-                if (dead)
+                maxStats[i] = originalStats[i];
+            }
+            if (stats[(int)StatName.HP] <= 0)
+            {
+                bool inParty = await PartySystem.IsInParty(chatId);
+                string code = null;
+                if (inParty) code = await PartySystem.GetPartyCode(chatId);
+                //full wipeout
+                if (!inParty || await PartySystem.IsPartyWipedOut(code))
                 {
-                    maxStats[i] = originalStats[i];
+                    stats = (float[])originalStats.Clone();
+                    //return player to starting node
+                    await Map.SetPlayerPosition(chatId, 0);
+                }
+                //in party but not full wipeout
+                else
+                {
+                    stats = (float[])originalStats.Clone();
+                    //1 HP and 1 MP
+                    stats[(int)StatName.HP] = 1;
+                    stats[(int)StatName.MP] = 1;
                 }
             }
-            //return player to starting node
-            if (dead) await Map.SetPlayerPosition(chatId, 0);
-            dead = false;
         }
 
         public override Dictionary<string, object> GetSerializable()
@@ -162,7 +180,7 @@ namespace MMOTFG_Bot
 
             playerInfo.Add(DbConstants.PLAYER_FIELD_ATTACKS, attacks);
 
-            playerInfo.Add(DbConstants.PLAYER_FIELD_UP_NEXT, upNext);
+            playerInfo.Add(DbConstants.BATTLE_UP_NEXT, upNext);
 
             playerInfo.Add(DbConstants.PLAYER_FIELD_LEARNING_ATTACK, learningAttack);
 
@@ -185,9 +203,14 @@ namespace MMOTFG_Bot
 
             SetAttacks();
 
-            upNext = Convert.ToBoolean(eInfo[DbConstants.PLAYER_FIELD_LEVEL]);
+            upNext = Convert.ToBoolean(eInfo[DbConstants.BATTLE_UP_NEXT]);
 
             learningAttack = eInfo[DbConstants.PLAYER_FIELD_LEARNING_ATTACK] as string;
+        }
+
+        public void LoadSerializableBase(Dictionary<string, object> eInfo)
+        {
+            base.LoadSerializable(eInfo);
         }
     }
 }
