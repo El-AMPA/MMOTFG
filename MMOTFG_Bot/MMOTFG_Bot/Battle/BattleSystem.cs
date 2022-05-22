@@ -221,6 +221,10 @@ namespace MMOTFG_Bot
             {
                 ba.turnOver = false;
             }
+            //when there are multiple players, enemies get stronger
+            if (players.Count > 1)
+                foreach (Battler b in enemies)
+                    b.BoostStats(players.Count);
             await SavePlayerBattle(chatIds.First());
             await NextAttack(chatIds.First());
         }
@@ -229,7 +233,6 @@ namespace MMOTFG_Bot
         {
             if (!battleActive || battlePaused) return;
 
-            await LoadPlayerBattle(chatId);
             //if every battler has finished their turn, start a new turn
             if (battlers.FirstOrDefault(x => x.turnOver == false) == null)
             {

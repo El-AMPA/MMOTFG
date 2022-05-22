@@ -29,12 +29,20 @@ namespace MMOTFG_Bot
 
         public string message;
 
+        [DefaultValue(true)]
+        public bool activateOnce;
+
+        public bool hasActivated;
+
         public override async Task Execute(string chatId) {
+            if (activateOnce && hasActivated) return;
+
             if (threshold == 0 || (user.GetStat(statToDepend) / user.GetMaxStat(statToDepend)) <= threshold)
             {
                 if (multiple == 0) user.AddToStat(statToChange, change, changeMax);
                 else user.MultiplyStat(statToChange, multiple, changeMax);
                 await TelegramCommunicator.SendText(chatId, message, true);
+                hasActivated = true;
             }
         }
     }

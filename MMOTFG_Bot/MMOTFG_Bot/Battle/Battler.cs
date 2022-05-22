@@ -3,11 +3,12 @@ using MMOTFG_Bot.Navigation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MMOTFG_Bot
 {
-    class Battler
+    class Battler : ICloneable
     {
         //current stats
         public float[] stats;
@@ -120,7 +121,7 @@ namespace MMOTFG_Bot
 
         public string GetStatBar(StatName s)
         {
-            int green = (int)(10 * GetStat(s) / GetOriginalStat(s));
+            int green = (int)(10 * GetStat(s) / GetMaxStat(s));
             string bar = "";
             for (int i = 0; i < 10; i++)
             {
@@ -140,12 +141,6 @@ namespace MMOTFG_Bot
         {
             float statn = changeMax ? maxStats[(int)stat] : stats[(int)stat];
             SetStat(stat, statn * mult, changeMax, permanent);
-        }
-
-        public void New()
-        {
-            stats = (float[])originalStats.Clone();
-            maxStats = (float[])originalStats.Clone();
         }
 
         public float GetStat(StatName stat)
@@ -179,8 +174,18 @@ namespace MMOTFG_Bot
             }
         }
 
+        //multiply all stats by a certain factor
+        public void BoostStats(float multiple)
+        {
+            for(int i = 0; i < Stats.statNum; i++)
+            {
+                MultiplyStat((StatName)i, multiple, true, true);
+            }
+        }
+
         public async Task SkipTurn(string chatId)
         {
+            await BattleSystem.LoadPlayerBattle(chatId);
             turnOver = true;
             await BattleSystem.SavePlayerBattle(chatId);
             await BattleSystem.NextAttack(chatId);
@@ -190,38 +195,11 @@ namespace MMOTFG_Bot
         {
             Dictionary<string, object> battlerInfo = new Dictionary<string, object>();
 
-            Dictionary<string, float> statsTemp = new Dictionary<string, float>();
+            battlerInfo.Add(DbConstants.BATTLER_INFO_FIELD_CUR_STATS, SerializeStats(stats));
 
-            int i = 0;
-            foreach (float sValue in stats)
-            {
-                statsTemp.Add(Enum.GetName(typeof(StatName), i), sValue);
-                i++;
-            }
+            battlerInfo.Add(DbConstants.BATTLER_INFO_FIELD_OG_STATS, SerializeStats(originalStats));
 
-            battlerInfo.Add(DbConstants.BATTLER_INFO_FIELD_CUR_STATS, statsTemp);
-
-            statsTemp = new Dictionary<string, float>();
-
-            i = 0;
-            foreach (float sValue in originalStats)
-            {
-                statsTemp.Add(Enum.GetName(typeof(StatName), i), sValue);
-                i++;
-            }
-
-            battlerInfo.Add(DbConstants.BATTLER_INFO_FIELD_OG_STATS, statsTemp);
-
-            statsTemp = new Dictionary<string, float>();
-
-            i = 0;
-            foreach (float sValue in maxStats)
-            {
-                statsTemp.Add(Enum.GetName(typeof(StatName), i), sValue);
-                i++;
-            }
-
-            battlerInfo.Add(DbConstants.BATTLER_INFO_FIELD_MAX_STATS, statsTemp);
+            battlerInfo.Add(DbConstants.BATTLER_INFO_FIELD_MAX_STATS, SerializeStats(maxStats));
 
             battlerInfo.Add(DbConstants.BATTLER_FIELD_NAME, name);
 
@@ -230,41 +208,44 @@ namespace MMOTFG_Bot
             battlerInfo.Add(DbConstants.BATTLER_FIELD_ITEM_DROP_AMOUNT, droppedItemAmount);
 
             battlerInfo.Add(DbConstants.BATTLER_FIELD_TURN_OVER, turnOver);
-                    
+
+            battlerInfo.Add(DbConstants.BATTLER_FIELD_ON_HIT_FLAGS, SerializeEventFlags(onHit));
+
+            battlerInfo.Add(DbConstants.BATTLER_FIELD_ON_TURN_END_FLAGS, SerializeEventFlags(onTurnEnd));
+
+            battlerInfo.Add(DbConstants.BATTLER_FIELD_ON_KILL_FLAGS, SerializeEventFlags(onKill));
+
             return battlerInfo;
+        }
+
+        public Dictionary<string, float> SerializeStats(float[] stats)
+        {
+            Dictionary<string, float> ret = new Dictionary<string, float>();
+            for (int i = 0; i < Stats.statNum; i++)
+            {
+                ret.Add(Enum.GetName(typeof(StatName), i), stats[i]);
+            }
+            return ret;
+        }
+
+        public List<bool> SerializeEventFlags(List<Event> behaviour)
+        {
+            List<bool> ret = new List<bool>();
+            foreach (Event e in behaviour.Where(e => e as eChangeStat != null))
+            {
+                eChangeStat ec = e as eChangeStat;
+                ret.Add(ec.hasActivated);
+            }
+            return ret;
         }
 
         public virtual void LoadSerializable(Dictionary<string, object> eInfo)
         {
-            Dictionary<string, object> statsDB = (Dictionary<string, object>)eInfo[DbConstants.BATTLER_INFO_FIELD_CUR_STATS];
+            LoadStats(stats, (Dictionary<string, object>)eInfo[DbConstants.BATTLER_INFO_FIELD_CUR_STATS]);
 
-            foreach (KeyValuePair<string, object> keyValue in statsDB)
-            {
-                StatName index;
-                Enum.TryParse(keyValue.Key, true, out index);
+            LoadStats(originalStats, (Dictionary<string, object>)eInfo[DbConstants.BATTLER_INFO_FIELD_OG_STATS]);
 
-                stats[(int)index] = Convert.ToSingle(keyValue.Value);
-            }
-
-            statsDB = (Dictionary<string, object>)eInfo[DbConstants.BATTLER_INFO_FIELD_OG_STATS];
-
-            foreach (KeyValuePair<string, object> keyValue in statsDB)
-            {
-                StatName index;
-                Enum.TryParse(keyValue.Key, true, out index);
-
-                originalStats[(int)index] = Convert.ToSingle(keyValue.Value);
-            }
-
-            statsDB = (Dictionary<string, object>)eInfo[DbConstants.BATTLER_INFO_FIELD_MAX_STATS];
-
-            foreach (KeyValuePair<string, object> keyValue in statsDB)
-            {
-                StatName index;
-                Enum.TryParse(keyValue.Key, true, out index);
-
-                maxStats[(int)index] = Convert.ToSingle(keyValue.Value);
-            }
+            LoadStats(maxStats, (Dictionary<string, object>)eInfo[DbConstants.BATTLER_INFO_FIELD_MAX_STATS]);
 
             name = eInfo[DbConstants.BATTLER_FIELD_NAME].ToString();
 
@@ -272,7 +253,40 @@ namespace MMOTFG_Bot
 
             droppedItemAmount = Convert.ToInt32(eInfo[DbConstants.BATTLER_FIELD_ITEM_DROP_AMOUNT]);
 
-            turnOver = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_TURN_OVER]);            
+            turnOver = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_TURN_OVER]);
+
+            LoadEventFlags(onHit, (List<object>)eInfo[DbConstants.BATTLER_FIELD_ON_HIT_FLAGS]);
+
+            LoadEventFlags(onTurnEnd, (List<object>)eInfo[DbConstants.BATTLER_FIELD_ON_TURN_END_FLAGS]);
+
+            LoadEventFlags(onKill, (List<object>)eInfo[DbConstants.BATTLER_FIELD_ON_KILL_FLAGS]);
+        }
+
+        public void LoadStats(float[] stats, Dictionary<string, object> statsDB)
+        {
+            foreach (KeyValuePair<string, object> keyValue in statsDB)
+            {
+                StatName index;
+                Enum.TryParse(keyValue.Key, true, out index);
+
+                stats[(int)index] = Convert.ToSingle(keyValue.Value);
+            }
+        }
+
+        public void LoadEventFlags(List<Event> behaviour, List<object> flags)
+        {
+            int i = 0;
+            foreach (Event e in behaviour.Where(e => e as eChangeStat != null))
+            {
+                eChangeStat ec = e as eChangeStat;
+                ec.hasActivated = (bool)flags[i];
+                i++;
+            }
+        }
+
+        public virtual object Clone()
+        {
+            return MemberwiseClone();
         }
     }
 }

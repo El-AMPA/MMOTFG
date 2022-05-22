@@ -12,15 +12,14 @@ namespace MMOTFG_Bot
         private static List<Battler> enemies;
         private static List<Attack> attacks;
         private static List<ObtainableItem> items;
+        private static Player defaultPlayer;
 
-        private static string playerPath;
-
-        public static void Init(string enemyPath, string playerP, string attackPath, string itemPath)
+        public static void Init(string enemyPath, string playerPath, string attackPath, string itemPath)
         {
             ReadAttacksFromJSON(attackPath);
             ReadItemsFromJSON(itemPath);
             ReadEnemiesFromJSON(enemyPath);
-            playerPath = playerP;
+            ReadPlayerFromJSON(playerPath);
         }
 
         /// <summary>
@@ -103,20 +102,8 @@ namespace MMOTFG_Bot
             }
         }
 
-        public static Battler GetEnemy(string name)
+        public static void ReadPlayerFromJSON(string playerPath)
         {
-            Battler e = enemies.FirstOrDefault(x => x.name == name);
-            if (e != null)
-            {
-                e.New();
-                return e;
-            }
-            else return e;
-        }
-
-        public static Player GetDefaultPlayer()
-        {
-            Player player = null;
             string playerText = ""; //Text of the entire .json file
             try
             {
@@ -130,26 +117,41 @@ namespace MMOTFG_Bot
 
             try
             {
-                player = JsonConvert.DeserializeObject<Player>(playerText,
+                defaultPlayer = JsonConvert.DeserializeObject<Player>(playerText,
                     new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate }); //Deserializes the .json file into a player
-                player.OnCreate();
+                defaultPlayer.OnCreate();
             }
             catch (JsonException e)
             {
                 Console.WriteLine("ERROR: player.json isn't formatted correctly. \nError message:" + e.Message);
                 Environment.Exit(-1);
             }
-            return player;
+        }
+
+        public static Battler GetEnemy(string name)
+        {
+            Battler e = enemies.FirstOrDefault(x => x.name.ToLower() == name.ToLower());
+            if (e != null)
+            {
+                //return by copy to preserve the original
+                return (Battler)e.Clone();
+            }
+            else return e;
+        }
+        public static Player GetDefaultPlayer()
+        {
+            //return by copy to preserve the original
+            return (Player)defaultPlayer.Clone();
         }
 
         public static Attack GetAttack(string name)
         {
-            return attacks.FirstOrDefault(x => x.name == name);
+            return attacks.FirstOrDefault(x => x.name.ToLower() == name.ToLower());
         }
 
         public static ObtainableItem GetItem(string name)
         {
-            return items.FirstOrDefault(x => x.name == name);
+            return items.FirstOrDefault(x => x.name.ToLower() == name.ToLower());
         }
 
         public static List<string> GetAllAttackNames()

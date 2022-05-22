@@ -45,6 +45,9 @@ namespace MMOTFG_Bot
 		readonly public static string BATTLER_FIELD_NAME = "name";
 		readonly public static string BATTLER_FIELD_ITEM_DROP = "item_drop";
 		readonly public static string BATTLER_FIELD_ITEM_DROP_AMOUNT = "item_drop_amount";
-		readonly public static string BATTLER_FIELD_TURN_OVER = "turn_over";		
+		readonly public static string BATTLER_FIELD_TURN_OVER = "turn_over";
+		readonly public static string BATTLER_FIELD_ON_HIT_FLAGS = "on_hit_flags";
+		readonly public static string BATTLER_FIELD_ON_TURN_END_FLAGS = "on_turn_end_flags";
+		readonly public static string BATTLER_FIELD_ON_KILL_FLAGS = "on_kill_flags";
 	}
 }

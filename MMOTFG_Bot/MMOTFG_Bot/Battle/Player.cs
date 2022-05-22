@@ -219,9 +219,9 @@ namespace MMOTFG_Bot
             learningAttack = eInfo[DbConstants.PLAYER_FIELD_LEARNING_ATTACK] as string;
         }
 
-        public void LoadSerializableBase(Dictionary<string, object> eInfo)
+        public override object Clone()
         {
-            base.LoadSerializable(eInfo);
+            return MemberwiseClone();
         }
     }
 }
