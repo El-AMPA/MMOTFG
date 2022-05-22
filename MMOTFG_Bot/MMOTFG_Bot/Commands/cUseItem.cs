@@ -21,8 +21,7 @@ Use: consume / use / eat / drink [item name]";
             key_words = new string[]{
                 "consume",
                 "use",
-                "eat",
-                "drink" 
+                "beber" 
             };
         }
 

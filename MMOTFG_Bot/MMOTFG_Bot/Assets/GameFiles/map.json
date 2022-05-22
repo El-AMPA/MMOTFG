@@ -19,7 +19,24 @@
       "norte" : {
         "ConnectingNode" : "PasilloCentral2"
       }
-    }
+    },
+    "OnArriveEvent":[
+      {
+        "EventType":"eSendText",
+        "Description":"Con pies de plomo entras en la mazmorra. Notas todo bastante limpio y ordenado. Unos altavoces emiten una musiquita muy pegadiza. Distraido por el ambiente, resbalas una región húmeda del suelo y te caes de culo. Al reincorporarte, ÉL aparece."
+      },
+      {
+        "EventType":"eStartBattle",
+        "Enemy":"ConserjeManolo"
+      }
+    ],
+    "OnInspectEvent":[
+      {
+        "EventType":"eSendAudio",
+        "AudioName":"Mamporrazo.mp3",
+        "Description":"Prestas atención a la música... ¡El malo maloso tiene muy buen gusto musical!"
+      }
+    ]
   },
   {
     "Name":"SalaTesoro1",
@@ -27,7 +44,24 @@
       "puerta" : {
         "ConnectingNode" : "PasilloCentral1"
       }
-    }
+    },
+    "OnInspectEvent": [
+      {
+        "EventType": "eGiveItem",
+        "ItemLots":[
+          {
+            "Item":"gorro_del_heroe"
+          }
+        ],
+        "TriggerCondition": "!GorroFound"
+      },
+      {
+        "EventType":"eSetFlag",
+        "Name": "GorroFound",
+        "SetAs": "True",
+        "TriggerCondition":"!GorroFound"
+      }
+    ]
   },
   {
     "Name": "PasilloCentral2",
@@ -74,7 +108,24 @@
       "puerta" : {
         "ConnectingNode" : "PasilloCentral3-W"
       }
-    }
+    },
+    "OnInspectEvent": [
+      {
+        "EventType": "eGiveItem",
+        "ItemLots":[
+          {
+            "Item":"calcetines_del_heroe"
+          }
+        ],
+        "TriggerCondition": "!CalcetinesFound"
+      },
+      {
+        "EventType":"eSetFlag",
+        "Name": "CalcetinesFound",
+        "SetAs": "True",
+        "TriggerCondition":"!CalcetinesFound"
+      }
+    ]
   },
   {
     "Name": "PasilloCentral3-E",
@@ -96,7 +147,24 @@
       "sur" : {
         "ConnectingNode": "PasilloCentral3-E"
       }
-    }
+    },
+    "OnInspectEvent": [
+      {
+        "EventType": "eGiveItem",
+        "ItemLots":[
+          {
+            "Item":"guantes_del_heroe"
+          }
+        ],
+        "TriggerCondition": "!GuantesFound"
+      },
+      {
+        "EventType":"eSetFlag",
+        "Name": "GuantesFound",
+        "SetAs": "True",
+        "TriggerCondition":"!GuantesFound"
+      }
+    ]
   },
   {
     "Name": "PasilloCentral4",
@@ -129,7 +197,24 @@
       "sur" : {
         "ConnectingNode" : "PasilloCentral5"
       }
-    }
+    },
+    "OnInspectEvent": [
+      {
+        "EventType": "eGiveItem",
+        "ItemLots":[
+          {
+            "Item":"espada_del_heroe"
+          }
+        ],
+        "TriggerCondition": "!EspadaFound"
+      },
+      {
+        "EventType":"eSetFlag",
+        "Name": "EspadaFound",
+        "SetAs": "True",
+        "TriggerCondition":"!EspadaFound"
+      }
+    ]
   },
   {
     "Name": "SalaJefe",

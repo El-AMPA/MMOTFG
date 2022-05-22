@@ -1,161 +1,69 @@
 ﻿[
   {
-    "Name": "health_potion",
+    "Name": "pocion_vida",
     "MaxStackQuantity": 5,
     "Key_Words": [
       {
-        "Key": "drink",
+        "Key": "beber",
         "Value": {
           "BehaviourType": "bChangeStat",
           "StatToChange": "HP",
           "Change": 500,
-          "Message": "Gained 500HP"
-        }
-      },
-      {
-        "Key": "eat",
-        "Value": {
-          "BehaviourType": "bChangeStat",
-          "StatToChange": "HP",
-          "Change": -2,
-          "Message": "Why would you eat a potion you freak.\nYour health has been reduced by 2 points."
+          "Message": "Recuperaste 500HP"
         }
       }
     ]
   },
   {
-    "Name": "mana_potion",
+    "Name": "pocion_mana",
     "MaxStackQuantity": 3,
     "Key_Words": [
       {
-        "Key": "drink",
+        "Key": "beber",
         "Value": {
           "BehaviourType": "bChangeStat",
           "StatToChange": "MP",
           "Change": 500,
-          "Message": "Gained 500MP"
-        }
-      },
-      {
-        "Key": "eat",
-        "Value": {
-          "BehaviourType": "bChangeStat",
-          "StatToChange": "MP",
-          "Change": -2,
-          "Message": "Why would you eat a potion you freak.\nYour MP has been reduced by 2 points."
+          "Message": "Recuperaste 500MP"
         }
       }
     ]
   },
   {
     "ItemType": "EquipableItem",
-    "Name": "camiseta_de_evangelion",
-    "GearSlot": "CHEST",
-    "StatModifiers": {
-      "ATK": -2,
-      "MP": 10
-    }
-  },
-  {
-    "ItemType": "EquipableItem",
-    "Name": "collar_de_jorge",
-    "GearSlot": "TRINKET",
+    "Name": "gorro_del_heroe",
+    "GearSlot": "HEAD",
     "StatModifiers": {
       "ATK": 20,
-      "HP": -10
+      "HP": 30
     }
   },
   {
     "ItemType": "EquipableItem",
-    "Name": "joycon_con_drift",
-    "GearSlot": "WEAPON",
-    "StatModifiers": {
-      "ATK": 10
-    }
-  },
-  {
-    "ItemType": "EquipableItem",
-    "Name": "sulfuras",
-    "GearSlot": "WEAPON",
-    "StatModifiers": {
-      "ATK": 15,
-      "MP": -2
-    }
-  },
-  {
-    "ItemType": "EquipableItem",
-    "Name": "tatirana",
-    "GearSlot": "WEAPON",
-    "StatModifiers": {
-      "ATK": 15,
-      "MP": 15
-    }
-  },
-  {
-    "ItemType": "EquipableItem",
-    "Name": "tfury",
-    "GearSlot": "WEAPON",
-    "StatModifiers": {
-      "ATK": 10,
-      "HP": -5
-    }
-  },
-  {
-    "ItemType": "EquipableItem",
-    "Name": "vaqueros_normales",
-    "GearSlot": "LEGS",
-    "StatModifiers": {
-      "HP": 10,
-      "MP": 10
-    }
-  },
-  {
-    "ItemType": "EquipableItem",
-    "Name": "zapatillas_gastadas",
+    "Name": "calcetines_del_heroe",
     "GearSlot": "FEET",
     "StatModifiers": {
-      "MP": 10
+      "SPE": 50,
+      "HP": 30
     }
   },
   {
     "ItemType": "EquipableItem",
-    "Name": "beast_slaying_boots",
-    "GearSlot": "FEET",
+    "Name": "guantes_del_heroe",
+    "GearSlot": "HANDS",
     "StatModifiers": {
       "ATK": 30,
-      "HP": 100
+      "HP": 50
     }
   },
   {
     "ItemType": "EquipableItem",
-    "Name": "mochila_loona",
-    "GearSlot": "BACK",
+    "Name": "espada_del_heroe",
+    "GearSlot": "WEAPON",
     "StatModifiers": {
-      "MP": 20,
-      "HP": 15
+      "ATK": 150,
+      "HP": 100,
+      "SPE": 50
     }
-  },
-  {
-    "ItemType": "EquipableItem",
-    "Name": "torch",
-    "GearSlot": "CHEST",
-    "StatModifiers": {
-      "ATK": -2,
-      "MP": 10
-    },
-    "OnEquipEvents": [
-      {
-        "EventType": "eSetFlag",
-        "Name": "TorchLit",
-        "SetAs": true
-      }
-    ],
-    "OnUnequipEvents": [
-      {
-        "EventType": "eSetFlag",
-        "Name": "TorchLit",
-        "SetAs": false
-      }
-    ]
   }
 ]
