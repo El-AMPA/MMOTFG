@@ -6,6 +6,13 @@
         "ConnectingNode": "PasilloCentral1"
       }
     },
+    "OnArriveEvent":[
+      {
+        "EventType":"eSendImage",
+        "ImageName": "EvilCastleEntrance.jpg",
+        "Description":"Has vuelto a la entrada del castillo. Aun tienes personal al que mamporrear. ¡No hay tiempo que perder!"
+      }
+    ],
     "OnInspectEvent":[
       {
         "EventType":"eSendImage",
@@ -62,7 +69,8 @@
     },
     "OnArriveEvent":[
       {
-        "EventType":"eSendText",
+        "EventType":"eSendImage",
+        "ImageName":"Entrada1.png",
         "Description":"Con pies de plomo entras en la mazmorra. Notas todo bastante limpio y ordenado. Unos altavoces emiten una musiquita muy pegadiza. Distraido por el ambiente, resbalas una región húmeda del suelo y te caes de culo. Al reincorporarte, ÉL aparece.",
         "TriggerCondition":"!ManoloDefeated"
       },
@@ -70,6 +78,12 @@
         "EventType":"eStartBattle",
         "Enemy":"ConserjeManolo",
         "TriggerCondition":"!ManoloDefeated"
+      },
+      {
+        "EventType":"eSendImage",
+        "ImageName":"Entrada2.png",
+        "Description":"Sin Manolo notas que el polvo se empieza a acumular...",
+        "TriggerCondition":"ManoloDefeated"
       }
     ],
     "OnInspectEvent":[
@@ -89,14 +103,16 @@
     },
     "OnArriveEvent":[
       {
-        "EventType": "eSendText",
+        "EventType": "eSendImage",
         "Description":"Al abrir la puerta observas la habitación en la que te encuentras. Hay un monton de cajas y barriles repartidos por la habitación. Igual hay algo interesante por aquí.",
-        "TriggerCondition": "!SalaTesoro1Visited"
+        "ImageName":"SalaTesoro1.png",
+        "TriggerCondition": "!GorroFound"
       },
       {
-        "EventType":"eSendText",
+        "EventType":"eSendImage",
+        "ImageName": "SalaTesoro1.png",
         "Description":"Has vuelto a la sala donde encontraste el gorro. La percha de donde lo agarrse debe echarle de menos...",
-        "TriggerCondition":"!GorroFound"
+        "TriggerCondition":"GorroFound"
       }
     ],
     "OnInspectEvent": [
@@ -139,7 +155,8 @@
     },
     "OnArriveEvent":[
       {
-        "EventType":"eSendText",
+        "EventType":"eSendImage",
+        "ImageName":"Pasillo2.png",
         "Description":"Vaya... Esta sala no está tan bien cuidada. Múltiples agujeros aparentemente dispuestos de una manera aleatoria perforan las paredes... La sala parece un Gruyer.",
         "TriggerCondition":"!PasilloCentral2Visited"
       }
@@ -152,18 +169,6 @@
       {
         "EventType":"eStartBattle",
         "Enemy":"SmallCheese"
-      }
-    ],
-    "OnExitEvent":[
-      {
-        "EventType":"eSendText",
-        "Description":"Al intentar abandonar la sala aparece una figura sombría de la siguiente sala. Una rata enorme adornada por ornamentos dorados fija su mirada en tí. Una cohorte de ratas más pequeñas le acompañan. Ay mecachis.",
-        "TriggerCondition":"!BigCheeseDefeated"
-      },
-      {
-        "EventType":"eStartBattle",
-        "Enemies":["BigCheese", "SmallCheese", "SmallCheese"],
-        "TriggerCondition": "!BigCheeseDefeated"
       }
     ]
   },
@@ -182,7 +187,37 @@
       "oeste":{
         "ConnectingNode" : "PasilloCentral3-W"
       }
-    }
+    },
+    "OnArriveEvent":[
+      {
+        "EventType":"eSendImage",
+        "ImageName":"CheeseThrone1.png",
+        "Description":"Un trono se alza en medio de la siguiente sala. Una enorme rata adornada por ornamentos dorados fija su mirada en tí. Una cohorte de ratas más pequeñas le acompañan. Ay mecachis.",
+        "TriggerCondition":"!BigCheeseDefeated"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"''¡Nunca llegarás al Malo Maloso, te detendré!'' Exclama la rata mientras se abalanza sobre tí.",
+        "TriggerCondition":"!BigCheeseDefeated"
+      },
+      {
+        "EventType":"eStartBattle",
+        "Enemies":["BigCheese", "SmallCheese", "SmallCheese"],
+        "TriggerCondition": "!BigCheeseDefeated"
+      },
+      {
+        "EventType":"eSendImage",
+        "ImageName": "CheeseThrone2.png",
+        "Description":"Has vuelto a la sala donde hiciste frente a Big Cheese. Su muerte dejó un gran hueco en el trono...",
+        "TriggerCondition":"BigCheeseDefeated"
+      }
+    ],
+    "OnInspectEvent":[
+      {
+        "EventType":"eSendText",
+        "Description":"Hay múltiples direcciones por las que puedo avanzar desde esta sala. Si avanzo hacia el norte debería encontrar al Malo Maloso, pero igual necesito explorar más y hacerme más fuerte para hacerle frente."
+      }
+    ]
   },
   {
     "Name": "PasilloCentral3-W",
@@ -193,7 +228,31 @@
       "este" : {
         "ConnectingNode" : "PasilloCentral3"
       }
-    }
+    },
+    "OnArriveEvent":[
+      {
+        "EventType":"eSendText",
+        "Description":"Menudo cablerío hay montado por el suelo. Yo que pensaba que esto era una aventura de fantasía medieval. Menudo cacao mental tienen los desarrolladores...",
+        "TriggerCondition":"!TomasDefeated"
+      },
+      {
+        "EventType":"eSendImage",
+        "ImageName": "Pasillo2_W_1.png",
+        "Description":"Así que a esto se dedicaba el Malo Maloso... ¡Mina criptomonedas! Con la cantidad de gente en el mundo sin luz y el bobo este calentando el mundo. Un crimen de calibre no debe permanecer impune.",
+        "TriggerCondition": "!TomasDefeated"
+      },
+      {
+        "EventType": "eStartBattle",
+        "Enemy": "TecnicoTomás",
+        "TriggerCondition": "!TomasDefeated"
+      },
+      {
+        "EventType": "eSendImage",
+        "Description" : "Otra vez aquí... A ver si consigo salir de esta sala y no enredarme con los cables.",
+        "ImageName": "Pasillo2_W_2.png",
+        "TriggerCondition": "TomasDefeated"
+      }
+    ]
   },
   {
     "Name": "SalaTesoro2",
@@ -202,7 +261,26 @@
         "ConnectingNode" : "PasilloCentral3-W"
       }
     },
+    "OnArriveEvent": [
+      {
+        "EventType":"eSendImage",
+        "ImageName": "SalaTesoro2.png",
+        "Description": "La madre que me... Esta debe ser la habitación del técnico de antes. Rebuscaré por aquí para ver que encuentro y me largaré lo antes posible.",
+        "TriggerCondition": "!CalcetinesFound"
+      },
+      {
+        "EventType": "eSendImage",
+        "ImageName": "SalaTesoro2.png",
+        "Description": "...",
+        "TriggerCondition": "CalcetinesFound"
+      }
+    ],
     "OnInspectEvent": [
+      {
+        "EventType": "eSendText",
+        "Description": "No me creo que esté haciendo esto...",
+        "TriggerCondition": "!CalcetinesFound"
+      },
       {
         "EventType": "eGiveItem",
         "ItemLots":[
@@ -211,6 +289,11 @@
           }
         ],
         "TriggerCondition": "!CalcetinesFound"
+      },
+      {
+        "EventType": "eSendText",
+        "Description": "...",
+        "TriggerCondition": "CalcetinesFound"
       },
       {
         "EventType":"eSetFlag",

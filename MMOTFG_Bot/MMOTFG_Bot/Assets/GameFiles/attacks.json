@@ -125,10 +125,29 @@
     "Name": "Gruñido",
     "MpCost": 5,
     "StatToChange": "ATK",
-    "Multiple": -0.5
+    "Multiple": 0.7
   },
   {
     "Name": "Coletazo",
     "Power": 10
+  },
+  {
+    "Name": "Chapa sobre Linux",
+    "AttackType": "aStatChanging",
+    "MpCost": 10,
+    "StatToChange" : "ATK",
+    "Multiple": 0.5,
+    "Power": 20
+  },
+  {
+    "Name" : "Golpe con cable",
+    "AttackType": "aStatChanging",
+    "StatToChange": "SPE",
+    "Multiple": 0.5,
+    "Power": 15
+  },
+  {
+    "Name": "Tabletazo",
+    "Power": 20
   }
 ]

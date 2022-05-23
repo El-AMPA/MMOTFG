@@ -183,5 +183,14 @@
     "DroppedItem": "mana_potion",
     "DroppedItemAmount" : 3,
     "Attacks": ["Gruñido", "Coletazo"]
+  },
+  {
+    "Name":"TecnicoTomás",
+    "ImageName": "TecnicoTomas.png",
+    "Stats" : [200, 30, 10, 10],
+    "ImageCaption": "Cuando llegas al centro de la sala, una mano aparece de entre el cablerío y te golpea.",
+    "DroppedItem": "mana_potion",
+    "DroppedItemAmount": 3,
+    "Attacks": ["Tabletazo", "Golpe con cable", "Chapa sobre Linux"]
   }
 ]
