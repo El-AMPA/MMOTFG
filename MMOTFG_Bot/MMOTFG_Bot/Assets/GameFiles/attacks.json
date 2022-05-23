@@ -115,5 +115,20 @@
   {
     "Name": "Fregonazo",
     "Power" : 1
+  },
+  {
+    "Name": "Mordisco al tobillo",
+    "Power": 4
+  },
+  {
+    "AttackType": "aStatChanging",
+    "Name": "Gruñido",
+    "MpCost": 5,
+    "StatToChange": "ATK",
+    "Multiple": -0.5
+  },
+  {
+    "Name": "Coletazo",
+    "Power": 10
   }
 ]

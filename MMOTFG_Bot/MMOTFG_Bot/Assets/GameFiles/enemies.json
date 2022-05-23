@@ -157,14 +157,31 @@
   },
   {
     "Name": "ConserjeManolo",
-    "Stats": [ 10, 10, 10, 10 ],
+    "Stats": [ 100, 10, 10, 10 ],
     "ImageName": "Janitor.png",
     "ImageCaption": "¿Arruinaste mi suelo? ¡Pagarás por ello!",
-    "DroppedItem": "health_potion",
+    "DroppedItem": "pocion_vida",
     "DroppedItemAmount": 2,
     "Attacks": [ "Fregonazo" ],
     "OnHit": {
       "Message": "Manolo te golpea con su fregona mojada."
     }
+  },
+  {
+    "Name":"SmallCheese",
+    "Stats" : [40, 10, 10, 10],
+    "ImageName":"SmallCheese.png",
+    "ImageCaption": "*sonidos de rata*",
+    "DroppedItem": "pocion_vida",
+    "Attacks": ["Mordisco al tobillo"]
+  },
+  {
+    "Name":"BigCheese",
+    "ImageName": "BigCheese.png",
+    "Stats" : [100, 20, 10, 10],
+    "ImageCaption": "*sonidos de rata más poderosa*",
+    "DroppedItem": "mana_potion",
+    "DroppedItemAmount" : 3,
+    "Attacks": ["Gruñido", "Coletazo"]
   }
 ]

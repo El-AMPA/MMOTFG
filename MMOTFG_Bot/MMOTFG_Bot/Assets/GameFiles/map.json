@@ -5,7 +5,47 @@
       "norte": {
         "ConnectingNode": "PasilloCentral1"
       }
-    }
+    },
+    "OnInspectEvent":[
+      {
+        "EventType":"eSendImage",
+        "ImageName": "EvilCastleEntrance.jpg",
+        "Description": "Ante ti se rige castillo del Malo Maloso. ¿Qué ha hecho? No tienes ni idea, pero con ese nombre seguro que nada bueno.",
+        "TriggerCondition" : "!EntradaInspect1"
+      },
+      {
+        "EventType":"eSendAudio",
+        "AudioName": "Thunder.mp3",
+        "Description": "¡Una aventura te espera. Tortas, golpetazos... Bienvenido a... Mazmorra Mamporrazo!",
+        "TriggerCondition": "!EntradaInspect1"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"Buscas debajo de la alfombra de la puerta y encuentras una poción.",
+        "TriggerCondition":"!EntradaInspect2 and EntradaInspect1"
+      },
+      {
+        "EventType":"eGiveItem",
+        "ItemLots":[
+          {
+            "Item":"pocion_vida"
+          }
+        ],
+        "TriggerCondition":"!EntradaInspect2 and EntradaInspect1"
+      },
+      {
+        "EventType":"eSetFlag",
+        "Name":"EntradaInspect2",
+        "SetAs":"True",
+        "TriggerCondition":"EntradaInspect1 and !EntradaInspect2"
+      },
+      {
+        "EventType":"eSetFlag",
+        "Name":"EntradaInspect1",
+        "SetAs":"True",
+        "TriggerCondition":"!EntradaInspect1"
+      }
+    ]
   },
   {
     "Name": "PasilloCentral1",
@@ -23,18 +63,20 @@
     "OnArriveEvent":[
       {
         "EventType":"eSendText",
-        "Description":"Con pies de plomo entras en la mazmorra. Notas todo bastante limpio y ordenado. Unos altavoces emiten una musiquita muy pegadiza. Distraido por el ambiente, resbalas una región húmeda del suelo y te caes de culo. Al reincorporarte, ÉL aparece."
+        "Description":"Con pies de plomo entras en la mazmorra. Notas todo bastante limpio y ordenado. Unos altavoces emiten una musiquita muy pegadiza. Distraido por el ambiente, resbalas una región húmeda del suelo y te caes de culo. Al reincorporarte, ÉL aparece.",
+        "TriggerCondition":"!ManoloDefeated"
       },
       {
         "EventType":"eStartBattle",
-        "Enemy":"ConserjeManolo"
+        "Enemy":"ConserjeManolo",
+        "TriggerCondition":"!ManoloDefeated"
       }
     ],
     "OnInspectEvent":[
       {
         "EventType":"eSendAudio",
         "AudioName":"Mamporrazo.mp3",
-        "Description":"Prestas atención a la música... ¡El malo maloso tiene muy buen gusto musical!"
+        "Description":"Prestas atención a la música... ¡El malo maloso tiene muy buen gusto musical! Seguro que motivaba un montón a Manolo."
       }
     ]
   },
@@ -45,7 +87,24 @@
         "ConnectingNode" : "PasilloCentral1"
       }
     },
+    "OnArriveEvent":[
+      {
+        "EventType": "eSendText",
+        "Description":"Al abrir la puerta observas la habitación en la que te encuentras. Hay un monton de cajas y barriles repartidos por la habitación. Igual hay algo interesante por aquí.",
+        "TriggerCondition": "!SalaTesoro1Visited"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"Has vuelto a la sala donde encontraste el gorro. La percha de donde lo agarrse debe echarle de menos...",
+        "TriggerCondition":"!GorroFound"
+      }
+    ],
     "OnInspectEvent": [
+      {
+        "EventType": "eSendText",
+        "Description":"Entre los objetos de la sala, un gorro colgado en la pared capta tu atención.",
+        "TriggerCondition":"!GorroFound"
+      },
       {
         "EventType": "eGiveItem",
         "ItemLots":[
@@ -54,6 +113,11 @@
           }
         ],
         "TriggerCondition": "!GorroFound"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"No hay nada más que llame tu atención",
+        "TriggerCondition":"GorroFound"
       },
       {
         "EventType":"eSetFlag",
@@ -72,7 +136,36 @@
       "sur" : {
         "ConnectingNode" : "PasilloCentral1"
       }
-    }
+    },
+    "OnArriveEvent":[
+      {
+        "EventType":"eSendText",
+        "Description":"Vaya... Esta sala no está tan bien cuidada. Múltiples agujeros aparentemente dispuestos de una manera aleatoria perforan las paredes... La sala parece un Gruyer.",
+        "TriggerCondition":"!PasilloCentral2Visited"
+      }
+    ],
+    "OnInspectEvent":[
+      {
+        "EventType": "eSendText",
+        "Description": "¡De uno de los agujeros que adornan la sala aparece una rata y se abalanza sobre ti!"
+      },
+      {
+        "EventType":"eStartBattle",
+        "Enemy":"SmallCheese"
+      }
+    ],
+    "OnExitEvent":[
+      {
+        "EventType":"eSendText",
+        "Description":"Al intentar abandonar la sala aparece una figura sombría de la siguiente sala. Una rata enorme adornada por ornamentos dorados fija su mirada en tí. Una cohorte de ratas más pequeñas le acompañan. Ay mecachis.",
+        "TriggerCondition":"!BigCheeseDefeated"
+      },
+      {
+        "EventType":"eStartBattle",
+        "Enemies":["BigCheese", "SmallCheese", "SmallCheese"],
+        "TriggerCondition": "!BigCheeseDefeated"
+      }
+    ]
   },
   {
     "Name": "PasilloCentral3",
