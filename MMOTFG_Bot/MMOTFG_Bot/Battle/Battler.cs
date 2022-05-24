@@ -46,13 +46,6 @@ namespace MMOTFG_Bot
             if (onKill == null) onKill = new List<Event>();
         }
 
-        protected void OnClone()
-        {
-            SetAttacks();
-            maxStats = (int[])stats.Clone();
-            originalStats = (int[])stats.Clone();
-        }
-
         public void SetAttacks()
         {
             attacks_ = new List<Attack>();
@@ -300,23 +293,6 @@ namespace MMOTFG_Bot
                 ec.timesActivated = Convert.ToInt32(flags[i]);
                 i++;
             }
-        }
-
-        public Battler Clone()
-        {
-            JsonSerializerSettings settings = new JsonSerializerSettings()
-            {
-                TypeNameHandling = TypeNameHandling.Auto,
-                DefaultValueHandling = DefaultValueHandling.Populate
-            };
-
-            string serialize = JsonConvert.SerializeObject(this, settings);
-
-            Battler b = JsonConvert.DeserializeObject<Battler>(serialize, settings);
-
-            b.OnClone();
-             
-            return b;
         }
     }
 }

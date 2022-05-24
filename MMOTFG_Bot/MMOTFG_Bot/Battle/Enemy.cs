@@ -42,22 +42,5 @@ namespace MMOTFG_Bot
             int attack = RNG.Next(0, i + 1); 
             return attacks_[attack];
         }
-
-        public new Enemy Clone()
-        {
-            JsonSerializerSettings settings = new JsonSerializerSettings()
-            {
-                TypeNameHandling = TypeNameHandling.Auto,
-                DefaultValueHandling = DefaultValueHandling.Populate
-            };
-
-            string serialize = JsonConvert.SerializeObject(this, settings);
-
-            Enemy e = JsonConvert.DeserializeObject<Enemy>(serialize, settings);
-
-            e.OnClone();
-             
-            return e;
-        }
     }
 }

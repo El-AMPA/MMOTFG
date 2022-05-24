@@ -227,22 +227,5 @@ namespace MMOTFG_Bot
 
             learningAttack = eInfo[DbConstants.PLAYER_FIELD_LEARNING_ATTACK] as string;
         }
-
-        public new Player Clone()
-        {
-            JsonSerializerSettings settings = new JsonSerializerSettings()
-            {
-                TypeNameHandling = TypeNameHandling.Auto,
-                DefaultValueHandling = DefaultValueHandling.Populate
-            };
-
-            string serialize = JsonConvert.SerializeObject(this, settings);
-
-            Player p = JsonConvert.DeserializeObject<Player>(serialize, settings);
-
-            p.OnClone();
-            
-            return p;
-        }
     }
 }

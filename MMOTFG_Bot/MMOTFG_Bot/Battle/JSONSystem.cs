@@ -9,13 +9,27 @@ namespace MMOTFG_Bot
 {
     static class JSONSystem
     {
-        private static List<Enemy> enemies;
-        private static List<Attack> attacks;
-        private static List<ObtainableItem> items;
-        private static Player defaultPlayer;
+        private static Dictionary<string, string> enemyDict;
+        private static Dictionary<string, Attack> attackDict;
+        private static Dictionary<string, ObtainableItem> itemDict;
+        private static string defaultPlayer;
+        private static JsonSerializerSettings jsonSerializerSettings;
 
         public static void Init(string enemyPath, string playerPath, string attackPath, string itemPath)
         {
+            jsonSerializerSettings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                DefaultValueHandling = DefaultValueHandling.Populate
+            };
+
+            //ignore case to simplify commands
+            var comparer = StringComparer.OrdinalIgnoreCase;
+
+            enemyDict = new Dictionary<string, string>(comparer);
+            attackDict = new Dictionary<string, Attack>(comparer);
+            itemDict = new Dictionary<string, ObtainableItem>(comparer);    
+
             ReadAttacksFromJSON(attackPath);
             ReadItemsFromJSON(itemPath);
             ReadEnemiesFromJSON(enemyPath);
@@ -40,9 +54,13 @@ namespace MMOTFG_Bot
 
             try
             {
-                enemies = JsonConvert.DeserializeObject<List<Enemy>>(enemyText, 
+                List<Enemy> enemyList = JsonConvert.DeserializeObject<List<Enemy>>(enemyText, 
                     new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate}); //Deserializes the .json file into an array of enemies.
-                foreach (Battler e in enemies) e.OnCreate();
+                foreach (Enemy e in enemyList)
+                {
+                    //serialize and store by name
+                    enemyDict.Add(e.name, JsonConvert.SerializeObject(e, jsonSerializerSettings));
+                }
             }
             catch (JsonException e)
             {
@@ -66,8 +84,12 @@ namespace MMOTFG_Bot
 
             try
             {
-                attacks = JsonConvert.DeserializeObject<List<Attack>>(attackText,
+                List<Attack> attacks = JsonConvert.DeserializeObject<List<Attack>>(attackText,
                     new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate }); //Deserializes the .json file into a list of attacks
+                foreach(Attack a in attacks)
+                {
+                    attackDict.Add(a.name, a);
+                }
             }
             catch (JsonException e)
             {
@@ -91,9 +113,13 @@ namespace MMOTFG_Bot
 
             try
             {
-                items = JsonConvert.DeserializeObject<List<ObtainableItem>>(itemText,
+                List<ObtainableItem> items = JsonConvert.DeserializeObject<List<ObtainableItem>>(itemText,
                     new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate }); //Deserializes the .json file into a list of items
-                foreach (ObtainableItem i in items) i.OnCreate();
+                foreach (ObtainableItem i in items)
+                {
+                    i.OnCreate();
+                    itemDict.Add(i.name, i);
+                }
             }
             catch (JsonException e)
             {
@@ -117,9 +143,9 @@ namespace MMOTFG_Bot
 
             try
             {
-                defaultPlayer = JsonConvert.DeserializeObject<Player>(playerText,
-                    new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate }); //Deserializes the .json file into a player
-                defaultPlayer.OnCreate();
+                //deserialize to check validity
+                Player p = JsonConvert.DeserializeObject<Player>(playerText, new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate });
+                defaultPlayer = JsonConvert.SerializeObject(p, jsonSerializerSettings);
             }
             catch (JsonException e)
             {
@@ -130,35 +156,47 @@ namespace MMOTFG_Bot
 
         public static Enemy GetEnemy(string name)
         {
-            //enemies with names such as "Enemy_1" get simplified to "enemy"
-            Enemy e = enemies.FirstOrDefault(x => x.name.ToLower() == name.Split('_')[0].ToLower());
-            if (e != null)
+            //enemies with names such as "Enemy_1" get simplified to "Enemy"
+            name = name.Split('_')[0];
+            if (enemyDict.TryGetValue(name, out string s))
             {
-                //return by copy to preserve the original
-                return e.Clone();
+                //return by copy to preserve the original             
+                Enemy e = JsonConvert.DeserializeObject<Enemy>(s, jsonSerializerSettings);
+                e.OnCreate();
+                return e;
             }
-            else return e;
+            else return null;
         }
         public static Player GetDefaultPlayer()
         {
             //return by copy to preserve the original
-            return defaultPlayer.Clone();
+            Player p = JsonConvert.DeserializeObject<Player>(defaultPlayer, jsonSerializerSettings);
+            p.OnCreate();
+            return p;
         }
 
         public static Attack GetAttack(string name)
         {
-            return attacks.FirstOrDefault(x => x.name.ToLower() == name.ToLower());
+            if (attackDict.TryGetValue(name, out Attack a))
+            {        
+                return a;
+            }
+            else return null;
         }
 
         public static ObtainableItem GetItem(string name)
         {
-            return items.FirstOrDefault(x => x.name.ToLower() == name.ToLower());
+            if (itemDict.TryGetValue(name, out ObtainableItem i))
+            {
+                return i;
+            }
+            else return null;
         }
 
         public static List<string> GetAllAttackNames()
         {
             List<string> an = new List<string>();
-            foreach (Attack a in attacks) an.Add(a.name);
+            foreach (Attack a in attackDict.Values) an.Add(a.name);
             an.Add("skip");
             return an;
         }
