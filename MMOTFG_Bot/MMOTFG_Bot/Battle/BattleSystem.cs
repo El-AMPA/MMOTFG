@@ -472,7 +472,7 @@ namespace MMOTFG_Bot
             await LoadPlayerBattle(chatId);
 
             if (name == null) b = GetPlayer(chatId);
-            else if (battleActive) b = battlers.FirstOrDefault(x => x.name == name);
+            else if (battleActive) b = battlers.FirstOrDefault(x => x.name.ToLower() == name.ToLower());
 
             string friendId = await PartySystem.GetFriendId(chatId, name);
             if (friendId != null)

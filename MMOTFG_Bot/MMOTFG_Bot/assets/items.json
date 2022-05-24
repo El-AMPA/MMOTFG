@@ -6,17 +6,24 @@
       "drink": [
         {
           "EventType": "eChangeStat",
-          "StatToChange": "HP",
-          "Change": 500,
-          "Message": "Gained 500HP"
+          "StatChanges": [
+            {
+              "StatToChange": "HP",
+              "Add": 500
+            }
+          ]
         }
       ],
       "eat": [
         {
           "EventType": "eChangeStat",
-          "StatToChange": "HP",
-          "Change": -2,
-          "Message": "Why would you eat a potion you freak.\nYour health has been reduced by 2 points."
+          "StatChanges": [
+            {
+              "StatToChange": "HP",
+              "Add": -2
+            }
+          ],
+          "Message": "Why would you eat a potion you freak."
         }
       ]
     }
@@ -28,17 +35,24 @@
       "drink": [
         {
           "EventType": "eChangeStat",
-          "StatToChange": "MP",
-          "Change": 500,
-          "Message": "Gained 500MP"
+          "StatChanges": [
+            {
+              "StatToChange": "MP",
+              "Add": 100
+            }
+          ]
         }
       ],
       "eat": [
         {
           "EventType": "eChangeStat",
-          "StatToChange": "MP",
-          "Change": -2,
-          "Message": "Why would you eat a potion you freak.\nYour MP has been reduced by 2 points."
+          "StatChanges": [
+            {
+              "StatToChange": "MP",
+              "Add": -2
+            }
+          ],
+          "Message": "Why would you eat a potion you freak."
         }
       ]
     }
