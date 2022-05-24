@@ -47,6 +47,6 @@ namespace MMOTFG_Bot
             return user.GetStat(ATK) * power;
         }
 
-        public virtual async Task OnAttack(string chatId) { }
+        public virtual string OnAttack() { return ""; }
     }
 }

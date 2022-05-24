@@ -7,13 +7,17 @@
     "DroppedMoney": 100,
     "DroppedItem": "health_potion",
     "DroppedItemAmount": 2,
-    "ExperienceGiven": 2,
+    "ExperienceGiven": 1,
     "Attacks": [ "Slap", "Swords Dance", "MpScale" ],
     "OnHit": [
       {
         "EventType": "eChangeStat",
-        "StatToChange": "ATK",
-        "Multiple": 2,
+        "StatChanges": [
+          {
+            "StatToChange": "ATK",
+            "Multiple": 2
+          }
+        ],
         "StatToDepend": "HP",
         "Threshold": 0.5,
         "Message": "Manuela se ha enfadado! Sus ataques harán más daño."
@@ -22,10 +26,14 @@
     "OnTurnEnd": [
       {
         "EventType": "eChangeStat",
-        "StatToChange": "HP",
-        "Change": 5,
+        "StatChanges": [
+          {
+            "StatToChange": "HP",
+            "Add": 5
+          }
+        ],
         "ActivateOnce": false,
-        "Message": "El poder de la amistad cura 5 HP a Manuela."
+        "Message": "El poder de la amistad cura a Manuela."
       }
     ]
   },
@@ -41,8 +49,12 @@
     "OnHit": [
       {
         "EventType": "eChangeStat",
-        "StatToChange": "ATK",
-        "Change": -1,
+        "statChanges": [
+          {
+            "StatToChange": "ATK",
+            "Multiple": -1
+          }
+        ],
         "Chance": 0.5,
         "Message": "Cleon y el mono se debaten sobre si deberían matarte o no. Su ataque baja un poco."
       }
@@ -60,8 +72,12 @@
     "OnHit": [
       {
         "EventType": "eChangeStat",
-        "StatToChange": "MP",
-        "Multiple": 100,
+        "StatChanges": [
+          {
+            "StatToChange": "MP",
+            "Multiple": 100
+          }
+        ],
         "StatToDepend": "HP",
         "Threshold": 0.5,
         "Message": "¡Fedejimbo conjura un patrón de diseño arcano de su libro y se recuperan todos sus MP!"
@@ -80,8 +96,12 @@
     "OnHit": [
       {
         "EventType": "eChangeStat",
-        "StatToChange": "ATK",
-        "Multiple": 0.5,
+        "StatChanges": [
+          {
+            "StatToChange": "ATK",
+            "Multiple": 0.5
+          }
+        ],
         "StatToDepend": "HP",
         "Threshold": 0.5,
         "Message": "Sein se está cansando de jugar contigo y notas que pronto va a dejar de hacerte caso."
@@ -100,8 +120,12 @@
     "OnHit": [
       {
         "EventType": "eChangeStat",
-        "StatToChange": "ATK",
-        "Multiple": 0.25,
+        "StatChanges": [
+          {
+            "StatToChange": "ATK",
+            "Multiple": 0.25
+          }
+        ],
         "StatToDepend": "HP",
         "Threshold": 0.25,
         "Message": "¡Ya solo queda uno! Habrá ganado la partida del PCE, pero no la batalla contigo."
@@ -120,8 +144,12 @@
     "OnHit": [
       {
         "EventType": "eChangeStat",
-        "StatToChange": "HP",
-        "Change": -25,
+        "StatChanges": [
+          {
+            "StatToChange": "HP",
+            "Add": -25
+          }
+        ],
         "StatToDepend": "HP",
         "Threshold": 0.5,
         "Message": "El thiccboi intenta comerse una silla pero no sale bien..."

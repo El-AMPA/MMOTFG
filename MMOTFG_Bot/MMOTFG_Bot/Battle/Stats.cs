@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -17,6 +18,22 @@ namespace MMOTFG_Bot
         [EnumMember(Value = "MP")]
         MP
     };
+
+    public struct StatChange
+    {
+        [JsonConverter(typeof(StringEnumConverter))]
+        public StatName statToChange;
+
+        //for additive change
+        public float add;
+
+        [DefaultValue(1)]
+        //for multiplicative change
+        public float multiple;
+
+        //does it change the max value of bounded stats?
+        public bool changeMax;
+    }
 
     static class Stats
     {

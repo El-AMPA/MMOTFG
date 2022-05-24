@@ -37,7 +37,7 @@ namespace MMOTFG_Bot
 
             foreach (Event e in events)
             {
-                e.SetUser(await BattleSystem.GetPlayer(chatId));
+                e.SetUser(BattleSystem.GetPlayer(chatId));
                 await e.ExecuteEvent(chatId);
             }
 

@@ -34,7 +34,9 @@ namespace MMOTFG_Bot.Events
                     chatIds.Add(id);
             }
 
-            await BattleSystem.StartBattle(chatIds, enemies);
+            if (enemies.Count == 0) await TelegramCommunicator.SendText(chatId, "No valid enemies");
+
+            else await BattleSystem.StartBattle(chatIds, enemies);
         }
     }
 }

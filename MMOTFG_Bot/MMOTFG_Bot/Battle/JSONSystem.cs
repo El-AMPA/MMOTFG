@@ -130,7 +130,8 @@ namespace MMOTFG_Bot
 
         public static Battler GetEnemy(string name)
         {
-            Battler e = enemies.FirstOrDefault(x => x.name.ToLower() == name.ToLower());
+            //enemies with names such as "Enemy_1" get simplified to "enemy"
+            Battler e = enemies.FirstOrDefault(x => x.name.ToLower() == name.Split('_')[0].ToLower());
             if (e != null)
             {
                 //return by copy to preserve the original

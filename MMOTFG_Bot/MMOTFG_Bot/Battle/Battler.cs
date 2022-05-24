@@ -1,5 +1,6 @@
 ﻿using MMOTFG_Bot.Events;
 using MMOTFG_Bot.Navigation;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MMOTFG_Bot
 {
-    class Battler : ICloneable
+    class Battler
     {
         //current stats
         public float[] stats;
@@ -49,7 +50,7 @@ namespace MMOTFG_Bot
         public Attack NextAttack()
         {
             int i = attacks_.Count - 1;
-            while (attacks_[i].mpCost > stats[(int)StatName.MP])
+            while (i >= 0 && attacks_[i].mpCost > stats[(int)StatName.MP])
                 i--;
             //if no attacks available, return base attack
             if (i < 0) return new Attack("Struggle", 1, 0);
@@ -63,8 +64,17 @@ namespace MMOTFG_Bot
             maxStats = (float[])stats.Clone();
             originalStats = (float[])stats.Clone();
             //by default, every enemy creates a flag upon death
+            if (onHit == null) onHit = new List<Event>();
+            if (onTurnEnd == null) onTurnEnd = new List<Event>();
             if (onKill == null) onKill = new List<Event>();
             onKill.Add(new eSetFlag() { Name = name + "Killed", SetAs = true });
+        }
+
+        protected void OnClone()
+        {
+            SetAttacks();
+            maxStats = (float[])stats.Clone();
+            originalStats = (float[])stats.Clone();
         }
 
         public void SetAttacks()
@@ -131,16 +141,22 @@ namespace MMOTFG_Bot
             return bar;
         }
 
-        public void AddToStat(StatName stat, float change, bool changeMax = false, bool permanent = false)
+        //returns a string with the changes
+        public string AddToStat(StatName stat, float add, bool changeMax = false, bool permanent = false)
         {
             float statn = changeMax ? maxStats[(int)stat] : stats[(int)stat];
-            SetStat(stat, statn + change, changeMax, permanent);
+            SetStat(stat, statn + add, changeMax, permanent);
+            string message = $"{name}'s {stat} was changed by {add}!\n";
+            return message;
         }
 
-        public void MultiplyStat(StatName stat, float mult, bool changeMax = false, bool permanent = false)
+        //returns a string with the changes
+        public string MultiplyStat(StatName stat, float mult, bool changeMax = false, bool permanent = false)
         {
             float statn = changeMax ? maxStats[(int)stat] : stats[(int)stat];
             SetStat(stat, statn * mult, changeMax, permanent);
+            string message = $"{name}'s {stat} was multiplied by {mult}!\n";
+            return message;
         }
 
         public float GetStat(StatName stat)
@@ -156,6 +172,21 @@ namespace MMOTFG_Bot
         public float GetOriginalStat(StatName stat)
         {
             return originalStats[(int)stat];
+        }
+
+        //returns a string with the changes
+        public string ApplyStatChange(StatChange sc)
+        {
+            string message = "";
+            if (sc.multiple != 1)
+            {
+                message += MultiplyStat(sc.statToChange, sc.multiple, sc.changeMax);
+            }
+            if (sc.add != 0)
+            {
+                message += AddToStat(sc.statToChange, sc.add, sc.changeMax);
+            }
+            return message;
         }
 
         //For events such as OnHit, OnKill or OnTurnEnd
@@ -284,9 +315,21 @@ namespace MMOTFG_Bot
             }
         }
 
-        public virtual object Clone()
+        public Battler Clone()
         {
-            return MemberwiseClone();
+            JsonSerializerSettings settings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                DefaultValueHandling = DefaultValueHandling.Populate
+            };
+
+            string serialize = JsonConvert.SerializeObject(this, settings);
+
+            Battler b = JsonConvert.DeserializeObject<Battler>(serialize, settings);
+
+            b.OnClone();
+             
+            return b;
         }
     }
 }

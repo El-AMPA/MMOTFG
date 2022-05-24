@@ -23,7 +23,7 @@ namespace MMOTFG_Bot
         {
         }
 
-        public static async Task<Player> GetPlayer(string chatId)
+        public static Player GetPlayer(string chatId)
         {
             if (partyCode == null)
                 return players.First();
@@ -147,6 +147,7 @@ namespace MMOTFG_Bot
             update.Add(DbConstants.BATTLE_PAUSED, false);
             update.Add(DbConstants.PLAYER_FIELD_BATTLE_INFO, player.GetSerializable());
             update.Add(DbConstants.BATTLE_ENEMY_LIST, null);
+            players = new List<Player>() { player };
 
             await DatabaseManager.ModifyDocumentFromCollection(update, chatId, DbConstants.COLLEC_PLAYERS);
         }
@@ -160,12 +161,14 @@ namespace MMOTFG_Bot
             //Save players of the party 
             Dictionary<string, object> playersDict = new Dictionary<string, object>();
             List<string> ids = await PartySystem.GetPartyMembers(partyCode, true);
+            players = new List<Player>();
             foreach (string id in ids)
             {
                 Player player = await CreatePlayer(id);
                 player.SetName((string)(await DatabaseManager.GetDocumentByUniqueValue(DbConstants.PLAYER_FIELD_TELEGRAM_ID, id, DbConstants.COLLEC_PLAYERS))[DbConstants.PLAYER_FIELD_NAME]);
                 player.SetId(id);
                 playersDict.Add(id, player.GetSerializable());
+                players.Add(player);
             }
             update.Add(DbConstants.PARTY_FIELD_MEMBER_INFO, playersDict);
             update.Add(DbConstants.BATTLE_ENEMY_LIST, null);
@@ -210,7 +213,19 @@ namespace MMOTFG_Bot
                         imageNames.Add(b.imageName);
 
                     if (b.imageCaption != null)
-                        caption += b.imageCaption;
+                        caption += b.imageCaption + "\n";
+                }
+
+                //if multiple enemies have the same name, they need to be distinct
+                List<string> repeatedNames = eSide.GroupBy(e => e.name).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
+                foreach(string name in repeatedNames)
+                {
+                    List<Battler> enemiesWithName = eSide.Where(e => e.name == name).ToList();
+                    for(int i = 0; i < enemiesWithName.Count; i++)
+                    {
+                        //this way, you get Enemy_1, Enemy_2...
+                        enemiesWithName[i].name += $"_{i + 1}";
+                    }
                 }
 
                 await TelegramCommunicator.SendImageCollection(chatIds.First(), imageNames.ToArray(), true);
@@ -277,7 +292,7 @@ namespace MMOTFG_Bot
 
         public static async Task SetPlayerOptions(string chatId, string text)
         {
-            Player player = await GetPlayer(chatId);
+            Player player = GetPlayer(chatId);
             player.upNext = true;
             await SavePlayerBattle(chatId);
             await TelegramCommunicator.SendButtons(chatId, text, player.attacks);
@@ -285,7 +300,7 @@ namespace MMOTFG_Bot
 
         public static async Task PlayerAttack(string chatId, string attackName, string targetName = null)
         {
-            Player player = await GetPlayer(chatId);
+            Player player = GetPlayer(chatId);
             if (!battleActive)
             {
                 await TelegramCommunicator.SendText(chatId, "No battle currently active");
@@ -349,26 +364,29 @@ namespace MMOTFG_Bot
             attack.SetTarget(target);
             float damage = (float)Math.Round(attack.GetDamage(), 2);
 
-            string message = $"{user.name} used {attack.name}!";
+            string message = $"{user.name} used {attack.name}!\n";
             if (damage != 0)
             {
-                message += $" {target.name} took {damage} damage.";
+                message += $"{target.name} took {damage} damage.\n";
                 target.AddToStat(HP, -damage);
             }
-            await attack.OnAttack(chatId);
+            message += attack.OnAttack();
 
+            if (target.GetStat(HP) <= 0)
+                await target.OnBehaviour(chatId, target.onKill);
+
+            //check again since onKill events could have healed the target
             if (target.GetStat(HP) <= 0)
             {
                 target.turnOver = true;
                 await TelegramCommunicator.SendText(chatId, message, true);
-                await target.OnBehaviour(chatId, target.onKill);
                 bool isPlayer = (target as Player != null);
                 if (!isPlayer)
                 {
-                    string msg = $"{target.name} died!";
+                    string msg = $"{target.name} died!\n";
                     if (target.droppedItem != null)
                     {
-                        msg += $"\nYou obtained {target.droppedItem} x{target.droppedItemAmount}";
+                        msg += $"You obtained {target.droppedItem} x{target.droppedItemAmount}";
                         if (InventorySystem.StringToItem(target.droppedItem, out ObtainableItem droppedItem))
                             await InventorySystem.AddItem(chatId, droppedItem, target.droppedItemAmount);
                     }
@@ -388,7 +406,7 @@ namespace MMOTFG_Bot
                 {
                     await SavePlayerBattle(chatId);
                     battleActive = false;
-                    await TelegramCommunicator.SendText(chatId, "Battle ends!", true);
+                    await TelegramCommunicator.RemoveReplyMarkup(chatId, "Battle ends!");
                     //if in party and party wiped out
                     if (partyCode != null && isPlayer)
                     {
@@ -407,18 +425,19 @@ namespace MMOTFG_Bot
             }
             else
             {
-                await target.OnBehaviour(chatId, target.onHit);
-                if (damage != 0) message += $"\n{target.name} HP: \n{target.GetStatBar(HP)}";
+                if (damage != 0) message += $"{target.name} HP: \n{target.GetStatBar(HP)}";
                 await TelegramCommunicator.SendText(chatId, message, true);
+                await target.OnBehaviour(chatId, target.onHit);
             }
 
-            if(user == await GetPlayer(chatId) && !battlePaused) await TelegramCommunicator.RemoveReplyMarkup(chatId, "Turn over");
+            if (user == GetPlayer(chatId) && battleActive && !battlePaused) 
+                await TelegramCommunicator.RemoveReplyMarkup(chatId, "Turn over");
 
             await SavePlayerBattle(chatId);
             if (battleActive) await NextAttack(chatId);
         }
 
-        //for instances where the battle needs to be paused (such as move learning)
+        //for instances where the battle needs to be paused (such as attack learning)
         public static async Task PauseBattle(string chatId)
         {
             battlePaused = players.FirstOrDefault(x => x.learningAttack != null) != null;
@@ -452,12 +471,12 @@ namespace MMOTFG_Bot
 
             await LoadPlayerBattle(chatId);
 
-            if (name == null) b = await GetPlayer(chatId);
+            if (name == null) b = GetPlayer(chatId);
             else if (battleActive) b = battlers.FirstOrDefault(x => x.name == name);
 
             string friendId = await PartySystem.GetFriendId(chatId, name);
             if (friendId != null)
-                b = await GetPlayer(friendId);
+                b = GetPlayer(friendId);
 
             if (b == null)
             {

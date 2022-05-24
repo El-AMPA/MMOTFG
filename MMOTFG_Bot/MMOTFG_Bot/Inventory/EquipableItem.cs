@@ -30,22 +30,40 @@ namespace MMOTFG_Bot.Items
         {
             foreach (var stat in statModifiers)
             {
-                (await BattleSystem.GetPlayer(chatId)).AddToStat(stat.Key, stat.Value, changeMax: true, permanent: true);
+                (BattleSystem.GetPlayer(chatId)).AddToStat(stat.Key, stat.Value, changeMax: true, permanent: true);
             }
 
             if(onEquipEvents != null)
-                foreach (Event e in onEquipEvents) await e.Execute(chatId);
+            {
+                await ProgressKeeper.LoadSerializable(chatId);
+
+                foreach (Event ev in onEquipEvents)
+                {
+                    await ev.ExecuteEvent(chatId);
+                }
+
+                await ProgressKeeper.SaveSerializable(chatId);
+            }
         }
 
         public virtual async void OnUnequip(string chatId, string[] args = null)
         {
             foreach (var stat in statModifiers)
             {
-                (await BattleSystem.GetPlayer(chatId)).AddToStat(stat.Key, -stat.Value, changeMax: true, permanent: true);
+                (BattleSystem.GetPlayer(chatId)).AddToStat(stat.Key, -stat.Value, changeMax: true, permanent: true);
             }
 
             if (onUnequipEvents != null)
-                foreach (Event e in onUnequipEvents) await e.Execute(chatId);
+            {
+                await ProgressKeeper.LoadSerializable(chatId);
+
+                foreach (Event ev in onUnequipEvents)
+                {
+                    await ev.ExecuteEvent(chatId);
+                }
+
+                await ProgressKeeper.SaveSerializable(chatId);
+            }
         }
     }
 }

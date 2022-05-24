@@ -1,5 +1,6 @@
 ﻿using MMOTFG_Bot.Events;
 using MMOTFG_Bot.Navigation;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -46,7 +47,7 @@ namespace MMOTFG_Bot
                 attacks.Add(a.name);
             }
         }
-      
+
         public void SetName(string playerName)
         {
             name = playerName;
@@ -129,7 +130,7 @@ namespace MMOTFG_Bot
             if (attackName == "skip")
             {
                 learningAttack = null;
-                await TelegramCommunicator.RemoveReplyMarkup(chatId, "Skipped move learning");
+                await TelegramCommunicator.RemoveReplyMarkup(chatId, "Skipped attack learning");
                 if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
                 return;
             }
@@ -219,9 +220,21 @@ namespace MMOTFG_Bot
             learningAttack = eInfo[DbConstants.PLAYER_FIELD_LEARNING_ATTACK] as string;
         }
 
-        public override object Clone()
+        public new Player Clone()
         {
-            return MemberwiseClone();
+            JsonSerializerSettings settings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                DefaultValueHandling = DefaultValueHandling.Populate
+            };
+
+            string serialize = JsonConvert.SerializeObject(this, settings);
+
+            Player p = JsonConvert.DeserializeObject<Player>(serialize, settings);
+
+            p.OnClone();
+            
+            return p;
         }
     }
 }
