@@ -23,12 +23,12 @@ Use: fight [enemyName] [enemyName2] [enemyName3]...";
 
         internal override async Task Execute(string command, string chatId, string[] args = null)
         {
-            List<Battler> enemies = new List<Battler>();
+            List<Enemy> enemies = new List<Enemy>();
 
             for (int i = 0; i < args.Length; i++)
             {
-                Battler b = JSONSystem.GetEnemy(args[i]);
-                if (b != null) enemies.Add(b);
+                Enemy e = JSONSystem.GetEnemy(args[i]);
+                if (e != null) enemies.Add(e);
                 else await TelegramCommunicator.SendText(chatId, $"{args[i]} is an invalid enemy, will be ignored");
             }
 

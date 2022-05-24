@@ -15,7 +15,7 @@ namespace MMOTFG_Bot.Events
 
         public async override Task Execute(string chatId)
         {
-            List<Battler> enemies = new List<Battler>();
+            List<Enemy> enemies = new List<Enemy>();
             if (Enemy != null) enemies.Add(JSONSystem.GetEnemy(Enemy));
             else foreach (string s in Enemies) enemies.Add(JSONSystem.GetEnemy(s));
 

@@ -20,6 +20,7 @@
         ],
         "StatToDepend": "HP",
         "Threshold": 0.5,
+        "Activations": 1,
         "Message": "Manuela se ha enfadado! Sus ataques harán más daño."
       }
     ],
@@ -32,7 +33,6 @@
             "Add": 5
           }
         ],
-        "ActivateOnce": false,
         "Message": "El poder de la amistad cura a Manuela."
       }
     ]
@@ -56,6 +56,7 @@
           }
         ],
         "Chance": 0.5,
+        "Activations": 1,
         "Message": "Cleon y el mono se debaten sobre si deberían matarte o no. Su ataque baja un poco."
       }
     ]
@@ -80,6 +81,7 @@
         ],
         "StatToDepend": "HP",
         "Threshold": 0.5,
+        "Activations": 1,
         "Message": "¡Fedejimbo conjura un patrón de diseño arcano de su libro y se recuperan todos sus MP!"
       }
     ]
@@ -104,6 +106,7 @@
         ],
         "StatToDepend": "HP",
         "Threshold": 0.5,
+        "Activations": 1,
         "Message": "Sein se está cansando de jugar contigo y notas que pronto va a dejar de hacerte caso."
       }
     ]
@@ -128,6 +131,7 @@
         ],
         "StatToDepend": "HP",
         "Threshold": 0.25,
+        "Activations": 1,
         "Message": "¡Ya solo queda uno! Habrá ganado la partida del PCE, pero no la batalla contigo."
       }
     ]
@@ -152,6 +156,7 @@
         ],
         "StatToDepend": "HP",
         "Threshold": 0.5,
+        "Activations": 1,
         "Message": "El thiccboi intenta comerse una silla pero no sale bien..."
       }
     ]

@@ -33,6 +33,7 @@ namespace MMOTFG_Bot
         {
             List<Event> events = key_words[command];
 
+            await BattleSystem.LoadPlayerBattle(chatId);
             await ProgressKeeper.LoadSerializable(chatId);
 
             foreach (Event e in events)

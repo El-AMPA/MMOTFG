@@ -42,7 +42,7 @@ Use: throw [item name]";
                 }
                 else await TelegramCommunicator.SendText(chatId, "Item " + item.name + " couldn't be found in your inventory");
             }
-            else await TelegramCommunicator.SendText(chatId, "Item " + args[1] + " doesn't exist");
+            else await TelegramCommunicator.SendText(chatId, "Item " + args[0] + " doesn't exist");
         }
 
         internal override bool IsFormattedCorrectly(string[] args)

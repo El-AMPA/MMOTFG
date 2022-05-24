@@ -30,32 +30,11 @@ namespace MMOTFG_Bot
 
         public bool turnOver;
 
-        public string imageName;
-        public string imageCaption;
-
-        public string droppedItem;
-        [DefaultValue(1)]
-        public int droppedItemAmount;
-        [DefaultValue(1)]
-        public int experienceGiven;     
-
         public Battler()
         {
             stats = new float[Stats.statNum];
             originalStats = new float[Stats.statNum];
             maxStats = new float[Stats.statNum];
-        }
-
-        //Gets a random attack the enemy has enough MP to use (basic attack always costs 0 to avoid problems)
-        public Attack NextAttack()
-        {
-            int i = attacks_.Count - 1;
-            while (i >= 0 && attacks_[i].mpCost > stats[(int)StatName.MP])
-                i--;
-            //if no attacks available, return base attack
-            if (i < 0) return new Attack("Struggle", 1, 0);
-            int attack = RNG.Next(0, i + 1); 
-            return attacks_[attack];
         }
 
         public virtual void OnCreate()
@@ -144,6 +123,8 @@ namespace MMOTFG_Bot
         //returns a string with the changes
         public string AddToStat(StatName stat, float add, bool changeMax = false, bool permanent = false)
         {
+            //if change is permanent, it uses the max value
+            if(permanent) changeMax = true;
             float statn = changeMax ? maxStats[(int)stat] : stats[(int)stat];
             SetStat(stat, statn + add, changeMax, permanent);
             string message = $"{name}'s {stat} was changed by {add}!\n";
@@ -189,6 +170,23 @@ namespace MMOTFG_Bot
             return message;
         }
 
+        public async Task CheckDeath(string chatId)
+        {
+            if(GetStat(StatName.HP) <= 0)
+                await OnBehaviour(chatId, onKill);
+
+            //check again since onKill can revive
+            if (GetStat(StatName.HP) <= 0)
+                await OnDeath(chatId);
+        }
+
+        //returns a string with information
+        public virtual async Task OnDeath(string chatId)
+        {
+            turnOver = true;
+            await TelegramCommunicator.SendText(chatId, $"{name} died!");
+        } 
+
         //For events such as OnHit, OnKill or OnTurnEnd
         public async Task OnBehaviour(string chatId, List<Event> events) {
             if (events != null)
@@ -216,7 +214,6 @@ namespace MMOTFG_Bot
 
         public async Task SkipTurn(string chatId)
         {
-            await BattleSystem.LoadPlayerBattle(chatId);
             turnOver = true;
             await BattleSystem.SavePlayerBattle(chatId);
             await BattleSystem.NextAttack(chatId);
@@ -233,10 +230,6 @@ namespace MMOTFG_Bot
             battlerInfo.Add(DbConstants.BATTLER_INFO_FIELD_MAX_STATS, SerializeStats(maxStats));
 
             battlerInfo.Add(DbConstants.BATTLER_FIELD_NAME, name);
-
-            battlerInfo.Add(DbConstants.BATTLER_FIELD_ITEM_DROP, droppedItem);
-
-            battlerInfo.Add(DbConstants.BATTLER_FIELD_ITEM_DROP_AMOUNT, droppedItemAmount);
 
             battlerInfo.Add(DbConstants.BATTLER_FIELD_TURN_OVER, turnOver);
 
@@ -259,13 +252,13 @@ namespace MMOTFG_Bot
             return ret;
         }
 
-        public List<bool> SerializeEventFlags(List<Event> behaviour)
+        public List<int> SerializeEventFlags(List<Event> behaviour)
         {
-            List<bool> ret = new List<bool>();
+            List<int> ret = new List<int>();
             foreach (Event e in behaviour.Where(e => e as eChangeStat != null))
             {
                 eChangeStat ec = e as eChangeStat;
-                ret.Add(ec.hasActivated);
+                ret.Add(ec.timesActivated);
             }
             return ret;
         }
@@ -279,10 +272,6 @@ namespace MMOTFG_Bot
             LoadStats(maxStats, (Dictionary<string, object>)eInfo[DbConstants.BATTLER_INFO_FIELD_MAX_STATS]);
 
             name = eInfo[DbConstants.BATTLER_FIELD_NAME].ToString();
-
-            droppedItem = eInfo[DbConstants.BATTLER_FIELD_ITEM_DROP] as string;
-
-            droppedItemAmount = Convert.ToInt32(eInfo[DbConstants.BATTLER_FIELD_ITEM_DROP_AMOUNT]);
 
             turnOver = Convert.ToBoolean(eInfo[DbConstants.BATTLER_FIELD_TURN_OVER]);
 
@@ -310,7 +299,7 @@ namespace MMOTFG_Bot
             foreach (Event e in behaviour.Where(e => e as eChangeStat != null))
             {
                 eChangeStat ec = e as eChangeStat;
-                ec.hasActivated = (bool)flags[i];
+                ec.timesActivated = Convert.ToInt32(flags[i]);
                 i++;
             }
         }

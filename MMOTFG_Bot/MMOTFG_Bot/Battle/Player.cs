@@ -91,6 +91,7 @@ namespace MMOTFG_Bot
 
                         foreach (Event e in lvlup.events)
                         {
+                            e.SetUser(this);
                             await e.ExecuteEvent(chatId);
                         }
 
@@ -118,6 +119,7 @@ namespace MMOTFG_Bot
                 learningAttack = null;
                 attacks_.Add(JSONSystem.GetAttack(attackName));
                 SetAttackNames();
+                SetAttacks();
                 await TelegramCommunicator.RemoveReplyMarkup(chatId, $"Learnt {attackName}!");
                 if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
             }
@@ -159,24 +161,31 @@ namespace MMOTFG_Bot
             }
             if (stats[(int)StatName.HP] <= 0)
             {
-                bool inParty = await PartySystem.IsInParty(chatId);
-                string code = null;
-                if (inParty) code = await PartySystem.GetPartyCode(chatId);
-                //full wipeout
-                if (!inParty || await PartySystem.IsPartyWipedOut(code))
-                {
-                    stats = (float[])originalStats.Clone();
-                    //return player to starting node
-                    await Map.SetPlayerPosition(chatId, 0);
-                }
-                //in party but not full wipeout
-                else
-                {
-                    stats = (float[])originalStats.Clone();
-                    //1 HP and 1 MP
-                    stats[(int)StatName.HP] = 1;
-                    stats[(int)StatName.MP] = 1;
-                }
+                await OnDeath(chatId);
+            }
+        }
+
+        public async override Task OnDeath(string chatId)
+        {
+            await base.OnDeath(chatId);
+            bool inParty = await PartySystem.IsInParty(chatId);
+            string code = null;
+            if (inParty) code = await PartySystem.GetPartyCode(chatId);
+            //full wipeout
+            if (!inParty || await PartySystem.IsPartyWipedOut(code))
+            {
+                stats = (float[])originalStats.Clone();
+                //return player to starting node
+                await TelegramCommunicator.SendText(chatId, "Returning to starting point...");
+                await Map.SetPlayerPosition(chatId, 0);
+            }
+            //in party but not full wipeout
+            else
+            {
+                stats = (float[])originalStats.Clone();
+                //1 HP and 1 MP
+                stats[(int)StatName.HP] = 1;
+                stats[(int)StatName.MP] = 1;
             }
         }
 

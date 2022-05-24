@@ -9,7 +9,7 @@ namespace MMOTFG_Bot
 {
     static class JSONSystem
     {
-        private static List<Battler> enemies;
+        private static List<Enemy> enemies;
         private static List<Attack> attacks;
         private static List<ObtainableItem> items;
         private static Player defaultPlayer;
@@ -40,7 +40,7 @@ namespace MMOTFG_Bot
 
             try
             {
-                enemies = JsonConvert.DeserializeObject<List<Battler>>(enemyText, 
+                enemies = JsonConvert.DeserializeObject<List<Enemy>>(enemyText, 
                     new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate}); //Deserializes the .json file into an array of enemies.
                 foreach (Battler e in enemies) e.OnCreate();
             }
@@ -128,21 +128,21 @@ namespace MMOTFG_Bot
             }
         }
 
-        public static Battler GetEnemy(string name)
+        public static Enemy GetEnemy(string name)
         {
             //enemies with names such as "Enemy_1" get simplified to "enemy"
-            Battler e = enemies.FirstOrDefault(x => x.name.ToLower() == name.Split('_')[0].ToLower());
+            Enemy e = enemies.FirstOrDefault(x => x.name.ToLower() == name.Split('_')[0].ToLower());
             if (e != null)
             {
                 //return by copy to preserve the original
-                return (Battler)e.Clone();
+                return e.Clone();
             }
             else return e;
         }
         public static Player GetDefaultPlayer()
         {
             //return by copy to preserve the original
-            return (Player)defaultPlayer.Clone();
+            return defaultPlayer.Clone();
         }
 
         public static Attack GetAttack(string name)

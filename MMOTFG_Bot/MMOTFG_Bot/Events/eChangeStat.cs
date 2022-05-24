@@ -17,13 +17,13 @@ namespace MMOTFG_Bot
 
         public string message;
 
-        [DefaultValue(true)]
-        public bool activateOnce;
+        [DefaultValue(-1)]
+        public int activations;
 
-        public bool hasActivated;
+        public int timesActivated;
 
         public override async Task Execute(string chatId) {
-            if (activateOnce && hasActivated) return;
+            if (activations > 0 && timesActivated >= activations) return;
 
             if (threshold == 0 || (user.GetStat(statToDepend) / user.GetMaxStat(statToDepend)) <= threshold)
             {
@@ -35,7 +35,9 @@ namespace MMOTFG_Bot
                 }
 
                 await TelegramCommunicator.SendText(chatId, msg + message, true);
-                hasActivated = true;
+                timesActivated++;
+
+                await user.CheckDeath(chatId);
             }
         }
     }
