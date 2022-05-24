@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Google.Cloud.Firestore;
+using Newtonsoft.Json.Linq;
 
 namespace MMOTFG_Bot
 {
@@ -18,8 +19,10 @@ namespace MMOTFG_Bot
 
 		public static void Init()
 		{
-			Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", "assets/private/firebase-admin.json");
-			db = FirestoreDb.Create("mmotfg-database");
+			Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", "Assets/private/firebase-admin.json");
+			string jsontext = System.IO.File.ReadAllText("Assets/private/firebase-admin.json");
+			var dbInfo = JObject.Parse(jsontext);
+			db = FirestoreDb.Create(dbInfo["project_id"].Value<String>());
 			docRefBase = db.Collection(collectionName).Document(documentName);
 			collRefBase = docRefBase.Collection(subCollectionName);
 

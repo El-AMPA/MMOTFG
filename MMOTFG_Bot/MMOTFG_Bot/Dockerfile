@@ -17,5 +17,5 @@ RUN dotnet publish "MMOTFG_Bot.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-COPY ./MMOTFG_Bot/assets ./assets
+COPY ./MMOTFG_Bot/Assets ./Assets
 ENTRYPOINT ["dotnet", "MMOTFG_Bot.dll"]

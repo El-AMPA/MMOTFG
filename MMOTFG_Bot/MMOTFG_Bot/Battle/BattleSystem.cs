@@ -189,7 +189,8 @@ namespace MMOTFG_Bot
 
         public static async Task StartBattle(List<string> chatIds, List<Enemy> eSide)
         {
-            await LoadPlayerBattle(chatIds.First());
+            string chatId = chatIds.First();
+            await LoadPlayerBattle(chatId);
             enemies = eSide;
             battlers = new List<Battler>();
             battlers.AddRange(players);
@@ -201,7 +202,7 @@ namespace MMOTFG_Bot
                 Enemy e = eSide.First();
                 if (e.imageName != null)
                 {
-                    await TelegramCommunicator.SendImage(chatIds.First(), e.imageName, true, e.imageCaption);
+                    await TelegramCommunicator.SendImage(chatId, e.imageName, true, e.imageCaption);
                 }
             }
             else
@@ -229,8 +230,8 @@ namespace MMOTFG_Bot
                     }
                 }
 
-                await TelegramCommunicator.SendImageCollection(chatIds.First(), imageNames.ToArray(), true);
-                await TelegramCommunicator.SendText(chatIds.First(), caption, true);
+                await TelegramCommunicator.SendImageCollection(chatId, imageNames.ToArray(), true);
+                await TelegramCommunicator.SendText(chatId, caption, true);
             }
             //all battlers start being able to move
             foreach (Battler ba in battlers)
@@ -241,8 +242,8 @@ namespace MMOTFG_Bot
             if (players.Count > 1)
                 foreach (Battler b in enemies)
                     b.BoostStats(players.Count);
-            await SavePlayerBattle(chatIds.First());
-            await NextAttack(chatIds.First());
+            await SavePlayerBattle(chatId);
+            await NextAttack(chatId);
         }
 
         public static async Task NextAttack(string chatId)

@@ -15,7 +15,8 @@ namespace MMOTFG_Bot
 {
 	class TelegramCommunicator
     {
-		static private string assetsPath = "./Assets/";
+		static private string imagesPath = "./Assets/Images/";
+		static private string audiosPath = "./Assets/Audios/";
 
 		private static ITelegramBotClient botClient;
 
@@ -29,7 +30,7 @@ namespace MMOTFG_Bot
 		/// </summary>
 		public static async Task SendImage(string chatId, string imageName, bool broadcast = false, string imageCaption = "")
 		{
-			using (var stream = System.IO.File.OpenRead(assetsPath + imageName))
+			using (var stream = System.IO.File.OpenRead(imagesPath + imageName))
 			{
 				InputOnlineFile inputOnlineFile = new InputOnlineFile(stream);
 				//ImageCaption supports emojis! 👏👏
@@ -53,25 +54,26 @@ namespace MMOTFG_Bot
 		/// </summary>
 		static public async Task SendImageCollection(string chatId, string[] imagesNames, bool broadcast = false)
 		{
-			List<FileStream> streams = new List<FileStream>();
-			List<InputMediaPhoto> media = new List<InputMediaPhoto>();
-			foreach (string imageName in imagesNames)
-			{
-				FileStream stream = System.IO.File.OpenRead(assetsPath + imageName);
-				streams.Add(stream);
-				media.Add(new InputMediaPhoto(new InputMedia(stream, imageName)));
-			}
+			List<string> chatIds = new List<string>();
+			if(broadcast && await PartySystem.IsInParty(chatId)) chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
+			else chatIds.Add(chatId);
 
-			if (broadcast && await PartySystem.IsInParty(chatId))
-			{ 
-				List<Task> tasks = new List<Task>();
-				List<string> chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
-				foreach (string id in chatIds) tasks.Add(botClient.SendMediaGroupAsync(id, media));
-				//await Task.WhenAll(tasks);
-			}
-			else await botClient.SendMediaGroupAsync(chatId, media);
+			List<Task> tasks = new List<Task>();
 
-			foreach (var stream in streams) stream.Close();
+			foreach(string id in chatIds)
+            {
+				List<FileStream> streams = new List<FileStream>();
+				List<InputMediaPhoto> media = new List<InputMediaPhoto>();
+				foreach (string imageName in imagesNames)
+				{
+					FileStream stream = System.IO.File.OpenRead(imagesPath + imageName);
+					streams.Add(stream);
+					media.Add(new InputMediaPhoto(new InputMedia(stream, imageName)));
+				}
+				tasks.Add(botClient.SendMediaGroupAsync(id, media));
+				//foreach (var stream in streams) stream.Close();
+			}
+			await Task.WhenAll(tasks);
 		}
 
 		/// <summary>
@@ -79,7 +81,7 @@ namespace MMOTFG_Bot
 		/// </summary>
 		static public async Task SendAudio(string chatId, string audioName, string audioCaption, bool broadcast = false)
 		{
-			using (var stream = System.IO.File.OpenRead(assetsPath + audioName))
+			using (var stream = System.IO.File.OpenRead(audiosPath + audioName))
 			{
 				InputOnlineFile inputOnlineFile = new InputOnlineFile(stream);
 
