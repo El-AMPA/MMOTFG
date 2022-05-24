@@ -24,6 +24,13 @@ namespace MMOTFG_Bot
         {
         }
 
+        public override void OnCreate()
+        {
+            base.OnCreate();
+            //by default, every enemy creates a flag upon death
+            onKill.Add(new eSetFlag() { Name = name + "Killed", SetAs = true });
+        }
+
         //Gets a random attack the enemy has enough MP to use (basic attack always costs 0 to avoid problems)
         public Attack NextAttack()
         {

@@ -41,11 +41,9 @@ namespace MMOTFG_Bot
             SetAttacks();           
             maxStats = (int[])stats.Clone();
             originalStats = (int[])stats.Clone();
-            //by default, every enemy creates a flag upon death
             if (onHit == null) onHit = new List<Event>();
             if (onTurnEnd == null) onTurnEnd = new List<Event>();
             if (onKill == null) onKill = new List<Event>();
-            onKill.Add(new eSetFlag() { Name = name + "Killed", SetAs = true });
         }
 
         protected void OnClone()
@@ -73,8 +71,8 @@ namespace MMOTFG_Bot
                 //Proportion is maintained for bounded stats
                 if (Stats.isBounded(stat))
                 {
-                    float currentPercent = stats[(int)stat] / maxStats[(int)stat];
-                    stats[(int)stat] = (int)(newValue * currentPercent);
+                    float proportion = stats[(int)stat] / maxStats[(int)stat];
+                    stats[(int)stat] = (int)(newValue * proportion);
                 }
                 else stats[s] = newValue;
                 maxStats[s] = newValue;
@@ -85,7 +83,7 @@ namespace MMOTFG_Bot
                 //Bounded stats are clamped
                 if (Stats.isBounded(stat))
                 {
-                    float max = maxStats[s];
+                    int max = maxStats[s];
                     stats[s] = (int)(Math.Clamp(newValue, 0, max));
                 }
                 else stats[s] = newValue;
