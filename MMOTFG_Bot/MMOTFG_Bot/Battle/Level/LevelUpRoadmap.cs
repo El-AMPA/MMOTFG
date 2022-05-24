@@ -50,7 +50,7 @@ namespace MMOTFG_Bot
             }
         }
 
-        public float getStatDifference(int s)
+        public int getStatDifference(int s)
         {
             return (finalStats[s] - firstStats[s]) / (maxLevel - minLevel);
         }

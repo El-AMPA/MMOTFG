@@ -76,7 +76,7 @@ namespace MMOTFG_Bot
                 string statChanges = "";
                 for (int i = 0; i < Stats.statNum; i++)
                 {
-                    int change = (int)levelUpRoadmap.getStatDifference(i);
+                    int change = levelUpRoadmap.getStatDifference(i);
                     AddToStat((StatName)i, change, changeMax: true, permanent: true);
                     statChanges += $"{(StatName)i} {((change >= 0) ? "+" : "")}{change}\n";
                 }
