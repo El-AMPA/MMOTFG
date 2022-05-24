@@ -167,7 +167,6 @@ namespace MMOTFG_Bot
 
         public async override Task OnDeath(string chatId)
         {
-            await base.OnDeath(chatId);
             bool inParty = await PartySystem.IsInParty(chatId);
             string code = null;
             if (inParty) code = await PartySystem.GetPartyCode(chatId);

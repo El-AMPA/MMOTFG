@@ -171,6 +171,7 @@ namespace MMOTFG_Bot
                 players.Add(player);
             }
             update.Add(DbConstants.PARTY_FIELD_MEMBER_INFO, playersDict);
+            update.Add(DbConstants.PARTY_FIELD_WIPEOUT, false);
             update.Add(DbConstants.BATTLE_ENEMY_LIST, null);
 
             await DatabaseManager.ModifyDocumentFromCollection(update, partyCode, DbConstants.COLLEC_PARTIES);

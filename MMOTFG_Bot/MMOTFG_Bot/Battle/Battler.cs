@@ -177,14 +177,15 @@ namespace MMOTFG_Bot
 
             //check again since onKill can revive
             if (GetStat(StatName.HP) <= 0)
+            {
+                turnOver = true;
+                await TelegramCommunicator.SendText(chatId, $"{name} died!");
                 await OnDeath(chatId);
+            }
         }
 
-        //returns a string with information
         public virtual async Task OnDeath(string chatId)
         {
-            turnOver = true;
-            await TelegramCommunicator.SendText(chatId, $"{name} died!");
         } 
 
         //For events such as OnHit, OnKill or OnTurnEnd
