@@ -4,7 +4,7 @@ namespace MMOTFG_Bot
 {
     class aStatChanging : Attack
     {
-        public aStatChanging(string name_, float power_, float mpCost_) : base(name_, power_, mpCost_) { }
+        public aStatChanging(string name_, float power_, int mpCost_) : base(name_, power_, mpCost_) { }
 
         public StatChange[] statChanges;
 

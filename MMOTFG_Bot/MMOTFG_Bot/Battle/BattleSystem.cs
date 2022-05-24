@@ -365,7 +365,7 @@ namespace MMOTFG_Bot
             user.turnOver = true;
             attack.SetUser(user);
             attack.SetTarget(target);
-            float damage = (float)Math.Round(attack.GetDamage(), 2);
+            int damage = attack.GetDamage();
 
             string message = $"{user.name} used {attack.name}!\n";
             if (damage != 0)

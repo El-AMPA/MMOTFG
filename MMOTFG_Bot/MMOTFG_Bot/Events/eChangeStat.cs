@@ -25,7 +25,9 @@ namespace MMOTFG_Bot
         public override async Task Execute(string chatId) {
             if (activations > 0 && timesActivated >= activations) return;
 
-            if (threshold == 0 || (user.GetStat(statToDepend) / user.GetMaxStat(statToDepend)) <= threshold)
+            float ratio = (float)user.GetStat(statToDepend) / user.GetMaxStat(statToDepend);
+
+            if (threshold == 0 || ratio <= threshold)
             {
                 string msg = "";
 

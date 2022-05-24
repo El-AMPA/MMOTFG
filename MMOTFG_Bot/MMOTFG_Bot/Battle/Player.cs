@@ -33,9 +33,9 @@ namespace MMOTFG_Bot
         public override void OnCreate()
         {
             base.OnCreate();
-            stats = (float[])levelUpRoadmap.firstStats.Clone();
-            maxStats = (float[])stats.Clone();
-            originalStats = (float[])stats.Clone();
+            stats = (int[])levelUpRoadmap.firstStats.Clone();
+            maxStats = (int[])stats.Clone();
+            originalStats = (int[])stats.Clone();
             levelUpRoadmap.CalculateLevels();
         }
 
@@ -111,8 +111,8 @@ namespace MMOTFG_Bot
                 List<string> options = new List<string>(attacks);
                 options.Add("Skip");
                 if (BattleSystem.battleActive) await BattleSystem.PauseBattle(chatId);
-                await TelegramCommunicator.SendButtons(chatId, $"Do you want to learn {attackName}? Choose an attack to replace or Skip to skip",
-                    options, 2, 3);
+                await TelegramCommunicator.SendButtons(chatId, $"Do you want to learn {attackName}? " +
+                    $"Choose an attack to replace or Skip to skip", options);
             }
             else
             {
@@ -173,7 +173,7 @@ namespace MMOTFG_Bot
             //full wipeout
             if (!inParty || await PartySystem.IsPartyWipedOut(code))
             {
-                stats = (float[])originalStats.Clone();
+                stats = (int[])originalStats.Clone();
                 //return player to starting node
                 await TelegramCommunicator.SendText(chatId, "Returning to starting point...");
                 await Map.SetPlayerPosition(chatId, 0);
@@ -181,7 +181,7 @@ namespace MMOTFG_Bot
             //in party but not full wipeout
             else
             {
-                stats = (float[])originalStats.Clone();
+                stats = (int[])originalStats.Clone();
                 //1 HP and 1 MP
                 stats[(int)StatName.HP] = 1;
                 stats[(int)StatName.MP] = 1;

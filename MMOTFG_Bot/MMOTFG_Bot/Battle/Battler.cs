@@ -3,7 +3,6 @@ using MMOTFG_Bot.Navigation;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,11 +11,11 @@ namespace MMOTFG_Bot
     class Battler
     {
         //current stats
-        public float[] stats;
+        public int[] stats;
         //max stats (por HP and MP)
-        protected float[] maxStats;
+        protected int[] maxStats;
         //original stats (to revert changes in battle)
-        protected float[] originalStats;
+        protected int[] originalStats;
 
         protected List<Attack> attacks_;
         //set in json
@@ -32,16 +31,16 @@ namespace MMOTFG_Bot
 
         public Battler()
         {
-            stats = new float[Stats.statNum];
-            originalStats = new float[Stats.statNum];
-            maxStats = new float[Stats.statNum];
+            stats = new int[Stats.statNum];
+            originalStats = new int[Stats.statNum];
+            maxStats = new int[Stats.statNum];
         }
 
         public virtual void OnCreate()
         {
             SetAttacks();           
-            maxStats = (float[])stats.Clone();
-            originalStats = (float[])stats.Clone();
+            maxStats = (int[])stats.Clone();
+            originalStats = (int[])stats.Clone();
             //by default, every enemy creates a flag upon death
             if (onHit == null) onHit = new List<Event>();
             if (onTurnEnd == null) onTurnEnd = new List<Event>();
@@ -52,8 +51,8 @@ namespace MMOTFG_Bot
         protected void OnClone()
         {
             SetAttacks();
-            maxStats = (float[])stats.Clone();
-            originalStats = (float[])stats.Clone();
+            maxStats = (int[])stats.Clone();
+            originalStats = (int[])stats.Clone();
         }
 
         public void SetAttacks()
@@ -65,7 +64,7 @@ namespace MMOTFG_Bot
             attacks_.Sort((a1, a2) => a1.mpCost.CompareTo(a2.mpCost));
         }
 
-        public void SetStat(StatName stat, float newValue, bool changeMax = false, bool permanent = false)
+        public void SetStat(StatName stat, int newValue, bool changeMax = false, bool permanent = false)
         {
             int s = (int)stat;
             //When the max value is changed
@@ -75,7 +74,7 @@ namespace MMOTFG_Bot
                 if (Stats.isBounded(stat))
                 {
                     float currentPercent = stats[(int)stat] / maxStats[(int)stat];
-                    stats[(int)stat] = (float)Math.Round(newValue * currentPercent, 2);
+                    stats[(int)stat] = (int)(newValue * currentPercent);
                 }
                 else stats[s] = newValue;
                 maxStats[s] = newValue;
@@ -87,7 +86,7 @@ namespace MMOTFG_Bot
                 if (Stats.isBounded(stat))
                 {
                     float max = maxStats[s];
-                    stats[s] = (float)Math.Round(Math.Clamp(newValue, 0, max), 2);
+                    stats[s] = (int)(Math.Clamp(newValue, 0, max));
                 }
                 else stats[s] = newValue;
             }
@@ -121,11 +120,11 @@ namespace MMOTFG_Bot
         }
 
         //returns a string with the changes
-        public string AddToStat(StatName stat, float add, bool changeMax = false, bool permanent = false)
+        public string AddToStat(StatName stat, int add, bool changeMax = false, bool permanent = false)
         {
             //if change is permanent, it uses the max value
             if(permanent) changeMax = true;
-            float statn = changeMax ? maxStats[(int)stat] : stats[(int)stat];
+            int statn = changeMax ? maxStats[(int)stat] : stats[(int)stat];
             SetStat(stat, statn + add, changeMax, permanent);
             string message = $"{name}'s {stat} was changed by {add}!\n";
             return message;
@@ -134,23 +133,23 @@ namespace MMOTFG_Bot
         //returns a string with the changes
         public string MultiplyStat(StatName stat, float mult, bool changeMax = false, bool permanent = false)
         {
-            float statn = changeMax ? maxStats[(int)stat] : stats[(int)stat];
-            SetStat(stat, statn * mult, changeMax, permanent);
+            int statn = changeMax ? maxStats[(int)stat] : stats[(int)stat];
+            SetStat(stat, (int)(statn * mult), changeMax, permanent);
             string message = $"{name}'s {stat} was multiplied by {mult}!\n";
             return message;
         }
 
-        public float GetStat(StatName stat)
+        public int GetStat(StatName stat)
         {
             return stats[(int)stat];
         }
 
-        public float GetMaxStat(StatName stat)
+        public int GetMaxStat(StatName stat)
         {
             return maxStats[(int)stat];
         }
 
-        public float GetOriginalStat(StatName stat)
+        public int GetOriginalStat(StatName stat)
         {
             return originalStats[(int)stat];
         }
@@ -243,9 +242,9 @@ namespace MMOTFG_Bot
             return battlerInfo;
         }
 
-        public Dictionary<string, float> SerializeStats(float[] stats)
+        public Dictionary<string, int> SerializeStats(int[] stats)
         {
-            Dictionary<string, float> ret = new Dictionary<string, float>();
+            Dictionary<string, int> ret = new Dictionary<string, int>();
             for (int i = 0; i < Stats.statNum; i++)
             {
                 ret.Add(Enum.GetName(typeof(StatName), i), stats[i]);
@@ -283,14 +282,14 @@ namespace MMOTFG_Bot
             LoadEventFlags(onKill, (List<object>)eInfo[DbConstants.BATTLER_FIELD_ON_KILL_FLAGS]);
         }
 
-        public void LoadStats(float[] stats, Dictionary<string, object> statsDB)
+        public void LoadStats(int[] stats, Dictionary<string, object> statsDB)
         {
             foreach (KeyValuePair<string, object> keyValue in statsDB)
             {
                 StatName index;
                 Enum.TryParse(keyValue.Key, true, out index);
 
-                stats[(int)index] = Convert.ToSingle(keyValue.Value);
+                stats[(int)index] = Convert.ToInt32(keyValue.Value);
             }
         }
 

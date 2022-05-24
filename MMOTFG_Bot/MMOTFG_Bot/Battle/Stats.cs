@@ -25,7 +25,7 @@ namespace MMOTFG_Bot
         public StatName statToChange;
 
         //for additive change
-        public float add;
+        public int add;
 
         [DefaultValue(1)]
         //for multiplicative change
