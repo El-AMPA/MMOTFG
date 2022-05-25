@@ -11,7 +11,7 @@ namespace MMOTFG_Bot.Commands
 	{
 		public override void SetDescription()
 		{
-			commandDescription = @"Deletes PERMANENTLY your character.
+			commandDescription = @"Deletes your character PERMANENTLY.
 Use: delete [character name]";
 		}
 

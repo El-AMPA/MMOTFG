@@ -26,10 +26,6 @@ namespace MMOTFG_Bot
 
         public string id;
 
-        public Player()
-        {
-        }
-
         public override void OnCreate()
         {
             base.OnCreate();

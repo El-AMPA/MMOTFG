@@ -1,11 +1,5 @@
 ﻿using MMOTFG_Bot.Events;
-using MMOTFG_Bot.Navigation;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MMOTFG_Bot
 {
@@ -19,10 +13,6 @@ namespace MMOTFG_Bot
         public int droppedItemAmount;
         [DefaultValue(1)]
         public int experienceGiven;     
-
-        public Enemy()
-        {
-        }
 
         public override void OnCreate()
         {

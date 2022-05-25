@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MMOTFG_Bot.Navigation;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,9 +14,11 @@ namespace MMOTFG_Bot
         private static Dictionary<string, Attack> attackDict;
         private static Dictionary<string, ObtainableItem> itemDict;
         private static string defaultPlayer;
+        private static List<Node> nodes;
+        private static Dictionary<string, string> directionSynonyms;
         private static JsonSerializerSettings jsonSerializerSettings;
 
-        public static void Init(string enemyPath, string playerPath, string attackPath, string itemPath)
+        public static void Init(string mapPath, string enemyPath, string playerPath, string attackPath, string itemPath, string synonymsPath)
         {
             jsonSerializerSettings = new JsonSerializerSettings()
             {
@@ -29,11 +32,14 @@ namespace MMOTFG_Bot
             enemyDict = new Dictionary<string, string>(comparer);
             attackDict = new Dictionary<string, Attack>(comparer);
             itemDict = new Dictionary<string, ObtainableItem>(comparer);    
+            directionSynonyms = new Dictionary<string, string>(comparer);
 
             ReadAttacksFromJSON(attackPath);
             ReadItemsFromJSON(itemPath);
             ReadEnemiesFromJSON(enemyPath);
             ReadPlayerFromJSON(playerPath);
+            ReadMapFromJSON(mapPath);
+            ReadDirectionsSynonymsFromJSON(synonymsPath);
         }
 
         /// <summary>
@@ -154,6 +160,99 @@ namespace MMOTFG_Bot
             }
         }
 
+        /// <summary>
+        /// Deserializes the .json file specified by path and constructs the map.
+        /// </summary>
+        private static void ReadMapFromJSON(string mapPath)
+        {
+            //Map reading
+            string mapText = ""; //Text of the entire .json file of the map
+            try
+            {
+                mapText = File.ReadAllText(mapPath, Encoding.GetEncoding(65001)); // Encoding: UTF-8
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("ERROR: map.json couldn't be found in assets folder.");
+                Environment.Exit(-1);
+            }
+
+            try
+            {
+                nodes = JsonConvert.DeserializeObject<List<Node>>(mapText,
+                    new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate }); //Deserializes the .json file into an array of nodes.
+            }
+            catch (JsonException e)
+            {
+                Console.WriteLine("ERROR: map.json isn't formatted correctly. \nError message:" + e.Message);
+                Environment.Exit(-1);
+            }
+        }
+
+        private struct DirectionSynonym
+        {
+            public string Direction
+            {
+                get;
+                set;
+            }
+            public string[] Synonyms
+            {
+                get;
+                set;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes the .json file containing all synonyms for directions.
+        /// </summary>
+        private static void ReadDirectionsSynonymsFromJSON(string synonymsPath)
+        {
+            string synonymsText = "";
+
+            //Auxiliary array containing a collection of synonyms for each direction
+            // north: {n, nrth, nor}
+            // south: {s, sth, sou}
+            // ...
+            DirectionSynonym[] synonymsAux = { }; //Needs to be initialized
+
+            try
+            {
+                //Dumps the file into a string
+                synonymsText = File.ReadAllText(synonymsPath, Encoding.GetEncoding(65001)); // Encoding: UTF-8
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("ERROR: directionsSynonyms.json couldn't be found in assets folder.");
+                //the lack of a synonyms file is not fatal
+                return;
+            }
+
+            try
+            {
+                //Deserializes the .json file into a Dictionary that will be used for obtaining the synonyms for each direction
+                synonymsAux = JsonConvert.DeserializeObject<DirectionSynonym[]>(synonymsText);
+            }
+            catch (JsonException e)
+            {
+                Console.WriteLine("ERROR: directionSynonyms.json isn't formatted correctly. \nError message:" + e.Message);
+                Environment.Exit(-1);
+            }
+
+            //Converts the structure of synonymsAux into a more comfortable structure for finding synonyms. A dictionary<string, string>, so the new structure works like so:
+            // n -> north
+            // nor -> north
+            // s -> south
+            // ...
+            foreach (var synonymList in synonymsAux)
+            {
+                foreach (string synonym in synonymList.Synonyms)
+                {
+                    directionSynonyms.Add(synonym, synonymList.Direction);
+                }
+            }
+        }
+
         public static Enemy GetEnemy(string name)
         {
             //enemies with names such as "Enemy_1" get simplified to "Enemy"
@@ -173,6 +272,16 @@ namespace MMOTFG_Bot
             Player p = JsonConvert.DeserializeObject<Player>(defaultPlayer, jsonSerializerSettings);
             p.OnCreate();
             return p;
+        }
+
+        public static List<Node> GetNodes()
+        {
+            return nodes;
+        }
+
+        public static Dictionary<string, string> GetDirectionSynonyms()
+        {
+            return directionSynonyms;
         }
 
         public static Attack GetAttack(string name)
@@ -195,10 +304,21 @@ namespace MMOTFG_Bot
 
         public static List<string> GetAllAttackNames()
         {
-            List<string> an = new List<string>();
-            foreach (Attack a in attackDict.Values) an.Add(a.name);
+            List<string> an = attackDict.Keys.ToList();
             an.Add("skip");
             return an;
+        }
+
+        public static List<string> GetAllItemActions()
+        {
+            List<string> actions = new List<string>();
+            foreach (ObtainableItem i in itemDict.Values)
+            {
+                if (i.key_words == null) continue;
+                foreach (string s in i.key_words.Keys)
+                    actions.Add(s);
+            }            
+            return actions.Distinct().ToList();
         }
     }
 }

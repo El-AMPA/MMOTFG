@@ -11,7 +11,8 @@ namespace MMOTFG_Bot.Commands
         public override void SetDescription()
         {
             commandDescription = @"Unequips an item from it's gear slot.
-Use: unequip [item name] / unequip [gear slot]";
+Use: unequip [item name] / unequip [gear slot]
+Gear slots can be seen by using /status";
         }
         public override void SetKeywords()
         {

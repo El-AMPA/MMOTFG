@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MMOTFG_Bot
 {
-    class Battler
+    abstract class Battler
     {
         //current stats
         public int[] stats;
@@ -28,13 +28,6 @@ namespace MMOTFG_Bot
         public List<Event> onKill;
 
         public bool turnOver;
-
-        public Battler()
-        {
-            stats = new int[Stats.statNum];
-            originalStats = new int[Stats.statNum];
-            maxStats = new int[Stats.statNum];
-        }
 
         public virtual void OnCreate()
         {
