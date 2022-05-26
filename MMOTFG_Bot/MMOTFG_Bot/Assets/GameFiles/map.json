@@ -1,626 +1,460 @@
 [
+  
   {
-    "Name": "HabitacionMmur",
+    "Name": "PiernaDerecha",
     "NodeConnections": {
-      "puerta": {
-        "ConnectingNode": "Pasillo1"
+      "arriba": {
+        "ConnectingNode": "Estomago"
       },
-      "trapdoor": {
-        "ConnectingNode": "Tunel10"
+      "abajo": {
+        "ConnectingNode": "PieDerecho"
       }
     },
     "OnArriveEvent": [
       {
-        "EventType": "eSendText",
-        "Description": "En mi habitación no hay mucho que ver. Debería bajar a ver qué hacen los demás (o también podría quedarme jugando al Elden Ring lmao)."
-      }
-    ],
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendImage",
-        "ImageName": "habitacionmmur.jpg",
-        "Description": "Mi habitación sigue hecha un desastre. Aún tengo que lavar la taza de Evangelion en la que ayer me bebí 3 cafés seguidos para copear con lo del tfg, pero bueno, al menos la estantería de las frikadas sigue intacta (pog). Desde que llegué a la FDI (Facultad del Internado) de la academia Kadiz, cada vez soy más desordenado... Pero bueno, mejor salgo ya por la puerta"
-      },
-      {
-        "EventType": "eSendText",
-        "Description": "En fin, debería vestirme y bajar. Cogeré lo primero que vea y au",
-        "TriggerCondition": "!MmurGearFound"
+        "EventType":"eSendText",
+        "Description":"Llegaste a la pierna derecha",
+        "TriggerCondition":"MensajeInicial"
       },
       {
         "EventType": "eSendImage",
-        "Description": "¡Obtienes el Mmur starter pack!",
-        "ImageName": "mmurstarterpack.png",
-        "TriggerCondition": "!MmurGearFound"
+        "ImageName": "intro.jpg",
+        "Description": "Hola Anacleta! Bienvenida al COPYA (Cuerpo Oficial de Plaquetas Y Anticoagulantes). Nuestra misión es garantizar que la sangre no se pare, pero que tampoco se nos escape por algún agujerito jejej. Sé que es un poco confuso, que acabas de nacer y tal, pero de momento no hay ningún trabajo para tí, así que date una vuelta para conocerte la zona y ver si alguien necesita algo.",
+        "TriggerCondition":"!MensajeInicial"
       },
       {
-        "EventType": "eGiveItem",
-        "ItemLots": [
-          {
-            "Item": "zapatillas_gastadas"
-          },
-          {
-            "Item": "vaqueros_normales"
-          },
-          {
-            "Item": "camiseta_de_evangelion"
-          },
-          {
-            "Item": "joycon_con_drift"
-          }
-        ],
-        "TriggerCondition": "!MmurGearFound"
+        "EventType":"eSendText",
+        "Description":"Para moverte puedes usar /dir y para ver el mapa del cuerpo /map. Luego te llamarán tus amigas plaquetas. Pásalo bien!",
+        "TriggerCondition":"!MensajeInicial"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"<i>Uy pero que señor más majo. Bueno, voy a dar una vuelta a ver que me encuentro por ahí </i>",
+        "TriggerCondition":"!MensajeInicial"
       },
       {
         "EventType":"eSetFlag",
-        "Name":"MmurGearFound",
+        "Name":"MensajeInicial",
+        "SetAs":"True"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"<i>Si no me falla mi conocimiento de los factores de coagulación, el hígado debería tener tanto protrombina como fibrinógeno.</i>",
+        "TriggerCondition":"Mission2Complete AND !fibri AND !prot AND !GameComplete"
+      }
+    ]
+  },
+  {
+    "Name": "Cerebro",
+    "NodeConnections": {
+      "abajo": {
+        "ConnectingNode": "Corazon"
+      }
+    },
+    "OnArriveEvent": [
+      {
+        "EventType":"eSendText",
+        "Description":"Llegaste al cerebro"
+      },
+      {
+        "EventType": "eSendImage",
+        "ImageName": "cerebro.jpg",
+        "Description": "<i>Por aquí está todo muy tranquilo, supongo que nuestro humano no usa mucho el \"cerebro\" este. Quizás en otro sitio alguien me necesite.</i>",
+        "TriggerCondition":"!Mision1Taken OR Mission1Complete"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"<i>Ah mira, ahí esta la pituitaria.</i>",
+        "TriggerCondition":"Mision1Taken AND !Mission1Complete"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"Oh! Hola pequeña trombocita! Como tú por aquí? Ahhh me traes un informe de sueño. Bueno, es un poco raro que me lo traigas tú, pero lo necesitaba, muchas gracias.",
+        "TriggerCondition":"Mision1Taken AND !Mission1Complete"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"Por cierto, me dijeron que unas amigas tuyas te estaban buscando. Dijeron que se iban de excursión a un sitio con muchas terminaciones nerviosas.",
+        "TriggerCondition":"Mision1Taken AND !Mission1Complete"
+      },
+      {
+        "EventType":"eSetFlag",
+        "Name":"Mission1Complete",
+        "SetAs":"True",
+        "TriggerCondition":"Mision1Taken AND !Mission1Complete"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"<i>Debería volver al pie derecho a darles esto.</i>",
+        "TriggerCondition":"fibri AND prot AND !GameComplete"
+      }
+    ]
+  },
+  {
+    "Name": "Corazon",
+    "NodeConnections": {
+      "arriba": {
+        "ConnectingNode": "Cerebro"
+      },
+      "abajo": {
+        "ConnectingNode": "Estomago"
+      },
+      "izquierda": {
+        "ConnectingNode": "PulmonIzquierdo"
+      },
+      "derecha": {
+        "ConnectingNode": "PulmonDerecho"
+      }
+    },
+    "OnArriveEvent": [
+      {
+        "EventType":"eSendText",
+        "Description":"Llegaste al corazón"
+      },
+      {
+        "EventType": "eSendImage",
+        "ImageName": "cuatroK.jpg",
+        "Description": "<i>Que grande es el corazón. Y cuantas células distintas...</i>",
+        "TriggerCondition":"!Corazon"
+      },
+      {
+        "EventType":"eSetFlag",
+        "Name":"Corazon",
+        "SetAs":"True"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"AAAAHH!!!! JOE TEN MAS CUIDADOO. Vaya susto me has dado! Cómo? Que necesitas un poco de trombocina? Sí, te puedo dar un poco, en verdad pille de sobra jejje. Toma.",
+        "TriggerCondition":"Mission2Complete AND fibri AND !prot AND !GameComplete"
+      },
+      {
+        "EventType":"eSetFlag",
+        "Name":"prot",
+        "SetAs":"True",
+        "TriggerCondition":"Mission2Complete AND fibri AND !prot AND !GameComplete"
+      }
+    ]
+  },
+  {
+    "Name": "PulmonIzquierdo",
+    "NodeConnections": {
+      "izquierda": {
+        "ConnectingNode": "BrazoIzquierdo"
+      },
+      "derecha": {
+        "ConnectingNode": "Corazon"
+      }
+    },
+    "OnArriveEvent": [
+      {
+        "EventType":"eSendText",
+        "Description":"Llegaste al pulmón izquierdo"
+      },
+      {
+        "EventType": "eSendImage",
+        "ImageName": "globRojo.jpg",
+        "Description": "HolaAnacleta!Quetaltodo?Esperoquebien. Buenomevoyquesemeestropeaeloxígeno.",
+        "TriggerCondition":"!GlobRojo"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"<i>Hay que ver lo liados que están siempre los eritrocitos, siempre de aqui para allá llevando cosas</i>",
+        "TriggerCondition":"!GlobRojo"
+      },
+      {
+        "EventType":"eSetFlag",
+        "Name":"GlobRojo",
         "SetAs":"True"
       }
     ]
   },
   {
-    "Name": "Pasillo1",
+    "Name": "PulmonDerecho",
     "NodeConnections": {
-      "puerta": {
-        "ConnectingNode": "HabitacionMmur"
+      "izquierda": {
+        "ConnectingNode": "Corazon"
       },
-      "south": {
-        "ConnectingNode": "Pasillo2"
+      "derecha": {
+        "ConnectingNode": "BrazoDerecho"
       }
     },
     "OnArriveEvent": [
       {
-        "EventType": "eSendText",
-        "Description": "Mi habitación está al final del pasillo. Justo enfrente está la de Pj. Parece que tiene montada una rave en su habitación??? En fin, la salida está hacia el sur."
-      }
-    ],
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Me acerco a cotillear a la puerta de Pj. Está sonando música de Ace Attorney a tope. Un clásico cuando quiere llorar de forma disimulada. Mejor no entro que la última vez me tuve que tragar un drama de 4 horas y media sobre el grupo aquel de fans de Loles León."
+        "EventType":"eSendText",
+        "Description":"Llegaste al pulmón derecho"
       },
       {
-        "EventType": "eSendAudio",
-        "Description": "Este pavo necesita un psicólogo (y unos cascos) pero ya",
-        "AudioName": "pasillopj.mp3"
-      }
-    ]
-  },
-  {
-    "Name": "Pasillo2",
-    "NodeConnections": {
-      "north": {
-        "ConnectingNode": "Pasillo1"
-      },
-      "south": {
-        "ConnectingNode": "Pasillo3"
-      }
-    },
-    "OnArriveEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "En cuanto piso el pasillo sé que algo anda mal. Cuando hay tan poca gente por aquí es porque ÉL anda de guardia. Y si no hemos terminado de hacer el proyecto de construct... Pues eso, que de aquí no paso lol-",
-        "TriggerCondition": "!FedejimboDefeated"
-      },
-      {
-        "EventType": "eStartBattle",
-        "Enemies": [ "Manuela", "Fedejimbo" ],
-        "TriggerCondition": "!FedejimboDefeated"
+        "EventType": "eSendImage",
+        "ImageName": "globRojo.jpg",
+        "Description": "HolaAnacleta!Quetaltodo?Esperoquebien. Buenomevoyquesemeestropeaeloxígeno.",
+        "TriggerCondition":"!GlobRojo"
       },
       {
         "EventType":"eSendText",
-        "Description":"Puedo pasar tranquilo por el pasillo ya que Fedejimbo ya no está... Bueno, para ser exactos está desparramado en el suelo, pero ya no me va a dar más problemas... Espero.",
-        "TriggerCondition":"FedejimboDefeated"
-      }
-    ],
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Si quiero salir, debería ir a la puerta que está hacia el sur. No tengo nada más que hacer en este pasillo curseado."
-      }
-    ]
-  },
-  {
-    "Name": "Pasillo3",
-    "NodeConnections": {
-      "north": {
-        "ConnectingNode": "Pasillo2"
-      },
-      "south": {
-        "ConnectingNode": "Patio"
-      },
-      "puerta": {
-        "ConnectingNode": "HabAlvarJorge"
-      }
-    },
-    "OnArriveEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Justo al sur está ya la salida al patio. La habitación de Albar y Jorge está justo aquí también, ¿habrá alguien?"
-      }
-    ],
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "No hay nadie, pero la puerta de la habitación está abierta. Menudos bobos, siempre se les olvida cerrarla. Podría entrar a echar un vistacito..."
-      }
-    ]
-  },
-  {
-    "Name": "HabAlvarJorge",
-    "NodeConnections": {
-      "puerta": {
-        "ConnectingNode": "Pasillo3"
-      }
-    },
-    "OnArriveEvent": [
-      {
-        "EventType": "eSendImage",
-        "ImageName": "habalbarjorge.png",
-        "Description": "La habitación no es lo mismo sin sus inquilinos, aunque Sein se encarga de hacer que parezca más animada. Como se entere Pierre Paul de que Jorge ha metido un perro de contrabando en el internado, va a salir de aquí más rápido que yo cuando vi a Fedejimbo."
-      }
-    ],
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendImage",
-        "ImageName": "collarDeJorge.jpg",
-        "Description": "Intento coger el collar de Jorge para hacerme el guay con los demás, pero Sein se pone por medio. No me va a dejar irme hasta que no se canse de jugar...",
-        "TriggerCondition": "!SeinDefeated"
-      },
-      {
-        "EventType": "eGiveItem",
-        "ItemLots": [
-          {
-            "Item": "collar_de_jorge",
-            "Quantity": 1,
-            "ChanceToObtain": 1
-          }
-        ],
-        "TriggerCondition": "!SeinDefeated"
-      },
-      {
-        "EventType": "eStartBattle",
-        "Enemy": "Sein",
-        "TriggerCondition": "!SeinDefeated"
-      },
-      {
-        "EventType":"eSendText",
-        "Description":"Rebuscas entre las cosas de Álvar y encuentras una mochila de LOONA. Le haces el favor de robársela, que a saber lo que hace con esto",
-        "TriggerCondition":"!LoonaCapFound AND SeinDefeated"
-      },
-      {
-        "EventType":"eSendImage",
-        "ImageName":"mochilaloona.png",
-        "TriggerCondition":"!LoonaCapFound AND SeinDefeated"
-      },
-      {
-        "EventType":"eGiveItem",
-        "ItemLots":[
-          {
-            "Item":"mochila_loona",
-            "Quantity": 1,
-            "ChanceToObtain": 1
-          }
-        ],
-        "TriggerCondition":"!LoonaCapFound AND SeinDefeated"
+        "Description":"<i>Hay que ver lo liados que están siempre los eritrocitos, todo el rato de aqui para allá llevando cosas.</i>",
+        "TriggerCondition":"!GlobRojo"
       },
       {
         "EventType":"eSetFlag",
-        "Name":"LoonaCapFound",
-        "SetAs":"True",
-        "TriggerCondition":"!LoonaCapFound AND SeinDefeated"
+        "Name":"GlobRojo",
+        "SetAs":"True"
+      }
+    ]
+  },
+  {
+    "Name": "BrazoIzquierdo",
+    "NodeConnections": {
+      "izquierda": {
+        "ConnectingNode": "ManoIzquierda"
+      },
+      "derecha": {
+        "ConnectingNode": "PulmonIzquierdo"
+      }
+    },
+    "OnArriveEvent": [
+      {
+        "EventType":"eSendText",
+        "Description":"Llegaste al brazo izquierdo"
+      }
+    ]
+  },
+  {
+    "Name": "BrazoDerecho",
+    "NodeConnections": {
+      "izquierda": {
+        "ConnectingNode": "PulmonDerecho"
+      },
+      "derecha": {
+        "ConnectingNode": "ManoDerecha"
+      }
+    },
+    "OnArriveEvent": [
+      {
+        "EventType":"eSendText",
+        "Description":"Llegaste al brazo derecho"
+      }
+    ]
+  },
+  {
+    "Name": "ManoIzquierda",
+    "NodeConnections": {
+      "derecha": {
+        "ConnectingNode": "BrazoIzquierdo"
+      }
+    },
+    "OnArriveEvent": [
+      {
+        "EventType":"eSendText",
+        "Description":"Llegaste a la mano izquierda"
       },
       {
         "EventType":"eSendText",
-        "Description":"Decides no rebuscar más en esta habitación, que menudas sorpresas te ha dado...",
-        "TriggerCondition":"LoonaCapFound AND SeinDefeated"
-      }
-    ]
-  },
-  {
-    "Name": "Patio",
-    "NodeConnections": {
-      "north": {
-        "ConnectingNode": "Pasillo3"
-      },
-      "east": {
-        "ConnectingNode": "Parque"
-      },
-      "south": {
-        "ConnectingNode": "Pasillo4"
-      },
-      "west": {
-        "ConnectingNode": "Comedor"
-      }
-    },
-    "OnArriveEvent": [
-      {
-        "EventType": "eSendImage",
-        "ImageName": "patio.png",
-        "Description": "El patio está completamente vacío. "
-      },
-      {
-        "EventType": "eSendImage",
-        "ImageName": "llamadapj.png",
-        "Description": "De repente me suena el móvil.",
-        "TriggerCondition":"!PatioVisited"
-      },
-      {
-        "EventType": "eSendText",
-        "Description": "Mmur, no hay tiempo para explicaciones. Ven a la fábrica ya, e intenta que no te vean. X.A.N.D.R.A ha vuelto a atacar. Es grave. Los personajes de nuestros proyectos, ahora son... reales. No queda mucho tiempo. Corre.",
-        "TriggerCondition":"!PatioVisited"
-      }
-    ],
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "El patio está en el centro de la escuela. Al norte están los dormitorios de los chicos, y al sur los de las chicas. Al oeste está el comedor, y al este el parque. Por ahí se va a la fábrica."
-      }
-    ]
-  },
-  {
-    "Name": "Pasillo4",
-    "NodeConnections": {
-      "north": {
-        "ConnectingNode": "Patio"
-      },
-      "puerta": {
-        "ConnectingNode": "HabTatiana"
-      }
-    },
-    "OnArriveEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Este es el pasillo de las chicas. No debería estar aquí, pero tampoco es que vaya a ser el primer guarro que se cuela."
-      }
-    ],
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Esa puerta es la habitación de Tatiana. ¿Se habrá ido corriendo también a la fábrica? Podría entrar a ver si está bien."
-      }
-    ]
-  },
-  {
-    "Name": "HabTatiana",
-    "NodeConnections": {
-      "puerta": {
-        "ConnectingNode": "Pasillo4"
-      }
-    },
-    "OnArriveEvent": [
-      {
-        "EventType": "eSendImage",
-        "ImageName": "habtatiana.png",
-        "Description": "La habitación de Tatiana está más vacía que la sección de calificaciones del campus virtual. Podría aprovechar para buscar pistas o algo."
-      }
-    ],
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "poggers, tiene aquí la ranita de peluche. Espero que no le importe que la tome prestada como apoyo moral.",
-        "TriggerCondition":"!TatiranaFound"
-      },
-      {
-        "EventType": "eGiveItem",
-        "ItemLots": [
-          {
-            "Item": "tatirana",
-            "Quantity": 1,
-            "ChanceToObtain": 1
-          }
-        ],
-        "TriggerCondition":"!TatiranaFound"
+        "Description":"<i>Por aquí está todo muy tranquilo, sigue habiendo cinco dedos y todo. Quizás en otro sitio alguien me necesite.</i>",
+        "TriggerCondition":"!Mision1Taken"
       },
       {
         "EventType":"eSendText",
-        "Description":"Ya le devolveré la ranita cuando acabe con todo este tinglao.",
-        "TriggerCondition":"TatiranaFound"
+        "Description":"<i>Mmmm donde estará la pituitaria, no la encuentro.</i>",
+        "TriggerCondition":"Mision1Taken AND !Mission1Complete"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"<i>Pues en la mano izquierda no hay nadie.</i>",
+        "TriggerCondition":"Mission1Complete AND !Mission2Complete"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"<i>Debería volver al pie derecho a darles esto.</i>",
+        "TriggerCondition":"fibri AND prot AND !GameComplete"
+      }
+    ]
+  },
+  {
+    "Name": "ManoDerecha",
+    "NodeConnections": {
+      "izquierda": {
+        "ConnectingNode": "BrazoDerecho"
+      }
+    },
+    "OnArriveEvent": [
+      {
+        "EventType":"eSendText",
+        "Description":"Llegaste a la mano derecha"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"<i>Por aquí está todo muy tranquilo, sigue habiendo cinco dedos y todo. Quizás en otro sitio alguien me necesite.</i>",
+        "TriggerCondition":"!Mision1Taken"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"<i>Mmmm donde estará la pituitaria, no la encuentro.</i>",
+        "TriggerCondition":"Mision1Taken AND !Mission1Complete"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"<i>Vaya, la mano derecha está muy tranquila también.</i>",
+        "TriggerCondition":"Mission1Complete AND !Mission2Complete"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"<i>Debería volver al pie derecho a darles esto.</i>",
+        "TriggerCondition":"fibri AND prot AND !GameComplete"
+      }
+    ]
+  },
+  {
+    "Name": "Estomago",
+    "NodeConnections": {
+      "arriba": {
+        "ConnectingNode": "Corazon"
+      },
+      "izquierda": {
+        "ConnectingNode": "PiernaIzquierda"
+      },
+      "derecha": {
+        "ConnectingNode": "PiernaDerecha"
+      }
+    },
+    "OnArriveEvent": [
+      {
+        "EventType":"eSendText",
+        "Description":"Llegaste al estómago"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"Hola Anacleta! Cómo?? qué quieres fibrinógeno y protrombina? Pues solo me queda fibrinógeno. Aquí tienes. La protrombina se la acaba de llevar otra plaqueta que iba hacia arriba. Si te das prisa igual la alcanzas.",
+        "TriggerCondition":"Mission2Complete AND !fibri AND !prot AND !GameComplete"
       },
       {
         "EventType":"eSetFlag",
-        "Name":"TatiranaFound",
+        "Name":"fibri",
         "SetAs":"True",
-        "TriggerCondition":"!TatiranaFound"
+        "TriggerCondition":"Mission2Complete AND !fibri AND !prot AND !GameComplete"
       }
     ]
   },
   {
-    "Name": "Comedor",
+    "Name": "PiernaIzquierda",
     "NodeConnections": {
-      "east": {
-        "ConnectingNode": "Patio"
+      "arriba": {
+        "ConnectingNode": "Estomago"
+      },
+      "abajo": {
+        "ConnectingNode": "PieIzquierdo"
       }
     },
-    "OnArriveEvent": [
-      {
-        "EventType": "eSendImage",
-        "ImageName": "comedor.png",
-        "Description": "Para sorpresa de nadie, la cafetería también está desierta. Pero espera, ¿qué es eso ahí al fondo? parece que se está comiendo el bufet entero..."
-      }
-    ],
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Me arrepiento en cuanto me acerco a investigar. Una criatura gigantesca se abalanza sobre mí sin que pueda evitarlo de ninguna forma.",
-        "TriggerCondition":"!ThiccboiDefeated"
-      },
-      {
-        "EventType":"eSendText",
-        "Description":"¡Otro thiccboi ha aparecido!",
-        "TriggerCondition":"ThiccboiDefeated"
-      },
-      {
-        "EventType": "eStartBattle",
-        "Enemy": "Thiccboi"
-      }
-    ]
-  },
-  {
-    "Name": "Parque",
-    "NodeConnections": {
-      "west": {
-        "ConnectingNode": "Patio"
-      },
-      "alcantarilla": {
-        "ConnectingNode": "Tunel1"
-      }
-    },
-    "OnArriveEvent": [
-      {
-        "EventType": "eSendImage",
-        "ImageName": "parque.jpg",
-        "Description": "Este es el parque. Puedo llegar a la fábrica por la alcantarilla que hay en el suelo, o volver al patio por el oeste."
-      }
-    ]
-  },
-  {
-    "Name": "Tunel1",
-    "NodeConnections": {
-      "alcantarilla": {
-        "ConnectingNode": "Parque"
-      },
-      "east": {
-        "ConnectingNode": "Tunel2"
-      }
-    },
-    "OnArriveEvent": [
-      {
-        "EventType": "eSendImage",
-        "ImageName": "tunel.png",
-        "Description": "Estoy en los túneles de las alcantarillas, y a decir verdad no tengo ni idea de cómo llegar a la fábrica. Tendré que dar vueltas hasta que encuentre la salida, y evitar a los enemigos (si es que puedo). Parece que al este hay un camino..."
-      }
-    ]
-  },
-  {
-    "Name": "Tunel2",
-    "NodeConnections": {
-      "east": {
-        "ConnectingNode": "Tunel3"
-      },
-      "west": {
-        "ConnectingNode": "Tunel1"
-      },
-      "south": {
-        "ConnectingNode": "Tunel4"
-      }
-    },
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
-      }
-    ]
-  },
-  {
-    "Name": "Tunel3",
-    "NodeConnections": {
-      "west": {
-        "ConnectingNode": "Tunel2"
-      }
-    },
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido"
-      },
-      {
-        "EventType": "eGiveItem",
-        "ItemLots": [
-          {
-            "Item": "health_potion",
-            "Quantity": 5,
-            "ChanceToObtain": 0.3
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "Name": "Tunel4",
-    "NodeConnections": {
-      "north": {
-        "ConnectingNode": "Tunel2"
-      },
-      "south": {
-        "ConnectingNode": "Tunel5"
-      }
-    },
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
-      }
-    ],
     "OnArriveEvent": [
       {
         "EventType":"eSendText",
-        "Description":"¡Otro stratospeer se abalanza contra ti!",
-        "TriggerCondition":"StratospeersDefeated"
-      },
-      {
-        "EventType": "eStartBattle",
-        "Enemy": "Stratospeers"
+        "Description":"Llegaste a la pierna izquierda"
       }
     ]
   },
   {
-    "Name": "Tunel5",
+    "Name": "PieIzquierdo",
     "NodeConnections": {
-      "west": {
-        "ConnectingNode": "Tunel6"
-      },
-      "east": {
-        "ConnectingNode": "Tunel8"
-      },
-      "north": {
-        "ConnectingNode": "Tunel4"
-      },
-      "south": {
-        "ConnectingNode": "Tunel7"
+      "arriba": {
+        "ConnectingNode": "PiernaIzquierda"
       }
     },
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
-      }
-    ]
-  },
-  {
-    "Name": "Tunel6",
-    "NodeConnections": {
-      "east": {
-        "ConnectingNode": "Tunel5"
-      }
-    },
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
-      },
-      {
-        "EventType": "eGiveItem",
-        "ItemLots": [
-          {
-            "Item": "health_potion",
-            "Quantity": 5,
-            "ChanceToObtain": 0.3
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "Name": "Tunel7",
-    "NodeConnections": {
-      "north": {
-        "ConnectingNode": "Tunel5"
-      }
-    },
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
-      },
-      {
-        "EventType": "eGiveItem",
-        "ItemLots": [
-          {
-            "Item": "health_potion",
-            "Quantity": 5,
-            "ChanceToObtain": 0.3
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "Name": "Tunel8",
-    "NodeConnections": {
-      "west": {
-        "ConnectingNode": "Tunel5"
-      },
-      "east": {
-        "ConnectingNode": "Tunel10"
-      },
-      "north": {
-        "ConnectingNode": "Tunel9"
-      }
-    },
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
-      }
-    ]
-  },
-  {
-    "Name": "Tunel9",
-    "NodeConnections": {
-      "south": {
-        "ConnectingNode": "Tunel8"
-      }
-    },
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
-      }
-    ],
     "OnArriveEvent": [
       {
-        "EventType": "eStartBattle",
-        "Enemy": "Cleonft",
-        "TriggerCondition":"!CleonftDefeated"
+        "EventType":"eSendText",
+        "Description":"Llegaste al pie izquierdo"
       },
       {
         "EventType":"eSendText",
-        "Description":"Pobre Cleon, se metió en el mundo de los NFTs para comprarse una silla tan chula como la de Guille y así acabó...",
-        "TriggerCondition":"CleonftDefeated"
+        "Description":"Hola Anacleta! Necesito que me hagas un favor. Llévale este informe de sueño a la glándula pituitaria. Siento pedírtelo a ti, pero estamos cortos de personal.",
+        "TriggerCondition":"!Mision1Taken"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"<i>Debería ir a buscar la pituitaria.</i>",
+        "TriggerCondition":"Mision1Taken AND !Mission1Complete"
+      },
+      {
+        "EventType":"eSetFlag",
+        "Name":"Mision1Taken",
+        "SetAs":"True"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"<i>No, el pie izquierdo no es. Aunque quizás sea el derecho...</i>",
+        "TriggerCondition":"Mission1Complete AND !Mission2Complete"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"<i>Debería volver al pie derecho a darles esto.</i>",
+        "TriggerCondition":"fibri AND prot AND !GameComplete"
       }
     ]
   },
   {
-    "Name": "Tunel10",
+    "Name": "PieDerecho",
     "NodeConnections": {
-      "west": {
-        "ConnectingNode": "Tunel8"
-      },
-      "alcantarilla": {
-        "ConnectingNode": "PuenteFabrica"
+      "arriba": {
+        "ConnectingNode": "PiernaDerecha"
       }
     },
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "¡Ya estoy aquí! Solo tengo que salir por la alcantarilla y salvar el mundo antes de que sea destruido por un Tinky gigante o algo, llegados a este punto me espero cualquier cosa."
-      }
-    ],
     "OnArriveEvent": [
+      {
+        "EventType":"eSendText",
+        "Description":"Llegaste al pie derecho"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"<i>Por aquí está todo muy tranquilo. Quizás en otro sitio alguien me necesite.</i>",
+        "TriggerCondition":"!Mision1Taken"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"<i>Mmmm donde estará la pituitaria, no la encuentro.</i>",
+        "TriggerCondition":"Mision1Taken AND !Mission1Complete"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"<i>Vale, creo que son esas? Sí, si son.</i>",
+        "TriggerCondition":"Mision1Taken AND !Mission1Complete"
+      },
       {
         "EventType": "eSendImage",
-        "ImageName": "tunel.png",
-        "Description": "Uf, por fin algo de luz. Solo falta salir por esa alcantarilla.."
-      }
-    ]
-  },
-  {
-    "Name": "PuenteFabrica",
-    "NodeConnections": {
-      "alcantarilla": {
-        "ConnectingNode": "Tunel10"
-      }
-    },
-    "OnInspectEvent": [
+        "ImageName": "plaquetas.jpg",
+        "Description":"Holaaaa Anacletaaa. Que tal va tu primer día?? Ya va siendo hora que te pongas a trabajar ehhh. Necesitamos que nos traigas protrombina y fibrinógeno, que nos estamos quedando un poco cortaaas. Buenaaaa suerteee",
+        "TriggerCondition":"Mission1Complete AND !Mission2Complete"
+      },
       {
-        "EventType": "eSendText",
-        "Description": "Aquí acaba MMOTFG 1.0. gracias por jugar I guess"
-      }
-    ],
-    "OnArriveEvent": [
+        "EventType":"eSetFlag",
+        "Name":"Mission2Complete",
+        "SetAs":"True",
+        "TriggerCondition":"Mission1Complete AND !Mission2Complete"
+      },
       {
-        "EventType": "eStartBattle",
-        "Enemy": "Tinky.exe"
+        "EventType":"eSendText",
+        "Description":"Vale, ya solo nos falta la protrombina.",
+        "TriggerCondition":"Mission2Complete AND fibri AND !prot AND !GameComplete"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"Vale, ya solo nos falta el fibrinógeno.",
+        "TriggerCondition":"Mission2Complete AND prot AND !fibri AND !GameComplete"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"Perfectooo muchass graciass Anacletaa! Buen trabajo! Bueno, pues por hoy hemos terminado!",
+        "TriggerCondition":"fibri AND prot AND !GameComplete"
+      },
+      {
+        "EventType":"eSetFlag",
+        "Name":"GameComplete",
+        "SetAs":"True",
+        "TriggerCondition":"fibri AND prot"
+      },
+      {
+        "EventType": "eSendImage",
+        "ImageName": "ganar.jpg",
+        "Description":"<b>Gracias por jugar a Anacleta la plaqueta! Para volver a jugar, borra tu perfil con /delete nombrePerfil (el nombre de perfil es el que usaste en el create).</b>",
+        "TriggerCondition":"GameComplete"
       }
     ]
   }

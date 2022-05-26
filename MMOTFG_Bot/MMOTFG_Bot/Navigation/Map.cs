@@ -19,6 +19,12 @@ namespace MMOTFG_Bot.Navigation
         private static Dictionary<string, string> directionSynonyms = new Dictionary<string, string>();
         private static Node startingNode;
 
+        public async static Task<Node>getCurrentnode(string chatId)
+		{
+            await LoadPlayerPosition(chatId);
+            return currentNode;
+		} 
+
         /// <summary>
         /// Moves the player in the specified direction
         /// </summary>

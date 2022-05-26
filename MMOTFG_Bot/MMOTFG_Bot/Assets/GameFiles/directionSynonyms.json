@@ -1,33 +1,39 @@
 [
     {
-        "Direction": "north",
+        "Direction": "arriba",
         "Synonyms": [
-            "n",
-            "nrth",
-            "nrt"
+            "ar",
+            "arr",
+            "up",
+            "u"
         ]
     },
     {
-        "Direction": "south",
+        "Direction": "abajo",
         "Synonyms": [
-            "s",
-            "sth",
-            "sou"
+            "ab",
+            "aba",
+            "d",
+            "down"
         ]
     },
     {
-        "Direction": "east",
+        "Direction": "derecha",
         "Synonyms": [
-            "e",
-            "est"
+            "der",
+            "r",
+            "right",
+            "de"
         ]
     },
     {
-        "Direction": "west",
+        "Direction": "izquierda",
         "Synonyms": [
-            "w",
-            "wst",
-            "wes"
+            "i",
+            "iz",
+            "izq",
+            "left",
+            "l"
         ]
     }
 ]

@@ -8,20 +8,6 @@
     "FinalStats": [ 1000, 200, 150, 100 ],
     "LevelUpExponent": 1,
     "LevelUpEvents": [
-      {
-        "Level": 2,
-        "Ev": {
-          "EventType": "eLearnAttack",
-          "Attack": "Tortazo"
-        }
-      },
-      {
-        "Level": 3,
-        "Ev": {
-          "EventType": "eLearnAttack",
-          "Attack": "Tortilla"
-        }
-      }
     ]
   }
 }
