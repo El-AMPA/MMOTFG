@@ -228,24 +228,24 @@
       {
         "EventType":"eSendText",
         "Description":"Menudo cablerío hay montado por el suelo. Yo que pensaba que esto era una aventura de fantasía medieval. Menudo cacao mental tienen los desarrolladores...",
-        "TriggerCondition":"!TomasKilled"
+        "TriggerCondition":"!TecnicoTomásKilled"
       },
       {
         "EventType":"eSendImage",
         "ImageName": "Pasillo2_W_1.png",
-        "Description":"Así que a esto se dedicaba el Malo Maloso... ¡Mina criptomonedas! Con la cantidad de gente en el mundo sin luz y el bobo este calentando el mundo. Un crimen de calibre no debe permanecer impune.",
-        "TriggerCondition": "!TomasKilled"
+        "Description":"Así que a esto se dedicaba el Malo Maloso... ¡Mina criptomonedas! Con la cantidad de gente en el mundo sin luz y el bobo este calentando el mundo. Un crimen de tal calibre no debe permanecer impune.",
+        "TriggerCondition": "!TecnicoTomásKilled"
       },
       {
         "EventType": "eStartBattle",
         "Enemy": "TecnicoTomás",
-        "TriggerCondition": "!TomasKilled"
+        "TriggerCondition": "!TecnicoTomásKilled"
       },
       {
         "EventType": "eSendImage",
         "Description" : "Otra vez aquí... A ver si consigo salir de esta sala y no enredarme con los cables.",
         "ImageName": "Pasillo2_W_2.png",
-        "TriggerCondition": "TomasKilled"
+        "TriggerCondition": "TecnicoTomásKilled"
       }
     ]
   },
