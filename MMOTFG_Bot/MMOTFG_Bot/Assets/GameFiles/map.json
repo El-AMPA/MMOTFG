@@ -10,26 +10,27 @@
       {
         "EventType":"eSendImage",
         "ImageName": "EvilCastleEntrance.jpg",
-        "Description":"Has vuelto a la entrada del castillo. Aun tienes personal al que mamporrear. ¡No hay tiempo que perder!"
-      }
-    ],
-    "OnInspectEvent":[
+        "Description":"Has vuelto a la entrada del castillo. Aun tienes personal al que mamporrear. ¡No hay tiempo que perder!",
+        "TriggerCondition": "EntradaVisited"
+      },
       {
         "EventType":"eSendImage",
         "ImageName": "EvilCastleEntrance.jpg",
         "Description": "Ante ti se rige castillo del Malo Maloso. ¿Qué ha hecho? No tienes ni idea, pero con ese nombre seguro que nada bueno.",
-        "TriggerCondition" : "!EntradaInspect1"
+        "TriggerCondition" : "!EntradaVisited"
       },
       {
         "EventType":"eSendAudio",
         "AudioName": "Thunder.mp3",
         "Description": "¡Una aventura te espera. Tortas, golpetazos... Bienvenido a... Mazmorra Mamporrazo!",
-        "TriggerCondition": "!EntradaInspect1"
-      },
+        "TriggerCondition": "!EntradaVisited"
+      }
+    ],
+    "OnInspectEvent":[
       {
         "EventType":"eSendText",
         "Description":"Buscas debajo de la alfombra de la puerta y encuentras una poción.",
-        "TriggerCondition":"!EntradaInspect2 and EntradaInspect1"
+        "TriggerCondition":"!EntradaInspect1"
       },
       {
         "EventType":"eGiveItem",
@@ -38,13 +39,7 @@
             "Item":"pocion_vida"
           }
         ],
-        "TriggerCondition":"!EntradaInspect2 and EntradaInspect1"
-      },
-      {
-        "EventType":"eSetFlag",
-        "Name":"EntradaInspect2",
-        "SetAs":"True",
-        "TriggerCondition":"EntradaInspect1 and !EntradaInspect2"
+        "TriggerCondition":"!EntradaInspect1"
       },
       {
         "EventType":"eSetFlag",
@@ -72,18 +67,18 @@
         "EventType":"eSendImage",
         "ImageName":"Entrada1.png",
         "Description":"Con pies de plomo entras en la mazmorra. Notas todo bastante limpio y ordenado. Unos altavoces emiten una musiquita muy pegadiza. Distraido por el ambiente, resbalas una región húmeda del suelo y te caes de culo. Al reincorporarte, ÉL aparece.",
-        "TriggerCondition":"!ManoloDefeated"
+        "TriggerCondition":"!ConserjeManoloKilled"
       },
       {
         "EventType":"eStartBattle",
         "Enemy":"ConserjeManolo",
-        "TriggerCondition":"!ManoloDefeated"
+        "TriggerCondition":"!ConserjeManoloKilled"
       },
       {
         "EventType":"eSendImage",
         "ImageName":"Entrada2.png",
         "Description":"Sin Manolo notas que el polvo se empieza a acumular...",
-        "TriggerCondition":"ManoloDefeated"
+        "TriggerCondition":"ConserjeManoloKilled"
       }
     ],
     "OnInspectEvent":[
@@ -193,23 +188,23 @@
         "EventType":"eSendImage",
         "ImageName":"CheeseThrone1.png",
         "Description":"Un trono se alza en medio de la siguiente sala. Una enorme rata adornada por ornamentos dorados fija su mirada en tí. Una cohorte de ratas más pequeñas le acompañan. Ay mecachis.",
-        "TriggerCondition":"!BigCheeseDefeated"
+        "TriggerCondition":"!BigCheeseKilled"
       },
       {
         "EventType":"eSendText",
         "Description":"''¡Nunca llegarás al Malo Maloso, te detendré!'' Exclama la rata mientras se abalanza sobre tí.",
-        "TriggerCondition":"!BigCheeseDefeated"
+        "TriggerCondition":"!BigCheeseKilled"
       },
       {
         "EventType":"eStartBattle",
         "Enemies":["BigCheese", "SmallCheese", "SmallCheese"],
-        "TriggerCondition": "!BigCheeseDefeated"
+        "TriggerCondition": "!BigCheeseKilled"
       },
       {
         "EventType":"eSendImage",
         "ImageName": "CheeseThrone2.png",
         "Description":"Has vuelto a la sala donde hiciste frente a Big Cheese. Su muerte dejó un gran hueco en el trono...",
-        "TriggerCondition":"BigCheeseDefeated"
+        "TriggerCondition":"BigCheeseKilled"
       }
     ],
     "OnInspectEvent":[
@@ -233,24 +228,24 @@
       {
         "EventType":"eSendText",
         "Description":"Menudo cablerío hay montado por el suelo. Yo que pensaba que esto era una aventura de fantasía medieval. Menudo cacao mental tienen los desarrolladores...",
-        "TriggerCondition":"!TomasDefeated"
+        "TriggerCondition":"!TomasKilled"
       },
       {
         "EventType":"eSendImage",
         "ImageName": "Pasillo2_W_1.png",
         "Description":"Así que a esto se dedicaba el Malo Maloso... ¡Mina criptomonedas! Con la cantidad de gente en el mundo sin luz y el bobo este calentando el mundo. Un crimen de calibre no debe permanecer impune.",
-        "TriggerCondition": "!TomasDefeated"
+        "TriggerCondition": "!TomasKilled"
       },
       {
         "EventType": "eStartBattle",
         "Enemy": "TecnicoTomás",
-        "TriggerCondition": "!TomasDefeated"
+        "TriggerCondition": "!TomasKilled"
       },
       {
         "EventType": "eSendImage",
         "Description" : "Otra vez aquí... A ver si consigo salir de esta sala y no enredarme con los cables.",
         "ImageName": "Pasillo2_W_2.png",
-        "TriggerCondition": "TomasDefeated"
+        "TriggerCondition": "TomasKilled"
       }
     ]
   },

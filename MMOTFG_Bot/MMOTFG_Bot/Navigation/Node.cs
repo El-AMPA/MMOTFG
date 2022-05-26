@@ -114,7 +114,8 @@ namespace MMOTFG_Bot.Navigation
 
                 foreach (Event ev in OnInspectEvent)
                 {
-                    await ev.ExecuteEvent(chatId);
+                    bool evExecuted = await ev.ExecuteEvent(chatId);
+                    if (!triggeredEvent && evExecuted) triggeredEvent = true;
                 }
 
                 await ProgressKeeper.SaveSerializable(chatId);

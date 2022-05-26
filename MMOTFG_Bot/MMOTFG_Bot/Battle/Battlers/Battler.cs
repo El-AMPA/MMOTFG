@@ -57,7 +57,7 @@ namespace MMOTFG_Bot
                 //Proportion is maintained for bounded stats
                 if (Stats.isBounded(stat))
                 {
-                    float proportion = stats[(int)stat] / maxStats[(int)stat];
+                    float proportion = (float)stats[(int)stat] / maxStats[(int)stat];
                     stats[(int)stat] = (int)(newValue * proportion);
                 }
                 else stats[s] = newValue;

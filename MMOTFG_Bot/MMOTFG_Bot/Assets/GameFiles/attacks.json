@@ -132,8 +132,12 @@
     "AttackType": "aStatChanging",
     "Name": "Gruñido",
     "MpCost": 5,
-    "StatToChange": "ATK",
-    "Multiple": 0.7
+    "StatChanges":[
+      {
+      "StatToChange": "ATK",
+      "Multiple": 0.7
+      }
+    ] 
   },
   {
     "Name": "Coletazo",
@@ -143,15 +147,23 @@
     "Name": "Chapa sobre Linux",
     "AttackType": "aStatChanging",
     "MpCost": 10,
-    "StatToChange" : "ATK",
-    "Multiple": 0.5,
+    "StatChanges":[
+      {
+      "StatToChange": "ATK",
+      "Multiple": 0.5
+      }
+    ],
     "Power": 20
   },
   {
     "Name" : "Golpe con cable",
     "AttackType": "aStatChanging",
-    "StatToChange": "SPE",
-    "Multiple": 0.5,
+    "StatChanges":[
+      {
+      "StatToChange": "SPE",
+      "Multiple": 0.5
+      }
+    ],
     "Power": 15
   },
   {
