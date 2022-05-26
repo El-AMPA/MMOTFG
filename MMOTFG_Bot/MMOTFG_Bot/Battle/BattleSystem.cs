@@ -132,8 +132,8 @@ namespace MMOTFG_Bot
             }
 
             battlers = new List<Battler>();
-            battlers.AddRange(enemies);
             battlers.AddRange(players);
+            battlers.AddRange(enemies);
         }
 
         public static async Task CreatePlayerBattleData(string chatId)
@@ -263,7 +263,7 @@ namespace MMOTFG_Bot
                 }
             }
             //sort battlers by speed
-            battlers.Sort((b1, b2) => b2.GetStat(SPE).CompareTo(b1.GetStat(SPE)));
+            battlers.OrderBy(b1 => b1.GetStat(SPE));
             //get first battler that hasn't moved that turn and is alive
             Battler b = battlers.First(x => x.turnOver == false);
 
