@@ -209,5 +209,56 @@
     "DroppedItem": "mana_potion",
     "DroppedItemAmount": 3,
     "Attacks": ["Tabletazo", "Golpe con cable", "Chapa sobre Linux"]
+  },
+  {
+    "Name":"CocineroCarlos",
+    "ImageName": "CocineroCarlos.jpg",
+    "Stats": [300, 20, 10, 20],
+    "ImageCaption": "¡Como no acabe pronto contigo se me pasará el arroz!",
+    "Attacks": ["Sartenazo"],
+    "OnKill":[
+      {
+        "EventType": "eSendImage",
+        "ImageName": "Carlos2Fase.png",
+        "Description": "El cocinero exhala su último aliento. Su gorro de cocinero cae de una forma dramática al suelo y de él asoman 2 ojos."
+      },
+      {
+        "EventType": "eStartBattle",
+        "Enemy": "RataRicardo"
+      }
+    ]
+  },
+  {
+    "Name": "RataRicardo",
+    "ImageName":"RataRicardo.jpg",
+    "Stats":[500, 20, 10, 20],
+    "ImageCaption": "*Sonidos de rata refinada*",
+    "Attacks": ["Mordisco Refinado"],
+    "OnKill":[
+      {
+        "EventType": "eSendImage",
+        "ImageName": "Carlos3Fase.png",
+        "Description": "La rata cocinera exhala su último aliento. Su gorro de cocinero cae de una forma dramática al suelo y de él asoman... muchos ojos... ¿Joder, otra vez?"
+      },
+      {
+        "EventType": "eStartBattle",
+        "Enemy": "MoscaMiguel"
+      }
+    ],
+    "OnHit":[
+      {
+        "EventType": "eSendText",
+        "Description": "''Si yo no puedo... ÉL podrá contigo...'' Exclama la rata mientras te mordisquea los tobillos."
+      }
+    ]
+  },
+  {
+    "Name": "MoscaMiguel",
+    "ImageName":"MoscaMiguel.png",
+    "Stats":[1, 20, 10, 20],
+    "ImageCaption": "*Sonidos de mosca lista para morir*",
+    "Attacks": ["Último aliento"],
+    "DroppedItem": "mana_potion",
+    "DroppedItemAmount": 3
   }
 ]

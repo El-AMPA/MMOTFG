@@ -169,5 +169,24 @@
   {
     "Name": "Tabletazo",
     "Power": 20
+  },
+  {
+    "Name": "Sartenazo",
+    "Power": 20
+  },
+  {
+    "Name": "Último aliento",
+    "Power": 100
+  },
+  {
+    "Name": "Mordisco Refinado",
+    "AttackType": "aStatChanging",
+    "StatChanges":[
+      {
+      "StatToChange": "SPE",
+      "Multiple": 0.9
+      }
+    ],
+    "Power": 20
   }
 ]

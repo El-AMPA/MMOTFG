@@ -154,6 +154,18 @@
         "ImageName":"Pasillo2.png",
         "Description":"Vaya... Esta sala no está tan bien cuidada. Múltiples agujeros aparentemente dispuestos de una manera aleatoria perforan las paredes... La sala parece un Gruyer.",
         "TriggerCondition":"!PasilloCentral2Visited"
+      },
+      {
+        "EventType":"eSendImage",
+        "ImageName":"Pasillo2.png",
+        "Description":"He vuelto a esta sala. Podría entrenarme aquí peleando contra las ratas...",
+        "TriggerCondition": "PasilloCentral2Visited and SmallCheeseKilled"
+      },
+      {
+        "EventType":"eSendImage",
+        "ImageName":"Pasillo2.png",
+        "Description": "He vuelto a esta sala. Me pregunto que habrá dentro de los agujeros...",
+        "TriggerCondition":"PasilloCentral2Visited and !SmallCheeseKilled"
       }
     ],
     "OnInspectEvent":[
@@ -307,7 +319,32 @@
       "oeste" : {
         "ConnectingNode" : "PasilloCentral3"
       }
-    }
+    },
+    "OnArriveEvent":[
+      {
+        "EventType": "eSendImage",
+        "Description": "Parece que has llegado a la cocina ¡Que bien huele! Olisqueas un arroz que está al fuego y recibes un sartenazo en toda la cabeza ¡Ouch!",
+        "ImageName": "Restaurante.jpg",
+        "TriggerCondition": "!MoscaMiguelKilled"
+      },
+      {
+        "EventType":"eStartBattle",
+        "Enemy": "CocineroCarlos",
+        "TriggerCondition": "!MoscaMiguelKilled"
+      },
+      {
+        "EventType":"eSendImage",
+        "Description": "Me gustaría haber probado el arroz del... Bueno, de los chefs.",
+        "ImageName":"Restaurante2.png",
+        "TriggerCondition": "MoscaMiguelKilled"
+      }
+    ],
+    "OnInspectEvent":[
+      {
+        "EventType":"eSendText",
+        "Description": "La mosca controlaba a la rata que controlaba al humano... ¿Quién controla a la mosca? Para pensar..."
+      }
+    ]
   },
   {
     "Name": "SalaTesoro3",
@@ -319,7 +356,26 @@
         "ConnectingNode": "PasilloCentral3-E"
       }
     },
+    "OnArriveEvent":[
+      {
+        "EventType":"eSendImage",
+        "ImageName": "Nevera.jpg",
+        "Description": "Brrrr... Menudo frio que hace aquí. Pillaré lo primero que vea y me iré.",
+        "TriggerCondition":"!GuantesFound"
+      },
+      {
+        "EventType":"eSendImage",
+        "ImageName": "Nevera.jpg",
+        "Description": "Brrrr... No creo que quede nada por pillar aquí. Debería largarme de aquí cuanto antes o pillaré una pulmonía.",
+        "TriggerCondition": "GuantesFound"
+      }
+    ],
     "OnInspectEvent": [
+      {
+        "EventType": "eSendText",
+        "Description": "¡Yoink!... Joder están congelados...",
+        "TriggerCondition": "!GuantesFound"
+      },
       {
         "EventType": "eGiveItem",
         "ItemLots":[
@@ -328,6 +384,11 @@
           }
         ],
         "TriggerCondition": "!GuantesFound"
+      },
+      {
+        "EventType": "eSendText",
+        "Description": "A no ser que quiera llevarme unos hielos no hay nada más por aquí... Hay una trampilla que parece que me devuelve al pasillo central.",
+        "TriggerCondition": "GuantesFound"
       },
       {
         "EventType":"eSetFlag",
