@@ -182,24 +182,51 @@ namespace MMOTFG_Bot
             return (bool)await DatabaseManager.GetFieldFromDocument(DbConstants.BATTLE_ACTIVE, chatId, DbConstants.COLLEC_PLAYERS);
         }
 
-        public static async Task StartBattle(string chatId, Enemy eSide)
+        public static async Task StartBattleFromNames(string chatId, List<string> enemySide)
         {
-            await StartBattle(new List<string>() { chatId }, new List<Enemy> { eSide });
+            List<Enemy> enemies = new List<Enemy>();
+
+            foreach (string s in enemySide)
+            {
+                Enemy e = JSONSystem.GetEnemy(s);
+                if (e != null) enemies.Add(e);
+                else await TelegramCommunicator.SendText(chatId, $"{s} is an invalid enemy, will be ignored");
+            }
+
+            bool isInParty = await PartySystem.IsInParty(chatId);
+            bool isLeader = await PartySystem.IsLeader(chatId);
+
+            if (isInParty && !isLeader) return;
+
+            List<string> chatIds = new List<string>();
+
+            chatIds.Add(chatId);
+            if (isInParty)
+            {
+                string partyCode = await PartySystem.GetPartyCode(chatId);
+                foreach (string id in await PartySystem.GetPartyMembers(partyCode))
+                    chatIds.Add(id);
+            }
+
+            if (enemies.Count == 0) await TelegramCommunicator.SendText(chatId, "No valid enemies");
+
+            else await StartBattle(chatIds, enemies);
         }
 
-        public static async Task StartBattle(List<string> chatIds, List<Enemy> eSide)
+        public static async Task StartBattle(List<string> chatIds, List<Enemy> enemySide)
         {
             string chatId = chatIds.First();
+            await TelegramCommunicator.SendText(chatId, "Battle starts!", true);
             await LoadPlayerBattle(chatId);
-            enemies = eSide;
+            enemies = enemySide;
             battlers = new List<Battler>();
             battlers.AddRange(players);
             battlers.AddRange(enemies);
             battleActive = true;
             battlePaused = false;
-            if(eSide.Count == 1)
+            if(enemySide.Count == 1)
             {
-                Enemy e = eSide.First();
+                Enemy e = enemySide.First();
                 if (e.imageName != null)
                 {
                     await TelegramCommunicator.SendImage(chatId, e.imageName, true, e.imageCaption);
@@ -209,7 +236,7 @@ namespace MMOTFG_Bot
             {
                 List<string> imageNames = new List<string>();
                 string caption = "";
-                foreach (Enemy e in eSide)
+                foreach (Enemy e in enemySide)
                 {
                     if (e.imageName != null)
                         imageNames.Add(e.imageName);
@@ -219,10 +246,10 @@ namespace MMOTFG_Bot
                 }
 
                 //if multiple enemies have the same name, they need to be distinct
-                List<string> repeatedNames = eSide.GroupBy(e => e.name).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
+                List<string> repeatedNames = enemySide.GroupBy(e => e.name).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
                 foreach(string name in repeatedNames)
                 {
-                    List<Enemy> enemiesWithName = eSide.Where(e => e.name == name).ToList();
+                    List<Enemy> enemiesWithName = enemySide.Where(e => e.name == name).ToList();
                     for(int i = 0; i < enemiesWithName.Count; i++)
                     {
                         //this way, you get Enemy_1, Enemy_2...
@@ -376,13 +403,15 @@ namespace MMOTFG_Bot
             message += attack.OnAttack();
 
             if (target.GetStat(HP) <= 0)
+            {
+                await TelegramCommunicator.SendText(chatId, message + $"{target.name} died!", true);
                 await target.OnBehaviour(chatId, target.onKill);
+            }
 
             //check again since onKill events could have healed the target
             if (target.GetStat(HP) <= 0)
             {
                 target.turnOver = true;
-                await TelegramCommunicator.SendText(chatId, message + $"{target.name} died!", true);
                 Enemy e = target as Enemy;
                 bool isPlayer = (e == null);
                 if (!isPlayer)
