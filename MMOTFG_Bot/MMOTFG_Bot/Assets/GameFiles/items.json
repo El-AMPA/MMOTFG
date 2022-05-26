@@ -2,50 +2,60 @@
   {
     "Name": "health_potion",
     "MaxStackQuantity": 5,
-    "Key_Words": [
-      {
-        "Key": "drink",
-        "Value": {
-          "BehaviourType": "bChangeStat",
-          "StatToChange": "HP",
-          "Change": 500,
-          "Message": "Gained 500HP"
+    "Key_Words": {
+      "drink": [
+        {
+          "EventType": "eChangeStat",
+          "StatChanges": [
+            {
+              "StatToChange": "HP",
+              "Add": 500
+            }
+          ]
         }
-      },
-      {
-        "Key": "eat",
-        "Value": {
-          "BehaviourType": "bChangeStat",
-          "StatToChange": "HP",
-          "Change": -2,
-          "Message": "Why would you eat a potion you freak.\nYour health has been reduced by 2 points."
+      ],
+      "eat": [
+        {
+          "EventType": "eChangeStat",
+          "StatChanges": [
+            {
+              "StatToChange": "HP",
+              "Add": -2
+            }
+          ],
+          "Message": "Why would you eat a potion you freak."
         }
-      }
-    ]
+      ]
+    }
   },
   {
     "Name": "mana_potion",
     "MaxStackQuantity": 3,
-    "Key_Words": [
-      {
-        "Key": "drink",
-        "Value": {
-          "BehaviourType": "bChangeStat",
-          "StatToChange": "MP",
-          "Change": 500,
-          "Message": "Gained 500MP"
+    "Key_Words": {
+      "drink": [
+        {
+          "EventType": "eChangeStat",
+          "StatChanges": [
+            {
+              "StatToChange": "MP",
+              "Add": 100
+            }
+          ]
         }
-      },
-      {
-        "Key": "eat",
-        "Value": {
-          "BehaviourType": "bChangeStat",
-          "StatToChange": "MP",
-          "Change": -2,
-          "Message": "Why would you eat a potion you freak.\nYour MP has been reduced by 2 points."
+      ],
+      "eat": [
+        {
+          "EventType": "eChangeStat",
+          "StatChanges": [
+            {
+              "StatToChange": "MP",
+              "Add": -2
+            }
+          ],
+          "Message": "Why would you eat a potion you freak."
         }
-      }
-    ]
+      ]
+    }
   },
   {
     "ItemType": "EquipableItem",

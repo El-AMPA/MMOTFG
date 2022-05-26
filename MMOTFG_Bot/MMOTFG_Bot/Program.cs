@@ -55,9 +55,10 @@ namespace MMOTFG_Bot
 
 			//Module initializers
 			TelegramCommunicator.Init(botClient);
+			JSONSystem.Init("Assets/GameFiles/map.json", "Assets/GameFiles/enemies.json", "Assets/GameFiles/player.json", 
+				"Assets/GameFiles/attacks.json", "Assets/GameFiles/items.json", "Assets/GameFiles/directionSynonyms.json");
+			Map.Init();
 			InventorySystem.Init();
-			Map.Init("Assets/GameFiles/map.json", "Assets/GameFiles/directionSynonyms.json");
-			JSONSystem.Init("Assets/GameFiles/enemies.json", "Assets/GameFiles/player.json", "Assets/GameFiles/attacks.json", "Assets/GameFiles/items.json");
 			BattleSystem.Init();
 			DatabaseManager.Init();
 			foreach (ICommand c in commandList)
@@ -72,9 +73,7 @@ namespace MMOTFG_Bot
 
 			using var cts = new CancellationTokenSource();
 
-			//var a = new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync);
 			botClient.StartReceiving(new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync), null, cts.Token);
-			BotCommand command = new BotCommand();
 
 			Console.WriteLine($"Start listening for @{me.Username}");
 			Thread.Sleep(Timeout.Infinite);
@@ -93,10 +92,10 @@ namespace MMOTFG_Bot
 				// UpdateType.PreCheckoutQuery:
 				// UpdateType.Poll:
 				UpdateType.MyChatMember => onChatMemeberUpdateReceived(update),
-				UpdateType.Message => BotOnMessageReceived(botClient, update.Message),
-				UpdateType.EditedMessage => BotOnMessageReceived(botClient, update.EditedMessage),
+				UpdateType.Message => BotOnMessageReceived(update.Message),
+				UpdateType.EditedMessage => BotOnMessageReceived(update.EditedMessage),
 				//UpdateType.CallbackQuery => BotOnCallbackQueryReceived(botClient, update.CallbackQuery),
-				UpdateType.InlineQuery => BotOnInlineQueryReceived(botClient, update.InlineQuery),
+				//UpdateType.InlineQuery => BotOnInlineQueryReceived(botClient, update.InlineQuery),
 				//UpdateType.ChosenInlineResult => BotOnChosenInlineResultReceived(botClient, update.ChosenInlineResult),
 				//_ => UnknownUpdateHandlerAsync(botClient, update)
 			};
@@ -111,31 +110,10 @@ namespace MMOTFG_Bot
 			}
 		}
 
-		static async Task BotOnInlineQueryReceived(ITelegramBotClient botClient, InlineQuery query)
-		{
-			InlineQueryResult[] results = {
-					//// displayed result
-					//new InlineQueryResultArticle(
-					//	id: "0",
-					//	title: "dumbify your message!",
-					//	inputMessageContent: new InputTextMessageContent(
-					//		DumbifyText(query.Query)
-					//	)
-					//)
-				};
-
-			await botClient.AnswerInlineQueryAsync(
-				inlineQueryId: query.Id,
-				results: results,
-				isPersonal: true,
-				cacheTime: 0);
-		}
-
-		static async Task BotOnMessageReceived(ITelegramBotClient botClient, Message message)
+		static async Task BotOnMessageReceived(Message message)
 		{
 			var chatId = message.Chat.Id.ToString();
 			var senderName = message.From.FirstName;
-			var senderID = message.From.Id;
 
 			if (!processedNewEvents) //Don't process messages with a date prior to the program's launch date
 			{

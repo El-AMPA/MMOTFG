@@ -14,7 +14,7 @@ namespace MMOTFG_Bot.Commands
 		public override void SetDescription()
 		{
 			commandDescription = @"Gives an item on your inventory to a fellow party member.
-Use: give [item name] [player name] [quantity]";
+Use: give [item name] [player name] [quantity] (optional)";
 		}
 		public override void SetKeywords()
 		{

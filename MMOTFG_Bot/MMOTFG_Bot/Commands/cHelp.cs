@@ -15,7 +15,6 @@ namespace MMOTFG_Bot.Commands
 Use: help [command name]";
 		}
 
-
 		public override void SetKeywords()
 		{
 			key_words = new string[] {
@@ -31,16 +30,22 @@ Use: help [command name]";
 
 			if (args.Length == 0)
 			{
-
 				response = "List of available commands with its synonyms:\n";
 
 				foreach (ICommand c in commandsList)
 				{
 					string sameCommand = "/help_";
 
-					foreach (string comStr in c.GetKeywords())
+					if (c.showOnHelp != null)
 					{
-						sameCommand = sameCommand + comStr + " ";
+						sameCommand += c.showOnHelp;
+					}
+					else
+					{
+						foreach (string comStr in c.GetKeywords())
+						{
+							sameCommand += comStr + " ";
+						}
 					}
 
 					response += sameCommand + "\n";
@@ -54,7 +59,7 @@ Use: help [command name]";
 			{
 				foreach (ICommand c in Program.commandList)
 				{
-					if (c.ContainsKeyWord(args[0]))
+					if (c.ContainsKeyWord(args[0]) || c.showOnHelp == args[0])
 					{
 						response = c.GetDescription();
 						await TelegramCommunicator.SendText(chatId, response);

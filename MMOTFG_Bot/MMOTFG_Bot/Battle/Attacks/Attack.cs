@@ -19,13 +19,13 @@ namespace MMOTFG_Bot
         [DefaultValue("Basic Attack")]
         public string name;
         public float power;
-        public float mpCost;
+        public int mpCost;
         protected Battler user;
         protected Battler target;
 
         public bool affectsSelf;
 
-        public Attack(string name_, float power_, float mpCost_)
+        public Attack(string name_, float power_, int mpCost_)
         {
             name = name_;
             power = power_;
@@ -42,11 +42,11 @@ namespace MMOTFG_Bot
             target = target_;
         }
 
-        public virtual float GetDamage()
+        public virtual int GetDamage()
         {
-            return user.GetStat(ATK) * power;
+            return (int)(user.GetStat(ATK) * power);
         }
 
-        public virtual async Task OnAttack(string chatId) { }
+        public virtual string OnAttack() { return ""; }
     }
 }

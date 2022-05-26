@@ -1,4 +1,6 @@
-﻿using MMOTFG_Bot.Navigation;
+﻿using MMOTFG_Bot.Events;
+using MMOTFG_Bot.Navigation;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,16 +26,12 @@ namespace MMOTFG_Bot
 
         public string id;
 
-        public Player()
-        {
-        }
-
         public override void OnCreate()
         {
             base.OnCreate();
-            stats = (float[])levelUpRoadmap.firstStats.Clone();
-            maxStats = (float[])stats.Clone();
-            originalStats = (float[])stats.Clone();
+            stats = (int[])levelUpRoadmap.firstStats.Clone();
+            maxStats = (int[])stats.Clone();
+            originalStats = (int[])stats.Clone();
             levelUpRoadmap.CalculateLevels();
         }
 
@@ -45,7 +43,7 @@ namespace MMOTFG_Bot
                 attacks.Add(a.name);
             }
         }
-      
+
         public void SetName(string playerName)
         {
             name = playerName;
@@ -74,7 +72,7 @@ namespace MMOTFG_Bot
                 string statChanges = "";
                 for (int i = 0; i < Stats.statNum; i++)
                 {
-                    int change = (int)levelUpRoadmap.getStatDifference(i);
+                    int change = levelUpRoadmap.getStatDifference(i);
                     AddToStat((StatName)i, change, changeMax: true, permanent: true);
                     statChanges += $"{(StatName)i} {((change >= 0) ? "+" : "")}{change}\n";
                 }
@@ -82,8 +80,19 @@ namespace MMOTFG_Bot
                 //if there is an event for that level
                 if (levelUpRoadmap.levelUpEvents != null)
                 {
-                    var event_ = levelUpRoadmap.levelUpEvents.Find(x => x.level == level);
-                    if (event_.ev != null) await event_.ev.Execute(chatId);
+                    var lvlup = levelUpRoadmap.levelUpEvents.Find(x => x.level == level);
+                    if (lvlup.events != null)
+                    {
+                        await ProgressKeeper.LoadSerializable(chatId);
+
+                        foreach (Event e in lvlup.events)
+                        {
+                            e.SetUser(this);
+                            await e.ExecuteEvent(chatId);
+                        }
+
+                        await ProgressKeeper.SaveSerializable(chatId);
+                    }
                 }
                 if (level == levelUpRoadmap.maxLevel) return;
                 neededExp = levelUpRoadmap.neededExperience[level - 1];
@@ -98,14 +107,15 @@ namespace MMOTFG_Bot
                 List<string> options = new List<string>(attacks);
                 options.Add("Skip");
                 if (BattleSystem.battleActive) await BattleSystem.PauseBattle(chatId);
-                await TelegramCommunicator.SendButtons(chatId, $"Do you want to learn {attackName}? Choose an attack to replace or Skip to skip",
-                    options, 2, 3);
+                await TelegramCommunicator.SendButtons(chatId, $"Do you want to learn {attackName}? " +
+                    $"Choose an attack to replace or Skip to skip", options);
             }
             else
             {
                 learningAttack = null;
                 attacks_.Add(JSONSystem.GetAttack(attackName));
                 SetAttackNames();
+                SetAttacks();
                 await TelegramCommunicator.RemoveReplyMarkup(chatId, $"Learnt {attackName}!");
                 if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
             }
@@ -118,7 +128,7 @@ namespace MMOTFG_Bot
             if (attackName == "skip")
             {
                 learningAttack = null;
-                await TelegramCommunicator.RemoveReplyMarkup(chatId, "Skipped move learning");
+                await TelegramCommunicator.RemoveReplyMarkup(chatId, "Skipped attack learning");
                 if (BattleSystem.battlePaused) await BattleSystem.ResumeBattle(chatId);
                 return;
             }
@@ -147,24 +157,30 @@ namespace MMOTFG_Bot
             }
             if (stats[(int)StatName.HP] <= 0)
             {
-                bool inParty = await PartySystem.IsInParty(chatId);
-                string code = null;
-                if (inParty) code = await PartySystem.GetPartyCode(chatId);
-                //full wipeout
-                if (!inParty || await PartySystem.IsPartyWipedOut(code))
-                {
-                    stats = (float[])originalStats.Clone();
-                    //return player to starting node
-                    await Map.SetPlayerPosition(chatId, 0);
-                }
-                //in party but not full wipeout
-                else
-                {
-                    stats = (float[])originalStats.Clone();
-                    //1 HP and 1 MP
-                    stats[(int)StatName.HP] = 1;
-                    stats[(int)StatName.MP] = 1;
-                }
+                await OnDeath(chatId);
+            }
+        }
+
+        public async override Task OnDeath(string chatId)
+        {
+            bool inParty = await PartySystem.IsInParty(chatId);
+            string code = null;
+            if (inParty) code = await PartySystem.GetPartyCode(chatId);
+            //full wipeout
+            if (!inParty || await PartySystem.IsPartyWipedOut(code))
+            {
+                stats = (int[])originalStats.Clone();
+                //return player to starting node
+                await TelegramCommunicator.SendText(chatId, "Returning to starting point...");
+                await Map.SetPlayerPosition(chatId, 0);
+            }
+            //in party but not full wipeout
+            else
+            {
+                stats = (int[])originalStats.Clone();
+                //1 HP and 1 MP
+                stats[(int)StatName.HP] = 1;
+                stats[(int)StatName.MP] = 1;
             }
         }
 
@@ -206,11 +222,6 @@ namespace MMOTFG_Bot
             upNext = Convert.ToBoolean(eInfo[DbConstants.BATTLE_UP_NEXT]);
 
             learningAttack = eInfo[DbConstants.PLAYER_FIELD_LEARNING_ATTACK] as string;
-        }
-
-        public void LoadSerializableBase(Dictionary<string, object> eInfo)
-        {
-            base.LoadSerializable(eInfo);
         }
     }
 }

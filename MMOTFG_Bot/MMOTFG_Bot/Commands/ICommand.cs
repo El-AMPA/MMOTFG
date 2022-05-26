@@ -8,6 +8,8 @@ namespace MMOTFG_Bot
 
         protected string commandDescription;
 
+        public string showOnHelp = null;
+
         /// <summary>
         /// Sets the keywords that will be recognized by this command
         /// </summary>
@@ -26,6 +28,16 @@ namespace MMOTFG_Bot
                 }
             }
             return false;
+        }
+
+        public virtual string ShowOnHelp()
+        {
+            string s = "";
+            foreach(string k in key_words)
+            {
+                s += k + " ";
+            }
+            return s;
         }
 
         public async Task<bool> TryExecute(string command, string chatId, string[] args = null)
