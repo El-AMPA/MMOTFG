@@ -109,8 +109,11 @@ namespace MMOTFG_Bot
 			else await botClient.SendTextMessageAsync(chatId, text, parseMode);
         }
 
-		static public async Task SendButtons(string chatId, string text, List<string> buttonNames, int rows = 2, int columns = 2)
+		static public async Task SendButtons(string chatId, string text, List<string> buttonNames)
         {
+			//show the buttons as evenly distributed as possible
+			int rows = (int)Math.Ceiling(Math.Sqrt(buttonNames.Count));
+			int columns = rows;
 			for (int i = buttonNames.Count; i < rows * columns; i++) buttonNames.Add("");
 			var keyboard = new List<List<KeyboardButton>>();
 			for(int i = 0; i< rows; i++)

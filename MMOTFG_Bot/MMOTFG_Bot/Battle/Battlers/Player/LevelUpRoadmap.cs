@@ -13,7 +13,7 @@ namespace MMOTFG_Bot
     {
         //base experience needed to level up
         [DefaultValue(1)]
-        public float levelUpExperience;
+        public int levelUpExperience;
 
         //1 for linear, 2 for cuadratic, 3 for cubic...
         [DefaultValue(1)]
@@ -25,14 +25,14 @@ namespace MMOTFG_Bot
         public int maxLevel;
 
         //stats at min level
-        public float[] firstStats;
+        public int[] firstStats;
         //stats at max level
-        public float[] finalStats;
+        public int[] finalStats;
 
         public struct LevelUpEvent
         {
             public int level;
-            public Event ev;
+            public List<Event> events;
         }
 
         public List<LevelUpEvent> levelUpEvents;
@@ -50,7 +50,7 @@ namespace MMOTFG_Bot
             }
         }
 
-        public float getStatDifference(int s)
+        public int getStatDifference(int s)
         {
             return (finalStats[s] - firstStats[s]) / (maxLevel - minLevel);
         }

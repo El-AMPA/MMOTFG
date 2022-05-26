@@ -14,7 +14,7 @@ namespace MMOTFG_Bot.Commands
         public override void SetDescription()
         {
             commandDescription = @"Moves the player in the given direction. For all available directions, use /directions
-Use: go [direccion]";
+Use: go [direction]";
         }
         public override void SetKeywords()
         {

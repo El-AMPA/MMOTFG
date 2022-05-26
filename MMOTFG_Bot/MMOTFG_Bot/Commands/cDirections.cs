@@ -13,7 +13,8 @@ namespace MMOTFG_Bot.Commands
     {
         public override void SetDescription()
         {
-            commandDescription = @"Lists all available directions from your current room";
+            commandDescription = @"Lists all available directions from your current room
+Use: directions";
         }
         public override void SetKeywords()
         {

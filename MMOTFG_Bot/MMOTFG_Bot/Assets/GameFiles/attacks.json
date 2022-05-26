@@ -13,8 +13,12 @@
     "AttackType": "aStatChanging",
     "Name": "Burla",
     "MpCost": 5,
-    "StatToChange": "ATK",
-    "Multiple": 0.5
+    "StatChanges": [
+      {
+        "StatToChange": "ATK",
+        "Multiple": 0.5
+      }
+    ]
   },
   {
     "Name": "Tortazo",
@@ -32,9 +36,13 @@
     "AttackType": "aStatChanging",
     "Name": "Swords Dance",
     "MpCost": 1,
-    "StatToChange": "ATK",
-    "AffectsSelf": true,
-    "Multiple": 2
+    "StatChanges": [
+      {
+        "StatToChange": "ATK",
+        "Multiple": 2
+      }
+    ],
+    "AffectsSelf": true
   },
   {
     "AttackType": "aScaled",

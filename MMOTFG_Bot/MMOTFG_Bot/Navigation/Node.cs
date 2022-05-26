@@ -76,17 +76,7 @@ namespace MMOTFG_Bot.Navigation
             {
                 foreach (Event ev in OnExitEvent)
                 {
-                    bool condition = true;
-
-                    if (ev.TriggerCondition != null)
-                    {
-                        condition = ProgressKeeper.IsFlagActive(chatId, ev.TriggerCondition);
-                    }
-
-                    if (condition)
-                    {
-                        await ev.Execute(chatId);
-                    }
+                    await ev.ExecuteEvent(chatId);
                 }
             }
 
@@ -105,17 +95,7 @@ namespace MMOTFG_Bot.Navigation
 
                 foreach (Event ev in OnArriveEvent)
                 {
-                    bool condition = true;
-
-                    if (ev.TriggerCondition != null)
-                    {
-                        condition = ProgressKeeper.IsFlagActive(chatId, ev.TriggerCondition);
-                    }
-
-                    if (condition)
-                    {
-                        await ev.Execute(chatId);
-                    }
+                    await ev.ExecuteEvent(chatId);
                 }
 
                 await ProgressKeeper.SaveSerializable(chatId);
@@ -134,18 +114,7 @@ namespace MMOTFG_Bot.Navigation
 
                 foreach (Event ev in OnInspectEvent)
                 {
-                    bool condition = true;
-
-                    if (ev.TriggerCondition != null)
-                    {
-                        condition = ProgressKeeper.IsFlagActive(chatId, ev.TriggerCondition);
-                    }
-
-                    if (condition)
-                    {
-                        triggeredEvent = true;
-                        await ev.Execute(chatId);
-                    }
+                    await ev.ExecuteEvent(chatId);
                 }
 
                 await ProgressKeeper.SaveSerializable(chatId);

@@ -10,18 +10,20 @@ namespace MMOTFG_Bot.Commands
     {
         public override void SetDescription()
         {
-            commandDescription = @"There is no specific information on this command";
+            commandDescription = @"Uses a certain attack in battle. You can specify the target's name.
+Use: [attack name] [target name] (optional)";
         }
         public override void SetKeywords()
         {
             //keywords are every possible attack
             key_words = JSONSystem.GetAllAttackNames().ConvertAll(x => x.ToLower()).ToArray();
+            showOnHelp = "attack";
         }
 
         internal override async Task Execute(string command, string chatId, string[] args = null)
         {
             await BattleSystem.LoadPlayerBattle(chatId);
-            Player p = await BattleSystem.GetPlayer(chatId);
+            Player p = BattleSystem.GetPlayer(chatId);
             if (p.learningAttack != null)
             {
                 await p.ForgetAttack(chatId, command);

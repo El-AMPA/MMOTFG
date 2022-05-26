@@ -9,8 +9,9 @@ namespace MMOTFG_Bot.Commands
     {
         public override void SetDescription()
         {
-            commandDescription = @"Lists the player's stats.
-use: stats";
+            commandDescription = @"Lists the stats and gear of a certain character.
+When used by itself, it will display the player's status. Can also be used to know the status of another player or enemy.
+use: status [character name]";
         }
         public override void SetKeywords()
         {

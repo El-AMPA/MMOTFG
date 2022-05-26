@@ -15,7 +15,7 @@ namespace MMOTFG_Bot.Events
 
         public async override Task Execute(string chatId)
         {
-            List<Battler> enemies = new List<Battler>();
+            List<Enemy> enemies = new List<Enemy>();
             if (Enemy != null) enemies.Add(JSONSystem.GetEnemy(Enemy));
             else foreach (string s in Enemies) enemies.Add(JSONSystem.GetEnemy(s));
 
@@ -34,7 +34,9 @@ namespace MMOTFG_Bot.Events
                     chatIds.Add(id);
             }
 
-            await BattleSystem.StartBattle(chatIds, enemies);
+            if (enemies.Count == 0) await TelegramCommunicator.SendText(chatId, "No valid enemies");
+
+            else await BattleSystem.StartBattle(chatIds, enemies);
         }
     }
 }

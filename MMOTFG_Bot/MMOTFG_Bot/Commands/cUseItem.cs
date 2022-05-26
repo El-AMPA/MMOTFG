@@ -13,16 +13,16 @@ namespace MMOTFG_Bot.Commands
     {
         public override void SetDescription()
         {
-            commandDescription = @"Uses an item. Depending on the word you provide, different things can happen.
-Use: consume / use / eat / drink [item name]";
+            commandDescription = @"Uses an item and consumes it. Depending on the word you provide, different things can happen.
+You can also specify the number of times in will be used.
+Use: [action name] [item name] [number of times] (optional)
+To get the actions of a certain item, use ""info [item name]""";
         }
+
         public override void SetKeywords()
         {
-            key_words = new string[]{
-                "consume",
-                "use",
-                "beber" 
-            };
+            key_words = JSONSystem.GetAllItemActions().ToArray();
+            showOnHelp = "use";
         }
 
         internal override async Task Execute(string command, string chatId, string[] args = null)

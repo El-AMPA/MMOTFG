@@ -2,32 +2,36 @@
   {
     "Name": "pocion_vida",
     "MaxStackQuantity": 5,
-    "Key_Words": [
-      {
-        "Key": "beber",
-        "Value": {
-          "BehaviourType": "bChangeStat",
-          "StatToChange": "HP",
-          "Change": 500,
-          "Message": "Recuperaste 500HP"
+    "Key_Words": {
+      "beber": [
+        {
+          "EventType": "eChangeStat",
+          "StatChanges": [
+            {
+              "StatToChange": "HP",
+              "Add": 500
+            }
+          ]
         }
-      }
-    ]
+      ]
+    }
   },
   {
     "Name": "pocion_mana",
     "MaxStackQuantity": 3,
-    "Key_Words": [
-      {
-        "Key": "beber",
-        "Value": {
-          "BehaviourType": "bChangeStat",
-          "StatToChange": "MP",
-          "Change": 500,
-          "Message": "Recuperaste 500MP"
+    "Key_Words": {
+      "beber": [
+        {
+          "EventType": "eChangeStat",
+          "StatChanges": [
+            {
+              "StatToChange": "MP",
+              "Add": 100
+            }
+          ]
         }
-      }
-    ]
+      ]
+    }
   },
   {
     "ItemType": "EquipableItem",
