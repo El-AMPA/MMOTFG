@@ -260,5 +260,21 @@
     "Attacks": ["Último aliento"],
     "DroppedItem": "mana_potion",
     "DroppedItemAmount": 3
+  },
+  {
+    "Name": "MediumCheese",
+    "ImageName":"MediumCheese.png",
+    "Stats": [100, 20, 10, 10],
+    "ImageCaption": "*Sonidos de rata muy enfadada*",
+    "Attacks": ["Mordisco al tobillo"],
+    "DroppedItem": "pocion_vida",
+    "DroppedItemAmount": 1
+  },
+  {
+    "Name": "MaloMaloso",
+    "ImageName":"MediumCheese.png",
+    "Stats": [1000000, 20, 10, 10],
+    "ImageCaption": "...",
+    "Attacks": ["Mordisco al tobillo"]
   }
 ]

@@ -413,24 +413,44 @@
     "Name": "PasilloCentral5",
     "NodeConnections":{
       "norte" : {
-        "ConnectingNode" : "PasilloCentral6"
+        "ConnectingNode" : "SalaJefe"
       },
       "sur" : {
         "ConnectingNode" : "PasilloCentral4"
       }
-    }
-  },
-  {
-    "Name": "PasilloCentral6",
-    "NodeConnections":{
-      "puerta" : {
-        "ConnectingNode" : "SalaJefe"
-      },
-      "sur" : {
-        "ConnectingNode" : "PasilloCentral5"
-      }
     },
+    "OnArriveEvent": [
+      {
+        "EventType": "eSendImage",
+        "ImageName": "Pasillo5.jpg",
+        "Description": "Al abrir la puerta hacia la siguiente sala encuentras un... ¿jardín? Está muy bien cuidado, temes que en cualquier momento el jardinero te pegue un palazo o algo...",
+        "TriggerCondition": "!PasilloCentral5Visited"
+      },
+      {
+        "EventType": "eSendImage",
+        "ImageName": "Pasillo5.jpg",
+        "Description": "Has vuelto al jardín, cuando termines todo esto igual deberías darte un paseo, que lo necesitas.",
+        "TriggerCondition": "PasilloCentral5Visited"
+      },
+      {
+        "EventType": "eSendImage",
+        "ImageName": "Pasillo5-Espada.jpg",
+        "Description": "En el centro del jardín encuentras una espada clavada en una piedra... Encuentras la situación un poco cliché.",
+        "TriggerCondition": "!EspadaSacada"
+      }
+    ],
     "OnInspectEvent": [
+      {
+        "EventType":"eSetFlag",
+        "Name": "EspadaFound",
+        "SetAs": "True",
+        "TriggerCondition":"!EspadaFound"
+      },
+      {
+        "EventType": "eSendText",
+        "Description": "Al acercar tus manos a la espada, tus calcetines, gorro y guantes comienzan a brillar intensamente. Con fuerza rejuvenecida, extraes la espada de la piedra.",
+        "TriggerCondition": "!EspadaSacada"
+      },
       {
         "EventType": "eGiveItem",
         "ItemLots":[
@@ -438,21 +458,20 @@
             "Item":"espada_del_heroe"
           }
         ],
-        "TriggerCondition": "!EspadaFound"
+        "TriggerCondition":"!EspadaSacada"
       },
       {
-        "EventType":"eSetFlag",
-        "Name": "EspadaFound",
-        "SetAs": "True",
-        "TriggerCondition":"!EspadaFound"
+        "EventType": "eSendText",
+        "Description": "Gracias a la espada nunca te has sentido con tanta energía.",
+        "TriggerCondition": "EspadaSacada"
       }
     ]
   },
   {
     "Name": "SalaJefe",
     "NodeConnections":{
-      "puerta" : {
-        "ConnectingNode" : "PasilloCentral6"
+      "sur" : {
+        "ConnectingNode" : "PasilloCentral5"
       }
     }
   }

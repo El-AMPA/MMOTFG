@@ -58,7 +58,21 @@
     "StatModifiers": {
       "ATK": 30,
       "HP": 50
-    }
+    },
+    "OnEquip":[
+      {
+        "EventType": "eSetFlag",
+        "Name": "GuantesEq",
+        "SetAs": "False"
+      }
+    ],
+    "OnUnequip":[
+      {
+        "EventType": "eSetFlag",
+        "Name": "GuantesEq",
+        "SetAs": "True"
+      }
+    ]
   },
   {
     "ItemType": "EquipableItem",
