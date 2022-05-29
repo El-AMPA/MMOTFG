@@ -410,7 +410,37 @@
       "sur" : {
         "ConnectingNode" : "PasilloCentral3"
       }
-    }
+    },
+    "OnArriveEvent":[
+      {
+        "EventType":"eSendImage",
+        "ImageName":"Pasillo2.png",
+        "Description":"Otra con agujeros. Me pregunto que habrá dentro de ellos...",
+        "TriggerCondition":"!PasilloCentral4Visited"
+      },
+      {
+        "EventType":"eSendImage",
+        "ImageName":"Pasillo2.png",
+        "Description":"He vuelto a esta sala. Podría entrenarme aquí peleando contra las ratas...",
+        "TriggerCondition": "PasilloCentral4Visited and MediumCheese"
+      },
+      {
+        "EventType":"eSendImage",
+        "ImageName":"Pasillo2.png",
+        "Description": "He vuelto a esta sala. Me pregunto que habrá dentro de los agujeros...",
+        "TriggerCondition":"PasilloCentral4Visited and !MediumCheese"
+      }
+    ],
+    "OnInspectEvent":[
+      {
+        "EventType": "eSendText",
+        "Description": "¡De uno de los agujeros que adornan la sala aparece una rata y se abalanza sobre ti!"
+      },
+      {
+        "EventType":"eStartBattle",
+        "Enemy":"MediumCheese"
+      }
+    ]
   },
   {
     "Name": "PasilloCentral5",
@@ -459,8 +489,8 @@
       },
       {
         "EventType": "eLearnAttack",
-        "Attack": "EspadazoDelHéroe"
-        //"TriggerCondition": "!EspadaSacada and GuantesEq and GorroEq and CalcetinesEq"
+        "Attack": "EspadazoDelHeroe",
+        "TriggerCondition": "!EspadaSacada and GuantesEq and GorroEq and CalcetinesEq"
       },
       {
         "EventType": "eSendText",
@@ -468,16 +498,16 @@
         "TriggerCondition": "EspadaSacada"
       },
       {
-        "EventType": "eSendText",
-        "Description": "Intentas extraer la espada de la piedra, pero se mantiene inamovible. Seguro que hay algo por el castillo que me pueda ayudar.",
-        "TriggerCondition": "!EspadaSacada and !GuantesEq and !GorroEq and !CalcetinesEq"
-      },
-      {
         "EventType":"eSetFlag",
         "Name": "EspadaSacada",
         "SetAs": "True",
         "TriggerCondition":"GuantesEq and GorroEq and CalcetinesEq"
-      }
+      },
+      {
+        "EventType": "eSendText",
+        "Description": "Intentas extraer la espada de la piedra, pero se mantiene inamovible. Seguro que hay algo por el castillo que me pueda ayudar.",
+        "TriggerCondition": "!EspadaSacada"
+      },
     ]
   },
   {
