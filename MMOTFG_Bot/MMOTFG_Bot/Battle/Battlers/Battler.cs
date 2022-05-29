@@ -43,6 +43,7 @@ namespace MMOTFG_Bot
         {
             attacks_ = new List<Attack>();
             //get attacks by name
+            if (attacks == null) return;
             foreach (string s in attacks) attacks_.Add(JSONSystem.GetAttack(s));
             //attacks are automatically sorted by mpCost
             attacks_.Sort((a1, a2) => a1.mpCost.CompareTo(a2.mpCost));
@@ -151,6 +152,18 @@ namespace MMOTFG_Bot
                 message += AddToStat(sc.statToChange, sc.add, sc.changeMax);
             }
             return message;
+        }
+
+        //Gets a random attack the battler has enough MP to use
+        public Attack NextAttack()
+        {
+            int i = attacks_.Count - 1;
+            while (i >= 0 && attacks_[i].mpCost > stats[(int)StatName.MP])
+                i--;
+            //if no attacks available, return null
+            if (i < 0) return null;
+            int attack = RNG.Next(0, i + 1);
+            return attacks_[attack];
         }
 
         public async Task CheckDeath(string chatId)

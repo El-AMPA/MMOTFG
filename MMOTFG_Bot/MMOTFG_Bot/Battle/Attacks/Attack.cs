@@ -22,7 +22,7 @@ namespace MMOTFG_Bot
 
         [JsonConverter(typeof(StringEnumConverter))]
         [DefaultValue(ATK)]
-        public StatName statToScale;
+        public StatName statToScale = ATK;
 
         public int fixedDamage;
 
@@ -56,7 +56,7 @@ namespace MMOTFG_Bot
 
         public string GetInformation()
         {
-            string target = (affectsSelf) ? "Self" : "Foe";
+            string target = (affectsSelf) ? "User" : "Foe";
             //scaling on attack is assumed
             string scale = (statToScale == ATK) ? "" : $"\nScales from: {statToScale}";
             //power only displayed if not 0
