@@ -7,7 +7,8 @@ using MMOTFG_Bot.Navigation;
 
 namespace MMOTFG_Bot.Commands
 {/// <summary>
- /// Shows the available directions from a given node.
+ /// Comando añadido durante el desarrollo de Anacleta la plaqueta.
+ /// Muestra una imagen del mapa humano, con la posición actual del jugador remarcada. 
  /// </summary>
 	class cMap : ICommand
 	{
@@ -28,7 +29,7 @@ namespace MMOTFG_Bot.Commands
 		{
 			Node n = await Map.getCurrentnode(chatId);
 			string imgName = n.Name + "Mapa.PNG";
-			await TelegramCommunicator.SendImage(chatId, imgName, imageCaption: "hola");
+			await TelegramCommunicator.SendImage(chatId, imgName);
 		}
 
 		internal override bool IsFormattedCorrectly(string[] args)
