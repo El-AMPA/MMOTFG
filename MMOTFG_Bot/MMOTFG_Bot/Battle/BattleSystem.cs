@@ -23,10 +23,13 @@ namespace MMOTFG_Bot
         {
         }
 
-        public static Player GetPlayer(string chatId)
+        public async static Task<Player> GetPlayer(string chatId)
         {
             if (partyCode == null)
+            {
+                if (players == null) await CreatePlayerBattleData(chatId);
                 return players.First();
+            }
             else
             {
                 return players.FirstOrDefault(p => p.id == chatId);
@@ -322,7 +325,7 @@ namespace MMOTFG_Bot
 
         public static async Task SetPlayerOptions(string chatId, string text)
         {
-            Player player = GetPlayer(chatId);
+            Player player = await GetPlayer(chatId);
             player.upNext = true;
             await SavePlayerBattle(chatId);
             await TelegramCommunicator.SendButtons(chatId, text, player.attacks);
@@ -330,7 +333,7 @@ namespace MMOTFG_Bot
 
         public static async Task PlayerAttack(string chatId, string attackName, string targetName = null)
         {
-            Player player = GetPlayer(chatId);
+            Player player = await GetPlayer(chatId);
             if (!battleActive)
             {
                 await TelegramCommunicator.SendText(chatId, "No battle currently active");
@@ -462,7 +465,7 @@ namespace MMOTFG_Bot
                 await target.OnBehaviour(chatId, target.onHit);
             }
 
-            if (user == GetPlayer(chatId) && battleActive && !battlePaused) 
+            if (user == await GetPlayer(chatId) && battleActive && !battlePaused) 
                 await TelegramCommunicator.RemoveReplyMarkup(chatId, "Turn over");
 
             await SavePlayerBattle(chatId);
@@ -504,12 +507,12 @@ namespace MMOTFG_Bot
 
             await LoadPlayerBattle(chatId);
 
-            if (name == null) b = GetPlayer(chatId);
+            if (name == null) b = await GetPlayer(chatId);
             else if (battleActive) b = battlers.FirstOrDefault(x => x.name.ToLower() == name.ToLower());
 
             string friendId = await PartySystem.GetFriendId(chatId, name);
             if (friendId != null)
-                b = GetPlayer(friendId);
+                b = await GetPlayer(friendId);
 
             if (b == null)
             {

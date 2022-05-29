@@ -40,7 +40,21 @@
     "StatModifiers": {
       "ATK": 20,
       "HP": 30
-    }
+    },
+    "OnEquipEvents":[
+      {
+        "EventType": "eSetFlag",
+        "Name": "GorroEq",
+        "SetAs": "True"
+      }
+    ],
+    "OnUnequipEvents":[
+      {
+        "EventType": "eSetFlag",
+        "Name": "GorroEq",
+        "SetAs": "False"
+      }
+    ]
   },
   {
     "ItemType": "EquipableItem",
@@ -49,7 +63,21 @@
     "StatModifiers": {
       "SPE": 50,
       "HP": 30
-    }
+    },
+    "OnEquipEvents":[
+      {
+        "EventType": "eSetFlag",
+        "Name": "CalcetinesEq",
+        "SetAs": "True"
+      }
+    ],
+    "OnUnequipEvents":[
+      {
+        "EventType": "eSetFlag",
+        "Name": "CalcetinesEq",
+        "SetAs": "False"
+      }
+    ]
   },
   {
     "ItemType": "EquipableItem",
@@ -59,18 +87,18 @@
       "ATK": 30,
       "HP": 50
     },
-    "OnEquip":[
-      {
-        "EventType": "eSetFlag",
-        "Name": "GuantesEq",
-        "SetAs": "False"
-      }
-    ],
-    "OnUnequip":[
+    "OnEquipEvents":[
       {
         "EventType": "eSetFlag",
         "Name": "GuantesEq",
         "SetAs": "True"
+      }
+    ],
+    "OnUnequipEvents":[
+      {
+        "EventType": "eSetFlag",
+        "Name": "GuantesEq",
+        "SetAs": "False"
       }
     ]
   },

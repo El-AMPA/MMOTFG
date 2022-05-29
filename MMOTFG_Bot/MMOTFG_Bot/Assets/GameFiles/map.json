@@ -4,6 +4,9 @@
     "NodeConnections": {
       "norte": {
         "ConnectingNode": "PasilloCentral1"
+      },
+      "test": {
+        "ConnectingNode": "PasilloCentral5"
       }
     },
     "OnArriveEvent":[
@@ -441,15 +444,9 @@
     ],
     "OnInspectEvent": [
       {
-        "EventType":"eSetFlag",
-        "Name": "EspadaFound",
-        "SetAs": "True",
-        "TriggerCondition":"!EspadaFound"
-      },
-      {
         "EventType": "eSendText",
         "Description": "Al acercar tus manos a la espada, tus calcetines, gorro y guantes comienzan a brillar intensamente. Con fuerza rejuvenecida, extraes la espada de la piedra.",
-        "TriggerCondition": "!EspadaSacada"
+        "TriggerCondition": "!EspadaSacada and GuantesEq and GorroEq and CalcetinesEq"
       },
       {
         "EventType": "eGiveItem",
@@ -458,12 +455,28 @@
             "Item":"espada_del_heroe"
           }
         ],
-        "TriggerCondition":"!EspadaSacada"
+        "TriggerCondition":"!EspadaSacada and GuantesEq and GorroEq and CalcetinesEq"
+      },
+      {
+        "EventType": "eLearnAttack",
+        "Attack": "EspadazoDelHéroe"
+        //"TriggerCondition": "!EspadaSacada and GuantesEq and GorroEq and CalcetinesEq"
       },
       {
         "EventType": "eSendText",
         "Description": "Gracias a la espada nunca te has sentido con tanta energía.",
         "TriggerCondition": "EspadaSacada"
+      },
+      {
+        "EventType": "eSendText",
+        "Description": "Intentas extraer la espada de la piedra, pero se mantiene inamovible. Seguro que hay algo por el castillo que me pueda ayudar.",
+        "TriggerCondition": "!EspadaSacada and !GuantesEq and !GorroEq and !CalcetinesEq"
+      },
+      {
+        "EventType":"eSetFlag",
+        "Name": "EspadaSacada",
+        "SetAs": "True",
+        "TriggerCondition":"GuantesEq and GorroEq and CalcetinesEq"
       }
     ]
   },
@@ -473,6 +486,12 @@
       "sur" : {
         "ConnectingNode" : "PasilloCentral5"
       }
-    }
+    },
+    "OnArriveEvent":[
+      {
+        "EventType": "eStartBattle",
+        "Enemy": "MaloMaloso"
+      }
+    ]
   }
 ]

@@ -273,8 +273,8 @@
   {
     "Name": "MaloMaloso",
     "ImageName":"MediumCheese.png",
-    "Stats": [1000000, 20, 10, 10],
+    "Stats": [1000000, 1, 1000, 1000],
     "ImageCaption": "...",
-    "Attacks": ["Mordisco al tobillo"]
+    "Attacks": ["???"]
   }
 ]

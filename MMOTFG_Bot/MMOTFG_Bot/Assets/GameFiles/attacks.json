@@ -188,5 +188,9 @@
       }
     ],
     "Power": 20
+  },
+  {
+    "Name": "EspadazoDelHéroe",
+    "Power": 100000
   }
 ]
