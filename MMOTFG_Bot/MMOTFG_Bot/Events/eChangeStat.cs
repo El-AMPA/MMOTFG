@@ -10,9 +10,11 @@ namespace MMOTFG_Bot
     {      
         public StatChange[] statChanges;
 
+        [DefaultValue(StatName.HP)]
         [JsonConverter(typeof(StringEnumConverter))]
         public StatName statToDepend;
 
+        [DefaultValue(1)]
         public float threshold;       
 
         public string message;
@@ -37,7 +39,7 @@ namespace MMOTFG_Bot
 
             float ratio = (float)user.GetStat(statToDepend) / user.GetMaxStat(statToDepend);
 
-            if (threshold == 0 || ratio <= threshold)
+            if (threshold == 1 || ratio <= threshold)
             {
                 string msg = "";
 

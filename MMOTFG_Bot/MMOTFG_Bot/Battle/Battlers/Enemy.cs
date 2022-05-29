@@ -6,7 +6,7 @@ namespace MMOTFG_Bot
     class Enemy : Battler
     {
         public string imageName;
-        public string imageCaption;
+        public string text;
 
         public string droppedItem;
         [DefaultValue(1)]

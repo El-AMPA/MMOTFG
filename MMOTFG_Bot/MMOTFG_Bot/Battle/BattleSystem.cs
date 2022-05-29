@@ -204,7 +204,11 @@ namespace MMOTFG_Bot
                 Enemy e = eSide.First();
                 if (e.imageName != null)
                 {
-                    await TelegramCommunicator.SendImage(chatId, e.imageName, true, e.imageCaption);
+                    await TelegramCommunicator.SendImage(chatId, e.imageName, true, e.text);
+                }
+                else
+                {
+                    if(e.text != null) await TelegramCommunicator.SendText(chatId, e.text, true);
                 }
             }
             else
@@ -216,8 +220,8 @@ namespace MMOTFG_Bot
                     if (e.imageName != null)
                         imageNames.Add(e.imageName);
 
-                    if (e.imageCaption != null)
-                        caption += e.imageCaption + "\n";
+                    if (e.text != null)
+                        caption += e.text + "\n";
                 }
 
                 //if multiple enemies have the same name, they need to be distinct
