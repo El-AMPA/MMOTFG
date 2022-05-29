@@ -22,6 +22,16 @@ namespace MMOTFG_Bot
 
         public int timesActivated;
 
+        public override string GetInformation()
+        {
+            string info = "";
+
+            foreach (StatChange sc in statChanges)
+                info += sc.GetInfo() + "\n";
+
+            return info;
+        }
+
         public override async Task Execute(string chatId) {
             if (activations > 0 && timesActivated >= activations) return;
 
@@ -33,7 +43,9 @@ namespace MMOTFG_Bot
 
                 foreach (StatChange sc in statChanges)
                 {
-                    msg += user.ApplyStatChange(sc);
+                    Battler tgt = sc.affectsSelf ? user : target;
+                    if (tgt == null) continue;
+                    msg += tgt.ApplyStatChange(sc);
                 }
 
                 await TelegramCommunicator.SendText(chatId, msg + message, true);

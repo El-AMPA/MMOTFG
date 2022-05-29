@@ -46,6 +46,21 @@ namespace MMOTFG_Bot
             await BattleSystem.SavePlayerBattle(chatId);
         }
 
+        public virtual string GetInformation()
+        {
+            string info = $"Name: {name}\nMax Stack: {maxStackQuantity}\nUses:\n";
+            foreach(string s in key_words.Keys)
+            {
+                info += $"{s}: ";
+                List<Event> events = key_words[s];
+                foreach(Event e in events)
+                {
+                    info += e.GetInformation();
+                }
+            }
+            return info;
+        }
+
         public ObtainableItem()
         {
         }

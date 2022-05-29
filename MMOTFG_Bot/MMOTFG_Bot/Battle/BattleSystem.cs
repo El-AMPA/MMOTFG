@@ -373,16 +373,30 @@ namespace MMOTFG_Bot
                 message += $"{target.name} took {damage} damage.\n";
                 target.AddToStat(HP, -damage);
             }
-            message += attack.OnAttack();
 
+            //send information about attack hit
             if (target.GetStat(HP) <= 0)
-                await target.OnBehaviour(chatId, target.onKill);
+            {
+                await TelegramCommunicator.SendText(chatId, message + $"{target.name} died!", true);              
+            }
+            else
+            {
+                if (damage != 0) message += $"{target.name} HP: \n{target.GetStatBar(HP)}";
+                await TelegramCommunicator.SendText(chatId, message, true);
+            }
+
+            //activate attack trigger
+            await attack.OnAttack(chatId);
+
+            //activate onHit and onKill triggers
+            if (target.GetStat(HP) <= 0)
+                await target.OnBehaviour(chatId, target.onKill, user);
+            else await target.OnBehaviour(chatId, target.onHit, user);
 
             //check again since onKill events could have healed the target
             if (target.GetStat(HP) <= 0)
             {
                 target.turnOver = true;
-                await TelegramCommunicator.SendText(chatId, message + $"{target.name} died!", true);
                 Enemy e = target as Enemy;
                 bool isPlayer = (e == null);
                 if (!isPlayer)
@@ -425,13 +439,7 @@ namespace MMOTFG_Bot
                         await PartySystem.WipeOutParty(partyCode, false);
                     await SavePlayerBattle(chatId);
                 }
-            }
-            else
-            {
-                if (damage != 0) message += $"{target.name} HP: \n{target.GetStatBar(HP)}";
-                await TelegramCommunicator.SendText(chatId, message, true);
-                await target.OnBehaviour(chatId, target.onHit);
-            }
+            }           
 
             if (user == GetPlayer(chatId) && battleActive && !battlePaused) 
                 await TelegramCommunicator.RemoveReplyMarkup(chatId, "Turn over");

@@ -13,12 +13,18 @@
     "AttackType": "aStatChanging",
     "Name": "Burla",
     "MpCost": 5,
-    "StatChanges": [
+    "OnAttack": [
       {
-        "StatToChange": "ATK",
-        "Multiple": 0.5
+        "EventType": "eChangeStat",
+        "StatChanges": [
+          {
+            "StatToChange": "ATK",
+            "Multiple": 0.5,
+            "AffectsSelf": false
+          }
+        ]
       }
-    ]
+    ]   
   },
   {
     "Name": "Tortazo",
@@ -36,10 +42,15 @@
     "AttackType": "aStatChanging",
     "Name": "Swords Dance",
     "MpCost": 1,
-    "StatChanges": [
+    "OnAttack": [
       {
-        "StatToChange": "ATK",
-        "Multiple": 2
+        "EventType": "eChangeStat",
+        "StatChanges": [
+          {
+            "StatToChange": "ATK",
+            "Multiple": 2
+          }
+        ]
       }
     ],
     "AffectsSelf": true
@@ -53,7 +64,7 @@
   },
   {
     "Name": "Chiste sobre javascript",
-    "Power": 2
+    "FixedDamage": 2
   },
   {
     "Name": "El PCE es maravilloso",

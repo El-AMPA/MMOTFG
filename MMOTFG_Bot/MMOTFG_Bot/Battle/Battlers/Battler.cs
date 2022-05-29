@@ -172,7 +172,7 @@ namespace MMOTFG_Bot
         } 
 
         //For events such as OnHit, OnKill or OnTurnEnd
-        public async Task OnBehaviour(string chatId, List<Event> events) {
+        public async Task OnBehaviour(string chatId, List<Event> events, Battler target = null) {
             if (events != null)
             {
                 await ProgressKeeper.LoadSerializable(chatId);
@@ -180,6 +180,7 @@ namespace MMOTFG_Bot
                 foreach (Event e in events)
                 {
                     e.SetUser(this);
+                    if(target != null) e.SetTarget(target);
                     await e.ExecuteEvent(chatId);
                 }
 
