@@ -26,6 +26,39 @@ namespace MMOTFG_Bot.Items
         public List<Event> onEquipEvents;
         public List<Event> onUnequipEvents;
 
+        public override string GetInformation()
+        {
+            string info = $"Name: {name}\nGear Slot: {gearSlot}\n";
+
+            foreach(var s in statModifiers)
+            {
+                string symbol = (s.Value > 0) ? "+" : "";
+                info += $"{s.Key} {symbol}{s.Value}\n";
+            }
+
+            if (onEquipEvents != null && onEquipEvents.Count > 0)
+            {
+                info += "Effect when equipping:\n";
+                foreach (Event e in onEquipEvents)
+                {
+                    string i = e.GetInformation();
+                    if (i != "") info += i + "\n";
+                }
+            }
+
+            if (onUnequipEvents != null && onUnequipEvents.Count > 0)
+            {
+                info += "Effect when unequipping:\n";
+                foreach (Event e in onUnequipEvents)
+                {
+                    string i = e.GetInformation();
+                    if (i != "") info += i + "\n";
+                }
+            }
+
+            return info;
+        }
+
         public virtual async void OnEquip(string chatId, string[] args = null)
         {
             foreach (var stat in statModifiers)

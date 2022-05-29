@@ -42,7 +42,7 @@ namespace MMOTFG_Bot.Events
 
         public virtual string GetInformation()
         {
-            return "";
+            return "Unique effect";
         }
 
         public virtual Task Execute(string chatId)
