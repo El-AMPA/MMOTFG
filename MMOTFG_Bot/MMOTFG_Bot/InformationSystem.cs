@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using MMOTFG_Bot.Communicator;
 
 namespace MMOTFG_Bot
 {

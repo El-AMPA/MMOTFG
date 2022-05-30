@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using MMOTFG_Bot.Inventory;
+using MMOTFG_Bot.Multiplayer;
 
-namespace MMOTFG_Bot.Commands
+namespace MMOTFG_Bot.Communicator
 {
 	/// <summary>
 	/// Uses an item a specified amount of times.

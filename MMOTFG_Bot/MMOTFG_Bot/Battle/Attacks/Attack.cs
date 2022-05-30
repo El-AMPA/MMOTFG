@@ -1,13 +1,8 @@
 ﻿using JsonSubTypes;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
-using System.Threading.Tasks;
-using static MMOTFG_Bot.StatName;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Battle
 {
     //If you want to create a new Attack class, add it below so JsonSubtypes recognizes it
     //when deserializing the battlers.
@@ -44,7 +39,7 @@ namespace MMOTFG_Bot
 
         public virtual int GetDamage()
         {
-            return (int)(user.GetStat(ATK) * power);
+            return (int)(user.GetStat(StatName.ATK) * power);
         }
 
         public virtual string OnAttack() { return ""; }

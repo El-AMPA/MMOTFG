@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using MMOTFG_Bot.Communicator;
+using MMOTFG_Bot.Persistency;
+using MMOTFG_Bot.Battle;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Multiplayer
 {
     static class PartySystem
     {

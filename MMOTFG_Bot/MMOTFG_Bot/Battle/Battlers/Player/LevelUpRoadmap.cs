@@ -1,13 +1,9 @@
 ﻿using MMOTFG_Bot.Events;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.Serialization;
-using System.Text;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Battle
 {
     class LevelUpRoadmap
     {

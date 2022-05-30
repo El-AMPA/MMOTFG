@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using MMOTFG_Bot.Items;
+using MMOTFG_Bot.Persistency;
+using MMOTFG_Bot.Communicator;
+using MMOTFG_Bot.Battle;
+using MMOTFG_Bot.Loader;
+using MMOTFG_Bot.Multiplayer;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Inventory
 {
     static class InventorySystem
     {

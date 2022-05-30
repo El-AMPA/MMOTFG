@@ -1,12 +1,14 @@
-﻿using MMOTFG_Bot.Navigation;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MMOTFG_Bot.Battle;
+using MMOTFG_Bot.Inventory;
+using MMOTFG_Bot.Navigation;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Loader
 {
     static class JSONSystem
     {

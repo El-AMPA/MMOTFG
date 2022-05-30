@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MMOTFG_Bot.Navigation;
+using MMOTFG_Bot.Multiplayer;
 
-namespace MMOTFG_Bot.Commands
+namespace MMOTFG_Bot.Communicator
 {
 	/// <summary>
 	/// Sends the 'OnInspectText' field of the current node of the player 

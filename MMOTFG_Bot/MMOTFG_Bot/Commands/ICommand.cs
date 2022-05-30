@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Communicator
 {
     abstract class ICommand
     {

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
+﻿using System.Runtime.Serialization;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Inventory
 {
     public enum EQUIPMENT_SLOT
     {

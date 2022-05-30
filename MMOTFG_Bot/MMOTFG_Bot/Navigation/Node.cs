@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MMOTFG_Bot.Events;
+using MMOTFG_Bot.Communicator;
 
 namespace MMOTFG_Bot.Navigation
 {

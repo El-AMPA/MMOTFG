@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using MMOTFG_Bot.Inventory;
 
-namespace MMOTFG_Bot.Commands
+namespace MMOTFG_Bot.Communicator
 {
     /// <summary>
     /// Shows the inventory of the player.

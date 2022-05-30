@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using MMOTFG_Bot.Items;
+using MMOTFG_Bot.Inventory;
 
-namespace MMOTFG_Bot.Commands
+namespace MMOTFG_Bot.Communicator
 {
     class cUnequipItem : ICommand
     {

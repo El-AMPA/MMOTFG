@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
+using MMOTFG_Bot.Multiplayer;
 
-namespace MMOTFG_Bot.Commands
+namespace MMOTFG_Bot.Communicator
 {
 	/// <summary>
 	/// Shows the available directions from a given node.

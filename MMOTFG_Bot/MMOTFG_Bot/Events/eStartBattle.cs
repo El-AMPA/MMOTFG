@@ -1,7 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using MMOTFG_Bot.Communicator;
+using MMOTFG_Bot.Battle;
+using MMOTFG_Bot.Loader;
+using MMOTFG_Bot.Multiplayer;
 
 namespace MMOTFG_Bot.Events
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MMOTFG_Bot.Persistency;
 
 namespace MMOTFG_Bot.Navigation
 {

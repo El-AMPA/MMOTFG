@@ -1,12 +1,11 @@
-﻿using MMOTFG_Bot.Events;
-using MMOTFG_Bot.Navigation;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System;
 using System.Collections.Generic;
-using System.Text;
+using MMOTFG_Bot.Events;
+using MMOTFG_Bot.Navigation;
+using MMOTFG_Bot.Battle;
 
-namespace MMOTFG_Bot.Items
+namespace MMOTFG_Bot.Inventory
 {
     class EquipableItem : ObtainableItem
     {

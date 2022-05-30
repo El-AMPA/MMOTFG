@@ -1,7 +1,7 @@
 ﻿using MMOTFG_Bot.Events;
 using System.ComponentModel;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Battle
 {
     class Enemy : Battler
     {

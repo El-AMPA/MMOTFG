@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace MMOTFG_Bot
+﻿namespace MMOTFG_Bot.Battle
 {
     class aStatChanging : Attack
     {

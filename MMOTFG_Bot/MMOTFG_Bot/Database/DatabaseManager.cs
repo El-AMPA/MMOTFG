@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Google.Cloud.Firestore;
 using Newtonsoft.Json.Linq;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Persistency
 {
 	static class DatabaseManager
 	{

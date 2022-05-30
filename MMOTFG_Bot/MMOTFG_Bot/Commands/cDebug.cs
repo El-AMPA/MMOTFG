@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using MMOTFG_Bot.Persistency;
+using MMOTFG_Bot.Inventory;
 
-namespace MMOTFG_Bot.Commands
+namespace MMOTFG_Bot.Communicator
 {/// <summary>
  /// Shows the available directions from a given node.
  /// </summary>

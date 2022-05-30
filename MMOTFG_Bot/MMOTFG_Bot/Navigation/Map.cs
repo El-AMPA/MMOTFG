@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using MMOTFG_Bot.Battle;
+using MMOTFG_Bot.Communicator;
+using MMOTFG_Bot.Multiplayer;
+using MMOTFG_Bot.Loader;
+using MMOTFG_Bot.Persistency;
 
 namespace MMOTFG_Bot.Navigation
 {

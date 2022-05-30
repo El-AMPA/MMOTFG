@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Battle
 {
     class aScaled : Attack
     {

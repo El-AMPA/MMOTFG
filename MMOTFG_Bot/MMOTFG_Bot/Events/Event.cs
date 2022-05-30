@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using JsonSubTypes;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using MMOTFG_Bot.Navigation;
+using MMOTFG_Bot.Battle;
 
 namespace MMOTFG_Bot.Events
 {

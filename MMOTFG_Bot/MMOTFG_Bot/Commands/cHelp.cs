@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MMOTFG_Bot.Commands
+namespace MMOTFG_Bot.Communicator
 {
 	class cHelp : ICommand
 	{
@@ -57,7 +55,7 @@ Use: help [command name]";
 			}
 			else if (args.Length == 1)
 			{
-				foreach (ICommand c in Program.commandList)
+				foreach (ICommand c in MMOTFG.commandList)
 				{
 					if (c.ContainsKeyWord(args[0]) || c.showOnHelp == args[0])
 					{

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MMOTFG_Bot
+﻿namespace MMOTFG_Bot.Persistency
 {
 
 	//IMPORTANT!!!

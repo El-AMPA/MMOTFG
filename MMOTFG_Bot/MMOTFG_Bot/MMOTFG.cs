@@ -1,6 +1,4 @@
-﻿using MMOTFG_Bot.Commands;
-using MMOTFG_Bot.Navigation;
-using System;
+﻿using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +9,16 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.InlineQueryResults;
+using MMOTFG_Bot.Communicator;
+using MMOTFG_Bot.Navigation;
+using MMOTFG_Bot.Loader;
+using MMOTFG_Bot.Battle;
+using MMOTFG_Bot.Inventory;
+using MMOTFG_Bot.Persistency;
 
 namespace MMOTFG_Bot
 {
-	class Program
+	class MMOTFG
 	{
 		private static bool processedNewEvents = false;
 		private static long launchTime;
