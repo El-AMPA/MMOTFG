@@ -38,7 +38,7 @@ namespace MMOTFG_Bot.Events
         protected Battler target;
 
         [DefaultValue(1)]
-        public float Chance;
+        public float Chance = 1;
 
         public virtual string GetInformation()
         {
@@ -50,7 +50,7 @@ namespace MMOTFG_Bot.Events
             return Task.CompletedTask;
         }
 
-        public async Task ExecuteEvent(string chatId)
+        public async Task<bool> ExecuteEvent(string chatId)
         {
             bool condition = true;
 
@@ -62,8 +62,12 @@ namespace MMOTFG_Bot.Events
             if (condition)
             {
                 if (Chance == 1 || RNG.Next(0, 100) < Chance * 100)
+                {
                     await Execute(chatId);
+                    return true;
+                }
             }
+            return false;
         }
 
         public void SetUser(Battler u)

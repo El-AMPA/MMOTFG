@@ -1,177 +1,122 @@
 ﻿[
   {
-    "Name": "Manuela",
-    "Stats": [ 100, 10, 15, 25 ],
-    "ImageName": "manuela.jpg",
-    "Text": "Manuela ataca!",
-    "DroppedMoney": 100,
-    "DroppedItem": "health_potion",
+    "Name": "ConserjeManolo",
+    "Stats": [ 100, 10, 10, 10 ],
+    "ImageName": "Janitor.png",
+    "ImageCaption": "¿Arruinaste mi suelo? ¡Pagarás por ello!",
+    "DroppedItem": "pocion_vida",
     "DroppedItemAmount": 2,
-    "ExperienceGiven": 1,
-    "Attacks": [ "Slap", "Swords Dance", "MpScale" ],
-    "OnHit": [
+    "ExperienceGiven": 50,
+    "Attacks": [ "Fregonazo" ]
+  },
+  {
+    "Name":"SmallCheese",
+    "Stats" : [250, 7, 10, 10],
+    "ImageName":"SmallCheese.png",
+    "ImageCaption": "*sonidos de rata*",
+    "DroppedItem": "pocion_vida",
+    "ExperienceGiven": 75,
+    "Attacks": ["Mordisco al tobillo"]
+  },
+  {
+    "Name":"BigCheese",
+    "ImageName": "BigCheese.png",
+    "Stats" : [800, 20, 10, 5],
+    "ImageCaption": "*sonidos de rata más poderosa*",
+    "DroppedItem": "mana_potion",
+    "DroppedItemAmount" : 3,
+    "ExperienceGiven": 400,
+    "Attacks": ["Gruñido", "Coletazo"]
+  },
+  {
+    "Name":"TecnicoTomás",
+    "ImageName": "TecnicoTomas.png",
+    "Stats" : [2000, 30, 10, 10],
+    "ImageCaption": "Cuando llegas al centro de la sala, una mano aparece de entre el cablerío y te golpea.",
+    "DroppedItem": "mana_potion",
+    "DroppedItemAmount": 3,
+    "ExperienceGiven": 400,
+    "Attacks": ["Tabletazo", "Golpe con cable", "Chapa sobre Linux"]
+  },
+  {
+    "Name":"CocineroCarlos",
+    "ImageName": "CocineroCarlos.jpg",
+    "Stats": [2000, 20, 10, 20],
+    "ImageCaption": "¡Como no acabe pronto contigo se me pasará el arroz!",
+    "Attacks": ["Sartenazo"],
+    "ExperienceGiven": 0,
+    "OnKill":[
       {
-        "EventType": "eChangeStat",
-        "StatChanges": [
-          {
-            "StatToChange": "ATK",
-            "Multiple": 2
-          }
-        ],
-        "StatToDepend": "HP",
-        "Threshold": 0.5,
-        "Activations": 1,
-        "Message": "Manuela se ha enfadado! Sus ataques harán más daño."
+        "EventType": "eSendImage",
+        "ImageName": "Carlos2Fase.png",
+        "Description": "El cocinero exhala su último aliento. Su gorro de cocinero cae de una forma dramática al suelo y de él asoman 2 ojos."
+      },
+      {
+        "EventType": "eStartBattle",
+        "Enemy": "RataRicardo"
+      }
+    ]
+  },
+  {
+    "Name": "RataRicardo",
+    "ImageName":"RataRicardo.jpg",
+    "Stats":[3000, 20, 10, 20],
+    "ImageCaption": "*Sonidos de rata refinada*",
+    "Attacks": ["Mordisco Refinado"],
+    "ExperienceGiven": 0,
+    "OnKill":[
+      {
+        "EventType": "eSendImage",
+        "ImageName": "Carlos3Fase.png",
+        "Description": "La rata cocinera exhala su último aliento. Su gorro de cocinero cae de una forma dramática al suelo y de él asoman... muchos ojos... ¿Joder, otra vez?"
+      },
+      {
+        "EventType": "eStartBattle",
+        "Enemy": "MoscaMiguel"
       }
     ],
-    "OnTurnEnd": [
+    "OnHit":[
       {
-        "EventType": "eChangeStat",
-        "StatChanges": [
-          {
-            "StatToChange": "HP",
-            "Add": 5
-          }
-        ],
-        "Message": "El poder de la amistad cura a Manuela."
+        "EventType": "eSendText",
+        "Description": "''Si yo no puedo... ÉL podrá contigo...'' Exclama la rata mientras te mordisquea los tobillos."
       }
     ]
   },
   {
-    "Name": "Cleonft",
-    "Stats": [ 100, 5, 15, 20 ],
-    "ImageName": "cleonft.png",
-    "Text": "¡Cleonft viene a mintearte la carrera!",
-    "DroppedMoney": 2223,
+    "Name": "MoscaMiguel",
+    "ImageName":"MoscaMiguel.png",
+    "Stats":[1, 20, 20, 20],
+    "ImageCaption": "*Sonidos de mosca lista para morir*",
+    "Attacks": ["Último aliento"],
     "DroppedItem": "mana_potion",
-    "DroppedItemAmount": 2,
-    "Attacks": [ "Chiste sobre javascript", "El PCE es maravilloso", "No Fucking Thanks" ],
-    "OnHit": [
-      {
-        "EventType": "eChangeStat",
-        "statChanges": [
-          {
-            "StatToChange": "ATK",
-            "Multiple": -1
-          }
-        ],
-        "Chance": 0.5,
-        "Activations": 1,
-        "Message": "Cleon y el mono se debaten sobre si deberían matarte o no. Su ataque baja un poco."
-      }
-    ]
+    "DroppedItemAmount": 3,
+    "ExperienceGiven": 500
   },
   {
-    "Name": "Fedejimbo",
-    "Stats": [ 100, 10, 5, 25 ],
-    "ImageName": "fedejimbo.png",
-    "Text": "¡Fedejimbo no te deja pasar de esta esquina!",
-    "DroppedMoney": 666,
-    "DroppedItem": "mana_potion",
-    "DroppedItemAmount": 2,
-    "Attacks": [ "Chapa en PowerPoint", "Deconstructción", "Fantasma de la ópera" ],
-    "OnHit": [
-      {
-        "EventType": "eChangeStat",
-        "StatChanges": [
-          {
-            "StatToChange": "MP",
-            "Multiple": 100
-          }
-        ],
-        "StatToDepend": "HP",
-        "Threshold": 0.5,
-        "Activations": 1,
-        "Message": "¡Fedejimbo conjura un patrón de diseño arcano de su libro y se recuperan todos sus MP!"
-      }
-    ]
+    "Name": "MediumCheese",
+    "ImageName":"MediumCheese.png",
+    "Stats": [100, 20, 10, 10],
+    "ImageCaption": "*Sonidos de rata muy enfadada*",
+    "Attacks": ["Mordisco al tobillo"],
+    "DroppedItem": "pocion_mana",
+    "ExperienceGiven": 800,
+    "DroppedItemAmount": 1
   },
   {
-    "Name": "Sein",
-    "Stats": [ 100, 10, 30, 25 ],
-    "ImageName": "sein.png",
-    "Text": "¡Sein quiere jugar a pegarse!",
-    "DroppedMoney": 6969,
-    "DroppedItem": "health_potion",
-    "DroppedItemAmount": 2,
-    "Attacks": [ "Latigazo correa", "Plástico sospechoso" ],
-    "OnHit": [
+    "Name": "MaloMaloso",
+    "ImageName":"MaloMaloso.png",
+    "Stats": [1000000, 2223, 1, 2223],
+    "ImageCaption": "...",
+    "Attacks": ["???"],
+    "OnKill":[
       {
-        "EventType": "eChangeStat",
-        "StatChanges": [
-          {
-            "StatToChange": "ATK",
-            "Multiple": 0.5
-          }
-        ],
-        "StatToDepend": "HP",
-        "Threshold": 0.5,
-        "Activations": 1,
-        "Message": "Sein se está cansando de jugar contigo y notas que pronto va a dejar de hacerte caso."
-      }
-    ]
-  },
-  {
-    "Name": "Stratospeers",
-    "Stats": [ 40, 10, 10, 10 ],
-    "ImageName": "stratospeers.png",
-    "Text": "¡Los astronautas del PCE pasan de convivir contigo!",
-    "DroppedMoney": 1920,
-    "DroppedItem": "health_potion",
-    "DroppedItemAmount": 2,
-    "Attacks": [ "Ondas del wifi", "La Chancla", "Modo capitalismo" ],
-    "OnHit": [
+        "EventType": "eSendText",
+        "Description": "Lo conseguiste... ¡Has derrotado al malo maloso! Su reino de terror ha acabado por fin y sus crímenes (los que fueran) han sido castigados."
+      },
       {
-        "EventType": "eChangeStat",
-        "StatChanges": [
-          {
-            "StatToChange": "ATK",
-            "Multiple": 0.25
-          }
-        ],
-        "StatToDepend": "HP",
-        "Threshold": 0.25,
-        "Activations": 1,
-        "Message": "¡Ya solo queda uno! Habrá ganado la partida del PCE, pero no la batalla contigo."
-      }
-    ]
-  },
-  {
-    "Name": "Thiccboi",
-    "Stats": [ 100, 10, 1, 25 ],
-    "ImageName": "thiccboi.png",
-    "Text": "¡El thiccboi abre la boca!",
-    "DroppedMoney": 345,
-    "DroppedItem": "health_potion",
-    "DroppedItemAmount": 2,
-    "Attacks": [ "ñom", "Barras (de pan)", "Ahora puedes jugar a Blown to Blacksmithereens desde el navegador en http://www.tai1games.itch.io" ],
-    "OnHit": [
-      {
-        "EventType": "eChangeStat",
-        "StatChanges": [
-          {
-            "StatToChange": "HP",
-            "Add": -25
-          }
-        ],
-        "StatToDepend": "HP",
-        "Threshold": 0.5,
-        "Activations": 1,
-        "Message": "El thiccboi intenta comerse una silla pero no sale bien..."
-      }
-    ]
-  },
-  {
-    "Name": "Tinky.exe",
-    "Stats": [ 100, 100, 100, 100 ],
-    "ImageName": "tinkyexe.png",
-    "Text": "T̵i̶n̵k̴y̸",
-    "DroppedItem": "health_potion",
-    "DroppedItemAmount": 2,
-    "Attacks": [ "t̶͖̮̙̦̯̮͓̲̎u̴̧̡̢͓̮͉͓̻͙̰̟̳͖̠̇͆̽̀͂̈̈̆ ̷̡̛̭̩̲̦͉̱͓̈́̄͑c̷͕̜͎͚̑́̂͑́ỏ̶̧̢̩̳̗̤̎̄͠d̸̮̮͍͚̜̝̋̃̔̽̃̐̎̏̕͘͜͝ͅì̴̥̈́̕̚g̸̡͇̖̞̯̯̑ơ̸̡̙̳̝̟̐̒̾̈́͒̔̕ ̷̧̡̧̫̤̮̳̦͈̩̫̪̬̐́͆̈̿͜ȩ̵̡̨̨̪͇͇̼͎̳͓̣̥̙̺̃s̵̟̘͈̖̘͔̣͛̔̓͒ ̸̬̑̈̾s̴̢̺͇͎̈́̂̇̓̄̎͋e̴̡̺̙͉̥̳͕̣̤̩͔͉̽̀͆̔̂͐̆̓̔̈́̚͜͝ͅň̶̞͑̍́͊̑̃̅̎̏͜͝c̶̨̥͈̙͛̄͛̓̾̕̕ͅi̶̳͈̼͈̰̲͖͗̅l̶̥̞̽͛̾̎̂͐̓̾̆̀̓̓̐̕͝l̸̫̤̥̹̫̅̀͗̐́̽̃̆̆̉̀́͊͘͝ȧ̵̮̱͇̱͉̯̱̲̝̣̦̲͋̑͛̈́̿̈́͊́̑̈́̒̏̚͜͜m̶̹̩̖̠̀͌̑̄͗̉ę̶̧̦̙̰̤̫̤̘͇̫̠̘͊̈́̓͊͐̊̄̚͝͝͝ͅn̵̨̙̭̣͉̤̱̮̙̤̣͎͑̂́́͒͑͗t̵̡͚̣̖͊̇̄̈́̓́͌̔̏͝e̷͙̜̳̠͍̠̦̓̈̄̾̍ͅ ̵͖̘̭̝͈̯̩̪̩͈̳͖͆͑̽̓͂͋̈͑̎͘̕͜͜ḻ̸̗͇͇͇͕̹̬̝͚̺̐̈̌̀̈̌͊̏͌̍̀̓͘͘å̵̧̛̗̞͉̮̽͌̎̆̎͗̇͌̾̂̾͝m̷͉͕̞̳͍͙̣͌̈̈̏̾͛̍͋̄͂͛̚e̸̡͈̹̩̯̭̝͗̅̀́͗̑̑͝n̵̛̯͖͈̩̩͚͖̥͍̬͖̹̮͑̐̿̉͌͆̐̐̓́͜͜͠t̵̛͖̥͍̎̋͌͊̀̿̕̕a̴̛̗̐͌͑̊͌͋͑̈́̆͂͋̈́̈́͘ḅ̴̧͕͙̗͙̩̖̦͓̓̆͘ļ̸̢͕̞̦͚̰͚̝̲̲̃ề̷̛̗̠̟͊͌͐̂̃̀͘͝" ],
-    "OnHit": [
-      {
-        "Message": "n̵͔͚̟̈o̸̳̐̾͘ ̵̢̠̋͑p̶̰̦͂u̸̮͒e̷͈̰̜͗́d̵̦̻̦̔̾e̶̼̍̀̚s̵̢̮͉̑̈́̎ ̵͔̣̌̎͑p̵̛̞͇̎ḁ̷̛̉̂ş̸͓̺͠ȧ̸̦͙̥͝r̶̨͐t̸͔̻̋ë̵́͜ ̷̡̭̤̽e̶̙͒š̷̛̲̬t̴̡͖̕e̷̩̳̦͋̾ ̷̻͔̽j̷͎̇͊ę̷̗̋ḟ̶̫̦e̷͉͚̥͊̎̊ ̵̘͍͊̅͐n̶̻̓͝o̵̘̓̒̃ ̵̨͔̲̊͊̐h̵̬͆à̷̝͝y̷̢̆͐ ̸̺͆̉m̶̟͉͆͋͝á̵͕s̴̭̪̙̀̈́͛ ̷̳͚̒c̶̩̦̾͊o̵̟̭̍̊n̷̝̞̬̋̒ţ̴̜͊ȅ̴͚n̵̛͐̈́͜ĭ̷̞̈́͘d̵̯̯̳͝o̵̘͔̍̉̀ ̸͖̭̘̀̅͝a̷͕̽͒ ̶̞̼͕̎̓͝p̷͚̚ͅa̸͉̓͊͊r̵̭͕͐̿͝t̷͎̔̽i̴͕͌̈́r̵̻̻̅̒ ̷̬̲̳̃d̷͙̲͗ͅě̵̩̫̈ ̷̝̓͗͘a̴̰̫͑͜q̷̘͙͈̄̆ṵ̴̧̔́ͅi̵̧̤̠̋̌"
+        "EventType": "eSendImage",
+        "Description": "Gracias por jugar a MazmorraMamporrazo. Este es el final del juego pero puedes seguir explorando por el castillo si así lo deseas. Si quieres volver a jugar, utiliza el comando /delete seguido del nombre de tu personaje.",
+        "ImageName": "EvilCastleEntrance.jpg"
       }
     ]
   }

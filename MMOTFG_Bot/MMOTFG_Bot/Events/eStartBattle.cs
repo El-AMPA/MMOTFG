@@ -15,28 +15,11 @@ namespace MMOTFG_Bot.Events
 
         public async override Task Execute(string chatId)
         {
-            List<Enemy> enemies = new List<Enemy>();
-            if (Enemy != null) enemies.Add(JSONSystem.GetEnemy(Enemy));
-            else foreach (string s in Enemies) enemies.Add(JSONSystem.GetEnemy(s));
+            List<string> enemies = new List<string>();
+            if(Enemy != null) enemies.Add(Enemy);
+            if(Enemies != null) enemies.AddRange(Enemies);
 
-            bool isInParty = await PartySystem.IsInParty(chatId);
-            bool isLeader = await PartySystem.IsLeader(chatId);
-
-            if (isInParty && !isLeader) return;
-
-            List<string> chatIds = new List<string>();
-
-            chatIds.Add(chatId);
-            if (isInParty)
-            {
-                string partyCode = await PartySystem.GetPartyCode(chatId);
-                foreach (string id in await PartySystem.GetPartyMembers(partyCode))
-                    chatIds.Add(id);
-            }
-
-            if (enemies.Count == 0) await TelegramCommunicator.SendText(chatId, "No valid enemies");
-
-            else await BattleSystem.StartBattle(chatIds, enemies);
+            await BattleSystem.StartBattleFromNames(chatId, enemies);          
         }
     }
 }
