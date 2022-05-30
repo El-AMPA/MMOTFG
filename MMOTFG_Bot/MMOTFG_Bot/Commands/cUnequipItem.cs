@@ -24,10 +24,10 @@ Gear slots can be seen by using /status";
         internal override async Task Execute(string command, string chatId, string[] args = null)
         {
             //Check if the args provided is an equipment slot
-            if (InventorySystem.StringToEquipmentSlot(args[0], out EQUIPMENT_SLOT slot))
+            if (InventorySystem.IsValidSlot(args[0]))
             {
                 //If it's valid, unequip the item from that given slot.
-                await InventorySystem.UnequipGear(chatId, slot);
+                await InventorySystem.UnequipGear(chatId, args[0]);
             }
             else
             {

@@ -19,10 +19,12 @@ namespace MMOTFG_Bot
 
         private static string partyCode = null;
 
-        private static Attack baseAttack = new Attack("Struggle", 1, 0);
+        private static Attack baseAttack;
 
         public static void Init()
         {
+            baseAttack = JSONSystem.GetConfigInfo().baseAttack;
+            Stats.Init();
         }
 
         public static Player GetPlayer(string chatId)
@@ -399,7 +401,7 @@ namespace MMOTFG_Bot
             }
             else
             {
-                if (damage != 0) message += $"{target.name} HP: \n{target.GetStatBar(HP)}";
+                if (damage != 0) message += $"{target.name}'s {Stats.NameOfStat(HP)}: \n{target.GetStatBar(HP)}";
                 await TelegramCommunicator.SendText(chatId, message, true);
             }
 

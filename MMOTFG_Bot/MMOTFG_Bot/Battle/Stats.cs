@@ -45,7 +45,7 @@ namespace MMOTFG_Bot
             string symbol = (add > 0) ? "+" : "";
             string mults = (multiple == 1) ? "" : $"x{multiple}";
 
-            return $"{user} {statToChange} {symbol}{adds}{mults}";
+            return $"{user} {Stats.NameOfStat(statToChange)} {symbol}{adds}{mults}";
         }
     }
 
@@ -53,11 +53,28 @@ namespace MMOTFG_Bot
     {
         private static List<StatName> boundedStats = new List<StatName> { StatName.HP, StatName.MP };
 
+        private static Dictionary<StatName, string> namesOfStats;
+
         public static int statNum = Enum.GetNames(typeof(StatName)).Length;
+
+        public static void Init()
+        {
+            namesOfStats = new Dictionary<StatName, string>();
+            List<string> names = JSONSystem.GetConfigInfo().statNames;
+            for(int i = 0; i < names.Count; i++)
+            {
+                namesOfStats.Add((StatName)i, names[i]);
+            }
+        }
 
         public static bool isBounded(StatName stat)
         {
             return boundedStats.Contains(stat);
+        }
+
+        public static string NameOfStat(StatName s)
+        {
+            return namesOfStats[s];
         }
     }
 }

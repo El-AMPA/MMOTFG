@@ -10,8 +10,7 @@ namespace MMOTFG_Bot.Items
 {
     class EquipableItem : ObtainableItem
     {
-        [JsonConverter(typeof(StringEnumConverter))]
-        public EQUIPMENT_SLOT gearSlot
+        public string gearSlot
         {
             get;
             set;

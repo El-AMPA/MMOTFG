@@ -8,6 +8,16 @@ using System.Text;
 
 namespace MMOTFG_Bot
 {
+    struct ConfigInfo
+    {
+        public Attack baseAttack;
+        public int maxInventorySlots;
+        public List<string> equipmentSlots;
+        public List<string> statNames;
+        public string debugPassword;
+        public List<string> debugOnlyCommands;
+    }
+
     static class JSONSystem
     {
         private static Dictionary<string, string> enemyDict;
@@ -17,8 +27,9 @@ namespace MMOTFG_Bot
         private static List<Node> nodes;
         private static Dictionary<string, string> directionSynonyms;
         private static JsonSerializerSettings jsonSerializerSettings;
+        private static ConfigInfo configInfo;
 
-        public static void Init(string mapPath, string enemyPath, string playerPath, string attackPath, string itemPath, string synonymsPath)
+        public static void Init(string mapPath, string enemyPath, string playerPath, string attackPath, string itemPath, string synonymsPath, string configPath)
         {
             jsonSerializerSettings = new JsonSerializerSettings()
             {
@@ -40,6 +51,7 @@ namespace MMOTFG_Bot
             ReadPlayerFromJSON(playerPath);
             ReadMapFromJSON(mapPath);
             ReadDirectionsSynonymsFromJSON(synonymsPath);
+            ReadConfigFromJSON(configPath);
         }
 
         /// <summary>
@@ -253,6 +265,36 @@ namespace MMOTFG_Bot
             }
         }
 
+        /// <summary>
+        /// Deserializes the .json file containing the general configuration of the game
+        /// </summary>
+        private static void ReadConfigFromJSON(string configPath)
+        {
+            string configText = "";
+
+            try
+            {
+                //Dumps the file into a string
+                configText = File.ReadAllText(configPath, Encoding.GetEncoding(65001)); // Encoding: UTF-8
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("ERROR: config.json couldn't be found in assets folder.");
+                Environment.Exit(-1);
+            }
+
+            try
+            {
+                //Deserializes the .json file into a Dictionary that will be used for obtaining the synonyms for each direction
+                configInfo = JsonConvert.DeserializeObject<ConfigInfo>(configText);
+            }
+            catch (JsonException e)
+            {
+                Console.WriteLine("ERROR: config.json isn't formatted correctly. \nError message:" + e.Message);
+                Environment.Exit(-1);
+            }
+        }
+
         public static Enemy GetEnemy(string name)
         {
             //enemies with names such as "Enemy_1" get simplified to "Enemy"
@@ -319,6 +361,11 @@ namespace MMOTFG_Bot
                     actions.Add(s);
             }            
             return actions.Distinct().ToList();
+        }
+
+        public static ConfigInfo GetConfigInfo()
+        {
+            return configInfo;
         }
     }
 }

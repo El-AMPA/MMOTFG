@@ -84,7 +84,7 @@ namespace MMOTFG_Bot
             for (int i = 0; i < Stats.statNum; i++)
             {
                 StatName sn = (StatName)i;
-                s += $"{sn}: {GetStat(sn)}";
+                s += $"{Stats.NameOfStat(sn)}: {GetStat(sn)}";
                 if (Stats.isBounded(sn))
                     s += $"/{GetMaxStat(sn)}";
                 s += "\n";
@@ -94,7 +94,7 @@ namespace MMOTFG_Bot
 
         public string GetStatBar(StatName s)
         {
-            int green = (int)(10 * GetStat(s) / GetMaxStat(s));
+            int green = (int)(10 * (float)GetStat(s) / GetMaxStat(s));
             string bar = "";
             for (int i = 0; i < 10; i++)
             {
@@ -111,7 +111,7 @@ namespace MMOTFG_Bot
             if(permanent) changeMax = true;
             int statn = changeMax ? maxStats[(int)stat] : stats[(int)stat];
             SetStat(stat, statn + add, changeMax, permanent);
-            string message = $"{name}'s {stat} was changed by {add}!\n";
+            string message = $"{name}'s {Stats.NameOfStat(stat)} was changed by {add}!\n";
             return message;
         }
 
@@ -120,7 +120,7 @@ namespace MMOTFG_Bot
         {
             int statn = changeMax ? maxStats[(int)stat] : stats[(int)stat];
             SetStat(stat, (int)(statn * mult), changeMax, permanent);
-            string message = $"{name}'s {stat} was multiplied by {mult}!\n";
+            string message = $"{name}'s {Stats.NameOfStat(stat)} was multiplied by {mult}!\n";
             return message;
         }
 

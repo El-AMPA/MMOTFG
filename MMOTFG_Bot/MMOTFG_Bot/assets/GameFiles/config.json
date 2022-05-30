@@ -1,0 +1,12 @@
+﻿{
+  "BaseAttack": {
+    "Name": "Base Attack",
+    "Power": 1,
+    "MpCost": 0
+  },
+  "MaxInventorySlots": 10,
+  "EquipmentSlots": ["HEAD", "SHOULDERS", "KNEES", "TOES"],
+  "StatNames": ["VIDA", "ATAQUE", "VELOCIDAD", "MANÁ"],
+  "DebugPassword": "password",
+  "DebugOnlyCommands": ["fight", "add"]
+}
