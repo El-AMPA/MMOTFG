@@ -1,4 +1,4 @@
-# MMOTFG - API para programar juegos de rol en Telegram
+# MMOTFG - Framework para programar juegos de rol en Telegram
 
 MMOTFG proporciona código que sirve como base para la creación de juegos RPG multijugador a través de plataformas de mensajería como Telegram, con personajes con distintas estadísticas, equipamiento, objetos consumibles, batallas contra enemigos, así como soporte para creación de mapas de juego en los que cada sala puede contener distintos eventos.
 
