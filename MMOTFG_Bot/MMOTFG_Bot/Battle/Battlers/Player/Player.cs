@@ -1,14 +1,16 @@
 ﻿using MMOTFG_Bot.Events;
 using MMOTFG_Bot.Navigation;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using MMOTFG_Bot.Communicator;
+using MMOTFG_Bot.Persistency;
+using MMOTFG_Bot.Multiplayer;
+using MMOTFG_Bot.Loader;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Battle
 {
     class Player : Battler
     {

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using MMOTFG_Bot.Persistency;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Multiplayer
 {
     class Party
     {

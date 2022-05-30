@@ -1,10 +1,11 @@
-﻿using MMOTFG_Bot.Events;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using MMOTFG_Bot.Battle;
+using MMOTFG_Bot.Communicator;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Events
 {
     class eChangeStat : Event
     {      

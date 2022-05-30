@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Battle
 {   
     public enum StatName {
         [EnumMember(Value = "HP")]

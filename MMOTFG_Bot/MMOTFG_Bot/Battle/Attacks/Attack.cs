@@ -1,14 +1,12 @@
-﻿using JsonSubTypes;
-using MMOTFG_Bot.Events;
-using MMOTFG_Bot.Navigation;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using static MMOTFG_Bot.StatName;
+using MMOTFG_Bot.Events;
+using MMOTFG_Bot.Navigation;
+using Newtonsoft.Json.Converters;
+using System.Collections.Generic;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Battle
 {
     class Attack
     {
@@ -21,8 +19,8 @@ namespace MMOTFG_Bot
         public bool affectsSelf;
 
         [JsonConverter(typeof(StringEnumConverter))]
-        [DefaultValue(ATK)]
-        public StatName statToScale = ATK;
+        [DefaultValue(StatName.ATK)]
+        public StatName statToScale = StatName.ATK;
 
         public int fixedDamage;
 
@@ -58,7 +56,7 @@ namespace MMOTFG_Bot
         {
             string target = (affectsSelf) ? "User" : "Foe";
             //scaling on attack is assumed
-            string scale = (statToScale == ATK) ? "" : $"\nScales from: {statToScale}";
+            string scale = (statToScale == StatName.ATK) ? "" : $"\nScales from: {statToScale}";
             //power only displayed if not 0
             string powers = (power == 0) ? "" : $"Power: {power}{scale}\n";
             //if fixed damage exists, only display that

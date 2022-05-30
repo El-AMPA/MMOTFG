@@ -1,12 +1,14 @@
-﻿using MMOTFG_Bot.Events;
-using MMOTFG_Bot.Navigation;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MMOTFG_Bot.Events;
+using MMOTFG_Bot.Navigation;
+using MMOTFG_Bot.Communicator;
+using MMOTFG_Bot.Persistency;
+using MMOTFG_Bot.Loader;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Battle
 {
     abstract class Battler
     {

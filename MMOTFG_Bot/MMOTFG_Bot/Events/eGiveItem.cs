@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Threading.Tasks;
+using MMOTFG_Bot.Inventory;
 
 namespace MMOTFG_Bot.Events
 {
@@ -45,7 +44,7 @@ namespace MMOTFG_Bot.Events
             foreach(ItemLot i in ItemLots)
             {
                 if(RNG.Next(0, 100) < i.ChanceToObtain * 100){
-                    InventorySystem.StringToItem(i.Item, out ObtainableItem item);
+                    InventorySystem.StringToItem(i.Item, out Item item);
                     await InventorySystem.AddItem(chatId, item, i.Quantity);
                 }
             }

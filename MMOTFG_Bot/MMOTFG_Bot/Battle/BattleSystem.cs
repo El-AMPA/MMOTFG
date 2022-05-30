@@ -1,10 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static MMOTFG_Bot.StatName;
+using MMOTFG_Bot.Loader;
+using MMOTFG_Bot.Persistency;
+using MMOTFG_Bot.Multiplayer;
+using MMOTFG_Bot.Communicator;
+using MMOTFG_Bot.Inventory;
 
-namespace MMOTFG_Bot
+namespace MMOTFG_Bot.Battle
 {
     static class BattleSystem
     {
@@ -184,7 +187,10 @@ namespace MMOTFG_Bot
 
         public static async Task<bool> IsPlayerInBattle(string chatId)
         {
-            return (bool)await DatabaseManager.GetFieldFromDocument(DbConstants.BATTLE_ACTIVE, chatId, DbConstants.COLLEC_PLAYERS);
+            if (partyCode == null)
+                return (bool)await DatabaseManager.GetFieldFromDocument(DbConstants.BATTLE_ACTIVE, chatId, DbConstants.COLLEC_PLAYERS);
+            else
+                return (bool)await DatabaseManager.GetFieldFromDocument(DbConstants.BATTLE_ACTIVE, partyCode, DbConstants.COLLEC_PARTIES);
         }
 
         public static async Task StartBattleFromNames(string chatId, List<string> enemySide)
@@ -291,7 +297,7 @@ namespace MMOTFG_Bot
             {
                 foreach (Battler ba in battlers)
                 {
-                    if (ba.GetStat(HP) > 0)
+                    if (ba.GetStat(StatName.HP) > 0)
                     {
                         await ba.OnBehaviour(chatId, ba.onTurnEnd);
                         ba.turnOver = false;
@@ -299,7 +305,7 @@ namespace MMOTFG_Bot
                 }
             }
             //sort battlers by speed
-            battlers.OrderBy(b1 => b1.GetStat(SPE));
+            battlers.OrderBy(b1 => b1.GetStat(StatName.SPE));
             //get first battler that hasn't moved that turn and is alive
             Battler b = battlers.First(x => x.turnOver == false);
 
@@ -315,7 +321,7 @@ namespace MMOTFG_Bot
                 Battler target = b;
                 if (!a.affectsSelf)
                 {
-                    List<Player> alivePlayers = players.Where(x => x.GetStat(HP) > 0).ToList();
+                    List<Player> alivePlayers = players.Where(x => x.GetStat(StatName.HP) > 0).ToList();
                     target = alivePlayers[RNG.Next(0, alivePlayers.Count)];
                 }
                 await SavePlayerBattle(chatId);
@@ -358,7 +364,7 @@ namespace MMOTFG_Bot
                 await TelegramCommunicator.SendText(chatId, "Invalid attack");
                 return;
             }
-            if (attack.mpCost > player.GetStat(MP))
+            if (attack.mpCost > player.GetStat(StatName.MP))
             {
                 //if player doesn't have enough mp to use any attack, use base attack
                 if(player.NextAttack() == null)
@@ -369,12 +375,12 @@ namespace MMOTFG_Bot
                 else
                 {
                     await TelegramCommunicator.SendText(chatId, $"Not enough MP for that attack" +
-                    $"\nYour MP: {player.GetStat(MP)}\nAttack MP cost: {attack.mpCost}");
+                    $"\nYour MP: {player.GetStat(StatName.MP)}\nAttack MP cost: {attack.mpCost}");
                     return;
                 }         
             }
             Battler target = player;
-            List<Battler> otherAliveBattlers = battlers.Where(x => x != player && x.GetStat(HP) > 0).ToList();
+            List<Battler> otherAliveBattlers = battlers.Where(x => x != player && x.GetStat(StatName.HP) > 0).ToList();
             if (!attack.affectsSelf)
             {
                 if (otherAliveBattlers.Count == 1)
@@ -409,7 +415,7 @@ namespace MMOTFG_Bot
 
         private static async Task UseAttack(string chatId, Attack attack, Battler user, Battler target)
         {
-            user.AddToStat(MP, -attack.mpCost);
+            user.AddToStat(StatName.MP, -attack.mpCost);
             user.turnOver = true;
             attack.SetUser(user);
             attack.SetTarget(target);
@@ -419,17 +425,16 @@ namespace MMOTFG_Bot
             if (damage != 0)
             {
                 message += $"{target.name} took {damage} damage.\n";
-                target.AddToStat(HP, -damage);
+                target.AddToStat(StatName.HP, -damage);
             }
 
-            //send information about attack hit
-            if (target.GetStat(HP) <= 0)
+            if (target.GetStat(StatName.HP) <= 0)
             {
                 await TelegramCommunicator.SendText(chatId, message + $"{target.name} died!", true);              
             }
             else
             {
-                if (damage != 0) message += $"{target.name} HP: \n{target.GetStatBar(HP)}";
+                if (damage != 0) message += $"{target.name} HP: \n{target.GetStatBar(StatName.HP)}";
                 await TelegramCommunicator.SendText(chatId, message, true);
             }
 
@@ -437,19 +442,19 @@ namespace MMOTFG_Bot
             await attack.OnAttack(chatId);
 
             //activate onHit and onKill triggers
-            if (target.GetStat(HP) <= 0)
+            if (target.GetStat(StatName.HP) <= 0)
                 await target.OnBehaviour(chatId, target.onKill, user);
             else await target.OnBehaviour(chatId, target.onHit, user);
 
             //check again since onKill events could have healed the target
-            if (target.GetStat(HP) <= 0)
+            if (target.GetStat(StatName.HP) <= 0)
             {
                 target.turnOver = true;
                 Enemy e = target as Enemy;
                 bool isPlayer = (e == null);
                 if (!isPlayer)
                 {
-                    if (e.droppedItem != null && InventorySystem.StringToItem(e.droppedItem, out ObtainableItem droppedItem))
+                    if (e.droppedItem != null && InventorySystem.StringToItem(e.droppedItem, out Item droppedItem))
                     {
                         List<Task> tasks = new List<Task>();
                         foreach (Player p in players)
@@ -466,7 +471,7 @@ namespace MMOTFG_Bot
                 }
                 List<Battler> side = isPlayer ? players.Select(p => (Battler)p).ToList() : enemies.Select(p => (Battler)p).ToList();
                 //if entire side has been defeated, end battle
-                if (side.FirstOrDefault(x => x.GetStat(HP) > 0) == null)
+                if (side.FirstOrDefault(x => x.GetStat(StatName.HP) > 0) == null)
                 {
                     await SavePlayerBattle(chatId);
                     battleActive = false;

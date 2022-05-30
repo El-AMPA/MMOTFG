@@ -1,6 +1,7 @@
 ﻿[
   {
     "Name": "pocion_vida",
+    "ItemType": "ConsumableItem",
     "MaxStackQuantity": 5,
     "Key_Words": {
       "beber": [
@@ -18,6 +19,7 @@
   },
   {
     "Name": "pocion_mana",
+    "ItemType": "ConsumableItem",
     "MaxStackQuantity": 3,
     "Key_Words": {
       "beber": [
@@ -105,6 +107,16 @@
   {
     "ItemType": "EquipableItem",
     "Name": "espada_del_heroe",
+    "GearSlot": "WEAPON",
+    "StatModifiers": {
+      "ATK": 150,
+      "HP": 100,
+      "SPE": 50
+    }
+  },
+  {
+    "ItemType": "EquipableItem",
+    "Name": "espada_del_heroe2",
     "GearSlot": "WEAPON",
     "StatModifiers": {
       "ATK": 150,

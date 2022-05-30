@@ -1,14 +1,13 @@
-﻿using MMOTFG_Bot.Events;
-using MMOTFG_Bot.Navigation;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System;
 using System.Collections.Generic;
-using System.Text;
+using MMOTFG_Bot.Events;
+using MMOTFG_Bot.Navigation;
+using MMOTFG_Bot.Battle;
 
-namespace MMOTFG_Bot.Items
+namespace MMOTFG_Bot.Inventory
 {
-    class EquipableItem : ObtainableItem
+    class EquipableItem : Item
     {
         [JsonConverter(typeof(StringEnumConverter))]
         public EQUIPMENT_SLOT gearSlot
@@ -25,39 +24,6 @@ namespace MMOTFG_Bot.Items
 
         public List<Event> onEquipEvents;
         public List<Event> onUnequipEvents;
-
-        public override string GetInformation()
-        {
-            string info = $"Name: {name}\nGear Slot: {gearSlot}\n";
-
-            foreach(var s in statModifiers)
-            {
-                string symbol = (s.Value > 0) ? "+" : "";
-                info += $"{s.Key} {symbol}{s.Value}\n";
-            }
-
-            if (onEquipEvents != null && onEquipEvents.Count > 0)
-            {
-                info += "Effect when equipping:\n";
-                foreach (Event e in onEquipEvents)
-                {
-                    string i = e.GetInformation();
-                    if (i != "") info += i + "\n";
-                }
-            }
-
-            if (onUnequipEvents != null && onUnequipEvents.Count > 0)
-            {
-                info += "Effect when unequipping:\n";
-                foreach (Event e in onUnequipEvents)
-                {
-                    string i = e.GetInformation();
-                    if (i != "") info += i + "\n";
-                }
-            }
-
-            return info;
-        }
 
         public virtual async void OnEquip(string chatId, string[] args = null)
         {
@@ -97,6 +63,39 @@ namespace MMOTFG_Bot.Items
 
                 await ProgressKeeper.SaveSerializable(chatId);
             }
+        }
+
+        public override string GetInformation()
+        {
+            string info = $"Name: {name}\nGear Slot: {gearSlot}\n";
+
+            foreach (var s in statModifiers)
+            {
+                string symbol = (s.Value > 0) ? "+" : "";
+                info += $"{s.Key} {symbol}{s.Value}\n";
+            }
+
+            if (onEquipEvents != null && onEquipEvents.Count > 0)
+            {
+                info += "Effect when equipping:\n";
+                foreach (Event e in onEquipEvents)
+                {
+                    string i = e.GetInformation();
+                    if (i != "") info += i + "\n";
+                }
+            }
+
+            if (onUnequipEvents != null && onUnequipEvents.Count > 0)
+            {
+                info += "Effect when unequipping:\n";
+                foreach (Event e in onUnequipEvents)
+                {
+                    string i = e.GetInformation();
+                    if (i != "") info += i + "\n";
+                }
+            }
+
+            return info;
         }
     }
 }
