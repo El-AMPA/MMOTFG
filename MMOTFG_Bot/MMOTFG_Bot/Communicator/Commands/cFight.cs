@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MMOTFG_Bot.Battle;
 using MMOTFG_Bot.Multiplayer;
@@ -24,36 +24,7 @@ Use: fight [enemyName] [enemyName2] [enemyName3]...";
 
         internal override async Task Execute(string command, string chatId, string[] args = null)
         {
-            List<Enemy> enemies = new List<Enemy>();
-
-            for (int i = 0; i < args.Length; i++)
-            {
-                Enemy e = JSONSystem.GetEnemy(args[i]);
-                if (e != null) enemies.Add(e);
-                else await TelegramCommunicator.SendText(chatId, $"{args[i]} is an invalid enemy, will be ignored");
-            }
-
-            bool isInParty = await PartySystem.IsInParty(chatId);
-            bool isLeader = await PartySystem.IsLeader(chatId);
-
-            if (isInParty && !isLeader) {
-                await TelegramCommunicator.SendText(chatId, "Only leader can start battles");
-                return;
-            }
-
-            List<string> chatIds = new List<string>();
-
-            chatIds.Add(chatId);
-            if (isInParty)
-            {
-                string partyCode = await PartySystem.GetPartyCode(chatId);
-                foreach (string id in await PartySystem.GetPartyMembers(partyCode))
-                    chatIds.Add(id);
-            }
-
-            if(enemies.Count == 0) await TelegramCommunicator.SendText(chatId, "No valid enemies");
-
-            else await BattleSystem.StartBattle(chatIds, enemies);
+            await BattleSystem.StartBattleFromNames(chatId, args.ToList());
         }
 
         internal override bool IsFormattedCorrectly(string[] args)

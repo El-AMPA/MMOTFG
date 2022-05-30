@@ -1,16 +1,15 @@
 ﻿{
   "Name": "Player",
   "Stats": [ 100, 10, 10, 50 ],
-  "Attacks": ["Patada", "Burla" ],
+  "Attacks": [ "Overkill", "Patada", "Burla" ],
   "LevelUpRoadmap": {
     "MaxLevel": 10,
     "FirstStats": [ 100, 10, 10, 100 ],
-    "FinalStats": [ 3000, 100, 100, 200 ],
-    "LevelUpExperience": 10,
-    "LevelUpExponent": 3,
+    "FinalStats": [ 1000, 200, 150, 100 ],
+    "LevelUpExponent": 1,
     "LevelUpEvents": [
       {
-        "Level": 3,
+        "Level": 2,
         "Events": [
           {
             "EventType": "eLearnAttack",
@@ -19,11 +18,11 @@
         ]
       },
       {
-        "Level": 5,
+        "Level": 3,
         "Events": [
           {
             "EventType": "eLearnAttack",
-            "Attack": "Entrenar"  
+            "Attack": "Tortilla"
           }
         ]
       }

@@ -1,0 +1,132 @@
+[
+  {
+    "Name": "Corridor1",
+    "NodeConnections": {
+      "north": {
+        "ConnectingNode": "Corridor2"
+      },
+      "trapdoor": {
+        "ConnectingNode": "BossArena"
+      }
+    },
+    "OnInspectEvent": [
+      {
+        "EventType": "eSendText",
+        "Description": "This dungeon is so dark. As you walk through the area, you stumble into a lit torch. This will be really useful.",
+        "TriggerCondition": "!TorchFound AND !TorchEquipped"
+      },
+      {
+        "EventType": "eGiveItem",
+        "ItemLots": [
+          {
+            "Item": "torch",
+            "Quantity": 1,
+            "ChanceToObtain": 1
+          }
+        ],
+        "TriggerCondition": "!TorchFound"
+      },
+      {
+        "EventType": "eSendText",
+        "Description": "I should equip the torch to see better further ahead.",
+        "TriggerCondition": "!TorchLit AND TorchFound"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"You cheated not only on yourself",
+        "TriggerCondition": "TorchLit AND !TorchFound" 
+      },
+      {
+        "EventType": "eSetFlag",
+        "Name": "TorchFound",
+        "SetAs": "True",
+        "TriggerCondition": "!TorchFound"
+      }
+    ],
+    "OnExitEvent": [
+      {
+        "EventType":"eSendText",
+        "Description":"On your way out, you find a health potion. Nice!",
+        "TriggerCondition":"!Corridor2Visited"
+      },
+      {
+        "EventType": "eGiveItem",
+        "ItemLots": [
+          {
+            "Item": "health_potion",
+            "Quantity": 1,
+            "ChanceToObtain": 1
+          }
+        ],
+        "TriggerCondition":"Corridor1Visited"
+      }
+    ]
+  },
+  {
+    "Name": "Corridor2",
+    "NodeConnections": {
+      "north": {
+        "ConnectingNode": "BossArena"
+      },
+      "south": {
+        "ConnectingNode": "Corridor1"
+      }
+    },
+    "OnArriveEvent": [
+      {
+        "EventType":"eSendText",
+        "Description":"God damn. I can't see nothing around here. Maybe I should return and inspect the entrance.",
+        "TriggerCondition":"!TorchLit"
+      },
+      {
+        "EventType":"eSendText",
+        "Description":"As you make your way into the room, you see huge claw marks in the area.",
+        "TriggerCondition":"TorchLit"
+      }
+    ],
+    "OnExitEvent": [
+      {
+        "EventType":"eSendText",
+        "Description":"You have a bad feeling about this...",
+        "TriggerCondition":"TorchLit"
+      }
+    ],
+    "OnInspectEvent":[
+      {
+        "EventType":"eSendText",
+        "Description":"As you move around your torch to inspect the room, you notice a small glint of light.\n You make your way to the source and you find... A pair of beast slaying boots!... For some reason...",
+        "TriggerCondition":"TorchLit"
+      },
+      {
+        "EventType":"eGiveItem",
+        "ItemLots":[
+          {
+            "Item":"beast_slaying_boots",
+            "Quantity":1,
+            "ChanceToObtain":1
+          }
+        ],
+        "TriggerCondition":"TorchLit"
+      }
+    ]
+  },
+  {
+    "Name": "BossArena",
+    "NodeConnections": {
+      "south": {
+        "ConnectingNode": "Corridor2"
+      }
+    },
+    "OnArriveEvent": [
+      {
+        "EventType": "eSendText",
+        "Description": "Al entrar, notas una fuerte respiraci�n en tu espalda."
+      },
+      {
+        "EventType": "eStartBattle",
+        "Enemy": "Manuela",
+        "TriggerCondition": "!ManuelaKilled"
+      }
+    ]
+  }
+]

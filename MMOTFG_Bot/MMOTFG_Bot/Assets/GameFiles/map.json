@@ -1,626 +1,526 @@
 [
   {
-    "Name": "HabitacionMmur",
+    "Name": "Entrada",
     "NodeConnections": {
-      "puerta": {
-        "ConnectingNode": "Pasillo1"
+      "norte": {
+        "ConnectingNode": "PasilloCentral1"
       },
-      "trapdoor": {
-        "ConnectingNode": "Tunel10"
+      "test": {
+        "ConnectingNode": "PasilloCentral5"
       }
     },
-    "OnArriveEvent": [
+    "OnArriveEvent":[
       {
-        "EventType": "eSendText",
-        "Description": "En mi habitación no hay mucho que ver. Debería bajar a ver qué hacen los demás (o también podría quedarme jugando al Elden Ring lmao)."
-      }
-    ],
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendImage",
-        "ImageName": "habitacionmmur.jpg",
-        "Description": "Mi habitación sigue hecha un desastre. Aún tengo que lavar la taza de Evangelion en la que ayer me bebí 3 cafés seguidos para copear con lo del tfg, pero bueno, al menos la estantería de las frikadas sigue intacta (pog). Desde que llegué a la FDI (Facultad del Internado) de la academia Kadiz, cada vez soy más desordenado... Pero bueno, mejor salgo ya por la puerta"
-      },
-      {
-        "EventType": "eSendText",
-        "Description": "En fin, debería vestirme y bajar. Cogeré lo primero que vea y au",
-        "TriggerCondition": "!MmurGearFound"
-      },
-      {
-        "EventType": "eSendImage",
-        "Description": "¡Obtienes el Mmur starter pack!",
-        "ImageName": "mmurstarterpack.png",
-        "TriggerCondition": "!MmurGearFound"
-      },
-      {
-        "EventType": "eGiveItem",
-        "ItemLots": [
-          {
-            "Item": "zapatillas_gastadas"
-          },
-          {
-            "Item": "vaqueros_normales"
-          },
-          {
-            "Item": "camiseta_de_evangelion"
-          },
-          {
-            "Item": "joycon_con_drift"
-          }
-        ],
-        "TriggerCondition": "!MmurGearFound"
-      },
-      {
-        "EventType":"eSetFlag",
-        "Name":"MmurGearFound",
-        "SetAs":"True"
-      }
-    ]
-  },
-  {
-    "Name": "Pasillo1",
-    "NodeConnections": {
-      "puerta": {
-        "ConnectingNode": "HabitacionMmur"
-      },
-      "south": {
-        "ConnectingNode": "Pasillo2"
-      }
-    },
-    "OnArriveEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Mi habitación está al final del pasillo. Justo enfrente está la de Pj. Parece que tiene montada una rave en su habitación??? En fin, la salida está hacia el sur."
-      }
-    ],
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Me acerco a cotillear a la puerta de Pj. Está sonando música de Ace Attorney a tope. Un clásico cuando quiere llorar de forma disimulada. Mejor no entro que la última vez me tuve que tragar un drama de 4 horas y media sobre el grupo aquel de fans de Loles León."
-      },
-      {
-        "EventType": "eSendAudio",
-        "Description": "Este pavo necesita un psicólogo (y unos cascos) pero ya",
-        "AudioName": "pasillopj.mp3"
-      }
-    ]
-  },
-  {
-    "Name": "Pasillo2",
-    "NodeConnections": {
-      "north": {
-        "ConnectingNode": "Pasillo1"
-      },
-      "south": {
-        "ConnectingNode": "Pasillo3"
-      }
-    },
-    "OnArriveEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "En cuanto piso el pasillo sé que algo anda mal. Cuando hay tan poca gente por aquí es porque ÉL anda de guardia. Y si no hemos terminado de hacer el proyecto de construct... Pues eso, que de aquí no paso lol-",
-        "TriggerCondition": "!FedejimboDefeated"
-      },
-      {
-        "EventType": "eStartBattle",
-        "Enemies": [ "Manuela", "Fedejimbo" ],
-        "TriggerCondition": "!FedejimboDefeated"
-      },
-      {
-        "EventType":"eSendText",
-        "Description":"Puedo pasar tranquilo por el pasillo ya que Fedejimbo ya no está... Bueno, para ser exactos está desparramado en el suelo, pero ya no me va a dar más problemas... Espero.",
-        "TriggerCondition":"FedejimboDefeated"
-      }
-    ],
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Si quiero salir, debería ir a la puerta que está hacia el sur. No tengo nada más que hacer en este pasillo curseado."
-      }
-    ]
-  },
-  {
-    "Name": "Pasillo3",
-    "NodeConnections": {
-      "north": {
-        "ConnectingNode": "Pasillo2"
-      },
-      "south": {
-        "ConnectingNode": "Patio"
-      },
-      "puerta": {
-        "ConnectingNode": "HabAlvarJorge"
-      }
-    },
-    "OnArriveEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Justo al sur está ya la salida al patio. La habitación de Albar y Jorge está justo aquí también, ¿habrá alguien?"
-      }
-    ],
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "No hay nadie, pero la puerta de la habitación está abierta. Menudos bobos, siempre se les olvida cerrarla. Podría entrar a echar un vistacito..."
-      }
-    ]
-  },
-  {
-    "Name": "HabAlvarJorge",
-    "NodeConnections": {
-      "puerta": {
-        "ConnectingNode": "Pasillo3"
-      }
-    },
-    "OnArriveEvent": [
-      {
-        "EventType": "eSendImage",
-        "ImageName": "habalbarjorge.png",
-        "Description": "La habitación no es lo mismo sin sus inquilinos, aunque Sein se encarga de hacer que parezca más animada. Como se entere Pierre Paul de que Jorge ha metido un perro de contrabando en el internado, va a salir de aquí más rápido que yo cuando vi a Fedejimbo."
-      }
-    ],
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendImage",
-        "ImageName": "collarDeJorge.jpg",
-        "Description": "Intento coger el collar de Jorge para hacerme el guay con los demás, pero Sein se pone por medio. No me va a dejar irme hasta que no se canse de jugar...",
-        "TriggerCondition": "!SeinDefeated"
-      },
-      {
-        "EventType": "eGiveItem",
-        "ItemLots": [
-          {
-            "Item": "collar_de_jorge",
-            "Quantity": 1,
-            "ChanceToObtain": 1
-          }
-        ],
-        "TriggerCondition": "!SeinDefeated"
-      },
-      {
-        "EventType": "eStartBattle",
-        "Enemy": "Sein",
-        "TriggerCondition": "!SeinDefeated"
-      },
-      {
-        "EventType":"eSendText",
-        "Description":"Rebuscas entre las cosas de Álvar y encuentras una mochila de LOONA. Le haces el favor de robársela, que a saber lo que hace con esto",
-        "TriggerCondition":"!LoonaCapFound AND SeinDefeated"
+        "EventType":"eSendImage",
+        "ImageName": "EvilCastleEntrance.jpg",
+        "Description":"Has vuelto a la entrada del castillo. Aun tienes personal al que mamporrear. ¡No hay tiempo que perder!",
+        "TriggerCondition": "EntradaVisited"
       },
       {
         "EventType":"eSendImage",
-        "ImageName":"mochilaloona.png",
-        "TriggerCondition":"!LoonaCapFound AND SeinDefeated"
+        "ImageName": "EvilCastleEntrance.jpg",
+        "Description": "Ante ti se rige castillo del Malo Maloso. ¿Qué ha hecho? No tienes ni idea, pero con ese nombre seguro que nada bueno.",
+        "TriggerCondition" : "!EntradaVisited"
+      },
+      {
+        "EventType":"eSendAudio",
+        "AudioName": "Thunder.mp3",
+        "Description": "¡Una aventura te espera. Tortas, golpetazos... Bienvenido a... Mazmorra Mamporrazo!",
+        "TriggerCondition": "!EntradaVisited"
+      }
+    ],
+    "OnInspectEvent":[
+      {
+        "EventType":"eSendText",
+        "Description":"Buscas debajo de la alfombra de la puerta y encuentras una poción.",
+        "TriggerCondition":"!EntradaInspect1"
       },
       {
         "EventType":"eGiveItem",
         "ItemLots":[
           {
-            "Item":"mochila_loona",
-            "Quantity": 1,
-            "ChanceToObtain": 1
+            "Item":"pocion_vida"
           }
         ],
-        "TriggerCondition":"!LoonaCapFound AND SeinDefeated"
+        "TriggerCondition":"!EntradaInspect1"
       },
       {
         "EventType":"eSetFlag",
-        "Name":"LoonaCapFound",
+        "Name":"EntradaInspect1",
         "SetAs":"True",
-        "TriggerCondition":"!LoonaCapFound AND SeinDefeated"
-      },
-      {
-        "EventType":"eSendText",
-        "Description":"Decides no rebuscar más en esta habitación, que menudas sorpresas te ha dado...",
-        "TriggerCondition":"LoonaCapFound AND SeinDefeated"
+        "TriggerCondition":"!EntradaInspect1"
       }
     ]
   },
   {
-    "Name": "Patio",
-    "NodeConnections": {
-      "north": {
-        "ConnectingNode": "Pasillo3"
+    "Name": "PasilloCentral1",
+    "NodeConnections":{
+      "sur" : {
+        "ConnectingNode" : "Entrada"
       },
-      "east": {
-        "ConnectingNode": "Parque"
+      "puerta" : {
+        "ConnectingNode" : "SalaTesoro1"
       },
-      "south": {
-        "ConnectingNode": "Pasillo4"
-      },
-      "west": {
-        "ConnectingNode": "Comedor"
+      "norte" : {
+        "ConnectingNode" : "PasilloCentral2"
       }
     },
-    "OnArriveEvent": [
+    "OnArriveEvent":[
       {
-        "EventType": "eSendImage",
-        "ImageName": "patio.png",
-        "Description": "El patio está completamente vacío. "
+        "EventType":"eSendImage",
+        "ImageName":"Entrada1.png",
+        "Description":"Con pies de plomo entras en la mazmorra. Notas todo bastante limpio y ordenado. Unos altavoces emiten una musiquita muy pegadiza. Distraido por el ambiente, resbalas una región húmeda del suelo y te caes de culo. Al reincorporarte, ÉL aparece.",
+        "TriggerCondition":"!ConserjeManoloKilled"
       },
       {
-        "EventType": "eSendImage",
-        "ImageName": "llamadapj.png",
-        "Description": "De repente me suena el móvil.",
-        "TriggerCondition":"!PatioVisited"
+        "EventType":"eStartBattle",
+        "Enemy":"ConserjeManolo",
+        "TriggerCondition":"!ConserjeManoloKilled"
       },
       {
-        "EventType": "eSendText",
-        "Description": "Mmur, no hay tiempo para explicaciones. Ven a la fábrica ya, e intenta que no te vean. X.A.N.D.R.A ha vuelto a atacar. Es grave. Los personajes de nuestros proyectos, ahora son... reales. No queda mucho tiempo. Corre.",
-        "TriggerCondition":"!PatioVisited"
+        "EventType":"eSendImage",
+        "ImageName":"Entrada2.png",
+        "Description":"Sin Manolo notas que el polvo se empieza a acumular...",
+        "TriggerCondition":"ConserjeManoloKilled"
+      }
+    ],
+    "OnInspectEvent":[
+      {
+        "EventType":"eSendAudio",
+        "AudioName":"Mamporrazo.mp3",
+        "Description":"Prestas atención a la música... ¡El malo maloso tiene muy buen gusto musical! Seguro que motivaba un montón a Manolo."
+      }
+    ]
+  },
+  {
+    "Name":"SalaTesoro1",
+    "NodeConnections":{
+      "puerta" : {
+        "ConnectingNode" : "PasilloCentral1"
+      }
+    },
+    "OnArriveEvent":[
+      {
+        "EventType": "eSendImage",
+        "Description":"Al abrir la puerta observas la habitación en la que te encuentras. Hay un monton de cajas y barriles repartidos por la habitación. Igual hay algo interesante por aquí.",
+        "ImageName":"SalaTesoro1.png",
+        "TriggerCondition": "!GorroFound"
+      },
+      {
+        "EventType":"eSendImage",
+        "ImageName": "SalaTesoro1.png",
+        "Description":"Has vuelto a la sala donde encontraste el gorro. La percha de donde lo agarrse debe echarle de menos...",
+        "TriggerCondition":"GorroFound"
       }
     ],
     "OnInspectEvent": [
       {
         "EventType": "eSendText",
-        "Description": "El patio está en el centro de la escuela. Al norte están los dormitorios de los chicos, y al sur los de las chicas. Al oeste está el comedor, y al este el parque. Por ahí se va a la fábrica."
-      }
-    ]
-  },
-  {
-    "Name": "Pasillo4",
-    "NodeConnections": {
-      "north": {
-        "ConnectingNode": "Patio"
-      },
-      "puerta": {
-        "ConnectingNode": "HabTatiana"
-      }
-    },
-    "OnArriveEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Este es el pasillo de las chicas. No debería estar aquí, pero tampoco es que vaya a ser el primer guarro que se cuela."
-      }
-    ],
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Esa puerta es la habitación de Tatiana. ¿Se habrá ido corriendo también a la fábrica? Podría entrar a ver si está bien."
-      }
-    ]
-  },
-  {
-    "Name": "HabTatiana",
-    "NodeConnections": {
-      "puerta": {
-        "ConnectingNode": "Pasillo4"
-      }
-    },
-    "OnArriveEvent": [
-      {
-        "EventType": "eSendImage",
-        "ImageName": "habtatiana.png",
-        "Description": "La habitación de Tatiana está más vacía que la sección de calificaciones del campus virtual. Podría aprovechar para buscar pistas o algo."
-      }
-    ],
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "poggers, tiene aquí la ranita de peluche. Espero que no le importe que la tome prestada como apoyo moral.",
-        "TriggerCondition":"!TatiranaFound"
+        "Description":"Entre los objetos de la sala, un gorro colgado en la pared capta tu atención.",
+        "TriggerCondition":"!GorroFound"
       },
       {
         "EventType": "eGiveItem",
-        "ItemLots": [
+        "ItemLots":[
           {
-            "Item": "tatirana",
-            "Quantity": 1,
-            "ChanceToObtain": 1
+            "Item":"gorro_del_heroe"
           }
         ],
-        "TriggerCondition":"!TatiranaFound"
+        "TriggerCondition": "!GorroFound"
       },
       {
         "EventType":"eSendText",
-        "Description":"Ya le devolveré la ranita cuando acabe con todo este tinglao.",
-        "TriggerCondition":"TatiranaFound"
+        "Description":"No hay nada más que llame tu atención",
+        "TriggerCondition":"GorroFound"
       },
       {
         "EventType":"eSetFlag",
-        "Name":"TatiranaFound",
-        "SetAs":"True",
-        "TriggerCondition":"!TatiranaFound"
+        "Name": "GorroFound",
+        "SetAs": "True",
+        "TriggerCondition":"!GorroFound"
       }
     ]
   },
   {
-    "Name": "Comedor",
-    "NodeConnections": {
-      "east": {
-        "ConnectingNode": "Patio"
+    "Name": "PasilloCentral2",
+    "NodeConnections":{
+      "norte" : {
+        "ConnectingNode" : "PasilloCentral3"
+      },
+      "sur" : {
+        "ConnectingNode" : "PasilloCentral1"
       }
     },
-    "OnArriveEvent": [
+    "OnArriveEvent":[
       {
-        "EventType": "eSendImage",
-        "ImageName": "comedor.png",
-        "Description": "Para sorpresa de nadie, la cafetería también está desierta. Pero espera, ¿qué es eso ahí al fondo? parece que se está comiendo el bufet entero..."
+        "EventType":"eSendImage",
+        "ImageName":"Pasillo2.png",
+        "Description":"Vaya... Esta sala no está tan bien cuidada. Múltiples agujeros aparentemente dispuestos de una manera aleatoria perforan las paredes... La sala parece un Gruyer.",
+        "TriggerCondition":"!PasilloCentral2Visited"
+      },
+      {
+        "EventType":"eSendImage",
+        "ImageName":"Pasillo2.png",
+        "Description":"He vuelto a esta sala. Podría entrenarme aquí peleando contra las ratas...",
+        "TriggerCondition": "PasilloCentral2Visited and SmallCheeseKilled"
+      },
+      {
+        "EventType":"eSendImage",
+        "ImageName":"Pasillo2.png",
+        "Description": "He vuelto a esta sala. Me pregunto que habrá dentro de los agujeros...",
+        "TriggerCondition":"PasilloCentral2Visited and !SmallCheeseKilled"
       }
     ],
-    "OnInspectEvent": [
+    "OnInspectEvent":[
       {
         "EventType": "eSendText",
-        "Description": "Me arrepiento en cuanto me acerco a investigar. Una criatura gigantesca se abalanza sobre mí sin que pueda evitarlo de ninguna forma.",
-        "TriggerCondition":"!ThiccboiDefeated"
+        "Description": "¡De uno de los agujeros que adornan la sala aparece una rata y se abalanza sobre ti!"
+      },
+      {
+        "EventType":"eStartBattle",
+        "Enemy":"SmallCheese"
+      }
+    ]
+  },
+  {
+    "Name": "PasilloCentral3",
+    "NodeConnections":{
+      "norte" : {
+        "ConnectingNode" : "PasilloCentral4"
+      },
+      "sur" : {
+        "ConnectingNode" : "PasilloCentral2"
+      },
+      "este":{
+        "ConnectingNode" : "PasilloCentral3-E"
+      },
+      "oeste":{
+        "ConnectingNode" : "PasilloCentral3-W"
+      }
+    },
+    "OnArriveEvent":[
+      {
+        "EventType":"eSendImage",
+        "ImageName":"CheeseThrone1.png",
+        "Description":"Un trono se alza en medio de la siguiente sala. Una enorme rata adornada por ornamentos dorados fija su mirada en tí. Una cohorte de ratas más pequeñas le acompañan. Ay mecachis.",
+        "TriggerCondition":"!BigCheeseKilled"
       },
       {
         "EventType":"eSendText",
-        "Description":"¡Otro thiccboi ha aparecido!",
-        "TriggerCondition":"ThiccboiDefeated"
+        "Description":"''¡Nunca llegarás al Malo Maloso, te detendré!'' Exclama la rata mientras se abalanza sobre tí.",
+        "TriggerCondition":"!BigCheeseKilled"
       },
       {
-        "EventType": "eStartBattle",
-        "Enemy": "Thiccboi"
-      }
-    ]
-  },
-  {
-    "Name": "Parque",
-    "NodeConnections": {
-      "west": {
-        "ConnectingNode": "Patio"
-      },
-      "alcantarilla": {
-        "ConnectingNode": "Tunel1"
-      }
-    },
-    "OnArriveEvent": [
-      {
-        "EventType": "eSendImage",
-        "ImageName": "parque.jpg",
-        "Description": "Este es el parque. Puedo llegar a la fábrica por la alcantarilla que hay en el suelo, o volver al patio por el oeste."
-      }
-    ]
-  },
-  {
-    "Name": "Tunel1",
-    "NodeConnections": {
-      "alcantarilla": {
-        "ConnectingNode": "Parque"
-      },
-      "east": {
-        "ConnectingNode": "Tunel2"
-      }
-    },
-    "OnArriveEvent": [
-      {
-        "EventType": "eSendImage",
-        "ImageName": "tunel.png",
-        "Description": "Estoy en los túneles de las alcantarillas, y a decir verdad no tengo ni idea de cómo llegar a la fábrica. Tendré que dar vueltas hasta que encuentre la salida, y evitar a los enemigos (si es que puedo). Parece que al este hay un camino..."
-      }
-    ]
-  },
-  {
-    "Name": "Tunel2",
-    "NodeConnections": {
-      "east": {
-        "ConnectingNode": "Tunel3"
-      },
-      "west": {
-        "ConnectingNode": "Tunel1"
-      },
-      "south": {
-        "ConnectingNode": "Tunel4"
-      }
-    },
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
-      }
-    ]
-  },
-  {
-    "Name": "Tunel3",
-    "NodeConnections": {
-      "west": {
-        "ConnectingNode": "Tunel2"
-      }
-    },
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido"
+        "EventType":"eStartBattle",
+        "Enemies":["BigCheese", "SmallCheese", "SmallCheese"],
+        "TriggerCondition": "!BigCheeseKilled"
       },
       {
-        "EventType": "eGiveItem",
-        "ItemLots": [
-          {
-            "Item": "health_potion",
-            "Quantity": 5,
-            "ChanceToObtain": 0.3
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "Name": "Tunel4",
-    "NodeConnections": {
-      "north": {
-        "ConnectingNode": "Tunel2"
-      },
-      "south": {
-        "ConnectingNode": "Tunel5"
-      }
-    },
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
+        "EventType":"eSendImage",
+        "ImageName": "CheeseThrone2.png",
+        "Description":"Has vuelto a la sala donde hiciste frente a Big Cheese. Su muerte dejó un gran hueco en el trono...",
+        "TriggerCondition":"BigCheeseKilled"
       }
     ],
-    "OnArriveEvent": [
+    "OnInspectEvent":[
       {
         "EventType":"eSendText",
-        "Description":"¡Otro stratospeer se abalanza contra ti!",
-        "TriggerCondition":"StratospeersDefeated"
-      },
-      {
-        "EventType": "eStartBattle",
-        "Enemy": "Stratospeers"
+        "Description":"Hay múltiples direcciones por las que puedo avanzar desde esta sala. Si avanzo hacia el norte debería encontrar al Malo Maloso, pero igual necesito explorar más y hacerme más fuerte para hacerle frente."
       }
     ]
   },
   {
-    "Name": "Tunel5",
-    "NodeConnections": {
-      "west": {
-        "ConnectingNode": "Tunel6"
+    "Name": "PasilloCentral3-W",
+    "NodeConnections":{
+      "puerta" : {
+        "ConnectingNode" : "SalaTesoro2"
       },
-      "east": {
-        "ConnectingNode": "Tunel8"
-      },
-      "north": {
-        "ConnectingNode": "Tunel4"
-      },
-      "south": {
-        "ConnectingNode": "Tunel7"
+      "este" : {
+        "ConnectingNode" : "PasilloCentral3"
       }
     },
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
-      }
-    ]
-  },
-  {
-    "Name": "Tunel6",
-    "NodeConnections": {
-      "east": {
-        "ConnectingNode": "Tunel5"
-      }
-    },
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
-      },
-      {
-        "EventType": "eGiveItem",
-        "ItemLots": [
-          {
-            "Item": "health_potion",
-            "Quantity": 5,
-            "ChanceToObtain": 0.3
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "Name": "Tunel7",
-    "NodeConnections": {
-      "north": {
-        "ConnectingNode": "Tunel5"
-      }
-    },
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
-      },
-      {
-        "EventType": "eGiveItem",
-        "ItemLots": [
-          {
-            "Item": "health_potion",
-            "Quantity": 5,
-            "ChanceToObtain": 0.3
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "Name": "Tunel8",
-    "NodeConnections": {
-      "west": {
-        "ConnectingNode": "Tunel5"
-      },
-      "east": {
-        "ConnectingNode": "Tunel10"
-      },
-      "north": {
-        "ConnectingNode": "Tunel9"
-      }
-    },
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
-      }
-    ]
-  },
-  {
-    "Name": "Tunel9",
-    "NodeConnections": {
-      "south": {
-        "ConnectingNode": "Tunel8"
-      }
-    },
-    "OnInspectEvent": [
-      {
-        "EventType": "eSendText",
-        "Description": "Otro túnel de las alcantarillas. Todos me parecen iguales, efectivamente me he perdido."
-      }
-    ],
-    "OnArriveEvent": [
-      {
-        "EventType": "eStartBattle",
-        "Enemy": "Cleonft",
-        "TriggerCondition":"!CleonftDefeated"
-      },
+    "OnArriveEvent":[
       {
         "EventType":"eSendText",
-        "Description":"Pobre Cleon, se metió en el mundo de los NFTs para comprarse una silla tan chula como la de Guille y así acabó...",
-        "TriggerCondition":"CleonftDefeated"
+        "Description":"Menudo cablerío hay montado por el suelo. Yo que pensaba que esto era una aventura de fantasía medieval. Menudo cacao mental tienen los desarrolladores...",
+        "TriggerCondition":"!TecnicoTomásKilled"
+      },
+      {
+        "EventType":"eSendImage",
+        "ImageName": "Pasillo2_W_1.png",
+        "Description":"Así que a esto se dedicaba el Malo Maloso... ¡Mina criptomonedas! Con la cantidad de gente en el mundo sin luz y el bobo este calentando el mundo. Un crimen de tal calibre no debe permanecer impune.",
+        "TriggerCondition": "!TecnicoTomásKilled"
+      },
+      {
+        "EventType": "eStartBattle",
+        "Enemy": "TecnicoTomás",
+        "TriggerCondition": "!TecnicoTomásKilled"
+      },
+      {
+        "EventType": "eSendImage",
+        "Description" : "Otra vez aquí... A ver si consigo salir de esta sala y no enredarme con los cables.",
+        "ImageName": "Pasillo2_W_2.png",
+        "TriggerCondition": "TecnicoTomásKilled"
       }
     ]
   },
   {
-    "Name": "Tunel10",
-    "NodeConnections": {
-      "west": {
-        "ConnectingNode": "Tunel8"
-      },
-      "alcantarilla": {
-        "ConnectingNode": "PuenteFabrica"
+    "Name": "SalaTesoro2",
+    "NodeConnections":{
+      "puerta" : {
+        "ConnectingNode" : "PasilloCentral3-W"
       }
     },
+    "OnArriveEvent": [
+      {
+        "EventType":"eSendImage",
+        "ImageName": "SalaTesoro2.png",
+        "Description": "La madre que me... Esta debe ser la habitación del técnico de antes. Rebuscaré por aquí para ver que encuentro y me largaré lo antes posible.",
+        "TriggerCondition": "!CalcetinesFound"
+      },
+      {
+        "EventType": "eSendImage",
+        "ImageName": "SalaTesoro2.png",
+        "Description": "...",
+        "TriggerCondition": "CalcetinesFound"
+      }
+    ],
     "OnInspectEvent": [
       {
         "EventType": "eSendText",
-        "Description": "¡Ya estoy aquí! Solo tengo que salir por la alcantarilla y salvar el mundo antes de que sea destruido por un Tinky gigante o algo, llegados a este punto me espero cualquier cosa."
+        "Description": "No me creo que esté haciendo esto...",
+        "TriggerCondition": "!CalcetinesFound"
+      },
+      {
+        "EventType": "eGiveItem",
+        "ItemLots":[
+          {
+            "Item":"calcetines_del_heroe"
+          }
+        ],
+        "TriggerCondition": "!CalcetinesFound"
+      },
+      {
+        "EventType": "eSendText",
+        "Description": "...",
+        "TriggerCondition": "CalcetinesFound"
+      },
+      {
+        "EventType":"eSetFlag",
+        "Name": "CalcetinesFound",
+        "SetAs": "True",
+        "TriggerCondition":"!CalcetinesFound"
+      }
+    ]
+  },
+  {
+    "Name": "PasilloCentral3-E",
+    "NodeConnections":{
+      "norte" : {
+        "ConnectingNode" : "SalaTesoro3"
+      },
+      "oeste" : {
+        "ConnectingNode" : "PasilloCentral3"
+      }
+    },
+    "OnArriveEvent":[
+      {
+        "EventType": "eSendImage",
+        "Description": "Parece que has llegado a la cocina ¡Que bien huele! Olisqueas un arroz que está al fuego y recibes un sartenazo en toda la cabeza ¡Ouch!",
+        "ImageName": "Restaurante.jpg",
+        "TriggerCondition": "!MoscaMiguelKilled"
+      },
+      {
+        "EventType":"eStartBattle",
+        "Enemy": "CocineroCarlos",
+        "TriggerCondition": "!MoscaMiguelKilled"
+      },
+      {
+        "EventType":"eSendImage",
+        "Description": "Me gustaría haber probado el arroz del... Bueno, de los chefs.",
+        "ImageName":"Restaurante2.png",
+        "TriggerCondition": "MoscaMiguelKilled"
       }
     ],
+    "OnInspectEvent":[
+      {
+        "EventType":"eSendText",
+        "Description": "La mosca controlaba a la rata que controlaba al humano... ¿Quién controla a la mosca? Para pensar..."
+      }
+    ]
+  },
+  {
+    "Name": "SalaTesoro3",
+    "NodeConnections":{
+      "trampilla" : {
+        "ConnectingNode" : "PasilloCentral4"
+      },
+      "sur" : {
+        "ConnectingNode": "PasilloCentral3-E"
+      }
+    },
+    "OnArriveEvent":[
+      {
+        "EventType":"eSendImage",
+        "ImageName": "Nevera.jpg",
+        "Description": "Brrrr... Menudo frio que hace aquí. Pillaré lo primero que vea y me iré.",
+        "TriggerCondition":"!GuantesFound"
+      },
+      {
+        "EventType":"eSendImage",
+        "ImageName": "Nevera.jpg",
+        "Description": "Brrrr... No creo que quede nada por pillar aquí. Debería largarme de aquí cuanto antes o pillaré una pulmonía.",
+        "TriggerCondition": "GuantesFound"
+      }
+    ],
+    "OnInspectEvent": [
+      {
+        "EventType": "eSendText",
+        "Description": "¡Yoink!... Joder están congelados...",
+        "TriggerCondition": "!GuantesFound"
+      },
+      {
+        "EventType": "eGiveItem",
+        "ItemLots":[
+          {
+            "Item":"guantes_del_heroe"
+          }
+        ],
+        "TriggerCondition": "!GuantesFound"
+      },
+      {
+        "EventType": "eSendText",
+        "Description": "A no ser que quiera llevarme unos hielos no hay nada más por aquí... Hay una trampilla que parece que me devuelve al pasillo central.",
+        "TriggerCondition": "GuantesFound"
+      },
+      {
+        "EventType":"eSetFlag",
+        "Name": "GuantesFound",
+        "SetAs": "True",
+        "TriggerCondition":"!GuantesFound"
+      }
+    ]
+  },
+  {
+    "Name": "PasilloCentral4",
+    "NodeConnections":{
+      "norte" : {
+        "ConnectingNode" : "PasilloCentral5"
+      },
+      "sur" : {
+        "ConnectingNode" : "PasilloCentral3"
+      }
+    },
+    "OnArriveEvent":[
+      {
+        "EventType":"eSendImage",
+        "ImageName":"Pasillo2.png",
+        "Description":"Otra con agujeros. Me pregunto que habrá dentro de ellos...",
+        "TriggerCondition":"!PasilloCentral4Visited"
+      },
+      {
+        "EventType":"eSendImage",
+        "ImageName":"Pasillo2.png",
+        "Description":"He vuelto a esta sala. Podría entrenarme aquí peleando contra las ratas...",
+        "TriggerCondition": "PasilloCentral4Visited and MediumCheese"
+      },
+      {
+        "EventType":"eSendImage",
+        "ImageName":"Pasillo2.png",
+        "Description": "He vuelto a esta sala. Me pregunto que habrá dentro de los agujeros...",
+        "TriggerCondition":"PasilloCentral4Visited and !MediumCheese"
+      }
+    ],
+    "OnInspectEvent":[
+      {
+        "EventType": "eSendText",
+        "Description": "¡De uno de los agujeros que adornan la sala aparece una rata y se abalanza sobre ti!"
+      },
+      {
+        "EventType":"eStartBattle",
+        "Enemy":"MediumCheese"
+      }
+    ]
+  },
+  {
+    "Name": "PasilloCentral5",
+    "NodeConnections":{
+      "norte" : {
+        "ConnectingNode" : "SalaJefe"
+      },
+      "sur" : {
+        "ConnectingNode" : "PasilloCentral4"
+      }
+    },
     "OnArriveEvent": [
       {
         "EventType": "eSendImage",
-        "ImageName": "tunel.png",
-        "Description": "Uf, por fin algo de luz. Solo falta salir por esa alcantarilla.."
+        "ImageName": "Pasillo5.jpg",
+        "Description": "Al abrir la puerta hacia la siguiente sala encuentras un... ¿jardín? Está muy bien cuidado, temes que en cualquier momento el jardinero te pegue un palazo o algo...",
+        "TriggerCondition": "!PasilloCentral5Visited"
+      },
+      {
+        "EventType": "eSendImage",
+        "ImageName": "Pasillo5.jpg",
+        "Description": "Has vuelto al jardín, cuando termines todo esto igual deberías darte un paseo, que lo necesitas.",
+        "TriggerCondition": "PasilloCentral5Visited"
+      },
+      {
+        "EventType": "eSendImage",
+        "ImageName": "Pasillo5-Espada.jpg",
+        "Description": "En el centro del jardín encuentras una espada clavada en una piedra... Encuentras la situación un poco cliché.",
+        "TriggerCondition": "!EspadaSacada"
       }
-    ]
-  },
-  {
-    "Name": "PuenteFabrica",
-    "NodeConnections": {
-      "alcantarilla": {
-        "ConnectingNode": "Tunel10"
-      }
-    },
+    ],
     "OnInspectEvent": [
       {
         "EventType": "eSendText",
-        "Description": "Aquí acaba MMOTFG 1.0. gracias por jugar I guess"
+        "Description": "Al acercar tus manos a la espada, tus calcetines, gorro y guantes comienzan a brillar intensamente. Con fuerza rejuvenecida, extraes la espada de la piedra.",
+        "TriggerCondition": "!EspadaSacada and GuantesEq and GorroEq and CalcetinesEq"
+      },
+      {
+        "EventType": "eGiveItem",
+        "ItemLots":[
+          {
+            "Item":"espada_del_heroe"
+          }
+        ],
+        "TriggerCondition":"!EspadaSacada and GuantesEq and GorroEq and CalcetinesEq"
+      },
+      {
+        "EventType": "eLearnAttack",
+        "Attack": "EspadazoDelHeroe",
+        "TriggerCondition": "!EspadaSacada and GuantesEq and GorroEq and CalcetinesEq"
+      },
+      {
+        "EventType": "eSendText",
+        "Description": "Gracias a la espada nunca te has sentido con tanta energía.",
+        "TriggerCondition": "EspadaSacada"
+      },
+      {
+        "EventType":"eSetFlag",
+        "Name": "EspadaSacada",
+        "SetAs": "True",
+        "TriggerCondition":"GuantesEq and GorroEq and CalcetinesEq"
+      },
+      {
+        "EventType": "eSendText",
+        "Description": "Intentas extraer la espada de la piedra, pero se mantiene inamovible. Seguro que hay algo por el castillo que me pueda ayudar.",
+        "TriggerCondition": "!EspadaSacada"
+      },
+    ]
+  },
+  {
+    "Name": "SalaJefe",
+    "NodeConnections":{
+      "sur" : {
+        "ConnectingNode" : "PasilloCentral5"
       }
-    ],
-    "OnArriveEvent": [
+    },
+    "OnArriveEvent":[
       {
         "EventType": "eStartBattle",
-        "Enemy": "Tinky.exe"
+        "Enemy": "MaloMaloso"
       }
     ]
   }
