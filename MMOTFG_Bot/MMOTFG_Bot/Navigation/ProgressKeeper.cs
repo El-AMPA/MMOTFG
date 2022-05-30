@@ -28,7 +28,7 @@ namespace MMOTFG_Bot.Navigation
             //Dumps the information from the DB into a dictionary
             foreach(KeyValuePair<string, object> flagInDict in dbFlagDict)
             {
-                PlayerRecords.Add(flagInDict.Key, Convert.ToBoolean(flagInDict.Value));
+                if(!PlayerRecords.ContainsKey(flagInDict.Key)) PlayerRecords.Add(flagInDict.Key, Convert.ToBoolean(flagInDict.Value));
             }
         }
 
