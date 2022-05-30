@@ -28,20 +28,21 @@ namespace MMOTFG_Bot.Communicator
 		/// </summary>
 		public static async Task SendImage(string chatId, string imageName, bool broadcast = false, string imageCaption = "")
 		{
-			using (var stream = System.IO.File.OpenRead(imagesPath + imageName))
+			List<string> chatIds = new List<string>();
+			if (broadcast && await PartySystem.IsInParty(chatId)) chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
+			else chatIds.Add(chatId);
+
+			List<Task> tasks = new List<Task>();
+
+			foreach (string id in chatIds)
 			{
+				FileStream stream = System.IO.File.OpenRead(imagesPath + imageName);
 				InputOnlineFile inputOnlineFile = new InputOnlineFile(stream);
-				//ImageCaption supports emojis! 👏👏
-				if (broadcast && await PartySystem.IsInParty(chatId))
-				{
-					List<Task> tasks = new List<Task>();
-					List<string> chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
-					foreach (string id in chatIds) tasks.Add(botClient.SendPhotoAsync(id, inputOnlineFile, imageCaption, ParseMode.Html));
-					await Task.WhenAll(tasks);
-				}
-				else await botClient.SendPhotoAsync(chatId, inputOnlineFile, imageCaption, ParseMode.Html);
-				stream.Close();
+				
+				tasks.Add(botClient.SendPhotoAsync(id, inputOnlineFile, imageCaption, ParseMode.Html));
+				//foreach (var stream in streams) stream.Close();
 			}
+			await Task.WhenAll(tasks);
 		}
 
 		/// <summary>
@@ -79,20 +80,21 @@ namespace MMOTFG_Bot.Communicator
 		/// </summary>
 		static public async Task SendAudio(string chatId, string audioName, string audioCaption, bool broadcast = false)
 		{
-			using (var stream = System.IO.File.OpenRead(audiosPath + audioName))
+			List<string> chatIds = new List<string>();
+			if (broadcast && await PartySystem.IsInParty(chatId)) chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
+			else chatIds.Add(chatId);
+
+			List<Task> tasks = new List<Task>();
+
+			foreach (string id in chatIds)
 			{
+				FileStream stream = System.IO.File.OpenRead(audiosPath + audioName);
 				InputOnlineFile inputOnlineFile = new InputOnlineFile(stream);
 
-				if (broadcast && await PartySystem.IsInParty(chatId))
-				{
-					List<Task> tasks = new List<Task>();
-					List<string> chatIds = await PartySystem.GetPartyMembers(await PartySystem.GetPartyCode(chatId), true);
-					foreach (string id in chatIds) tasks.Add(botClient.SendAudioAsync(id, inputOnlineFile, audioCaption, ParseMode.Html));
-					await Task.WhenAll(tasks);
-				}
-				else await botClient.SendAudioAsync(chatId, inputOnlineFile, audioCaption, ParseMode.Html);
-				stream.Close();
+				tasks.Add(botClient.SendAudioAsync(id, inputOnlineFile, audioCaption, ParseMode.Html));
+				//foreach (var stream in streams) stream.Close();
 			}
+			await Task.WhenAll(tasks);
 		}
 
 		static public async Task SendText(string chatId, string text, bool broadcast = false, string excludedId = null, ParseMode parseMode = ParseMode.Html)
