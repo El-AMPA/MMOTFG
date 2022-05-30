@@ -35,9 +35,15 @@ namespace MMOTFG_Bot.Events
         }
 
         protected Battler user;
+        protected Battler target;
 
         [DefaultValue(1)]
         public float Chance = 1;
+
+        public virtual string GetInformation()
+        {
+            return "Unique effect";
+        }
 
         public virtual Task Execute(string chatId)
         {
@@ -67,6 +73,11 @@ namespace MMOTFG_Bot.Events
         public void SetUser(Battler u)
         {
             user = u;
+        }
+
+        public void SetTarget(Battler t)
+        {
+            target = t;
         }
     }
 }

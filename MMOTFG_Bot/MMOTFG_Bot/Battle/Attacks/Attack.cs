@@ -1,22 +1,17 @@
 ﻿using JsonSubTypes;
+using MMOTFG_Bot.Events;
+using MMOTFG_Bot.Navigation;
 using Newtonsoft.Json;
-using System;
+using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Threading.Tasks;
 using static MMOTFG_Bot.StatName;
 
 namespace MMOTFG_Bot
 {
-    //If you want to create a new Attack class, add it below so JsonSubtypes recognizes it
-    //when deserializing the battlers.
-    [JsonConverter(typeof(JsonSubtypes), "AttackType")]
-    [JsonSubtypes.KnownSubType(typeof(aScaled), "aScaled")]
-    [JsonSubtypes.KnownSubType(typeof(aStatChanging), "aStatChanging")]
     class Attack
     {
-        [DefaultValue("Basic Attack")]
         public string name;
         public float power;
         public int mpCost;
@@ -24,6 +19,14 @@ namespace MMOTFG_Bot
         protected Battler target;
 
         public bool affectsSelf;
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        [DefaultValue(ATK)]
+        public StatName statToScale = ATK;
+
+        public int fixedDamage;
+
+        public List<Event> onAttack;
 
         public Attack(string name_, float power_, int mpCost_)
         {
@@ -42,11 +45,53 @@ namespace MMOTFG_Bot
             target = target_;
         }
 
-        public virtual int GetDamage()
+        public int GetDamage()
         {
-            return (int)(user.GetStat(ATK) * power);
+            //fixed damage has priority
+            if (fixedDamage != 0) return fixedDamage;
+
+            //scaling based on chosen stat
+            return (int)(user.GetStat(statToScale) * power);
         }
 
-        public virtual string OnAttack() { return ""; }
+        public string GetInformation()
+        {
+            string target = (affectsSelf) ? "User" : "Foe";
+            //scaling on attack is assumed
+            string scale = (statToScale == ATK) ? "" : $"\nScales from: {statToScale}";
+            //power only displayed if not 0
+            string powers = (power == 0) ? "" : $"Power: {power}{scale}\n";
+            //if fixed damage exists, only display that
+            string damage = (fixedDamage == 0) ? $"{powers}" : $"Fixed Damage: {fixedDamage}\n";
+            string info = $"Name: {name}\n{damage}MP Cost: {mpCost}\nTarget: {target}\n";
+
+            if (onAttack != null && onAttack.Count > 0)
+            {
+                info += "Effect:\n";
+                foreach (Event e in onAttack)
+                {
+                    string i = e.GetInformation();
+                    if (i != "") info += i + "\n";
+                }
+            }
+
+            return info;
+        }
+
+        public async Task OnAttack(string chatId) {
+            if (onAttack != null)
+            {
+                await ProgressKeeper.LoadSerializable(chatId);
+
+                foreach (Event e in onAttack)
+                {
+                    e.SetUser(user);
+                    if (target != null) e.SetTarget(target);
+                    await e.ExecuteEvent(chatId);
+                }
+
+                await ProgressKeeper.SaveSerializable(chatId);
+            }
+        }
     }
 }

@@ -19,6 +19,8 @@ namespace MMOTFG_Bot
 
         private static string partyCode = null;
 
+        private static Attack baseAttack = new Attack("Struggle", 1, 0);
+
         public static void Init()
         {
         }
@@ -232,7 +234,11 @@ namespace MMOTFG_Bot
                 Enemy e = enemySide.First();
                 if (e.imageName != null)
                 {
-                    await TelegramCommunicator.SendImage(chatId, e.imageName, true, e.imageCaption);
+                    await TelegramCommunicator.SendImage(chatId, e.imageName, true, e.text);
+                }
+                else
+                {
+                    if(e.text != null) await TelegramCommunicator.SendText(chatId, e.text, true);
                 }
             }
             else
@@ -244,8 +250,8 @@ namespace MMOTFG_Bot
                     if (e.imageName != null)
                         imageNames.Add(e.imageName);
 
-                    if (e.imageCaption != null)
-                        caption += e.imageCaption + "\n";
+                    if (e.text != null)
+                        caption += e.text + "\n";
                 }
 
                 //if multiple enemies have the same name, they need to be distinct
@@ -304,6 +310,8 @@ namespace MMOTFG_Bot
             if (e != null)
             {
                 Attack a = e.NextAttack();
+                //if no attacks are available, use base attack
+                if (a == null) a = baseAttack;
                 Battler target = b;
                 if (!a.affectsSelf)
                 {
@@ -352,8 +360,18 @@ namespace MMOTFG_Bot
             }
             if (attack.mpCost > player.GetStat(MP))
             {
-                await TelegramCommunicator.SendText(chatId, "Not enough MP for that attack");
-                return;
+                //if player doesn't have enough mp to use any attack, use base attack
+                if(player.NextAttack() == null)
+                {
+                    await TelegramCommunicator.SendText(chatId, "Not enough MP for any attack. Using base attack");
+                    attack = baseAttack;
+                }
+                else
+                {
+                    await TelegramCommunicator.SendText(chatId, $"Not enough MP for that attack" +
+                    $"\nYour MP: {player.GetStat(MP)}\nAttack MP cost: {attack.mpCost}");
+                    return;
+                }         
             }
             Battler target = player;
             List<Battler> otherAliveBattlers = battlers.Where(x => x != player && x.GetStat(HP) > 0).ToList();
@@ -371,7 +389,7 @@ namespace MMOTFG_Bot
                         message = "Choose a target";
                     }
                     else target = battlers.FirstOrDefault(x => x.name.ToLower() == targetName);
-                    if (target == null)
+                    if (target == null || target == player)
                     {
                         message = "Invalid target";
                     }
@@ -403,13 +421,25 @@ namespace MMOTFG_Bot
                 message += $"{target.name} took {damage} damage.\n";
                 target.AddToStat(HP, -damage);
             }
-            message += attack.OnAttack();
 
+            //send information about attack hit
             if (target.GetStat(HP) <= 0)
             {
-                await TelegramCommunicator.SendText(chatId, message + $"{target.name} died!", true);
-                await target.OnBehaviour(chatId, target.onKill);
+                await TelegramCommunicator.SendText(chatId, message + $"{target.name} died!", true);              
             }
+            else
+            {
+                if (damage != 0) message += $"{target.name} HP: \n{target.GetStatBar(HP)}";
+                await TelegramCommunicator.SendText(chatId, message, true);
+            }
+
+            //activate attack trigger
+            await attack.OnAttack(chatId);
+
+            //activate onHit and onKill triggers
+            if (target.GetStat(HP) <= 0)
+                await target.OnBehaviour(chatId, target.onKill, user);
+            else await target.OnBehaviour(chatId, target.onHit, user);
 
             //check again since onKill events could have healed the target
             if (target.GetStat(HP) <= 0)
@@ -457,13 +487,7 @@ namespace MMOTFG_Bot
                         await PartySystem.WipeOutParty(partyCode, false);
                     await SavePlayerBattle(chatId);
                 }
-            }
-            else
-            {
-                if (damage != 0) message += $"{target.name} HP: \n{target.GetStatBar(HP)}";
-                await TelegramCommunicator.SendText(chatId, message, true);
-                await target.OnBehaviour(chatId, target.onHit);
-            }
+            }           
 
             if (user == await GetPlayer(chatId) && battleActive && !battlePaused) 
                 await TelegramCommunicator.RemoveReplyMarkup(chatId, "Turn over");
