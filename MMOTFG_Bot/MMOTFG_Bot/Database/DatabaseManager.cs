@@ -9,8 +9,6 @@ namespace MMOTFG_Bot
 	static class DatabaseManager
 	{
 		private static FirestoreDb db;
-		private static DocumentReference docRefBase;
-		private static CollectionReference collRefBase;
 
 		private static string collectionName = "Estructura";
 		private static string documentName = "pruebas";
@@ -23,10 +21,6 @@ namespace MMOTFG_Bot
 			string jsontext = System.IO.File.ReadAllText("Assets/private/firebase-admin.json");
 			var dbInfo = JObject.Parse(jsontext);
 			db = FirestoreDb.Create(dbInfo["project_id"].Value<String>());
-			docRefBase = db.Collection(collectionName).Document(documentName);
-			collRefBase = docRefBase.Collection(subCollectionName);
-
-			//docRefBase = db.Collection("Estructura").Document("players").Collection("PlayerList").Document("Pedro");
 		}
 
 		/// <summary>
