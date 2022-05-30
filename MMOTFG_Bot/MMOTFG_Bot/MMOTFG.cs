@@ -25,7 +25,7 @@ namespace MMOTFG_Bot
 		static cHelp helpCommand = new cHelp();
 		static cCreateCharacter createCommand = new cCreateCharacter();
 
-		public static List<ICommand> commandList = new List<ICommand> { new cDeleteCharacter(), new cDebug(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
+		public static List<ICommand> commandList = new List<ICommand> { new cDeleteCharacter(), new cCreateCharacter(), new cUseItem(), new cAddItem(), new cThrowItem(),
             new cShowInventory(), new cEquipItem(), new cUnequipItem(), new cInfo(), new cStatus(), new cFight(),
 			new cNavigate(), new cDirections(), new cInspectRoom(), new cAttack(), helpCommand,
 			new cCreateParty(), new cJoinParty(), new cExitParty(), new cShowParty(), new cGiveItem()};
