@@ -113,5 +113,15 @@
       "HP": 100,
       "SPE": 50
     }
+  },
+  {
+    "ItemType": "EquipableItem",
+    "Name": "espada_del_heroe2",
+    "GearSlot": "WEAPON",
+    "StatModifiers": {
+      "ATK": 150,
+      "HP": 100,
+      "SPE": 50
+    }
   }
 ]

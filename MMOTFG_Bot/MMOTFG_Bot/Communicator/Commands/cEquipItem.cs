@@ -25,7 +25,7 @@ Use: equip [item name]";
         {
             if (InventorySystem.StringToItem(args[0], out Item item))
             {
-                EquipableItem eItem = (EquipableItem)item;
+                EquipableItem eItem = item as EquipableItem;
                 if (eItem != null) await InventorySystem.EquipGear(chatId, eItem);
                 else await TelegramCommunicator.SendText(chatId, "I can't equip that item.");
             }

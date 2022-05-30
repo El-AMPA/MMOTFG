@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MMOTFG_Bot.Battle;
 using MMOTFG_Bot.Multiplayer;
 using MMOTFG_Bot.Loader;
+using System.Linq;
 
 namespace MMOTFG_Bot.Communicator
 {

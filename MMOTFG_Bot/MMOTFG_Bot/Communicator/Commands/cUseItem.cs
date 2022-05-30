@@ -32,7 +32,7 @@ To get the actions of a certain item, use ""info [item name]""";
             {
                 if (await InventorySystem.PlayerHasItem(chatId, item))
                 {
-                    ConsumableItem cItem = (ConsumableItem)item;
+                    ConsumableItem cItem = item as ConsumableItem;
                     if (cItem != null)
                     {
                         if (args.Length == 1) itemsConsumed = await InventorySystem.ConsumeItem(chatId, cItem, 1, command, args);
