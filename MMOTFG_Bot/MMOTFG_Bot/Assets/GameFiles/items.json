@@ -1,10 +1,10 @@
 ﻿[
   {
-    "Name": "health_potion",
+    "Name": "pocion_vida",
     "ItemType": "ConsumableItem",
     "MaxStackQuantity": 5,
     "Key_Words": {
-      "drink": [
+      "beber": [
         {
           "EventType": "eChangeStat",
           "StatChanges": [
@@ -14,27 +14,15 @@
             }
           ]
         }
-      ],
-      "eat": [
-        {
-          "EventType": "eChangeStat",
-          "StatChanges": [
-            {
-              "StatToChange": "HP",
-              "Add": -2
-            }
-          ],
-          "Message": "Why would you eat a potion you freak."
-        }
       ]
     }
   },
   {
-    "Name": "mana_potion",
+    "Name": "pocion_mana",
     "ItemType": "ConsumableItem",
     "MaxStackQuantity": 3,
     "Key_Words": {
-      "drink": [
+      "beber": [
         {
           "EventType": "eChangeStat",
           "StatChanges": [
@@ -44,130 +32,86 @@
             }
           ]
         }
-      ],
-      "eat": [
-        {
-          "EventType": "eChangeStat",
-          "StatChanges": [
-            {
-              "StatToChange": "MP",
-              "Add": -2
-            }
-          ],
-          "Message": "Why would you eat a potion you freak."
-        }
       ]
     }
   },
   {
     "ItemType": "EquipableItem",
-    "Name": "camiseta_de_evangelion",
-    "GearSlot": "CHEST",
-    "StatModifiers": {
-      "ATK": -2,
-      "MP": 10
-    }
-  },
-  {
-    "ItemType": "EquipableItem",
-    "Name": "collar_de_jorge",
-    "GearSlot": "TRINKET",
+    "Name": "gorro_del_heroe",
+    "GearSlot": "HEAD",
     "StatModifiers": {
       "ATK": 20,
-      "HP": -10
-    }
-  },
-  {
-    "ItemType": "EquipableItem",
-    "Name": "joycon_con_drift",
-    "GearSlot": "WEAPON",
-    "StatModifiers": {
-      "ATK": 10
-    }
-  },
-  {
-    "ItemType": "EquipableItem",
-    "Name": "sulfuras",
-    "GearSlot": "WEAPON",
-    "StatModifiers": {
-      "ATK": 15,
-      "MP": -2
-    }
-  },
-  {
-    "ItemType": "EquipableItem",
-    "Name": "tatirana",
-    "GearSlot": "WEAPON",
-    "StatModifiers": {
-      "ATK": 15,
-      "MP": 15
-    }
-  },
-  {
-    "ItemType": "EquipableItem",
-    "Name": "tfury",
-    "GearSlot": "WEAPON",
-    "StatModifiers": {
-      "ATK": 10,
-      "HP": -5
-    }
-  },
-  {
-    "ItemType": "EquipableItem",
-    "Name": "vaqueros_normales",
-    "GearSlot": "LEGS",
-    "StatModifiers": {
-      "HP": 10,
-      "MP": 10
-    }
-  },
-  {
-    "ItemType": "EquipableItem",
-    "Name": "zapatillas_gastadas",
-    "GearSlot": "FEET",
-    "StatModifiers": {
-      "MP": 10
-    }
-  },
-  {
-    "ItemType": "EquipableItem",
-    "Name": "beast_slaying_boots",
-    "GearSlot": "FEET",
-    "StatModifiers": {
-      "ATK": 30,
-      "HP": 100
-    }
-  },
-  {
-    "ItemType": "EquipableItem",
-    "Name": "mochila_loona",
-    "GearSlot": "BACK",
-    "StatModifiers": {
-      "MP": 20,
-      "HP": 15
-    }
-  },
-  {
-    "ItemType": "EquipableItem",
-    "Name": "torch",
-    "GearSlot": "CHEST",
-    "StatModifiers": {
-      "ATK": -2,
-      "MP": 10
+      "HP": 30
     },
-    "OnEquipEvents": [
+    "OnEquipEvents":[
       {
         "EventType": "eSetFlag",
-        "Name": "TorchLit",
-        "SetAs": true
+        "Name": "GorroEq",
+        "SetAs": "True"
       }
     ],
-    "OnUnequipEvents": [
+    "OnUnequipEvents":[
       {
         "EventType": "eSetFlag",
-        "Name": "TorchLit",
-        "SetAs": false
+        "Name": "GorroEq",
+        "SetAs": "False"
       }
     ]
+  },
+  {
+    "ItemType": "EquipableItem",
+    "Name": "calcetines_del_heroe",
+    "GearSlot": "FEET",
+    "StatModifiers": {
+      "SPE": 50,
+      "HP": 30
+    },
+    "OnEquipEvents":[
+      {
+        "EventType": "eSetFlag",
+        "Name": "CalcetinesEq",
+        "SetAs": "True"
+      }
+    ],
+    "OnUnequipEvents":[
+      {
+        "EventType": "eSetFlag",
+        "Name": "CalcetinesEq",
+        "SetAs": "False"
+      }
+    ]
+  },
+  {
+    "ItemType": "EquipableItem",
+    "Name": "guantes_del_heroe",
+    "GearSlot": "HANDS",
+    "StatModifiers": {
+      "ATK": 30,
+      "HP": 50
+    },
+    "OnEquipEvents":[
+      {
+        "EventType": "eSetFlag",
+        "Name": "GuantesEq",
+        "SetAs": "True"
+      }
+    ],
+    "OnUnequipEvents":[
+      {
+        "EventType": "eSetFlag",
+        "Name": "GuantesEq",
+        "SetAs": "False"
+      }
+    ]
+  },
+  {
+    "ItemType": "EquipableItem",
+    "Name": "espada_del_heroe",
+    "GearSlot": "WEAPON",
+    "StatModifiers": {
+      "ATK": 150,
+      "HP": 100,
+      "SPE": 50
+    }
   }
 ]

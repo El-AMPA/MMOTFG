@@ -1,10 +1,5 @@
 ﻿[
   {
-    "Name": "Overkill",
-    "Power": 100,
-    "MpCost": 10
-  },
-  {
     "Name": "Patada",
     "Power": 3,
     "MpCost": 1
@@ -22,102 +17,96 @@
   },
   {
     "Name": "Tortazo",
-    "Power": 1.5
-  },
-  {
-    "Name": "Tortilla",
-    "Power": 15
-  },
-  {
-    "Name": "Slap",
-    "Power": 1
+    "Power": 10,
+    "MpCost": 10
   },
   {
     "AttackType": "aStatChanging",
-    "Name": "Swords Dance",
-    "MpCost": 1,
+    "Name": "Entrenar",
+    "MpCost": 35,
     "StatChanges": [
       {
         "StatToChange": "ATK",
-        "Multiple": 2
+        "Multiple": 1.5
       }
     ],
     "AffectsSelf": true
   },
   {
-    "AttackType": "aScaled",
-    "Name": "MpScale",
-    "Power": 1,
-    "MpCost": 3,
-    "StatToScale": "MP"
+    "Name": "Fregonazo",
+    "Power" : 1
   },
   {
-    "Name": "Chiste sobre javascript",
-    "Power": 2
+    "Name": "Mordisco al tobillo",
+    "Power": 4
   },
   {
-    "Name": "El PCE es maravilloso",
-    "Power": 5,
-    "MpCost": 5
+    "AttackType": "aStatChanging",
+    "Name": "Gruñido",
+    "MpCost": 5,
+    "StatChanges":[
+      {
+      "StatToChange": "ATK",
+      "Multiple": 0.7
+      }
+    ] 
   },
   {
-    "Name": "No Fucking Thanks",
-    "Power": 10,
-    "MpCost": 10
+    "Name": "Coletazo",
+    "Power": 20
   },
   {
-    "Name": "Chapa en PowerPoint",
-    "Power": 1
+    "Name": "Chapa sobre Linux",
+    "AttackType": "aStatChanging",
+    "MpCost": 10,
+    "StatChanges":[
+      {
+      "StatToChange": "ATK",
+      "Multiple": 0.7
+      }
+    ],
+    "Power": 20
   },
   {
-    "Name": "Deconstructción",
-    "Power": 2,
-    "MpCost": 1
+    "Name" : "Golpe con cable",
+    "AttackType": "aStatChanging",
+    "StatChanges":[
+      {
+      "StatToChange": "SPE",
+      "Multiple": 0.5
+      }
+    ],
+    "Power": 15
   },
   {
-    "Name": "Fantasma de la ópera",
-    "Power": 5,
-    "MpCost": 5
+    "Name": "Tabletazo",
+    "Power": 20
   },
   {
-    "Name": "Latigazo correa",
-    "Power": 1
+    "Name": "Sartenazo",
+    "Power": 20
   },
   {
-    "Name": "Plástico sospechoso",
-    "Power": 2,
-    "MpCost": 1
+    "Name": "Último aliento",
+    "Power": 10000
   },
   {
-    "Name": "Ondas del wifi",
-    "Power": 1
+    "Name": "Mordisco Refinado",
+    "AttackType": "aStatChanging",
+    "StatChanges":[
+      {
+      "StatToChange": "SPE",
+      "Multiple": 0.7
+      }
+    ],
+    "Power": 20
   },
   {
-    "Name": "La Chancla",
-    "Power": 3,
-    "MpCost": 3
+    "Name": "EspadazoDelHeroe",
+    "Power": 100000
   },
   {
-    "Name": "Modo capitalismo",
-    "Power": 5,
-    "MpCost": 5
-  },
-  {
-    "Name": "ñom",
-    "Power": 1
-  },
-  {
-    "Name": "Barras (de pan)",
-    "Power": 2,
-    "MpCost": 1
-  },
-  {
-    "Name": "Ahora puedes jugar a Blown to Blacksmithereens desde el navegador en http://www.tai1games.itch.io",
-    "Power": 3,
-    "MpCost": 3
-  },
-  {
-    "Name": "t̶͖̮̙̦̯̮͓̲̎u̴̧̡̢͓̮͉͓̻͙̰̟̳͖̠̇͆̽̀͂̈̈̆ ̷̡̛̭̩̲̦͉̱͓̈́̄͑c̷͕̜͎͚̑́̂͑́ỏ̶̧̢̩̳̗̤̎̄͠d̸̮̮͍͚̜̝̋̃̔̽̃̐̎̏̕͘͜͝ͅì̴̥̈́̕̚g̸̡͇̖̞̯̯̑ơ̸̡̙̳̝̟̐̒̾̈́͒̔̕ ̷̧̡̧̫̤̮̳̦͈̩̫̪̬̐́͆̈̿͜ȩ̵̡̨̨̪͇͇̼͎̳͓̣̥̙̺̃s̵̟̘͈̖̘͔̣͛̔̓͒ ̸̬̑̈̾s̴̢̺͇͎̈́̂̇̓̄̎͋e̴̡̺̙͉̥̳͕̣̤̩͔͉̽̀͆̔̂͐̆̓̔̈́̚͜͝ͅň̶̞͑̍́͊̑̃̅̎̏͜͝c̶̨̥͈̙͛̄͛̓̾̕̕ͅi̶̳͈̼͈̰̲͖͗̅l̶̥̞̽͛̾̎̂͐̓̾̆̀̓̓̐̕͝l̸̫̤̥̹̫̅̀͗̐́̽̃̆̆̉̀́͊͘͝ȧ̵̮̱͇̱͉̯̱̲̝̣̦̲͋̑͛̈́̿̈́͊́̑̈́̒̏̚͜͜m̶̹̩̖̠̀͌̑̄͗̉ę̶̧̦̙̰̤̫̤̘͇̫̠̘͊̈́̓͊͐̊̄̚͝͝͝ͅn̵̨̙̭̣͉̤̱̮̙̤̣͎͑̂́́͒͑͗t̵̡͚̣̖͊̇̄̈́̓́͌̔̏͝e̷͙̜̳̠͍̠̦̓̈̄̾̍ͅ ̵͖̘̭̝͈̯̩̪̩͈̳͖͆͑̽̓͂͋̈͑̎͘̕͜͜ḻ̸̗͇͇͇͕̹̬̝͚̺̐̈̌̀̈̌͊̏͌̍̀̓͘͘å̵̧̛̗̞͉̮̽͌̎̆̎͗̇͌̾̂̾͝m̷͉͕̞̳͍͙̣͌̈̈̏̾͛̍͋̄͂͛̚e̸̡͈̹̩̯̭̝͗̅̀́͗̑̑͝n̵̛̯͖͈̩̩͚͖̥͍̬͖̹̮͑̐̿̉͌͆̐̐̓́͜͜͠t̵̛͖̥͍̎̋͌͊̀̿̕̕a̴̛̗̐͌͑̊͌͋͑̈́̆͂͋̈́̈́͘ḅ̴̧͕͙̗͙̩̖̦͓̓̆͘ļ̸̢͕̞̦͚̰͚̝̲̲̃ề̷̛̗̠̟͊͌͐̂̃̀͘͝",
-    "Power": 100
+    "Name": "???",
+    "Power": 100000
   }
 ]

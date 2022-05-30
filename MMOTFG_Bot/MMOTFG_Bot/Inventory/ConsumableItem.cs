@@ -26,7 +26,7 @@ namespace MMOTFG_Bot.Inventory
 
             foreach (Event e in events)
             {
-                e.SetUser(BattleSystem.GetPlayer(chatId));
+                e.SetUser(await BattleSystem.GetPlayer(chatId));
                 await e.ExecuteEvent(chatId);
             }
 
