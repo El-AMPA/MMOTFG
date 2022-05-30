@@ -1,4 +1,7 @@
 ﻿using System.Threading.Tasks;
+using MMOTFG_Bot.Loader;
+using MMOTFG_Bot.Inventory;
+using MMOTFG_Bot.Battle;
 
 namespace MMOTFG_Bot.Communicator
 {
@@ -19,7 +22,7 @@ Uso: info [name]";
         internal override async Task Execute(string command, string chatId, string[] args = null)
         {
             string name = string.Join(" ", args);
-            ObtainableItem i = JSONSystem.GetItem(name);
+            Item i = JSONSystem.GetItem(name);
             if (i != null) await TelegramCommunicator.SendText(chatId, i.GetInformation());
             else
             {

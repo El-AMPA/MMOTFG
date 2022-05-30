@@ -18,5 +18,10 @@ namespace MMOTFG_Bot.Inventory
         {
             iD = Guid.NewGuid();
         }
+
+        public virtual string GetInformation()
+        {
+            return "";
+        }
     }
 }
