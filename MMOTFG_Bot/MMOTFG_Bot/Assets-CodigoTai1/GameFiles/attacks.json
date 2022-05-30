@@ -10,13 +10,18 @@
     "MpCost": 1
   },
   {
-    "AttackType": "aStatChanging",
     "Name": "Burla",
     "MpCost": 5,
-    "StatChanges": [
+    "OnAttack": [
       {
-        "StatToChange": "ATK",
-        "Multiple": 0.5
+        "EventType": "eChangeStat",
+        "StatChanges": [
+          {
+            "StatToChange": "ATK",
+            "Multiple": 0.5,
+            "AffectsSelf": false
+          }
+        ]
       }
     ]
   },
@@ -33,19 +38,22 @@
     "Power": 1
   },
   {
-    "AttackType": "aStatChanging",
     "Name": "Swords Dance",
     "MpCost": 1,
-    "StatChanges": [
+    "OnAttack": [
       {
-        "StatToChange": "ATK",
-        "Multiple": 2
+        "EventType": "eChangeStat",
+        "StatChanges": [
+          {
+            "StatToChange": "ATK",
+            "Multiple": 2,
+          }
+        ]
       }
     ],
     "AffectsSelf": true
   },
   {
-    "AttackType": "aScaled",
     "Name": "MpScale",
     "Power": 1,
     "MpCost": 3,
