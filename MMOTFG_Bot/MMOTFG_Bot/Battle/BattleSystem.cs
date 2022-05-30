@@ -185,7 +185,10 @@ namespace MMOTFG_Bot.Battle
 
         public static async Task<bool> IsPlayerInBattle(string chatId)
         {
-            return (bool)await DatabaseManager.GetFieldFromDocument(DbConstants.BATTLE_ACTIVE, chatId, DbConstants.COLLEC_PLAYERS);
+            if (partyCode == null)
+                return (bool)await DatabaseManager.GetFieldFromDocument(DbConstants.BATTLE_ACTIVE, chatId, DbConstants.COLLEC_PLAYERS);
+            else
+                return (bool)await DatabaseManager.GetFieldFromDocument(DbConstants.BATTLE_ACTIVE, partyCode, DbConstants.COLLEC_PARTIES);
         }
 
         public static async Task StartBattleFromNames(string chatId, List<string> enemySide)
