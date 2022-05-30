@@ -14,7 +14,7 @@ namespace MMOTFG_Bot.Loader
     {
         private static Dictionary<string, string> enemyDict;
         private static Dictionary<string, Attack> attackDict;
-        private static Dictionary<string, ObtainableItem> itemDict;
+        private static Dictionary<string, Item> itemDict;
         private static string defaultPlayer;
         private static List<Node> nodes;
         private static Dictionary<string, string> directionSynonyms;
@@ -33,7 +33,7 @@ namespace MMOTFG_Bot.Loader
 
             enemyDict = new Dictionary<string, string>(comparer);
             attackDict = new Dictionary<string, Attack>(comparer);
-            itemDict = new Dictionary<string, ObtainableItem>(comparer);    
+            itemDict = new Dictionary<string, Item>(comparer);    
             directionSynonyms = new Dictionary<string, string>(comparer);
 
             ReadAttacksFromJSON(attackPath);
@@ -121,9 +121,9 @@ namespace MMOTFG_Bot.Loader
 
             try
             {
-                List<ObtainableItem> items = JsonConvert.DeserializeObject<List<ObtainableItem>>(itemText,
+                List<Item> items = JsonConvert.DeserializeObject<List<Item>>(itemText,
                     new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate }); //Deserializes the .json file into a list of items
-                foreach (ObtainableItem i in items)
+                foreach (Item i in items)
                 {
                     i.OnCreate();
                     itemDict.Add(i.name, i);
@@ -295,9 +295,9 @@ namespace MMOTFG_Bot.Loader
             else return null;
         }
 
-        public static ObtainableItem GetItem(string name)
+        public static Item GetItem(string name)
         {
-            if (itemDict.TryGetValue(name, out ObtainableItem i))
+            if (itemDict.TryGetValue(name, out Item i))
             {
                 return i;
             }
@@ -314,11 +314,15 @@ namespace MMOTFG_Bot.Loader
         public static List<string> GetAllItemActions()
         {
             List<string> actions = new List<string>();
-            foreach (ObtainableItem i in itemDict.Values)
+            foreach (Item i in itemDict.Values)
             {
-                if (i.key_words == null) continue;
-                foreach (string s in i.key_words.Keys)
-                    actions.Add(s);
+                ConsumableItem cI = i as ConsumableItem;
+                if(cI != null)
+                {
+                    if (cI.key_words == null) continue;
+                    foreach (string s in cI.key_words.Keys)
+                        actions.Add(s);
+                }
             }            
             return actions.Distinct().ToList();
         }

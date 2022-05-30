@@ -28,7 +28,7 @@ Use: throw [item name]";
         {
             int itemsThrown;
 
-            if(InventorySystem.StringToItem(args[0], out ObtainableItem item))
+            if(InventorySystem.StringToItem(args[0], out Item item))
             {
                 if(await InventorySystem.PlayerHasItem(chatId, item))
                 {

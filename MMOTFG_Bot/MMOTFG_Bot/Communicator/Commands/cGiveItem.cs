@@ -46,7 +46,7 @@ Use: give [item name] [player name] [quantity] (optional)";
 			}
 
 			int itemsGiven = 0;
-			ObtainableItem item;
+			Item item;
 
 			if (InventorySystem.StringToItem(args[0], out item))
 			{

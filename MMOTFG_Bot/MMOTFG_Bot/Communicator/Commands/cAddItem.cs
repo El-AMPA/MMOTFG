@@ -20,7 +20,7 @@ Use: add [item name]";
 
         internal override async Task Execute(string command, string chatId, string[] args = null)
         {
-            if (InventorySystem.StringToItem(args[0], out ObtainableItem item))
+            if (InventorySystem.StringToItem(args[0], out Item item))
             {
                 if (args.Length == 1) await InventorySystem.AddItem(chatId, item, 1);
                 else await InventorySystem.AddItem(chatId, item, int.Parse(args[1]));

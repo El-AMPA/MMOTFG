@@ -390,7 +390,7 @@ namespace MMOTFG_Bot.Battle
                 bool isPlayer = (e == null);
                 if (!isPlayer)
                 {
-                    if (e.droppedItem != null && InventorySystem.StringToItem(e.droppedItem, out ObtainableItem droppedItem))
+                    if (e.droppedItem != null && InventorySystem.StringToItem(e.droppedItem, out Item droppedItem))
                     {
                         List<Task> tasks = new List<Task>();
                         foreach (Player p in players)

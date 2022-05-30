@@ -1,6 +1,7 @@
 ﻿[
   {
     "Name": "health_potion",
+    "ItemType": "ConsumableItem",
     "MaxStackQuantity": 5,
     "Key_Words": {
       "drink": [
@@ -30,6 +31,7 @@
   },
   {
     "Name": "mana_potion",
+    "ItemType": "ConsumableItem",
     "MaxStackQuantity": 3,
     "Key_Words": {
       "drink": [

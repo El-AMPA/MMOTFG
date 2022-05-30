@@ -32,10 +32,14 @@ Gear slots can be seen by using /status";
             else
             {
                 //Check if the args provided is an equippable item
-                if (InventorySystem.StringToItem(args[0], out ObtainableItem item))
+                if (InventorySystem.StringToItem(args[0], out Item item))
                 {
+                    EquipableItem eItem = (EquipableItem)item;
                     //If it's valid, unequip the item from the player's gear
-                    await InventorySystem.UnequipGear(chatId, (EquipableItem)item);
+                    if (eItem != null) await InventorySystem.UnequipGear(chatId, (EquipableItem)item);
+                    else await TelegramCommunicator.SendText(chatId, "I can't unequip that item");
+                    
+
                 }
                 else await TelegramCommunicator.SendText(chatId, "The specified equippable item or gear slot doesn't exist");
             }

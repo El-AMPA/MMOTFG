@@ -28,18 +28,23 @@ To get the actions of a certain item, use ""info [item name]""";
         {
             int itemsConsumed;
 
-            if (InventorySystem.StringToItem(args[0], out ObtainableItem item))
+            if (InventorySystem.StringToItem(args[0], out Item item))
             {
                 if (await InventorySystem.PlayerHasItem(chatId, item))
                 {
-                    if (args.Length == 1) itemsConsumed = await InventorySystem.ConsumeItem(chatId, item, 1, command, args);
-                    else
+                    ConsumableItem cItem = (ConsumableItem)item;
+                    if (cItem != null)
                     {
-                        if (args[1] == "all") itemsConsumed = await InventorySystem.ConsumeItem(chatId, item, -1, command, args);
-                        else itemsConsumed = await InventorySystem.ConsumeItem(chatId, item, int.Parse(args[1]), command, args);
+                        if (args.Length == 1) itemsConsumed = await InventorySystem.ConsumeItem(chatId, cItem, 1, command, args);
+                        else
+                        {
+                            if (args[1] == "all") itemsConsumed = await InventorySystem.ConsumeItem(chatId, cItem, -1, command, args);
+                            else itemsConsumed = await InventorySystem.ConsumeItem(chatId, cItem, int.Parse(args[1]), command, args);
+                        }
+                        if (itemsConsumed == 1) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was removed from your inventory.");
+                        else if (itemsConsumed > 1) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was removed from your inventory " + args[1] + "times");
                     }
-                    if (itemsConsumed == 1) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was removed from your inventory.");
-                    else if (itemsConsumed > 1) await TelegramCommunicator.SendText(chatId, "Item " + item.name + " was removed from your inventory " + args[1] + "times");
+                    else await TelegramCommunicator.SendText(chatId, "Can't do that with that item");
                 }
                 else await TelegramCommunicator.SendText(chatId, "Item " + item.name + " couldn't be found in your inventory");
             }

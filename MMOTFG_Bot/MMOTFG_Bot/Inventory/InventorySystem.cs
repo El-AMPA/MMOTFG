@@ -53,7 +53,7 @@ namespace MMOTFG_Bot.Inventory
             {
                 foreach (KeyValuePair<string, object> itemAmountEntry in itemAmountDict)
                 {
-                    StringToItem(itemAmountEntry.Key, out ObtainableItem item);
+                    StringToItem(itemAmountEntry.Key, out Item item);
                     InventoryRecords.Add(new InventoryRecord(item, Convert.ToInt32(itemAmountEntry.Value)));
                 }
             }
@@ -64,7 +64,7 @@ namespace MMOTFG_Bot.Inventory
 
             foreach (KeyValuePair<string, object> equiItem in dbEquipment)
             {
-                ObtainableItem item = null;
+                Item item = null;
                 Enum.TryParse(typeof(EQUIPMENT_SLOT), equiItem.Key, true, out object index);
 
                 if (equiItem.Value != null)
@@ -125,7 +125,7 @@ namespace MMOTFG_Bot.Inventory
 
         //TO-DO: Repensar si es mejor dejarlo como está o que al sistema de inventario le llegue la clase Objeto ya directamente. Es bastante inflexible solo poder recibir un string y
         //traducirlo aquí
-        public static bool StringToItem(string s, out ObtainableItem item)
+        public static bool StringToItem(string s, out Item item)
         {
             item = JSONSystem.GetItem(s);
             return item != null;
@@ -136,7 +136,7 @@ namespace MMOTFG_Bot.Inventory
             return Enum.TryParse(s, true, out slot);
         }
 
-        public static async Task AddItem(string chatId, ObtainableItem item, int quantityToAdd)
+        public static async Task AddItem(string chatId, Item item, int quantityToAdd)
         {
             await LoadPlayerInventory(chatId);
 
@@ -192,7 +192,7 @@ namespace MMOTFG_Bot.Inventory
             return equipment[(int)slot];
         }
 
-        public static async Task<int> ConsumeItem(string chatId, ObtainableItem item, int quantityToConsume, string command = null, string[] args = null)
+        public static async Task<int> ConsumeItem(string chatId, ConsumableItem item, int quantityToConsume, string command = null, string[] args = null)
         {
             await LoadPlayerInventory(chatId);
             if (command != null && !item.UnderstandsCommand(command))
@@ -253,7 +253,7 @@ namespace MMOTFG_Bot.Inventory
             return quantityToConsume - quantityToConsumeAux;
         }
 
-        public static async Task<int> ThrowAwayItem(string chatId, ObtainableItem item, int quantityToThrowAway)
+        public static async Task<int> ThrowAwayItem(string chatId, Item item, int quantityToThrowAway)
         {
             await LoadPlayerInventory(chatId);
 
@@ -286,13 +286,13 @@ namespace MMOTFG_Bot.Inventory
             return quantityToThrowAway - quantityToThrowAwayAux;
         }
 
-        public static async Task<bool> PlayerHasItem(string chatId, ObtainableItem item)
+        public static async Task<bool> PlayerHasItem(string chatId, Item item)
         {
             await LoadPlayerInventory(chatId);
             return (InventoryRecords.Exists(x => (x.InventoryItem.iD == item.iD)));
         }
 
-        public static async Task<int> GetNumberOfItemsInInventory(string chatId, ObtainableItem item)
+        public static async Task<int> GetNumberOfItemsInInventory(string chatId, Item item)
         {
             await LoadPlayerInventory(chatId);
             int numItems = 0;
@@ -464,7 +464,7 @@ namespace MMOTFG_Bot.Inventory
                         //Remove the item from the inventory
                         //TO-DO: Kinda jank. Currently needed because consumeItem needs to load the currentBattle. If this wasn't added, ConsumeItem would override the stat changes from the item that was just equipped.
                         await BattleSystem.SavePlayerBattle(chatId);
-                        await ConsumeItem(chatId, item, 1);
+                        await ThrowAwayItem(chatId, item, 1);
                     }
                     await SavePlayerInventory(chatId);
                 }
@@ -498,7 +498,7 @@ namespace MMOTFG_Bot.Inventory
             //Add the unequipped item to the inventory
             await AddItem(chatId, oldItem, 1);
             //Remove the item from the inventory
-            await ConsumeItem(chatId, newItem, 1);
+            await ThrowAwayItem(chatId, newItem, 1);
 
             equipment[(int)newItem.gearSlot].OnUnequip(chatId);
             equipment[(int)newItem.gearSlot] = newItem;
@@ -508,9 +508,9 @@ namespace MMOTFG_Bot.Inventory
 
         public class InventoryRecord
         {
-            public ObtainableItem InventoryItem { get; private set; }
+            public Item InventoryItem { get; private set; }
             public int Quantity { get; private set; }
-            public InventoryRecord(ObtainableItem item, int quantity)
+            public InventoryRecord(Item item, int quantity)
             {
                 InventoryItem = item;
                 Quantity = quantity;

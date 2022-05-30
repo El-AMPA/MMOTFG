@@ -7,7 +7,7 @@ using MMOTFG_Bot.Battle;
 
 namespace MMOTFG_Bot.Inventory
 {
-    class EquipableItem : ObtainableItem
+    class EquipableItem : Item
     {
         [JsonConverter(typeof(StringEnumConverter))]
         public EQUIPMENT_SLOT gearSlot
