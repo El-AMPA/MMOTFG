@@ -3,49 +3,49 @@
     "Name": "ConserjeManolo",
     "Stats": [ 100, 10, 10, 10 ],
     "ImageName": "Janitor.png",
-    "ImageCaption": "¿Arruinaste mi suelo? ¡Pagarás por ello!",
+    "Text": "¿Arruinaste mi suelo? ¡Pagarás por ello!",
     "DroppedItem": "pocion_vida",
     "DroppedItemAmount": 2,
     "ExperienceGiven": 50,
     "Attacks": [ "Fregonazo" ]
   },
   {
-    "Name":"SmallCheese",
-    "Stats" : [250, 7, 10, 10],
-    "ImageName":"SmallCheese.png",
-    "ImageCaption": "*sonidos de rata*",
+    "Name": "SmallCheese",
+    "Stats": [ 250, 7, 10, 10 ],
+    "ImageName": "SmallCheese.png",
+    "Text": "*sonidos de rata*",
     "DroppedItem": "pocion_vida",
     "ExperienceGiven": 75,
-    "Attacks": ["Mordisco al tobillo"]
+    "Attacks": [ "Mordisco al tobillo" ]
   },
   {
-    "Name":"BigCheese",
+    "Name": "BigCheese",
     "ImageName": "BigCheese.png",
-    "Stats" : [800, 20, 10, 5],
-    "ImageCaption": "*sonidos de rata más poderosa*",
-    "DroppedItem": "mana_potion",
-    "DroppedItemAmount" : 3,
-    "ExperienceGiven": 400,
-    "Attacks": ["Gruñido", "Coletazo"]
-  },
-  {
-    "Name":"TecnicoTomás",
-    "ImageName": "TecnicoTomas.png",
-    "Stats" : [2000, 30, 10, 10],
-    "ImageCaption": "Cuando llegas al centro de la sala, una mano aparece de entre el cablerío y te golpea.",
+    "Stats": [ 800, 20, 10, 5 ],
+    "Text": "*sonidos de rata más poderosa*",
     "DroppedItem": "mana_potion",
     "DroppedItemAmount": 3,
     "ExperienceGiven": 400,
-    "Attacks": ["Tabletazo", "Golpe con cable", "Chapa sobre Linux"]
+    "Attacks": [ "Gruñido", "Coletazo" ]
   },
   {
-    "Name":"CocineroCarlos",
+    "Name": "TecnicoTomás",
+    "ImageName": "TecnicoTomas.png",
+    "Stats": [ 2000, 30, 10, 10 ],
+    "Text": "Cuando llegas al centro de la sala, una mano aparece de entre el cablerío y te golpea.",
+    "DroppedItem": "mana_potion",
+    "DroppedItemAmount": 3,
+    "ExperienceGiven": 400,
+    "Attacks": [ "Tabletazo", "Golpe con cable", "Chapa sobre Linux" ]
+  },
+  {
+    "Name": "CocineroCarlos",
     "ImageName": "CocineroCarlos.jpg",
-    "Stats": [2000, 20, 10, 20],
-    "ImageCaption": "¡Como no acabe pronto contigo se me pasará el arroz!",
-    "Attacks": ["Sartenazo"],
+    "Stats": [ 2000, 20, 10, 20 ],
+    "Text": "¡Como no acabe pronto contigo se me pasará el arroz!",
+    "Attacks": [ "Sartenazo" ],
     "ExperienceGiven": 0,
-    "OnKill":[
+    "OnKill": [
       {
         "EventType": "eSendImage",
         "ImageName": "Carlos2Fase.png",
@@ -59,12 +59,12 @@
   },
   {
     "Name": "RataRicardo",
-    "ImageName":"RataRicardo.jpg",
-    "Stats":[3000, 20, 10, 20],
-    "ImageCaption": "*Sonidos de rata refinada*",
-    "Attacks": ["Mordisco Refinado"],
+    "ImageName": "RataRicardo.jpg",
+    "Stats": [ 3000, 20, 10, 20 ],
+    "Text": "*Sonidos de rata refinada*",
+    "Attacks": [ "Mordisco Refinado" ],
     "ExperienceGiven": 0,
-    "OnKill":[
+    "OnKill": [
       {
         "EventType": "eSendImage",
         "ImageName": "Carlos3Fase.png",
@@ -75,7 +75,7 @@
         "Enemy": "MoscaMiguel"
       }
     ],
-    "OnHit":[
+    "OnHit": [
       {
         "EventType": "eSendText",
         "Description": "''Si yo no puedo... ÉL podrá contigo...'' Exclama la rata mientras te mordisquea los tobillos."
@@ -84,31 +84,31 @@
   },
   {
     "Name": "MoscaMiguel",
-    "ImageName":"MoscaMiguel.png",
-    "Stats":[1, 20, 20, 20],
-    "ImageCaption": "*Sonidos de mosca lista para morir*",
-    "Attacks": ["Último aliento"],
+    "ImageName": "MoscaMiguel.png",
+    "Stats": [ 1, 20, 20, 20 ],
+    "Text": "*Sonidos de mosca lista para morir*",
+    "Attacks": [ "Último aliento" ],
     "DroppedItem": "mana_potion",
     "DroppedItemAmount": 3,
     "ExperienceGiven": 500
   },
   {
     "Name": "MediumCheese",
-    "ImageName":"MediumCheese.png",
-    "Stats": [100, 20, 10, 10],
-    "ImageCaption": "*Sonidos de rata muy enfadada*",
-    "Attacks": ["Mordisco al tobillo"],
+    "ImageName": "MediumCheese.png",
+    "Stats": [ 100, 20, 10, 10 ],
+    "Text": "*Sonidos de rata muy enfadada*",
+    "Attacks": [ "Mordisco al tobillo" ],
     "DroppedItem": "pocion_mana",
     "ExperienceGiven": 800,
     "DroppedItemAmount": 1
   },
   {
     "Name": "MaloMaloso",
-    "ImageName":"MaloMaloso.png",
-    "Stats": [1000000, 2223, 1, 2223],
-    "ImageCaption": "...",
-    "Attacks": ["???"],
-    "OnKill":[
+    "ImageName": "MaloMaloso.png",
+    "Stats": [ 1000000, 2223, 1, 2223 ],
+    "Text": "...",
+    "Attacks": [ "???" ],
+    "OnKill": [
       {
         "EventType": "eSendText",
         "Description": "Lo conseguiste... ¡Has derrotado al malo maloso! Su reino de terror ha acabado por fin y sus crímenes (los que fueran) han sido castigados."
