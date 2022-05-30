@@ -5,13 +5,18 @@
     "MpCost": 1
   },
   {
-    "AttackType": "aStatChanging",
     "Name": "Burla",
     "MpCost": 5,
-    "StatChanges": [
+    "OnAttack": [
       {
-        "StatToChange": "ATK",
-        "Multiple": 0.5
+        "EventType": "eChangeStat",
+        "StatChanges": [
+          {
+            "StatToChange": "ATK",
+            "Multiple": 0.5,
+            "AffectsSelf": false
+          }
+        ]
       }
     ]
   },
@@ -21,13 +26,17 @@
     "MpCost": 10
   },
   {
-    "AttackType": "aStatChanging",
     "Name": "Entrenar",
     "MpCost": 35,
-    "StatChanges": [
+    "OnAttack": [
       {
-        "StatToChange": "ATK",
-        "Multiple": 1.5
+        "EventType": "eChangeStat",
+        "StatChanges": [
+          {
+            "StatToChange": "ATK",
+            "Multiple": 1.5
+          }
+        ]
       }
     ],
     "AffectsSelf": true
@@ -41,15 +50,20 @@
     "Power": 4
   },
   {
-    "AttackType": "aStatChanging",
     "Name": "Gruñido",
     "MpCost": 5,
-    "StatChanges":[
+    "OnAttack": [
       {
-      "StatToChange": "ATK",
-      "Multiple": 0.7
+        "EventType": "eChangeStat",
+        "StatChanges": [
+          {
+            "StatToChange": "ATK",
+            "Multiple": 0.7,
+            "AffectsSelf": false
+          }
+        ]
       }
-    ] 
+    ]
   },
   {
     "Name": "Coletazo",
@@ -57,23 +71,33 @@
   },
   {
     "Name": "Chapa sobre Linux",
-    "AttackType": "aStatChanging",
     "MpCost": 10,
-    "StatChanges":[
+    "OnAttack": [
       {
-      "StatToChange": "ATK",
-      "Multiple": 0.7
+        "EventType": "eChangeStat",
+        "StatChanges": [
+          {
+            "StatToChange": "ATK",
+            "Multiple": 0.7,
+            "AffectsSelf": false
+          }
+        ]
       }
     ],
     "Power": 20
   },
   {
-    "Name" : "Golpe con cable",
-    "AttackType": "aStatChanging",
-    "StatChanges":[
+    "Name": "Golpe con cable",
+    "OnAttack": [
       {
-      "StatToChange": "SPE",
-      "Multiple": 0.5
+        "EventType": "eChangeStat",
+        "StatChanges": [
+          {
+            "StatToChange": "SPE",
+            "Multiple": 0.5,
+            "AffectsSelf": false
+          }
+        ]
       }
     ],
     "Power": 15
@@ -92,11 +116,16 @@
   },
   {
     "Name": "Mordisco Refinado",
-    "AttackType": "aStatChanging",
-    "StatChanges":[
+    "OnAttack": [
       {
-      "StatToChange": "SPE",
-      "Multiple": 0.7
+        "EventType": "eChangeStat",
+        "StatChanges": [
+          {
+            "StatToChange": "SPE",
+            "Multiple": 0.7,
+            "AffectsSelf": false
+          }
+        ]
       }
     ],
     "Power": 20
