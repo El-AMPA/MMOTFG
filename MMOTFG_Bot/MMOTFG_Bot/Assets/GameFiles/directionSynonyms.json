@@ -1,32 +1,33 @@
 [
     {
-        "Direction": "norte",
+        "Direction": "north",
         "Synonyms": [
             "n",
-            "nor",
+            "nrth",
             "nrt"
         ]
     },
     {
-        "Direction": "sur",
+        "Direction": "south",
         "Synonyms": [
             "s",
-            "su"
+            "sth",
+            "sou"
         ]
     },
     {
-        "Direction": "este",
+        "Direction": "east",
         "Synonyms": [
             "e",
             "est"
         ]
     },
     {
-        "Direction": "oeste",
+        "Direction": "west",
         "Synonyms": [
-            "o",
-            "oe",
-            "oest"
+            "w",
+            "wst",
+            "wes"
         ]
     }
 ]

@@ -1,5 +1,10 @@
 ﻿[
   {
+    "Name": "Overkill",
+    "Power": 100,
+    "MpCost": 10
+  },
+  {
     "Name": "Patada",
     "Power": 3,
     "MpCost": 1
@@ -22,19 +27,26 @@
   },
   {
     "Name": "Tortazo",
-    "Power": 10,
-    "MpCost": 10
+    "Power": 1.5
   },
   {
-    "Name": "Entrenar",
-    "MpCost": 35,
+    "Name": "Tortilla",
+    "Power": 15
+  },
+  {
+    "Name": "Slap",
+    "Power": 1
+  },
+  {
+    "Name": "Swords Dance",
+    "MpCost": 1,
     "OnAttack": [
       {
         "EventType": "eChangeStat",
         "StatChanges": [
           {
             "StatToChange": "ATK",
-            "Multiple": 1.5
+            "Multiple": 2,
           }
         ]
       }
@@ -42,100 +54,78 @@
     "AffectsSelf": true
   },
   {
-    "Name": "Fregonazo",
-    "Power" : 1
+    "Name": "MpScale",
+    "Power": 1,
+    "MpCost": 3,
+    "StatToScale": "MP"
   },
   {
-    "Name": "Mordisco al tobillo",
-    "Power": 4
+    "Name": "Chiste sobre javascript",
+    "Power": 2
   },
   {
-    "Name": "Gruñido",
-    "MpCost": 5,
-    "OnAttack": [
-      {
-        "EventType": "eChangeStat",
-        "StatChanges": [
-          {
-            "StatToChange": "ATK",
-            "Multiple": 0.7,
-            "AffectsSelf": false
-          }
-        ]
-      }
-    ]
+    "Name": "El PCE es maravilloso",
+    "Power": 5,
+    "MpCost": 5
   },
   {
-    "Name": "Coletazo",
-    "Power": 20
+    "Name": "No Fucking Thanks",
+    "Power": 10,
+    "MpCost": 10
   },
   {
-    "Name": "Chapa sobre Linux",
-    "MpCost": 10,
-    "OnAttack": [
-      {
-        "EventType": "eChangeStat",
-        "StatChanges": [
-          {
-            "StatToChange": "ATK",
-            "Multiple": 0.7,
-            "AffectsSelf": false
-          }
-        ]
-      }
-    ],
-    "Power": 20
+    "Name": "Chapa en PowerPoint",
+    "Power": 1
   },
   {
-    "Name": "Golpe con cable",
-    "OnAttack": [
-      {
-        "EventType": "eChangeStat",
-        "StatChanges": [
-          {
-            "StatToChange": "SPE",
-            "Multiple": 0.5,
-            "AffectsSelf": false
-          }
-        ]
-      }
-    ],
-    "Power": 15
+    "Name": "Deconstructción",
+    "Power": 2,
+    "MpCost": 1
   },
   {
-    "Name": "Tabletazo",
-    "Power": 20
+    "Name": "Fantasma de la ópera",
+    "Power": 5,
+    "MpCost": 5
   },
   {
-    "Name": "Sartenazo",
-    "Power": 20
+    "Name": "Latigazo correa",
+    "Power": 1
   },
   {
-    "Name": "Último aliento",
-    "Power": 10000
+    "Name": "Plástico sospechoso",
+    "Power": 2,
+    "MpCost": 1
   },
   {
-    "Name": "Mordisco Refinado",
-    "OnAttack": [
-      {
-        "EventType": "eChangeStat",
-        "StatChanges": [
-          {
-            "StatToChange": "SPE",
-            "Multiple": 0.7,
-            "AffectsSelf": false
-          }
-        ]
-      }
-    ],
-    "Power": 20
+    "Name": "Ondas del wifi",
+    "Power": 1
   },
   {
-    "Name": "EspadazoDelHeroe",
-    "Power": 100000
+    "Name": "La Chancla",
+    "Power": 3,
+    "MpCost": 3
   },
   {
-    "Name": "???",
-    "Power": 100000
+    "Name": "Modo capitalismo",
+    "Power": 5,
+    "MpCost": 5
+  },
+  {
+    "Name": "ñom",
+    "Power": 1
+  },
+  {
+    "Name": "Barras (de pan)",
+    "Power": 2,
+    "MpCost": 1
+  },
+  {
+    "Name": "Ahora puedes jugar a Blown to Blacksmithereens desde el navegador en http://www.tai1games.itch.io",
+    "Power": 3,
+    "MpCost": 3
+  },
+  {
+    "Name": "t̶͖̮̙̦̯̮͓̲̎u̴̧̡̢͓̮͉͓̻͙̰̟̳͖̠̇͆̽̀͂̈̈̆ ̷̡̛̭̩̲̦͉̱͓̈́̄͑c̷͕̜͎͚̑́̂͑́ỏ̶̧̢̩̳̗̤̎̄͠d̸̮̮͍͚̜̝̋̃̔̽̃̐̎̏̕͘͜͝ͅì̴̥̈́̕̚g̸̡͇̖̞̯̯̑ơ̸̡̙̳̝̟̐̒̾̈́͒̔̕ ̷̧̡̧̫̤̮̳̦͈̩̫̪̬̐́͆̈̿͜ȩ̵̡̨̨̪͇͇̼͎̳͓̣̥̙̺̃s̵̟̘͈̖̘͔̣͛̔̓͒ ̸̬̑̈̾s̴̢̺͇͎̈́̂̇̓̄̎͋e̴̡̺̙͉̥̳͕̣̤̩͔͉̽̀͆̔̂͐̆̓̔̈́̚͜͝ͅň̶̞͑̍́͊̑̃̅̎̏͜͝c̶̨̥͈̙͛̄͛̓̾̕̕ͅi̶̳͈̼͈̰̲͖͗̅l̶̥̞̽͛̾̎̂͐̓̾̆̀̓̓̐̕͝l̸̫̤̥̹̫̅̀͗̐́̽̃̆̆̉̀́͊͘͝ȧ̵̮̱͇̱͉̯̱̲̝̣̦̲͋̑͛̈́̿̈́͊́̑̈́̒̏̚͜͜m̶̹̩̖̠̀͌̑̄͗̉ę̶̧̦̙̰̤̫̤̘͇̫̠̘͊̈́̓͊͐̊̄̚͝͝͝ͅn̵̨̙̭̣͉̤̱̮̙̤̣͎͑̂́́͒͑͗t̵̡͚̣̖͊̇̄̈́̓́͌̔̏͝e̷͙̜̳̠͍̠̦̓̈̄̾̍ͅ ̵͖̘̭̝͈̯̩̪̩͈̳͖͆͑̽̓͂͋̈͑̎͘̕͜͜ḻ̸̗͇͇͇͕̹̬̝͚̺̐̈̌̀̈̌͊̏͌̍̀̓͘͘å̵̧̛̗̞͉̮̽͌̎̆̎͗̇͌̾̂̾͝m̷͉͕̞̳͍͙̣͌̈̈̏̾͛̍͋̄͂͛̚e̸̡͈̹̩̯̭̝͗̅̀́͗̑̑͝n̵̛̯͖͈̩̩͚͖̥͍̬͖̹̮͑̐̿̉͌͆̐̐̓́͜͜͠t̵̛͖̥͍̎̋͌͊̀̿̕̕a̴̛̗̐͌͑̊͌͋͑̈́̆͂͋̈́̈́͘ḅ̴̧͕͙̗͙̩̖̦͓̓̆͘ļ̸̢͕̞̦͚̰͚̝̲̲̃ề̷̛̗̠̟͊͌͐̂̃̀͘͝",
+    "Power": 100
   }
 ]
