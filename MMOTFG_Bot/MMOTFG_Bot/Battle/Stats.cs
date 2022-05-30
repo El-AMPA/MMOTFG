@@ -33,6 +33,20 @@ namespace MMOTFG_Bot.Battle
 
         //does it change the max value of bounded stats?
         public bool changeMax;
+
+        [DefaultValue(true)]
+        //does it affect user or target?
+        public bool affectsSelf;
+
+        public string GetInfo()
+        {
+            string user = (affectsSelf) ? "User" : "Foe";
+            string adds = (add == 0) ? "" : $"{add} ";
+            string symbol = (add > 0) ? "+" : "";
+            string mults = (multiple == 1) ? "" : $"x{multiple}";
+
+            return $"{user} {statToChange} {symbol}{adds}{mults}";
+        }
     }
 
     static class Stats

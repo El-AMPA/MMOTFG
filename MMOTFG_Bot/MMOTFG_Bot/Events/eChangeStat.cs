@@ -11,9 +11,11 @@ namespace MMOTFG_Bot.Events
     {      
         public StatChange[] statChanges;
 
+        [DefaultValue(StatName.HP)]
         [JsonConverter(typeof(StringEnumConverter))]
         public StatName statToDepend;
 
+        [DefaultValue(1)]
         public float threshold;       
 
         public string message;
@@ -23,18 +25,30 @@ namespace MMOTFG_Bot.Events
 
         public int timesActivated;
 
+        public override string GetInformation()
+        {
+            string info = "";
+
+            foreach (StatChange sc in statChanges)
+                info += sc.GetInfo() + "\n";
+
+            return info;
+        }
+
         public override async Task Execute(string chatId) {
             if (activations > 0 && timesActivated >= activations) return;
 
             float ratio = (float)user.GetStat(statToDepend) / user.GetMaxStat(statToDepend);
 
-            if (threshold == 0 || ratio <= threshold)
+            if (threshold == 1 || ratio <= threshold)
             {
                 string msg = "";
 
                 foreach (StatChange sc in statChanges)
                 {
-                    msg += user.ApplyStatChange(sc);
+                    Battler tgt = sc.affectsSelf ? user : target;
+                    if (tgt == null) continue;
+                    msg += tgt.ApplyStatChange(sc);
                 }
 
                 await TelegramCommunicator.SendText(chatId, msg + message, true);

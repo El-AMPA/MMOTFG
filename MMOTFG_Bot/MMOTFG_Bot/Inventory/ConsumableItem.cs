@@ -34,8 +34,19 @@ namespace MMOTFG_Bot.Inventory
             await BattleSystem.SavePlayerBattle(chatId);
         }
 
-        public ConsumableItem()
+        public override string GetInformation()
         {
+            string info = $"Name: {name}\nMax Stack: {maxStackQuantity}\nUses:\n";
+            foreach(string s in key_words.Keys)
+            {
+                info += $"{s}: ";
+                List<Event> events = key_words[s];
+                foreach(Event e in events)
+                {
+                    info += e.GetInformation();
+                }
+            }
+            return info;
         }
     }
 }
